@@ -22,7 +22,6 @@ body {
     padding: 16px;
 }
 
-
 button {
     display: flex;
     align-items: center;
@@ -50,4 +49,21 @@ button:hover {
 
 button:active {
     background-color: #26272b;
+}
+
+a{
+    color: var(--forecolor) !important;
+}
+
+
+#login-body{
+    background-color: var(--accent) !important;
+}
+
+#login-card{
+    background-color: var(--primary) !important;
+}
+
+#login-icon{
+    color: var(--accent) ;
 }

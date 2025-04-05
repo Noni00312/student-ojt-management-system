@@ -14,7 +14,7 @@
     <link rel="app-mobile-web-app-status-bar" href="#9CCD62">
     <meta name="theme-color" content="#748E54">
 
-    <title>Student OJT Management Student - Login</title>
+    <title>SOJTMS - Login</title>
 </head>
 <body id="login-body">
 
@@ -25,25 +25,33 @@
             
         </div>
 
-        <div id="login-card" class="container d-flex align-items-center justify-content-center vh-100 flex-column">
+        <div id="login-card" class="p-5 d-flex flex-column">
            
-           
-            <p>Username</p>
-            <div class="position-relative mb-3">
-                <i id="login-icon" class="bi bi-person-fill position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                <input type="text" class="form-control ps-5" placeholder="">
+            <div class="form-floating mb-3 position-relative">
+                <i 
+                id="user-icon" 
+                class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
+                <input type="text" class="form-control  ps-4 pe-5" id="floatingInput" placeholder="Enter your username">
+                <label for="floatingInput">Username</label>
             </div>
-
-            <p>Password</p>
-            <div class="position-relative">
-                <i id="login-icon" class="bi bi-eye position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                <input type="password" class="form-control ps-5" placeholder="">
+            
+            
+            <div class="form-floating mb-3 position-relative">
+                <i 
+                id="password-icon" 
+                class="bi bi-eye-slash-fill position-absolute top-50 end-0 me-3  translate-middle-y ms-3" 
+                style="cursor: pointer;" role="button" aria-label="Toggle password visibility" tabindex="0"></i>
+                <input id="password-input" type="password" class="form-control ps-4 pe-5" placeholder="Enter your password">
+                <label for="password-input">Password</label>
             </div>
-
-            <button class="mt-4">
+            
+            
+        
+            <button class="mt-4 mb-3 d-block">
                 <span>LOGIN</span>
             </button>
-            <a href="/">Don't have any account? Sign Up</a>
+
+            <a id="login-link" href="/pages/register.html">Don't have any account? Sign Up</a>
         </div>
 
         

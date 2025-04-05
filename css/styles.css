@@ -55,6 +55,9 @@ a{
     color: var(--forecolor) !important;
 }
 
+h1{
+    color: var(--accent) !important;
+}
 
 #login-body{
     background-color: var(--accent) !important;
@@ -62,8 +65,51 @@ a{
 
 #login-card{
     background-color: var(--primary) !important;
+    border-radius: 2rem;
 }
 
-#login-icon{
+#login-link{
+    align-self: center;
+    font-size: 0.7rem;
+}
+
+#password-icon, #user-icon, #confirm-password-icon{
     color: var(--accent) ;
+}
+
+/* Mobile */
+@media (max-width: 393px) {
+
+    #register-icon-container{
+        display: flex;              
+        align-items: center;      
+        justify-content: center;    
+        flex-direction:row; 
+    } 
+
+
+    #register-icon{
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+    body{
+        position: relative;
+    }
+    #login-card{
+        position: absolute;
+        bottom: 0;
+        border-radius: 3rem 3rem 0 0;
+        width: 100vw;
+        height: 600px;
+    }
+    .logo-wrapper img{
+        position: absolute;
+        top: 50px;
+        scale: 1.5;
+    }
+}
+
+/* Tablet */
+@media (max-width: 820px) {
+    
 }

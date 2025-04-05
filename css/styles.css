@@ -2,9 +2,12 @@
 
 :root {
     --accent : #9CCD62;
+    --accent-darken : #85ad53;
     --primary: #F6F8E2;
     --forecolor: #3C3D42;
     --secondary: #E0DDCA;
+    --maroon: #801414;
+    --cyan-dark: #004E4E;
 
     padding: 0;
     margin: 0;
@@ -14,6 +17,26 @@
 body { 
     background-color: var(--primary) !important;
     font-family: "Poppins", sans-serif !important;
+}
+
+.primary-bg-color {
+    background-color: var(--primary) !important;
+}
+
+.accent-bg-color {
+    background-color: var(--accent);
+}
+
+.accent-darken-bg-color {
+    background-color: var(--accent-darken);
+}
+
+.secondaray-bg-color {
+    background-color: var(--secondary);
+}
+
+.forecolor-bg-color {
+    background-color: var(--forecolor);
 }
 
 .logo-wrapper img{
@@ -38,6 +61,8 @@ button {
     transition: all 168ms ease-out;
 }
 
+
+
 button span i {
     margin-left: 10px;
     font-size: 1.5rem !important;
@@ -55,7 +80,6 @@ a{
     color: var(--forecolor) !important;
 }
 
-
 #login-body{
     background-color: var(--accent) !important;
 }
@@ -66,4 +90,172 @@ a{
 
 #login-icon{
     color: var(--accent) ;
+}
+
+
+.offcanvas-body ul li a {
+    color: var(--forecolor) !important;
+    cursor: pointer;
+    transition: all 168ms ease-out;
+}
+
+
+.offcanvas-body ul li a:hover {
+    background-color: var(--accent);
+}
+
+#user-profile {
+    width: 45px;
+    height: 45px;
+    padding:  0;
+    border: 1px solid var(--forecolor);
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+#user-profile img {
+ width: 100%;
+ object-fit: cover;
+}
+
+.card {
+    border-radius: 16px !important;
+    -webkit-box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76); 
+    box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76);
+    position: relative;
+    overflow: hidden;
+    border: none;
+}
+
+.card h3, h4, h5 {
+    color: var(--accent)
+}
+
+.card h3 {
+    font-weight: bold;
+    letter-spacing: 0.7px;
+    font-size: 1.2rem;
+    margin-bottom: 0;
+}
+
+.time-container {
+    position: relative;
+}
+
+
+.time-container .hours{
+    font-size: 2.8rem ;
+    font-weight: bold;
+    
+}
+
+.time-container .hours .name {
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-left: -7px;
+}
+
+.time-container .mins , .required-hours p{
+    font-weight: bold;
+    font-size: 1.9rem;
+}
+
+.time-container .mins .name ,  .required-hours p span{
+    font-size: 0.7rem;
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.separator-line {
+    border-top: 1px solid #acacac;
+    margin: 10px 0; 
+    width: 100%; 
+    margin-top: -5px;
+
+}
+
+.card h4 {
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.8px;
+    margin-bottom: 2px;
+    z-index: 5;
+}
+
+
+.required-hours p{
+    margin-bottom: 0;
+
+}
+
+.required-hours, .hours-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.hours-left h5 {
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-bottom: 1px;
+}
+
+.hours-left p {
+    font-size: 0.8rem;
+    margin-bottom: 9px;
+}
+
+.time-container, .required-hours, .hours-left {
+    color: var(--primary);
+}
+
+.item-1 {
+    background-color: var(--forecolor) !important;
+}
+
+.item-1::after {
+    position: absolute;
+    content: "\F291";
+    font-family: "bootstrap-icons";
+    margin-left: 5px;
+    color: var(--primary);
+    font-size: 9rem;
+    bottom: -70px;
+    left: -40px;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.item-2 {
+    background-color: var(--maroon)  !important;
+}
+
+.item-2::after {
+    position: absolute;
+    content: "\F291";
+    font-family: "bootstrap-icons";
+    margin-left: 5px;
+    color: var(--primary);
+    font-size: 9rem;
+    bottom: -70px;
+    left:-40px;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.item-3 {
+    background-color: var(--cyan-dark)  !important;
+}
+
+.item-3::after {
+    position: absolute;
+    content: "\F87C";
+    font-family: "bootstrap-icons";
+    margin-left: 5px;
+    color: var(--primary);
+    font-size: 8rem;
+    bottom: -40px;
+    left: -20px;
+    opacity: 0.5;
+    z-index: 1;
 }

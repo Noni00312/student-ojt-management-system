@@ -21,23 +21,40 @@
             <div class="d-flex align-items-center justify-content-between w-100">
               <div class="wrapper">
                 <div class="d-flex align-items-center">
-                  <!-- <img src="../assets/img/icons/LOGO 192.png" alt="logo" width="50px" height="50px" class="me-2"> -->
                   <a href="" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS</a>
                 </div>
                 <button class="btn 	d-lg-none d-sm-block" type="button " data-bs-toggle="offcanvas" data-bs-target="#sideBar" aria-controls="sideBar">
                   <i class="bi bi-list text-light fs-3 outline-none"></i>
                 </button>
               </div>
-              <a href="#" id="user-profile" aria-label="User profile">
+
+              <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link text-light" aria-current="page" href="#">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-light" aria-current="page" href="#">Time in/out</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-light" aria-current="page" href="#">History</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-light" aria-current="page" href="#">Reports</a>
+                  </li>
+                </ul>
+              </div>
+              <a href="#" id="user-profile" class=" text-decoration-none">
                 <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy">
               </a>
         </div>
     </nav>
 
+    <!-- Cards -->
     <section class="container px-4 px-md-4">
       <div class="row g-3 mt-3"> 
         <div class="col-md-4 ">
-          <div class="card item-1 mb-2 me-md-1 p-3 p-md-4 ">
+          <div class="card item-1 mb-2 me-md-1 p-3">
             <h3>Work hours</h3>
             <div class="time-container">
               <span class="hours">200 <span class="name">Hours</span></span>
@@ -59,44 +76,34 @@
         </div>
 
         <div class="col-md-4 ">
-          <div class="card item-2 mb-2 me-md-1 p-3 p-md-4">
-            <h3>Work hours</h3>
-            <div class="time-container">
-              <span class="hours">200 <span class="name">Hours</span></span>
-              <span class="mins">00<span class="name">min</span></span>
-              <span class="mins">00<span class="name">sec</span></span>
+          <div class="card item-2 mb-2 me-md-1 p-3">
+            <h3>Work schedule</h3>
+            <div class="time-container ">
+              <span class="hours">07:00<span class="name ms-1">am</span></span>
+              <span class="mx-1">-</span>
+              <span class="hours">12:00<span class="name ms-1">pm</span></span>
             </div>
             <div class="separator-line"></div>
-            <div class="d-flex justify-content-between">
-              <div class="required-hours">
-                <h4>Required hours</h4>
-                <p>200 <span>Hours</span></p>
-              </div>
-              <div class="hours-left">
-                <h5 >Hours left</h5>
-                <p>200:00:00</p>
-              </div>
+            <div class="time-container ">
+              <h4>Afternoon</h4>
+              <span class="hours">01:00<span class="name ms-1">pm</span></span>
+              <span class="mx-1">-</span>
+              <span class="hours">05:00<span class="name ms-1">pm</span></span>
             </div>
           </div>
         </div>
 
         <div class="col-md-4 ">
-          <div class="card item-3 mb-2 me-md-1 p-3 p-md-4">
-            <h3>Work hours</h3>
-            <div class="time-container">
-              <span class="hours">200 <span class="name">Hours</span></span>
-              <span class="mins">00<span class="name">min</span></span>
-              <span class="mins">00<span class="name">sec</span></span>
+          <div class="card item-3 mb-2 me-md-1 p-3">
+            <h3>Company</h3>
+            <div class="company">
+              <span class="name">DEPARTMENT OF AGRARIAN REFORM</span>
             </div>
             <div class="separator-line"></div>
-            <div class="d-flex justify-content-between">
-              <div class="required-hours">
-                <h4>Required hours</h4>
-                <p>200 <span>Hours</span></p>
-              </div>
-              <div class="hours-left">
-                <h5 >Hours left</h5>
-                <p>200:00:00</p>
+            <div class="">
+              <div class="location">
+                <h4>Location</h4>
+                <p>Nursery Masbate City, Masbate</p>
               </div>
             </div>
           </div>
@@ -104,7 +111,10 @@
 
       </div>
     </section>
+    <!-- Cards -->
 
+
+    <!-- Side bar -->
     <div class="offcanvas offcanvas-start primary-background-color" tabindex="-1" id="sideBar" aria-labelledby="sideBarLabel">
         <div class="offcanvas-header accent-darken-bg-color">
           <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">MENU</h5>
@@ -142,7 +152,7 @@
             </ul>
         </div>
     </div>
-
+   <!-- Side bar -->
 
 
 

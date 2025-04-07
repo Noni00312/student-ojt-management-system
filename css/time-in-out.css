@@ -1,0 +1,43 @@
+#camera-button {
+    width: 100%;
+    background-color: #3C3D42;
+    cursor: pointer;
+    border-radius: 10px !important;
+    height: 170px;
+}
+
+#camera-button i {
+    font-size: clamp(2rem, 1.1579rem + 4.2105vw, 4rem);
+}
+
+#time-in-out-button {
+    background-color: #94E237;
+}
+
+.rounded-table-container {
+    border-radius: 10px; 
+    overflow: hidden; 
+    box-shadow: 0 0 0 1px #dee2e6; 
+  }
+  
+  #table-head tr:first-child th:first-child {
+    border-top-left-radius: 10px;
+  }
+  
+  #table-head tr:first-child th:last-child {
+    border-top-right-radius: 10px;
+  }
+  
+  tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+  }
+  
+  tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+  }
+
+#table-head {
+    background-color: #3C3D42;
+    color: #F6F8E2;
+    border-radius: 20px !important;
+}

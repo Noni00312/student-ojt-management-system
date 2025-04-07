@@ -103,19 +103,18 @@ a{
 }
 
 @media (max-width: 393px) {
-    .register-icon-container {
-        display: flex;
-        flex-direction: column !important;    
-    }
+    
 
     #login-card{
         position: absolute;
-        padding-bottom: 40px;
+        padding-bottom: 100px;
         bottom: 0;
+        height: 60%;
         border-radius: 3rem 3rem 0 0;
         width: 100vw;
     }
-    .logo-wrapper img{
+    
+    #login-icon img{
         position: absolute;
         top: 50px;
         scale: 1.5;

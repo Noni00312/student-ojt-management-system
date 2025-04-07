@@ -19,18 +19,26 @@
 <body>
     
     <div id="register-body" class="container mt-3 d-flex align-items-center justify-content-center  flex-column">
+
         <div id="register-icon-container " class="logo-wrapper  register-icon-container  d-flex justify-content-center align-items-center">
             <img id="register-icon" src="/assets/img/logo trans.png" alt="logo" width="120px" height="120px">
             <h1 class="p-3">Sign Up</h1>
         </div>
 
 
-        <div class="px-5 py-sm-3 d-flex flex-column">
+        <div id="register-card" class="px-5 py-sm-3 d-flex flex-column">
            
            <div class="row pt-2">
 
+                <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
+                    <i 
+                    id="user-icon" 
+                    class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
+                    <input type="text" class="form-control ps-3 pe-1" id="floatingInput" placeholder="Enter your student id">
+                    <label for="floatingInput">Student ID</label>
+                </div>
                 
-                <div class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative">
+                <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
                     <i 
                     id="user-icon" 
                     class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
@@ -38,7 +46,7 @@
                     <label for="floatingInput">Username</label>
                 </div>
             
-                <div class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative">
+                <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
                     <i 
                     id="user-icon" 
                     class="bi bi-envelope-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
@@ -46,7 +54,7 @@
                     <label for="floatingInput">Email</label>
                 </div>
 
-                <div class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative">
+                <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
                     <i 
                     id="user-icon" 
                     class="bi bi-telephone-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>

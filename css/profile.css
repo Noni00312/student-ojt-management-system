@@ -1,0 +1,61 @@
+
+:root {
+    --accent : #9CCD62;
+    --accent-darken : #85ad53;
+    --primary: #F6F8E2;
+    --forecolor: #3C3D42;
+    --secondary: #E0DDCA;
+    --maroon: #801414;
+    --cyan-dark: #004E4E;
+
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden; 
+    max-width: 100%; 
+}
+
+
+
+.profile-icon {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+#return-button{
+    color: var(--primary) !important;
+    margin-left: 15px ;
+}
+
+#edit-button{
+    color: var(--accent) !important;
+}
+
+#profile-card{
+    border-radius: 16px !important;
+    -webkit-box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76); 
+    box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76);
+    border: none;
+    margin: 10px;
+    padding: 10px;
+    background-color: var(--forecolor);
+}
+
+@media (max-width: 393px) {   
+    #nav-container{
+        display: flex;
+        justify-content: start !important;
+        
+    }
+
+
+    #username-id{
+        display: flex;
+        margin-left: 110px;
+    }
+}

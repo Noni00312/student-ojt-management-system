@@ -13,7 +13,7 @@
     <link rel="app-mobile-web-app-status-bar" href="#9CCD62">
     <meta name="theme-color" content="#748E54">
 
-    <title>SOJTMS - Profile</title>
+    <title>SOJTMS - Admin Profile</title>
 </head>
 <body>
     
@@ -40,83 +40,21 @@
         <div id="profile-card" class="px-5 py-sm-3 d-flex flex-column">
             <div class="row">
         
-                <div id="user-info-header" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative d-flex justify-content-between">
-                    <h2 id="user-info-title" class="user-info-title">User Info</h2>
+                <div id="admin-info-header" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative d-flex justify-content-between">
+                    <h2 id="admin-info-title" class="admin-info-title">Admin Info</h2>
                     <a id="edit-button" class="text-decoration-none edit-button" href="" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                         <i class="bi bi-pencil fs-3"></i>
                     </a>
                 </div>
         
-                <div id="student-id-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
-                    <p id="student-id-label" class="student-id-label">Student ID</p>
-                    <h5 id="student-id" class="student-id">2112889</h5>
+                <div id="number-id-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
+                    <p id="number-id-label" class="number-id-label">ID Number</p>
+                    <h5 id="number-id" class="number-id">2112889</h5>
                 </div>
         
-                <div id="email-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
-                    <p id="email-label" class="email-label">Email</p>
-                    <h5 id="email" class="email">name@sample.com</h5>
-                </div>
-        
-                <div id="phone-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
-                    <p id="phone-label" class="phone-label">Phone</p>
-                    <h5 id="phone-number" class="phone-number">09123452398</h5>
-                </div>
-        
-                <div id="gender-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
-                    <p id="gender-label" class="gender-label">Gender</p>
-                    <h5 id="gender" class="gender">Male</h5>
-                </div>
-        
-                <div id="separator-1" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
-                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"></div>
-                </div>
-        
-                <div id="address-container" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
-                    <p id="address-label" class="address-label">Address</p>
-                    <h5 id="address" class="address">BRGY Kinamaligan, PRK 4, Masbate City, MASBATE, Philippines</h5>
-                </div>
-        
-                <div id="separator-2" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
-                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"></div>
-                </div>
-        
-                <div id="company-name-container" class="form-floating col-md-5 mb-3 ps-1 pe-1 position-relative">
-                    <p id="company-name-label" class="company-name-label">Company Name</p>
-                    <h5 id="company-name" class="company-name">Sample Company Name Sample</h5>
-                </div>
-        
-                <div id="company-address-container" class="form-floating col-md-5 mb-3 ps-1 pe-1 position-relative">
-                    <p id="company-address-label" class="company-address-label">Company Address</p>
-                    <h5 id="company-address" class="company-address">Sample Company Address Sample</h5>
-                </div>
-        
-                <div id="work-schedule-container" class="form-floating col-md-2 mb-3 ps-1 pe-1 position-relative">
-                    <p id="work-schedule-label" class="work-schedule-label">Work Schedule</p>
-                    <h5 id="work-schedule" class="work-schedule">MWF</h5>
-                </div>
-        
-                <div id="separator-3" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
-                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"></div>
-                </div>
-        
-                <div id="morning-time-in-container" class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
-                    <p id="morning-time-in-label" class="morning-time-in-label">Morning - Time in</p>
-                    <h5 id="morning-time-in" class="morning-time-in">07:30 AM</h5>
-                </div>
-        
-                <div id="morning-time-out-container" class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
-                    <p id="morning-time-out-label" class="morning-time-out-label">Morning - Time out</p>
-                    <h5 id="morning-time-out" class="morning-time-out">11:30 AM</h5>
-                </div>
-        
-                <div id="afternoon-time-in-container" class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
-                    <p id="afternoon-time-in-label" class="afternoon-time-in-label">Afternoon - Time in</p>
-                    <h5 id="afternoon-time-in" class="afternoon-time-in">01:00 PM</h5>
-                </div>
-        
-                <div id="afternoon-time-out-container" class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
-                    <p id="afternoon-time-out-label" class="afternoon-time-out-label">Afternoon - Time out</p>
-                    <h5 id="afternoon-time-out" class="afternoon-time-out">05:00 PM</h5>
+                <div id="position-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
+                    <p id="position-label" class="position-label">Position</p>
+                    <h5 id="position" class="position">Sample Pos</h5>
                 </div>
         
             </div>

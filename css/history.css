@@ -1,4 +1,3 @@
-
 input {
     border: none;
     background-color: #F6F8E2 !important;
@@ -8,6 +7,7 @@ input {
     -webkit-box-shadow: 5px 4px 21px -5px rgba(0,0,0,0.2);
     -moz-box-shadow: 5px 4px 21px -5px rgba(0,0,0,0.2); */
 }
+
 .history-card {
     width: 100%;
     padding: 20px;
@@ -51,4 +51,66 @@ input {
 .card-container::-webkit-scrollbar-thumb {
     background: #b1adbd;
     border-radius: 4px;
+}
+
+
+
+.history-card-inside {
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: clamp(2rem, 1.5789rem + 2.1053vw, 3rem);
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.history-card-inside span {
+    color: #F6F8E2;
+}
+
+.history-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
+    justify-items: center; 
+    align-items: center; 
+}
+
+.history-images img {
+    width: 100%; 
+    height: auto; 
+    max-height: 150px; 
+    object-fit: cover; 
+    border-radius: 10px;
+}
+
+.view-history-modal {
+    border-radius: 20px !important;
+    background-color: #3C3D42 !important;
+    padding: 20px;
+    max-height: 80vh; 
+    overflow-y: auto; 
+}
+
+.view-history-modal::-webkit-scrollbar {
+    width: 8px;
+}
+.view-history-modal::-webkit-scrollbar-thumb {
+    background: #b1adbd;
+    border-radius: 4px;
+}
+
+.image-container {
+    overflow-x: auto;
+}
+.image-container::-webkit-scrollbar-thumb:horizontal {
+    background: #b1adbd;
+    border-radius: 4px;
+
+}
+
+.image-container img{
+    height: 100%;
 }

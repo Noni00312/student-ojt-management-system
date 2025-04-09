@@ -14,10 +14,96 @@
 }
 
 html, body {
-    overflow-x: hidden; 
     max-width: 100%; 
 }
 
+section{
+ margin-top: 180px;
+}
+
+
+.form-floating h2, .form-floating p{
+    color: var(--accent) !important;
+}
+
+.form-floating input{
+    background-color: #3C3D42 !important;
+    box-shadow: none !important;
+    border-color: #FFF;
+    color: var(--primary) !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+}
+
+.form-floating input:focus {
+    border-color: #9CCD62 !important; 
+    color: var(--primary) !important;  
+}
+
+.form-floating input:-webkit-autofill {
+    background-color: #3C3D42 !important; 
+    color: var(--primary) !important;
+    -webkit-box-shadow: 0 0 0px 1000px #3C3D42 inset !important; 
+}
+
+.form-floating input:-webkit-autofill:focus {
+    background-color: #3C3D42 !important;
+    color: var(--primary) !important;
+    -webkit-box-shadow: 0 0 0px 1000px #3C3D42 inset !important;
+}
+
+.form-floating input:-webkit-autofill,
+.form-floating input:-webkit-autofill:hover,
+.form-floating input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--primary) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.form-floating label{
+    color: #FFF !important;
+    font-size: small;
+}
+
+.form-floating:focus-within label {
+    color: #9CCD62 !important;
+}
+
+
+.form-floating h5{
+    color: var(--primary) !important;
+}
+
+.form-floating select {
+    background-color: #3C3D42 !important; 
+    box-shadow: none !important;
+    border-color: #FFF;
+    color: var(--primary) !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+}
+
+.form-floating select:focus {
+    border-color: #9CCD62 !important; 
+    color: var(--primary) !important;  
+}
+
+.form-floating select::-ms-expand {
+    display: none; 
+}
+
+.form-floating select option {
+    background-color: #3C3D42 !important; 
+    color: var(--primary) !important;
+}
+
+
+i {
+    color: #FFF !important ;
+}
+
+.form-floating:focus-within i {
+    color: #9CCD62 !important;
+}
 
 
 .profile-icon {
@@ -25,6 +111,58 @@ html, body {
     height: 90px;
     border-radius: 50%;
     margin-right: 20px;
+}
+
+
+.modal-profile-icon {
+    width: 150px;
+    height: 150px;
+}
+
+.modal {
+    overflow: hidden !important;
+}
+
+.modal-dialog {
+    margin: 0 auto !important;
+    max-height: 100vh !important;
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 1rem);
+}
+
+.modal-content {
+    max-height: 95vh !important; 
+    overflow: hidden !important;
+}
+
+.modal-body {
+    max-height: calc(95vh - 150px); 
+    padding: 1rem;
+}
+
+.modal-open {
+    overflow: hidden;
+    padding-right: 0 !important;
+}
+
+
+#img-button {
+    background-color: transparent;
+    border: none;
+    position: relative;
+}
+
+#img-button:hover .edit-icon {
+    color: #007bff; 
+}
+
+.edit-profile-modal{
+    background-color: #3C3D42 !important;
+}
+
+.update-profile:hover{
+    background-color: #87b353;
 }
 
 #return-button{
@@ -36,21 +174,76 @@ html, body {
     color: var(--accent) !important;
 }
 
+input[type="time"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    width: 100%; 
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.bi-clock-fill {
+    pointer-events: none; 
+    z-index: 1; 
+}
+
 #profile-card{
     border-radius: 16px !important;
     -webkit-box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76); 
     box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76);
     border: none;
-    margin: 10px;
-    padding: 10px;
     background-color: var(--forecolor);
 }
 
-@media (max-width: 393px) {   
+@media (max-width: 768px) {   
+    .modal {
+        overflow: auto !important; 
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem auto !important; 
+        max-height: none !important;
+        display: block; 
+        align-items: normal;
+        min-height: auto;
+    }
+    
+    .modal-content {
+        max-height: none !important;
+        overflow: visible !important;
+        height: auto;
+    }
+    
+    .modal-body {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    .modal-open {
+        overflow: auto !important;
+        padding-right: 0 !important;
+    }
+    
+    .modal-dialog {
+        width: 95%;
+        margin: 0.5rem auto !important;
+    }
+    
+    section{
+        margin-top: 230px;
+    }
     #nav-container{
         display: flex;
         justify-content: start !important;
+    }
+
         
+    .form-floating h2{
+        color: var(--forecolor) !important;
     }
 
 

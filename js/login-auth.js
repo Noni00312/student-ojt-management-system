@@ -1,55 +1,72 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBgmAZwLqyNldx-vEQlUXztFyvINWeD1yY",
-  authDomain: "student-ojt-management-s-4580f.firebaseapp.com",
-  projectId: "student-ojt-management-s-4580f",
-  storageBucket: "student-ojt-management-s-4580f.firebasestorage.app",
-  messagingSenderId: "636983402790",
-  appId: "1:636983402790:web:001c224269afe3f03e61e7",
-  measurementId: "G-GPSY1W9J6L",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import { auth, signInWithEmailAndPassword } from "./firebase-config.js";
 
 const login = document.getElementById("login-button");
 const errorLabel = document.getElementById("error-label");
 
 login.addEventListener("click", (e) => {
   e.preventDefault();
+  errorLabel.textContent = "";
   const email = document.getElementById("username").value;
   const password = document.getElementById("password-input").value;
+
+  login.disabled = true;
+  login.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Logging in...`;
 
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      console.log("User signed in:", user); // Debugging
+
+      if (user.emailVerified === false) {
+        errorLabel.textContent = "Please verify your email address.";
+        errorLabel.classList.add("text-danger");
+        login.disabled = false;
+        login.textContent = "LOGIN";
+        return;
+      }
+
       localStorage.setItem("userId", user.uid);
       window.location.href = "/pages/dashboard.html";
+      login.disabled = false;
+      login.textContent = "LOGIN";
     })
     .catch((error) => {
-      console.error("Error Code:", error.code);
-      console.error("Error Message:", error.message);
+      const errorCode = error.code;
+      let errorMessage = "An unknown error occurred.";
 
-      switch (error.code) {
+      switch (errorCode) {
         case "auth/invalid-email":
-          errorLabel.textContent =
-            "Invalid email address. Please check your input.";
+          errorMessage = "Invalid email address.";
+          break;
+        case "auth/user-disabled":
+          errorMessage = "This account has been disabled.";
           break;
         case "auth/user-not-found":
-          errorLabel.textContent =
-            "No user found with this email. Please register first.";
+          errorMessage = "User not found. Please check your email.";
           break;
         case "auth/wrong-password":
-          errorLabel.textContent = "Incorrect password. Please try again.";
+          errorMessage = "Incorrect password.";
           break;
-        default:
-          errorLabel.textContent = "An error occurred. Please try again later.";
+        case "auth/too-many-requests":
+          errorMessage =
+            "Too many attempts. Try again later or reset your password.";
+          break;
+        case "auth/network-request-failed":
+          errorMessage = "Network error. Check your connection.";
+          break;
+        case "auth/invalid-credential":
+          errorMessage = "Invalid login credentials.";
+          break;
+        case "auth/requires-recent-login":
+          errorMessage = "Session expired. Please log in again.";
+          break;
+        case "auth/operation-not-allowed":
+          errorMessage = "Email/password login is not enabled.";
+          break;
       }
+      login.disabled = false;
+      login.textContent = "LOGIN";
+      errorLabel.textContent = errorMessage;
+      errorLabel.classList.add("text-danger");
     });
 });

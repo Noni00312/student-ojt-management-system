@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/reports.css">
+    <link rel="stylesheet" href="/css/assistant-reports.css">
     <link rel="stylesheet" href="/css/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="manifest" href="/manifest.json">
@@ -49,27 +49,28 @@
         </div>
     </nav>
 
-    <!-- Reports -->
-     <section class="container mt-2 d-flex flex-column  .reports-section">
-        <h1 class="fw-bold" style="color: #3C3D42 !important;">REPORTS</h1>
+    <!-- Assistant Reports -->
+     <section class="container mt-2 d-flex flex-column  .assistant-reports-section">
+        <h1 class="fw-bold" style="color: #3C3D42 !important;">ASSISTANT REPORTS</h1>
 
         <div class="add-search-container d-flex align-items-stretch">
             <form class="form-floating flex-grow-1 me-2">
-              <input type="date" class="form-control" id="report-search-input">
+              <input type="date" class="form-control" id="assistant-report-search-input">
             </form>
 
-            <button class="d-flex align-items-center justify-content-center" style="width: 80px;" data-bs-toggle="modal" data-bs-target="#addReportModal">
+            <button class="d-flex align-items-center justify-content-center" style="width: 80px;" data-bs-toggle="modal" data-bs-target="#addAssistantReportModal">
               <i class="bi bi-plus-lg"></i>
             </button>
+
         </div>
     
         <div class="card-container flex-grow-1 overflow-auto mt-2" >
 
-            <a href="" class="report-card mb-2" data-bs-toggle="modal" data-bs-target="#viewReportModal">
+            <a href="" class="assistant-report-card mb-2" data-bs-toggle="modal" data-bs-target="#viewAssistantReportModal">
               <span id="title" class="text-truncate" style="width: calc(100% - 10px);">Sample report title</span>
              
               <span id="separator"></span>
-              <div class="report-content-container">
+              <div class="assistant-report-content-container">
                   <p class="text-truncate m-0" style="width: calc(100% - 40px);">Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores similique cumqu.</p>
                   <p id="date" class="text-end mt-2">March 30, 2024</p>
               </div>
@@ -77,28 +78,25 @@
         </div>
 
         <div class="upload-view-container mt-3 w-100 d-flex flex-column justify-content-center align-items-center">
-          <button name="upload-report" class="w-100 d-flex align-items-center justify-content-center">Upload</button>
-          <a href="/pages/report-online.html" class="mt-1">View online reports</a>
+          <button name="upload-assistant-report" class="w-100 d-flex align-items-center justify-content-center">Upload</button>
+          <a href="/pages/assistant-report-online.html" class="mt-1">View online reports</a>
         </div>
      </section>
-     <!-- Reports -->
+     <!-- Assistant Reports -->
 
    
-     <!-- delete modal -->
-   
-     <!-- delete modal -->
 
-     <!-- Add report modal -->
-     <div class="modal fade" id="addReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addReportModalLabel" aria-hidden="true" >
+     <!-- Add assistant report modal -->
+     <div class="modal fade" id="addAssistantReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addAssistantReportModalLabel" aria-hidden="true" >
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content p-3 add-report-modal">
+          <div class="modal-content p-3 add-assistant-report-modal">
             <div class="d-flex justify-content-end w-100">
               <i class="bi bi-x-lg fs-6 text-white" data-bs-dismiss="modal" aria-label="Close"></i>
             </div>
-            <form action="" method="POST" id="add-report-form" class="mt-2">
-                <input type="text" name="report-title" id="report-title" placeholder="Report title" class="w-100 report-title">
+            <form action="" method="POST" id="add-assistant-report-form" class="mt-2">
+                <input type="text" name="assistant-report-title" id="assistant-report-title" placeholder="Assistant Report title" class="w-100 assistant-report-title">
 
-                <div class="report-images d-flex w-100 mt-2 ">
+                <div class="assistant-report-images d-flex w-100 mt-2 ">
                     <div class="image-container d-flex align-items-center flex-grow-1 me-3">
                       <img src="../assets/img/icons8_full_image_480px_1.png" alt="">
                       <img src="../assets/img/icons8_image_480px_1.png" alt="">
@@ -110,28 +108,28 @@
                     </a >
                 </div>
 
-                <textarea class="form-control my-2 p-2" placeholder="Report content" id="report-content" ></textarea>
+                <textarea class="form-control my-2 p-2" placeholder="Assistant Report content" id="assistant-report-content" ></textarea>
 
-                <button formtarget="add-report-form" id="add-report-button" class="w-100 d-flex justify-content-center" name="report-submit" value="submit">Add report</button>
+                <button formtarget="add-assistant-report-form" id="add-assistant-report-button" class="w-100 d-flex justify-content-center" name="assistant-report-submit" value="submit">Add Assistant Report</button>
             </form>
           </div>
         </div>
       </div>
-     <!-- Add report modal -->
+     <!-- Add assistant report modal -->
 
 
      
-    <!-- view/update report modal -->
-    <div class="modal fade" id="viewReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="viewReportModalLabel" aria-hidden="true" >
+    <!-- view/update assistant report modal -->
+    <div class="modal fade" id="viewAssistantReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="viewAssistantReportModalLabel" aria-hidden="true" >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-3 view-report-modal">
+        <div class="modal-content p-3 view-assistant-report-modal">
           <div class="d-flex justify-content-end w-100">
             <i class="bi bi-x-lg fs-6 text-white" data-bs-dismiss="modal" aria-label="Close"></i>
           </div>
-          <form action="" method="POST" id="update-report-form" class="mt-2">
-              <input type="text" name="report-title" id="report-title" placeholder="Report title" class="w-100 report-title">
+          <form action="" method="POST" id="update-assistant-report-form" class="mt-2">
+              <input type="text" name="assistant-report-title" id="assistant-report-title" placeholder="Assistant Report title" class="w-100 assistant-report-title">
 
-              <div class="report-images d-flex w-100 mt-2 ">
+              <div class="assistant-report-images d-flex w-100 mt-2 ">
                   <div class="image-container d-flex align-items-center flex-grow-1 me-3">
                     <img src="../assets/img/icons8_full_image_480px_1.png" alt="">
                     <img src="../assets/img/icons8_image_480px_1.png" alt="">
@@ -143,18 +141,18 @@
                   </a >
               </div>
 
-              <textarea class="form-control my-2 p-2" placeholder="Report content" id="report-content" ></textarea>
+              <textarea class="form-control my-2 p-2" placeholder="Assistant Report content" id="assistant-report-content" ></textarea>
 
 
               <div class="d-flex justify-content-between align-items-center" >
-                <button formtarget="update-report-form" id="view-report-button" class="d-flex justify-content-center flex-grow-1 px-0" name="update-report" value="submit">Update report</button>
+                <button formtarget="update-assistant-report-form" id="view-assistant-report-button" class="d-flex justify-content-center flex-grow-1 px-0" name="update-assistant-report" value="submit">Update assistant report</button>
                 <i class="delete-btn btn bi bi-trash-fill text-danger mx-1 fs-3"></i>
               </div>
           </form>
         </div>
       </div>
     </div>
-    <!-- view/update report modal -->
+    <!-- view/update assistant report modal -->
 
     <!-- Delete confirmation modal -->
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
@@ -219,17 +217,14 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        // Get all delete buttons
         const deleteButtons = document.querySelectorAll('.delete-btn');
         
         deleteButtons.forEach(button => {
           button.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Store which report is being deleted
-            const reportCard = this.closest('.report-card'); // Adjust selector if needed
+            const reportCard = this.closest('.assistant-report-card'); // Adjust selector if needed
             
-            // Show the modal
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
             deleteModal.show();
             
@@ -239,8 +234,6 @@
                 reportCard.remove();
               }
               
-              // Add your AJAX call here if deleting from server
-              // Example: deleteReportFromServer(reportId);
               
               deleteModal.hide();
             };

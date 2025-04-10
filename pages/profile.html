@@ -37,92 +37,97 @@
     </nav>
 
     <section class="container px-4 px-md-4">
-
         <div id="profile-card" class="px-5 py-sm-3 d-flex flex-column">
-           
             <div class="row">
-
-                <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative d-flex justify-content-between">
-                    <h2>User Info</h1>
-                        
-                    <a id="edit-button" class="text-decoration-none" href=""  data-bs-toggle="modal" data-bs-target="#editProfileModal">
+        
+                <div id="user-info-header" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative d-flex justify-content-between">
+                    <h2 id="user-info-title" class="user-info-title">User Info</h2>
+                    <a id="edit-button" class="text-decoration-none edit-button" href="" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                         <i class="bi bi-pencil fs-3"></i>
                     </a>
                 </div>
-
-                
-                <div class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative">
-                     <p>Email</p>
-                     <h5>name@sample.com</h5>
+        
+                <div id="student-id-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
+                    <p id="student-id-label" class="student-id-label">Student ID</p>
+                    <h5 id="student-id" class="student-id">2112889</h5>
                 </div>
-    
-                <div class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative">
-                    <p>Phone</p>
-                    <h5>09123452398</h5>
+        
+                <div id="email-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
+                    <p id="email-label" class="email-label">Email</p>
+                    <h5 id="email" class="email">name@sample.com</h5>
                 </div>
-                
-                 
-             
-                <div class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative">
-                    <p>Gender</p>
-                    <h5>Male</h5>
+        
+                <div id="phone-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
+                    <p id="phone-label" class="phone-label">Phone</p>
+                    <h5 id="phone-number" class="phone-number">09123452398</h5>
                 </div>
-
-                 
-                <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
-                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"> </div>
+        
+                <div id="gender-container" class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative">
+                    <p id="gender-label" class="gender-label">Gender</p>
+                    <h5 id="gender" class="gender">Male</h5>
                 </div>
-                 
-                <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
-                    <p>Address</p>
-                    <h5>BRGY Kinamaligan, PRK 4, Masbate City, MASBATE, Philippines </h5>
+        
+                <div id="separator-1" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
+                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"></div>
                 </div>
-
-                 
-                <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
-                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"> </div>
+        
+                <div id="address-container" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
+                    <p id="address-label" class="address-label">Address</p>
+                    <h5 id="address" class="address">BRGY Kinamaligan, PRK 4, Masbate City, MASBATE, Philippines</h5>
                 </div>
-                 
-                 <div class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative">
-                    <p>Company Name</p>
-                    <h5>Sample Company Name Sample</h5>
-                 </div>
-                 
-                 <div class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative">
-                    <p>Company Address</p>
-                    <h5>Sample Company Address Sample</h5>
-                 </div>
-
-                 
-                <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
-                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"> </div>
+        
+                <div id="separator-2" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
+                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"></div>
                 </div>
-                 
-                 <div class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
-                    <p>Morning - Time in</p>
-                    <h5>07:30 AM</h5>
-                 </div>
-    
-                 <div class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
-                    <p>Morning - Time out</p>
-                    <h5>11:30 AM</h5>
-                 </div>
-                 
-                 <div class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
-                    <p>Afternoon - Time in</p>
-                    <h5>01:00 PM</h5>
-                 </div>
-    
-                 <div class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
-                    <p>Afternoon - Time out</p>
-                    <h5>05:00 PM</h5>
-                 </div>
-                 
-                 
-                 
+        
+                <div id="company-name-container" class="form-floating col-md-5 mb-3 ps-1 pe-1 position-relative">
+                    <p id="company-name-label" class="company-name-label">Company Name</p>
+                    <h5 id="company-name" class="company-name">Sample Company Name Sample</h5>
+                </div>
+        
+                <div id="company-address-container" class="form-floating col-md-5 mb-3 ps-1 pe-1 position-relative">
+                    <p id="company-address-label" class="company-address-label">Company Address</p>
+                    <h5 id="company-address" class="company-address">Sample Company Address Sample</h5>
+                </div>
+        
+                <div id="work-schedule-container" class="form-floating col-md-2 mb-3 ps-1 pe-1 position-relative">
+                    <p id="work-schedule-label" class="work-schedule-label">Work Schedule</p>
+                    <h5 id="work-schedule" class="work-schedule">MWF</h5>
+                </div>
+        
+                <div id="separator-3" class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
+                    <div class="separator-line" style="border: 1.5px solid #F6F8E2;"></div>
+                </div>
+        
+                <div id="morning-time-in-container" class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
+                    <p id="morning-time-in-label" class="morning-time-in-label">Morning - Time in</p>
+                    <h5 id="morning-time-in" class="morning-time-in">07:30 AM</h5>
+                </div>
+        
+                <div id="morning-time-out-container" class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
+                    <p id="morning-time-out-label" class="morning-time-out-label">Morning - Time out</p>
+                    <h5 id="morning-time-out" class="morning-time-out">11:30 AM</h5>
+                </div>
+        
+                <div id="afternoon-time-in-container" class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
+                    <p id="afternoon-time-in-label" class="afternoon-time-in-label">Afternoon - Time in</p>
+                    <h5 id="afternoon-time-in" class="afternoon-time-in">01:00 PM</h5>
+                </div>
+        
+                <div id="afternoon-time-out-container" class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative">
+                    <p id="afternoon-time-out-label" class="afternoon-time-out-label">Afternoon - Time out</p>
+                    <h5 id="afternoon-time-out" class="afternoon-time-out">05:00 PM</h5>
+                </div>
+        
             </div>
-      
-         </div>
+        </div>
+
+         <div class="logout-button-container">
+            <button id="logout-button" class="logout-button mt-4">
+                <span>Logout</span>
+                <span><i class="bi bi-box-arrow-right"></i></span>
+            </button>
+        </div>
 
     <!-- Edit Profile Modal -->
     <div class="modal fade" id="editProfileModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editProfileModal" aria-hidden="true">
@@ -191,13 +196,53 @@
                             </select>
                             <label for="gender">Gender</label>
                         </div>
-                        
+
             
                         <div class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative">
                             <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
                             <input type="text" class="form-control ps-3 pe-1" id="address" name="address" placeholder="Enter your address" required>
                             <label for="address">Address</label>
                         </div>
+
+                        
+                        <div class="form-floating col-md-12 mt-3 ps-1 pe-1 position-relative">
+                            <i class="bi bi-buildings-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
+                            <select class="form-select ps-3 pe-1" id="company-name" name="company-name"  required>
+                                <option value="" selected></option>
+                                <option value="DAR">DAR</option>
+                                <option value="DOST">DOST</option>
+                            </select>
+                            <label for="company-name">Company Name</label>
+                        </div>
+
+                        <div class="form-floating col-md-12 mt-3 ps-1 pe-1 position-relative">
+                            <div class="work-schedule-options d-flex flex-wrap gap-4">
+                                
+                                <!-- <p class="work-schedule-label" id="work-schedule-label">Work Schedule: </p> -->
+                                <input type="checkbox" class="btn-check" id="btn-sun" name="work-schedule" value="Sun" autocomplete="off">
+                                <label class="btn btn-outline-primary work-schedule-option" for="btn-sun">Sun</label>
+                        
+                                <input type="checkbox" class="btn-check" id="btn-mon" name="work-schedule" value="Mon" autocomplete="off">
+                                <label class="btn btn-outline-primary work-schedule-option" for="btn-mon">Mon</label>
+                        
+                                <input type="checkbox" class="btn-check" id="btn-tue" name="work-schedule" value="Tue" autocomplete="off">
+                                <label class="btn btn-outline-primary work-schedule-option" for="btn-tue">Tue</label>
+                        
+                                <input type="checkbox" class="btn-check" id="btn-wed" name="work-schedule" value="Wed" autocomplete="off">
+                                <label class="btn btn-outline-primary work-schedule-option" for="btn-wed">Wed</label>
+                        
+                                <input type="checkbox" class="btn-check" id="btn-thu" name="work-schedule" value="Thu" autocomplete="off">
+                                <label class="btn btn-outline-primary work-schedule-option" for="btn-thu">Thu</label>
+                        
+                                <input type="checkbox" class="btn-check" id="btn-fri" name="work-schedule" value="Fri" autocomplete="off">
+                                <label class="btn btn-outline-primary work-schedule-option" for="btn-fri">Fri</label>
+                        
+                                <input type="checkbox" class="btn-check" id="btn-sat" name="work-schedule" value="Sat" autocomplete="off">
+                                <label class="btn btn-outline-primary work-schedule-option" for="btn-sat">Sat</label>
+                            </div>
+                        </div>
+                        
+
                         <div class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative">
                             <i class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
                             <input type="time" class="form-control ps-3 pe-1" id="morning-time-in" name="morning-time-in">
@@ -222,15 +267,6 @@
                             <label for="afternoon-time-out">Afternoon - Time out</label>
                         </div>
             
-                        <div class="form-floating col-md-12 mt-3 ps-1 pe-1 position-relative">
-                            <i class="bi bi-buildings-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                            <select class="form-select ps-3 pe-1" id="company-name" name="company-name"  required>
-                                <option value="" selected></option>
-                                <option value="DAR">DAR</option>
-                                <option value="DOST">DOST</option>
-                            </select>
-                            <label for="company-name">Company Name</label>
-                        </div>
             
                     </div>
                 </div>

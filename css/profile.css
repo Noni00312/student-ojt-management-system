@@ -26,6 +26,11 @@ section{
     color: var(--accent) !important;
 }
 
+
+.form-floating h2{
+    margin-top: 20px;
+}
+
 .form-floating input{
     background-color: #3C3D42 !important;
     box-shadow: none !important;
@@ -171,6 +176,7 @@ i {
 }
 
 #edit-button{
+    padding: 20px;
     color: var(--accent) !important;
 }
 
@@ -197,6 +203,85 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76);
     border: none;
     background-color: var(--forecolor);
+}
+
+
+.logout-button {
+    display: inline-flex; 
+    justify-content: center; 
+    align-items: center; 
+    border-radius: 40px !important;
+    outline: none;
+    margin-top: 50px;
+    padding: 16px 48px;
+    background-color: #F44336;
+    color: var(--primary) !important;
+    font-size: 1rem !important;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-decoration: none;
+    text-align: center;
+    width: auto;
+    min-width: 150px;
+}
+
+.logout-button-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    width: 100%; 
+}
+
+.logout-button:hover {
+    background-color: #da3c31 !important;
+    color: var(--primary) !important;
+}
+
+.logout-button:active {
+    background-color: #26272b;
+}
+
+
+#work-schedule-label {
+    color: var(--accent) !important;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.work-schedule-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.work-schedule-option {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    border: 1px solid #FFF  !important;
+    border-radius: 5px;
+    background-color: var(--forecolor)  !important;
+    color: var(--primary);
+    font-size: 5rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.btn-check {
+    display: none;
+}
+
+.btn-check:checked + .work-schedule-option {
+    background-color: var(--accent)  !important;
+    color: var(--forecolor);
+    border-color: var(--accent-darken)  !important;
+}
+
+.work-schedule-option:hover {
+    background-color: var(--accent-darken);
+    color: var(--primary);
+    border-color: var(--accent-darken);
 }
 
 @media (max-width: 768px) {   
@@ -243,7 +328,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
         
     .form-floating h2{
-        color: var(--forecolor) !important;
+        margin-top: 20px;
     }
 
 
@@ -251,4 +336,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         display: flex;
         margin-left: 110px;
     }
+
+    
+    .logout-button {
+        width: 100%;
+    }
+
 }

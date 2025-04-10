@@ -1,0 +1,113 @@
+
+:root {
+    --accent : #9CCD62;
+    --accent-darken : #85ad53;
+    --primary: #F6F8E2;
+    --forecolor: #3C3D42;
+    --secondary: #E0DDCA;
+    --maroon: #801414;
+    --cyan-dark: #004E4E;
+
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+.body-404 { 
+    display: flex;
+    justify-content: center;
+    background-color: #fff !important;
+    font-family: "Poppins", sans-serif !important;
+}
+
+.page-404 {
+    padding: 20px 0;
+    background: #fff;
+}
+.page-404 img {
+    width: 100%;
+}
+.four_zero_four_bg {
+    background-image: url(/assets/no-internet.gif);
+    background-position: center;
+    background-size: auto;
+    background-repeat: no-repeat; 
+    height: 55vh;  
+    width: 100%;  
+}
+.text-center h1 {
+    font-size: 80px;
+}
+.four_zero_four_bg h3 {
+    font-size: 80px;
+}
+.contant_box_404 {
+    margin-top: -50px;
+}
+.link_404 {
+    display: inline-flex; 
+    justify-content: center; 
+    align-items: center; 
+    border-radius: 40px !important;
+    outline: none;
+    padding: 16px 48px;
+    background-color: var(--accent);
+    color: var(--primary) !important;
+    font-size: 1rem !important;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-decoration: none;
+    text-align: center;
+    width: auto;
+    min-width: 150px; 
+}
+
+.link_404:hover {
+    background-color: var(--forecolor);
+    color: var(--accent) !important;
+}
+
+.link_404:active {
+    background-color: #26272b;
+}
+
+
+
+@media (max-width: 768px) {
+    .page-404 {
+        padding: 20px 0; /
+    }
+    
+    .four_zero_four_bg {
+        height: 30vh; 
+    }
+    
+    .text-center h1 {
+        font-size: 10vw; 
+    }
+    
+    .contant_box_404 {
+        margin-top: 10px; 
+    }
+
+    .link_404 {
+        font-size: 1.2rem; 
+        padding: 12px 30px; 
+    }
+}
+
+@media (max-width: 480px) {
+    .four_zero_four_bg {
+        height: 25vh; 
+    }
+    
+    .text-center h1 {
+        font-size: 12vw;  
+    }
+    
+    .link_404 {
+        font-size: 1.2rem;
+        padding: 10px 25px;
+    }
+}

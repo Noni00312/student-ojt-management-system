@@ -1,315 +1,321 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 :root {
-    --accent : #9CCD62;
-    --accent-darken : #85ad53;
-    --primary: #F6F8E2;
-    --forecolor: #3C3D42;
-    --secondary: #E0DDCA;
-    --maroon: #801414;
-    --cyan-dark: #004E4E;
+  --accent: #9ccd62;
+  --accent-darken: #85ad53;
+  --primary: #f6f8e2;
+  --forecolor: #3c3d42;
+  --secondary: #e0ddca;
+  --maroon: #801414;
+  --cyan-dark: #004e4e;
 
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-body { 
-    background-color: var(--primary) !important;
-    font-family: "Poppins", sans-serif !important;
+body {
+  background-color: var(--primary) !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 .primary-bg-color {
-    background-color: var(--primary) !important;
+  background-color: var(--primary) !important;
 }
 
 .accent-bg-color {
-    background-color: var(--accent);
+  background-color: var(--accent);
 }
 
 .accent-darken-bg-color {
-    background-color: var(--accent-darken);
+  background-color: var(--accent-darken);
 }
 
 .secondaray-bg-color {
-    background-color: var(--secondary);
+  background-color: var(--secondary);
 }
 
 .forecolor-bg-color {
-    background-color: var(--forecolor);
+  background-color: var(--forecolor);
 }
 
-.logo-wrapper img{
-    background-color: var(--accent);
-    border-radius: 16px;
-    padding: 16px;
+.logo-wrapper img {
+  background-color: var(--accent);
+  border-radius: 16px;
+  padding: 16px;
 }
 
 button {
-    display: flex;
-    align-items: center;
-    border: none;
-    border-radius: 40px !important;
-    outline: none;
-    padding: 16px 48px;
-    background-color: var(--accent);
-    color: var(--primary);
-    font-size: 1rem !important;
-    font-weight: bold;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 168ms ease-out;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 40px !important;
+  outline: none;
+  padding: 16px 48px;
+  background-color: var(--accent);
+  color: var(--primary);
+  font-size: 1rem !important;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 168ms ease-out;
 }
 
-h1{
-    color: var(--accent) !important;
+h1 {
+  color: var(--accent) !important;
 }
 
 button span i {
-    margin-left: 10px;
-    font-size: 1.5rem !important;
+  margin-left: 10px;
+  font-size: 1.5rem !important;
 }
 
 button:hover {
-    background-color: var(--forecolor);
+  background-color: var(--forecolor);
 }
 
 button:active {
-    background-color: #26272b;
+  background-color: #26272b;
 }
 
-a{
-    color: var(--forecolor) !important;
+button:disabled {
+  background-color: #5f6064;
 }
 
-
-
-#login-body{
-    background-color: var(--accent) !important;
+a {
+  color: var(--forecolor) !important;
 }
 
-#login-card{
-    background-color: var(--primary) !important;
-    border-radius: 2rem;
+#login-body {
+  background-color: var(--accent) !important;
 }
 
-#login-link{
-    align-self: center;
-    font-size: 0.7rem;
+#login-card {
+  background-color: var(--primary) !important;
+  border-radius: 2rem;
 }
 
-#password-icon, #user-icon, #confirm-password-icon{
-    color: var(--accent) ;
+#login-link {
+  align-self: center;
+  font-size: 0.7rem;
+}
+
+#password-icon,
+#user-icon,
+#confirm-password-icon {
+  color: var(--accent);
 }
 
 @media (max-width: 393px) {
-    
+  #login-card {
+    position: absolute;
+    padding-bottom: 100px;
+    bottom: 0;
+    height: 60%;
+    border-radius: 3rem 3rem 0 0;
+    width: 100vw;
+  }
 
-    #login-card{
-        position: absolute;
-        padding-bottom: 100px;
-        bottom: 0;
-        height: 60%;
-        border-radius: 3rem 3rem 0 0;
-        width: 100vw;
-    }
-    
-    #login-icon img{
-        position: absolute;
-        top: 50px;
-        scale: 1.5;
-    }
+  #login-icon img {
+    position: absolute;
+    top: 50px;
+    scale: 1.5;
+  }
 }
 
 .offcanvas-body ul li a {
-    color: var(--forecolor) !important;
-    cursor: pointer;
-    transition: all 168ms ease-out;
+  color: var(--forecolor) !important;
+  cursor: pointer;
+  transition: all 168ms ease-out;
 }
-
 
 .offcanvas-body ul li a:hover {
-    background-color: var(--accent);
+  background-color: var(--accent);
 }
 
- #user-profile {
-    width: 45px;
-    height: 45px;
-    padding:  0;
-    border: 1px solid var(--forecolor);
-    border-radius: 50%;
-    text-decoration: none;
+#user-profile {
+  width: 45px;
+  height: 45px;
+  padding: 0;
+  border: 1px solid var(--forecolor);
+  border-radius: 50%;
+  text-decoration: none;
 }
 
 #user-profile img {
- width: 100%;
- object-fit: cover;
+  width: 100%;
+  object-fit: cover;
 }
 
 .card {
-    border-radius: 16px !important;
-    -webkit-box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76); 
-    box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76);
-    position: relative;
-    overflow: hidden;
-    border: none;
-    height: 200px !important;
+  border-radius: 16px !important;
+  -webkit-box-shadow: 0px 5px 16px -4px rgba(0, 0, 0, 0.76);
+  box-shadow: 0px 5px 16px -4px rgba(0, 0, 0, 0.76);
+  position: relative;
+  overflow: hidden;
+  border: none;
+  height: 200px !important;
 }
 
-.card h3, h4, h5 {
-    color: var(--accent)
+.card h3,
+h4,
+h5 {
+  color: var(--accent);
 }
 
 .card h3 {
-    font-weight: bold;
-    letter-spacing: 0.7px;
-    font-size: 1.2rem;
-    margin-bottom: 0;
+  font-weight: bold;
+  letter-spacing: 0.7px;
+  font-size: 1.2rem;
+  margin-bottom: 0;
 }
 
 .time-container {
-    position: relative;
+  position: relative;
 }
 
-
-.time-container .hours, .company .name{
-    font-size: clamp(2rem, 1.6632rem + 1.6842vw, 2.8rem);
-    font-weight: bold;
-    
+.time-container .hours,
+.company .name {
+  font-size: clamp(2rem, 1.6632rem + 1.6842vw, 2.8rem);
+  font-weight: bold;
 }
 
 .time-container .hours .name {
-    font-size: 0.8rem;
-    font-weight: 400;
-    margin-left: -4px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin-left: -4px;
 }
 
-.time-container .mins , .required-hours p, .company .name{
-    font-weight: bold;
-    font-size: clamp(1rem, 0.6211rem + 1.8947vw, 1.6rem);
+.time-container .mins,
+.required-hours p,
+.company .name {
+  font-weight: bold;
+  font-size: clamp(1rem, 0.6211rem + 1.8947vw, 1.6rem);
 }
 
-.time-container .mins .name ,  .required-hours p span{
-    font-size: 0.7rem;
-    font-weight: 400;
-    margin-left: 5px;
+.time-container .mins .name,
+.required-hours p span {
+  font-size: 0.7rem;
+  font-weight: 400;
+  margin-left: 5px;
 }
 
 .separator-line {
-    border-top: 1px solid #acacac;
-    margin: 10px 0; 
-    width: 100%; 
-    margin-top: 1px;
-
+  border-top: 1px solid #acacac;
+  margin: 10px 0;
+  width: 100%;
+  margin-top: 1px;
 }
 
 .card h4 {
-    font-size: 0.9rem;
-    font-weight: 400;
-    letter-spacing: 0.8px;
-    margin-bottom: 2px;
-    z-index: 5;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.8px;
+  margin-bottom: 2px;
+  z-index: 5;
 }
 
-
-.required-hours p{
-    margin-bottom: 0;
+.required-hours p {
+  margin-bottom: 0;
 }
 
-.required-hours, .hours-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
+.required-hours,
+.hours-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
 }
 
 .hours-left h5 {
-    font-size: 0.8rem;
-    font-weight: 400;
-    margin-bottom: 1px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin-bottom: 1px;
 }
 
 .hours-left p {
-    font-size: 0.8rem;
-    margin-bottom: 9px;
+  font-size: 0.8rem;
+  margin-bottom: 9px;
 }
 
-.time-container, .required-hours, .hours-left, .company {
-    color: var(--primary);
+.time-container,
+.required-hours,
+.hours-left,
+.company {
+  color: var(--primary);
 }
 
 .item-1 {
-    background-color: var(--forecolor) !important;
+  background-color: var(--forecolor) !important;
 }
 
 .item-1::after {
-    position: absolute;
-    content: "\F291";
-    font-family: "bootstrap-icons";
-    margin-left: 5px;
-    color: var(--primary);
-    font-size: 9rem;
-    bottom: -70px;
-    left: -40px;
-    opacity: 0.5;
-    z-index: 1;
+  position: absolute;
+  content: "\F291";
+  font-family: "bootstrap-icons";
+  margin-left: 5px;
+  color: var(--primary);
+  font-size: 9rem;
+  bottom: -70px;
+  left: -40px;
+  opacity: 0.5;
+  z-index: 1;
 }
 
 .item-2 {
-    background-color: var(--maroon)  !important;
+  background-color: var(--maroon) !important;
 }
 
 .item-2::after {
-    position: absolute;
-    content: "\F291";
-    font-family: "bootstrap-icons";
-    margin-left: 5px;
-    color: var(--primary);
-    font-size: 9rem;
-    bottom: -70px;
-    left:-40px;
-    opacity: 0.5;
-    z-index: 1;
+  position: absolute;
+  content: "\F291";
+  font-family: "bootstrap-icons";
+  margin-left: 5px;
+  color: var(--primary);
+  font-size: 9rem;
+  bottom: -70px;
+  left: -40px;
+  opacity: 0.5;
+  z-index: 1;
 }
 
 .item-2 .time-container .hours {
-    font-size: clamp(1.8rem, 1.7158rem + 0.4211vw, 2rem);
+  font-size: clamp(1.8rem, 1.7158rem + 0.4211vw, 2rem);
 }
 
 .item-3 {
-    background-color: var(--cyan-dark)  !important;
+  background-color: var(--cyan-dark) !important;
 }
 
 .item-3::after {
-    position: absolute;
-    content: "\F87C";
-    font-family: "bootstrap-icons";
-    margin-left: 5px;
-    color: var(--primary);
-    font-size: 8rem;
-    bottom: -40px;
-    left: -20px;
-    opacity: 0.5;
-    z-index: 1;
+  position: absolute;
+  content: "\F87C";
+  font-family: "bootstrap-icons";
+  margin-left: 5px;
+  color: var(--primary);
+  font-size: 8rem;
+  bottom: -40px;
+  left: -20px;
+  opacity: 0.5;
+  z-index: 1;
 }
 
 .location p {
-    color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0;
-    width: 100%; 
-    height: 100%;
-    cursor: pointer;
-    z-index: 2;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 2;
 }
 
 .bi-clock-fill {
-    pointer-events: none; 
-    z-index: 1; 
+  pointer-events: none;
+  z-index: 1;
 }
-

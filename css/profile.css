@@ -233,8 +233,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .logout-button:hover {
-    background-color: var(--forecolor);
-    color: var(--accent) !important;
+    background-color: #da3c31 !important;
+    color: var(--primary) !important;
 }
 
 .logout-button:active {

@@ -137,7 +137,7 @@ $(document).ready(function () {
       import("./firebase-crud.js")
         .then(({ firebaseCRUD }) => {
           firebaseCRUD
-            .createStudent(studentData)
+            .createData("student", studentData)
             .then(() => {
               alert("Registration successful!");
               window.location.href = "../pages/login.html";

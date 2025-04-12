@@ -367,15 +367,14 @@
       function protectPersonalInfoPage() {
         const body = document.body;
 
-        // Create and show loading indicator
         const loadingIndicator = document.createElement("div");
         loadingIndicator.innerHTML = `
-    <div class="d-flex justify-content-center align-items-center" style="height: 100vh; z-index: 1000;">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-  `;
+            <div class="d-flex justify-content-center align-items-center" style="height: 100vh; z-index: 1000;">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          `;
         body.appendChild(loadingIndicator);
 
         onAuthStateChanged(auth, (user) => {
@@ -383,18 +382,14 @@
             window.location.href = "/pages/login.html";
             return;
           }
-
-          // User is verified - restore original content
           body.removeChild(loadingIndicator);
 
-          // SAFE ELEMENT ACCESS:
           const userIdInput = document.getElementById("user-id");
 
           if (userIdInput) {
             userIdInput.value = user.uid;
           } else {
             console.error("Element with ID 'user-id' not found");
-            // Either create the element or handle the missing element case
             const newInput = document.createElement("input");
             newInput.type = "hidden";
             newInput.id = "user-id";

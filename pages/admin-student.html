@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/time-in-out.css">
+    <link rel="stylesheet" href="/css/admin-student.css">
     <link rel="stylesheet" href="/css/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="manifest" href="/manifest.json">
@@ -14,7 +14,7 @@
 
     <title>Student OJT Management Student</title>
 </head>
-<body>
+<body class="main-container">
     <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
         <div class="container ">
             <div class="d-flex align-items-center justify-content-between w-100">
@@ -49,75 +49,86 @@
         </div>
     </nav>
 
-    <!-- Time in/out section -->
-     <section class="container">
-        <div class="date-time mt-2 d-flex justify-content-between ">
-            <p id="date">March 03, 2024</p>
-            <p id="time">12:00:32 am</p>
-        </div>
+    <!-- Student -->
+     <section class="container mt-2 d-flex flex-column  student-section">
+        <h1 class="fw-bold" style="color: #3C3D42 !important;">STUDENTS</h1>
 
-        <div class="time-in-cotainer d-flex align-items-center flex-column">
-            <button id="camera-button" class="d-flex align-items-center justify-content-center mb-3">
-                <i class="bi bi-camera-fill align-center"></i>
-            </button>
-            <p id="time-in-out-reminder" class="fs-6">You can only time in on 06:30 am</p>
-            <button id="time-in-out-button" class="w-100 d-flex align-items-center justify-content-center">Time in</button>
+        <div class="search-container">
+            <form class="form-floating">
+              <div class="search-input position-relative w-100">
+                <i class="bi bi-search position-absolute top-50 end-0 translate-middle me-2"></i>
+                <input type="text" class="form-control py-2" style="height: 58px;" placeholder="Search" >
+              </div>
+            </form>
         </div>
-        <!-- <div class="my-3 rounded-table-container">
-          
-            <table class="table table-striped w-100">
-                <thead id="table-head">
-                    <th class="text-center">Time</th>
-                    <th class="text-center">Time in/out</th>
-                </thead>
-                <tbody>
-                    <tr class="text-center">
-                        <td>06:31 am</td>
-                        <td>Time in</td>
-                    </tr>
-                    <tr class="text-center">
-                        <td>12:00 pm</td>
-                        <td>Time out</td>
-                    </tr>
-                    <tr class="text-center">
-                        <td>12:51 am</td>
-                        <td>Time in</td>
-                    </tr>
-                    <tr class="text-center">
-                        <td>05:31 pm</td>
-                        <td>Time out</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> -->
-        
-        <div class="container-fluid mt-3">
-          <div class="row">
-            <div class="col-6 col-lg-3 mb-3">
-              <div class="img-container text-center">
-                <img src="../assets/img/icons8_full_image_480px_1.png" alt="" class="img-fluid" style="width: calc(180px - 10px); object-fit: contain;">
+    
+        <div class="card-container flex-grow-1 overflow-auto mt-2">
+            <div class="row g-3 mx-0"> 
+              <div class="col-lg-4 col-md-6 px-2"> 
+                <div class="student-card h-100"> 
+                  <a href="./admin-student-report.html" class="d-flex align-items-center text-decoration-none h-100">
+                    <div class="img-container me-3 flex-shrink-0"> 
+                      <img src="../assets/img/icons8_male_user_480px_1.png" alt="user-profile">
+                    </div>
+                    <div class="main-container w-100 overflow-hidden"> 
+                      <div class="name-id-container d-flex justify-content-between">
+                        <p class="m-0 text-truncate fw-bold">Edgardo C.Balan Jr.</p>
+                        <p class="m-0 ms-2 text-nowrap">211444</p> 
+                      </div>
+                      <div class="separator my-2"></div>
+                      <div class="company">
+                        <p class="m-0 text-truncate">Department of Agrarian Reform</p>
+                      </div>
+                    </div>
+                  </a>      
+                </div>
               </div>
-            </div>
-            <div class="col-6 col-lg-3 mb-3">
-              <div class="img-container text-center">
-                <img src="../assets/img/icons8_full_image_480px_1.png" alt="" class="img-fluid" style="width: calc(180px - 10px); object-fit: contain;">
+
+              <div class="col-lg-4 col-md-6 px-2"> 
+                <div class="student-card h-100"> 
+                  <a href="./admin-student-report.html" class="d-flex align-items-center text-decoration-none h-100">
+                    <div class="img-container me-3 flex-shrink-0"> 
+                      <img src="../assets/img/icons8_male_user_480px_1.png" alt="user-profile">
+                    </div>
+                    <div class="main-container w-100 overflow-hidden"> 
+                      <div class="name-id-container d-flex justify-content-between">
+                        <p class="m-0 text-truncate fw-bold">Edgardo C.Balan Jr.</p>
+                        <p class="m-0 ms-2 text-nowrap">211444</p> 
+                      </div>
+                      <div class="separator my-2"></div>
+                      <div class="company">
+                        <p class="m-0 text-truncate">Department of Agrarian Reform</p>
+                      </div>
+                    </div>
+                  </a>      
+                </div>
               </div>
-            </div>
-            <div class="col-6 col-lg-3 mb-3">
-              <div class="img-container text-center">
-                <img src="../assets/img/icons8_full_image_480px_1.png" alt="" class="img-fluid" style="width: calc(180px - 10px); object-fit: contain;">
+
+              <div class="col-lg-4 col-md-6 px-2"> 
+                <div class="student-card h-100"> 
+                  <a href="./admin-student-report.html" class="d-flex align-items-center text-decoration-none h-100">
+                    <div class="img-container me-3 flex-shrink-0"> 
+                      <img src="../assets/img/icons8_male_user_480px_1.png" alt="user-profile">
+                    </div>
+                    <div class="main-container w-100 overflow-hidden"> 
+                      <div class="name-id-container d-flex justify-content-between">
+                        <p class="m-0 text-truncate fw-bold">Edgardo C.Balan Jr.</p>
+                        <p class="m-0 ms-2 text-nowrap">211444</p> 
+                      </div>
+                      <div class="separator my-2"></div>
+                      <div class="company">
+                        <p class="m-0 text-truncate">Department of Agrarian Reform</p>
+                      </div>
+                    </div>
+                  </a>      
+                </div>
               </div>
-            </div>
-            <div class="col-6 col-lg-3 mb-3">
-              <div class="img-container text-center">
-                <img src="../assets/img/icons8_full_image_480px_1.png" alt="" class="img-fluid" style="width: calc(180px - 10px); object-fit: contain;">
-              </div>
-            </div>
-          </div>
+            </div>  
         </div>
      </section>
-     <!-- Time in/out section -->
+     <!-- Student -->
 
+    
     <!-- Side bar -->
     <div class="offcanvas offcanvas-start primary-background-color" tabindex="-1" id="sideBar" aria-labelledby="sideBarLabel">
         <div class="offcanvas-header accent-darken-bg-color">
@@ -141,7 +152,7 @@
               </li>
 
               <li class="nav-item">
-                <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="#">
+                <a class="nav-link py-3     d-flex align-items-center justify-content-between" aria-current="page" href="#">
                   <span class="fs-5">History</span> 
                   <i class="bi bi-arrow-clockwise fs-3"></i>
                 </a>
@@ -157,9 +168,6 @@
         </div>
     </div>
    <!-- Side bar -->
-
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="/js/app.js"></script>

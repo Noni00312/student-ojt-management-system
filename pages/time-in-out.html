@@ -101,9 +101,7 @@
             class="d-flex align-items-center justify-content-center mb-3"
             name="cameraButton"
             type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#cameraModal"
-            onclick="openCamera()"
+            onclick="cameraAccess()"
           >
             <i class="bi bi-camera-fill align-center"></i>
           </button>
@@ -250,14 +248,18 @@
         <div class="modal-content capture-modal">
           <div class="header">
             <h3>Capture your attendance</h3>
-            <i class="bi bi-x-lg"></i>
+            <i class="bi bi-x-lg" data-bs-dismiss="modal" role="button"></i>
           </div>
           <div class="video-canvas-container">
             <video id="video" autoplay></video>
             <canvas id="canvas" class="d-none"></canvas>
           </div>
           <div class="capture-btn-container">
-            <button class="" id="captureBtn" name="captureBtn"></button>
+            <div class="btn-container">
+              <button class="" id="captureBtn" name="captureBtn"></button>
+              <i class="bi bi-x-lg"></i>
+            </div>
+            <button class="" id="okBtn" name="okBtn">OK</button>
           </div>
         </div>
       </div>

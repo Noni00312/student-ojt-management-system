@@ -105,7 +105,8 @@ input {
 }
 
 .add-report-modal,
-.view-report-modal {
+.view-report-modal,
+.view-image-modal {
   border-radius: 20px !important;
   background-color: #3c3d42 !important;
 }
@@ -184,4 +185,55 @@ input {
 .delete-report-button {
   width: unset;
   width: 20px !important;
+}
+
+/* Add this to your reports.css or styles.css */
+#image-container img {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#image-container img:hover {
+  transform: scale(1.05);
+}
+
+.view-image-modal {
+  background-color: #748e54;
+  color: white;
+  border-radius: 10px;
+}
+
+#modal-image-view {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+/* Add to your reports.css */
+.view-image-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  padding-bottom: 8px; /* Space for scrollbar */
+}
+
+.view-image-container::-webkit-scrollbar,
+.image-container::-webkit-scrollbar {
+  height: 5px;
+}
+
+.view-image-container::-webkit-scrollbar-thumb,
+.image-container::-webkit-scrollbar-thumb {
+  background-color: #748e54;
+  border-radius: 10px;
+}
+
+.view-image-container img {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.view-image-container img:hover {
+  transform: scale(1.05);
 }

@@ -41,3 +41,61 @@ tbody tr:last-child td:last-child {
   color: #f6f8e2;
   border-radius: 20px !important;
 }
+
+.capture-modal {
+  background-color: #004e4e !important;
+  border-radius: 20px !important;
+  color: #f6f8e2 !important;
+  padding: 20px !important;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.header i {
+  font-size: 1.3rem;
+}
+
+.video-canvas-container {
+  margin-top: 10px;
+  width: 100%;
+  height: 300px;
+  border-radius: 10px;
+  background-color: #f6f8e2;
+  overflow: hidden;
+}
+.video-canvas-container video {
+  width: 100%;
+  height: 100%;
+}
+
+.capture-btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.capture-btn-container button {
+  width: 70px !important;
+  height: 70px !important;
+  border-radius: 50%;
+  padding: 0 !important;
+  border: none !important;
+  box-sizing: border-box;
+}
+
+.capture-btn-container button:hover {
+  background-color: rgb(27, 164, 164) !important;
+}
+
+.capture-btn-container button:active {
+  scale: 0.9;
+}

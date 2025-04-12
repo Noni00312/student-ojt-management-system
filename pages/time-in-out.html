@@ -99,6 +99,11 @@
           <button
             id="camera-button"
             class="d-flex align-items-center justify-content-center mb-3"
+            name="cameraButton"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#cameraModal"
+            onclick="openCamera()"
           >
             <i class="bi bi-camera-fill align-center"></i>
           </button>
@@ -230,6 +235,34 @@
       </div>
     </div>
     <!-- Side bar -->
+
+    <!-- Camera  -->
+    <div
+      class="modal fade"
+      id="cameraModal"
+      tabindex="-1"
+      aria-labelledby="cameraModalLabel"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content capture-modal">
+          <div class="header">
+            <h3>Capture your attendance</h3>
+            <i class="bi bi-x-lg"></i>
+          </div>
+          <div class="video-canvas-container">
+            <video id="video" autoplay></video>
+            <canvas id="canvas" class="d-none"></canvas>
+          </div>
+          <div class="capture-btn-container">
+            <button class="" id="captureBtn" name="captureBtn"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Camera  -->
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"

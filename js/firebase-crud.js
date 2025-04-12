@@ -11,12 +11,13 @@ import {
   where,
 } from "./firebase-config.js";
 
-const studentsCollection = collection(db, "students");
+// const studentsCollection = collection(db, "students");
 
 export const firebaseCRUD = {
-  createStudent: async (studentData) => {
+  createData: async (tableName, tableData) => {
     try {
-      const docRef = await addDoc(studentsCollection, studentData);
+      const tableDataName = collection(db, tableName);
+      const docRef = await addDoc(tableDataName, tableData);
       console.log("Student added with ID: ", docRef.id);
       return docRef.id;
     } catch (error) {
@@ -25,9 +26,10 @@ export const firebaseCRUD = {
     }
   },
 
-  getAllStudents: async () => {
+  getAllData: async (tableName) => {
     try {
-      const querySnapshot = await getDocs(studentsCollection);
+      const tableDataName = collection(db, tableName);
+      const querySnapshot = await getDocs(tableDataName);
       return querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -38,7 +40,7 @@ export const firebaseCRUD = {
     }
   },
 
-  getStudentById: async (id) => {
+  getDataById: async (id, tableName) => {
     try {
       const docRef = doc(db, "students", id);
       const docSnap = await getDoc(docRef);

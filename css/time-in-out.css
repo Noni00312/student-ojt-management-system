@@ -70,20 +70,38 @@ tbody tr:last-child td:last-child {
   border-radius: 10px;
   background-color: #f6f8e2;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
 }
 .video-canvas-container video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+.video-canvas-container canvas {
   width: 100%;
   height: 100%;
+  object-fit: cover !important;
 }
 
 .capture-btn-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   margin-top: 20px;
 }
 
-.capture-btn-container button {
+.btn-container {
+  display: flex;
+  align-items: center;
+  flex-direction: rows;
+  gap: 10px;
+}
+
+.btn-container button {
   width: 70px !important;
   height: 70px !important;
   border-radius: 50%;
@@ -92,10 +110,21 @@ tbody tr:last-child td:last-child {
   box-sizing: border-box;
 }
 
-.capture-btn-container button:hover {
+.btn-container i {
+  font-size: 1rem;
+  color: white;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: red;
+  padding: 0;
+  margin: 0;
+}
+
+.btn-container button:hover {
   background-color: rgb(27, 164, 164) !important;
 }
 
-.capture-btn-container button:active {
+.btn-container button:active {
   scale: 0.9;
 }

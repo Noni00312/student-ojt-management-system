@@ -16,11 +16,20 @@ window.dbReady = initDB("SOJTMSDB", 1, [
     ],
   },
   {
-    name: "recordTbl",
+    name: "reportTbl",
     options: { keyPath: "id", autoIncrement: true },
     indexes: [
-      { name: "userId", keyPath: "userId", options: { unique: true } },
-      { name: "recordId", keyPath: "recordId", options: { unique: true } },
+      { name: "userId", keyPath: "userId", options: { unique: false } },
+      { name: "reportId", keyPath: "reportId", options: { unique: true } },
+      { name: "createdAt", keyPath: "createdAt" },
+    ],
+  },
+  {
+    name: "assistantReportTbl",
+    options: { keyPath: "id", autoIncrement: true },
+    indexes: [
+      { name: "userId", keyPath: "userId", options: { unique: false } },
+      { name: "reportId", keyPath: "reportId", options: { unique: true } },
       { name: "createdAt", keyPath: "createdAt" },
     ],
   },

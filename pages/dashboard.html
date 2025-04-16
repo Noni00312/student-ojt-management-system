@@ -79,6 +79,12 @@
               alt="User profile icon"
               loading="lazy"
               class=""
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover !important;
+                object-position: center !important;
+              "
             />
           </a>
         </div>
@@ -114,16 +120,34 @@
           <div class="card item-2 mb-2 me-md-1 p-3">
             <h3>Work schedule</h3>
             <div class="time-container">
-              <span class="hours">07:00<span class="name ms-1">am</span></span>
+              <span class="hours">
+                <span id="morning-time-in">07:00</span>
+                <span class="name ms-1" id="morning-time-in-tt"> am </span>
+              </span>
               <span class="mx-1">-</span>
-              <span class="hours">12:00<span class="name ms-1">pm</span></span>
+              <span class="hours">
+                <span class="hours">
+                  <span id="morning-time-out">07:00</span>
+                  <span class="name ms-1" id="morning-time-out-tt"> am </span>
+                </span></span
+              >
             </div>
             <div class="separator-line"></div>
             <div class="time-container">
               <h4>Afternoon</h4>
-              <span class="hours">01:00<span class="name ms-1">pm</span></span>
+              <span class="hours">
+                <span class="hours">
+                  <span id="afternoon-time-in">07:00</span>
+                  <span class="name ms-1" id="afternoon-time-in-tt"> am </span>
+                </span></span
+              >
               <span class="mx-1">-</span>
-              <span class="hours">05:00<span class="name ms-1">pm</span></span>
+              <span class="hours"
+                ><span class="hours">
+                  <span id="afternoon-time-out">07:00</span>
+                  <span class="name ms-1" id="afternoon-time-out-tt"> am </span>
+                </span></span
+              >
             </div>
           </div>
         </div>
@@ -140,7 +164,7 @@
             <div class="">
               <div class="location">
                 <h4>Location</h4>
-                <p>Nursery Masbate City, Masbate</p>
+                <p id="company-address">Nursery Masbate City, Masbate</p>
               </div>
             </div>
           </div>

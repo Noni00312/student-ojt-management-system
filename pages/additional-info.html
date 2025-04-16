@@ -50,7 +50,13 @@
               value="student"
               hidden
             />
-            <!-- <input type="text" id="company-address" name="companyAddress" value="" hidden> -->
+            <input
+              type="text"
+              id="company-address"
+              name="companyAddress"
+              value=""
+              hidden
+            />
 
             <div
               class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
@@ -249,9 +255,7 @@
                 aria-label="Floating label select example"
                 name="companyName"
               >
-                <option value=""></option>
-                <option value="male">DAR</option>
-                <option value="female">DOST</option>
+                <!-- generate companies -->
               </select>
               <label for="company-name">Company name</label>
 
@@ -464,7 +468,9 @@
     <script type="module" src="/js/firebase-config.js"></script>
     <script src="/js/image-handler.js"></script>
     <script src="/js/register-validation.js"></script>
+    <script src="/js/index-db-crud.js"></script>
     <script src="/js/app.js"></script>
+    <script type="module" src="/js/additional-info.js"></script>
     <script src="/js/ui.js"></script>
 
     <script type="module">

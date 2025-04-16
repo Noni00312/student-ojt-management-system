@@ -26,8 +26,14 @@ login.addEventListener("click", (e) => {
       }
 
       localStorage.setItem("userId", user.uid);
-      await fetchAndCacheUserData();
-      window.location.href = "/pages/dashboard.html";
+
+      try {
+        await fetchAndCacheUserData();
+        window.location.href = "/pages/dashboard.html";
+      } catch (error) {
+        console.error("Failed to fetch and cache user data:", error);
+      }
+
       login.disabled = false;
       login.textContent = "LOGIN";
     })

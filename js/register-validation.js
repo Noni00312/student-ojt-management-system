@@ -11,6 +11,14 @@ $(document).ready(function () {
     "Choose at least one day."
   );
 
+  $.validator.addMethod(
+    "validTimeSequence",
+    function () {
+      return isTimeSequenceValid();
+    },
+    "Please ensure the times are in proper order."
+  );
+
   $("#additional-info-form").validate({
     rules: {
       studentId: {
@@ -50,15 +58,19 @@ $(document).ready(function () {
       },
       morningTimeIn: {
         required: true,
+        validTimeSequence: true,
       },
       morningTimeOut: {
         required: true,
+        validTimeSequence: true,
       },
       afternoonTimeIn: {
         required: true,
+        validTimeSequence: true,
       },
       afternoonTimeOut: {
         required: true,
+        validTimeSequence: true,
       },
     },
 
@@ -106,13 +118,13 @@ $(document).ready(function () {
         required: "Please enter your morning time in",
       },
       morningTimeOut: {
-        required: "Please enter your morning time out",
+        greaterThan: "Time out must be after Morning time in.",
       },
       afternoonTimeIn: {
-        required: "Please enter your afternoon time in",
+        greaterThan: "Afternoon time in must be after Morning time out.",
       },
       afternoonTimeOut: {
-        required: "Please enter your afternoon time out",
+        greaterThan: "Time out must be after Afternoon time in.",
       },
     },
 
@@ -171,6 +183,7 @@ $(document).ready(function () {
           gender: form.gender.value,
           address: form.address.value,
           companyName: form.companyName.value,
+          companyAddress: form.companyAddress.value,
           weeklySchedule: selectedDays,
           morningTimeIn: form.morningTimeIn.value,
           morningTimeOut: form.morningTimeOut.value,
@@ -203,3 +216,27 @@ $(document).ready(function () {
     },
   });
 });
+
+$(
+  "#morning-time-in, #morning-time-out, #afternoon-time-in, #afternoon-time-out"
+).on("change", function () {
+  $("#additional-info-form").validate().element("#morning-time-in");
+  $("#additional-info-form").validate().element("#morning-time-out");
+  $("#additional-info-form").validate().element("#afternoon-time-in");
+  $("#additional-info-form").validate().element("#afternoon-time-out");
+});
+
+function isTimeSequenceValid() {
+  const morningIn = $("#morning-time-in").val();
+  const morningOut = $("#morning-time-out").val();
+  const afternoonIn = $("#afternoon-time-in").val();
+  const afternoonOut = $("#afternoon-time-out").val();
+
+  if (!morningIn || !morningOut || !afternoonIn || !afternoonOut) return true;
+
+  return (
+    morningIn < morningOut &&
+    morningOut < afternoonIn &&
+    afternoonIn < afternoonOut
+  );
+}

@@ -6,22 +6,18 @@ document.addEventListener("DOMContentLoaded", function () {
     toAdd: [],
     toDelete: [],
   };
+
   request.onupgradeneeded = function (event) {
     db = event.target.result;
-
-    // Delete the old object store if it exists
-    if (db.objectStoreNames.contains("reportTbl")) {
-      db.deleteObjectStore("reportTbl");
+    if (!db.objectStoreNames.contains("assistantReportTbl")) {
+      const store = db.createObjectStore("assistantReportTbl", {
+        keyPath: "id",
+        autoIncrement: true,
+      });
+      store.createIndex("createdAt", "createdAt", { unique: false });
+      store.createIndex("reportId", "reportId", { unique: true });
+      store.createIndex("userId", "userId", { unique: false });
     }
-
-    const store = db.createObjectStore("reportTbl", {
-      keyPath: "id",
-      autoIncrement: true,
-    });
-
-    store.createIndex("createdAt", "createdAt", { unique: false });
-    store.createIndex("reportId", "reportId", { unique: true });
-    store.createIndex("userId", "userId", { unique: false });
   };
 
   request.onsuccess = function (event) {
@@ -40,12 +36,28 @@ document.addEventListener("DOMContentLoaded", function () {
   // ADD REPORT MODAL FUNCTIONS
   // ========================
   function setupAddModal() {
-    const addImageInput = document.getElementById("add-image-input");
-    const addImageContainer = document.getElementById("add-image-container");
-    const addReportForm = document.getElementById("add-report-form");
+    const addImageButton = document.querySelector(
+      "#addAssistantReportModal .add-image-button"
+    );
+    const addImageContainer = document.querySelector(
+      "#addAssistantReportModal .image-container"
+    );
+    const addReportForm = document.getElementById("add-assistant-report-form");
     let addModalImages = [];
 
-    if (addImageInput && addImageContainer) {
+    if (addImageButton && addImageContainer) {
+      // Create hidden file input
+      const addImageInput = document.createElement("input");
+      addImageInput.type = "file";
+      addImageInput.multiple = true;
+      addImageInput.accept = "image/*";
+      addImageInput.style.display = "none";
+      document.body.appendChild(addImageInput);
+
+      addImageButton.addEventListener("click", function () {
+        addImageInput.click();
+      });
+
       addImageInput.addEventListener("change", function (event) {
         const files = event.target.files;
 
@@ -81,9 +93,11 @@ document.addEventListener("DOMContentLoaded", function () {
       addReportForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const title = document.getElementById("add-report-title").value.trim();
+        const title = document
+          .getElementById("assistant-report-title")
+          .value.trim();
         const content = document
-          .getElementById("add-report-content")
+          .getElementById("assistant-report-content")
           .value.trim();
         const userId = localStorage.getItem("userId");
 
@@ -97,8 +111,8 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
-        const transaction = db.transaction(["reportTbl"], "readwrite");
-        const store = transaction.objectStore("reportTbl");
+        const transaction = db.transaction(["assistantReportTbl"], "readwrite");
+        const store = transaction.objectStore("assistantReportTbl");
 
         // Generate a unique reportId
         const reportId = Date.now().toString();
@@ -116,10 +130,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         request.onsuccess = function () {
           const modal = bootstrap.Modal.getInstance(
-            document.getElementById("addReportModal")
+            document.getElementById("addAssistantReportModal")
           );
           if (modal) modal.hide();
-          alert("Report saved successfully!");
+          alert("Assistant report saved successfully!");
 
           addReportForm.reset();
           addImageContainer.innerHTML = "";
@@ -130,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         request.onerror = function (event) {
           console.error("Error storing report:", event.target.error);
-          alert("Error saving report to local database.");
+          alert("Error saving assistant report to local database.");
         };
       });
     }
@@ -157,10 +171,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // VIEW/UPDATE REPORT MODAL FUNCTIONS
   // ========================
   function setupViewModal() {
-    const viewImageContainer = document.getElementById("view-image-container");
-    const updateReportForm = document.getElementById("update-report-form");
-    const viewImageInput = document.getElementById("view-image-input");
-    const viewReportModal = document.getElementById("viewReportModal");
+    const viewImageContainer = document.querySelector(
+      "#viewAssistantReportModal .image-container"
+    );
+    const updateReportForm = document.getElementById(
+      "update-assistant-report-form"
+    );
+    const viewImageButton = document.querySelector(
+      "#viewAssistantReportModal .add-image-button"
+    );
+    const viewReportModal = document.getElementById("viewAssistantReportModal");
 
     // Reset pending changes when modal is shown
     viewReportModal.addEventListener("show.bs.modal", function () {
@@ -172,7 +192,19 @@ document.addEventListener("DOMContentLoaded", function () {
       pendingImageChanges = { toAdd: [], toDelete: [] };
     });
 
-    if (viewImageInput) {
+    if (viewImageButton) {
+      // Create hidden file input
+      const viewImageInput = document.createElement("input");
+      viewImageInput.type = "file";
+      viewImageInput.multiple = true;
+      viewImageInput.accept = "image/*";
+      viewImageInput.style.display = "none";
+      document.body.appendChild(viewImageInput);
+
+      viewImageButton.addEventListener("click", function () {
+        viewImageInput.click();
+      });
+
       viewImageInput.addEventListener("change", function (event) {
         if (!currentReportId) return;
 
@@ -223,8 +255,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!currentReportId) return;
 
-        const title = document.getElementById("view-report-title").value.trim();
-        const content = document.getElementById("report-content").value.trim();
+        const title = document
+          .getElementById("view-assistant-report-title")
+          .value.trim();
+        const content = document
+          .getElementById("view-assistant-report-content")
+          .value.trim();
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
@@ -237,8 +273,8 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
-        const transaction = db.transaction(["reportTbl"], "readwrite");
-        const store = transaction.objectStore("reportTbl");
+        const transaction = db.transaction(["assistantReportTbl"], "readwrite");
+        const store = transaction.objectStore("assistantReportTbl");
         const getRequest = store.get(parseInt(currentReportId));
 
         getRequest.onsuccess = function () {
@@ -269,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           const putRequest = store.put(report);
           putRequest.onsuccess = function () {
-            alert("Report updated successfully!");
+            alert("Assistant report updated successfully!");
             displayReports();
 
             // Reset pending changes
@@ -277,7 +313,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Close the modal
             const modal = bootstrap.Modal.getInstance(
-              document.getElementById("viewReportModal")
+              document.getElementById("viewAssistantReportModal")
             );
             if (modal) modal.hide();
           };
@@ -304,8 +340,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(
           '#deleteConfirmationModal [name="delete-yes"]'
         ).onclick = function () {
-          const transaction = db.transaction(["reportTbl"], "readwrite");
-          const store = transaction.objectStore("reportTbl");
+          const transaction = db.transaction(
+            ["assistantReportTbl"],
+            "readwrite"
+          );
+          const store = transaction.objectStore("assistantReportTbl");
           const getRequest = store.get(parseInt(currentReportId));
 
           getRequest.onsuccess = function () {
@@ -322,7 +361,7 @@ document.addEventListener("DOMContentLoaded", function () {
               deleteModal.hide();
 
               const viewModal = bootstrap.Modal.getInstance(
-                document.getElementById("viewReportModal")
+                document.getElementById("viewAssistantReportModal")
               );
               if (viewModal) viewModal.hide();
             };
@@ -365,11 +404,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Helper function to refresh view modal images
   function refreshViewModalImages(reportId, showPending = false) {
-    const viewImageContainer = document.getElementById("view-image-container");
+    const viewImageContainer = document.querySelector(
+      "#viewAssistantReportModal .image-container"
+    );
     viewImageContainer.innerHTML = "";
 
-    const transaction = db.transaction(["reportTbl"], "readonly");
-    const store = transaction.objectStore("reportTbl");
+    const transaction = db.transaction(["assistantReportTbl"], "readonly");
+    const store = transaction.objectStore("assistantReportTbl");
     const getRequest = store.get(parseInt(reportId));
 
     getRequest.onsuccess = function () {
@@ -412,21 +453,12 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // Close the image modal when clicking the X
-  document
-    .querySelector("#viewImageModal .bi-x-lg")
-    .addEventListener("click", function () {
-      bootstrap.Modal.getInstance(
-        document.getElementById("viewImageModal")
-      ).hide();
-    });
-
   // ========================
   // HELPER FUNCTIONS
   // ========================
   function loadReportDetails(reportId) {
-    const transaction = db.transaction(["reportTbl"], "readonly");
-    const store = transaction.objectStore("reportTbl");
+    const transaction = db.transaction(["assistantReportTbl"], "readonly");
+    const store = transaction.objectStore("assistantReportTbl");
     const request = store.get(reportId);
 
     request.onsuccess = function (event) {
@@ -434,18 +466,22 @@ document.addEventListener("DOMContentLoaded", function () {
       if (report) {
         currentReportId = report.id;
 
-        const viewModal = document.getElementById("viewReportModal");
-        viewModal.querySelector("#view-report-title").value = report.title;
-        viewModal.querySelector("#report-content").value = report.content;
+        const viewModal = document.getElementById("viewAssistantReportModal");
+        viewModal.querySelector("#view-assistant-report-title").value =
+          report.title;
+        viewModal.querySelector("#view-assistant-report-content").value =
+          report.content;
 
-        viewModal.querySelector("#update-report-form").dataset.reportId =
-          reportId;
+        viewModal.querySelector(
+          "#update-assistant-report-form"
+        ).dataset.reportId = reportId;
 
         // Display images
         refreshViewModalImages(reportId);
       }
     };
   }
+
   function displayReports() {
     const userId = localStorage.getItem("userId");
     if (!userId) {
@@ -453,8 +489,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    const transaction = db.transaction(["reportTbl"], "readonly");
-    const store = transaction.objectStore("reportTbl");
+    const transaction = db.transaction(["assistantReportTbl"], "readonly");
+    const store = transaction.objectStore("assistantReportTbl");
     const index = store.index("userId");
     const request = index.getAll(userId);
 
@@ -478,15 +514,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
           const card = document.createElement("a");
           card.href = "#";
-          card.className = "report-card mb-2";
+          card.className = "assistant-report-card mb-2";
           card.setAttribute("data-bs-toggle", "modal");
-          card.setAttribute("data-bs-target", "#viewReportModal");
+          card.setAttribute("data-bs-target", "#viewAssistantReportModal");
           card.setAttribute("data-report-id", report.id);
 
           card.innerHTML = `
             <span id="title" class="text-truncate" style="width: calc(100% - 10px);">${report.title}</span>
             <span id="separator"></span>
-            <div class="report-content-container">
+            <div class="assistant-report-content-container">
                 <p class="text-truncate m-0" style="width: calc(100% - 40px);">${report.content}</p>
                 <p id="date" class="text-end mt-2">${formattedDate}</p>
             </div>
@@ -508,7 +544,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // DATE SEARCH FUNCTIONALITY
   // ========================
   function setupDateSearch() {
-    const dateInput = document.getElementById("report-search-input");
+    const dateInput = document.getElementById("assistant-report-search-input");
     if (dateInput) {
       dateInput.addEventListener("change", function (e) {
         filterReportsByDate(e.target.value);
@@ -527,10 +563,10 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    const transaction = db.transaction(["reportTbl"], "readonly");
-    const store = transaction.objectStore("reportTbl");
+    const transaction = db.transaction(["assistantReportTbl"], "readonly");
+    const store = transaction.objectStore("assistantReportTbl");
 
-    // First get all reports for the current user using the userId index
+    // First get all reports for the current user
     const userIndex = store.index("userId");
     const userRequest = userIndex.getAll(userId);
 
@@ -568,15 +604,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
           const card = document.createElement("a");
           card.href = "#";
-          card.className = "report-card mb-2";
+          card.className = "assistant-report-card mb-2";
           card.setAttribute("data-bs-toggle", "modal");
-          card.setAttribute("data-bs-target", "#viewReportModal");
+          card.setAttribute("data-bs-target", "#viewAssistantReportModal");
           card.setAttribute("data-report-id", report.id);
 
           card.innerHTML = `
           <span id="title" class="text-truncate" style="width: calc(100% - 10px);">${report.title}</span>
           <span id="separator"></span>
-          <div class="report-content-container">
+          <div class="assistant-report-content-container">
             <p class="text-truncate m-0" style="width: calc(100% - 40px);">${report.content}</p>
             <p id="date" class="text-end mt-2">${formattedDate}</p>
           </div>

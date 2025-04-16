@@ -1,45 +1,29 @@
-const dbName = "student-ojt-management-db";
-const dbVersion = 1;
+function deleteDatabase(name) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.deleteDatabase(name);
+    request.onsuccess = () => resolve("Deleted successfully");
+    request.onerror = () => reject("Delete failed");
+  });
+}
 
-let db;
-
-function initDB() {
+function initDB(dbName, dbVersion, storeDefinitions = []) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(dbName, dbVersion);
 
     request.onupgradeneeded = (event) => {
       db = event.target.result;
-      if (!db.objectStoreNames.contains("studentInfoTbl")) {
-        const store = db.createObjectStore("studentInfoTbl", {
-          keyPath: "id",
-          autoIncrement: true,
-        });
 
-        // add columns
-        store.createIndex("userId", "userId", { unique: true });
-        store.createIndex("studentId", "studentId", { unique: false });
-        store.createIndex("phoneNumber", "phoneNumber", { unique: false });
-        store.createIndex("firstName", "firstName", { unique: false });
-        store.createIndex("middleName", "middleName", { unique: false });
-        store.createIndex("lastName", "lastName", { unique: false });
-        store.createIndex("suffix", "suffix", { unique: false });
-        store.createIndex("gender", "gender", { unique: false });
-        store.createIndex("address", "address", { unique: false });
-        store.createIndex("companyName", "companyName", { unique: false });
-        // store.createIndex('company-address', 'company-address', { unique: false });
-        store.createIndex("morningTimeIn", "morningTimeIn", { unique: false });
-        store.createIndex("morningTimeOut", "morningTimeOut", {
-          unique: false,
-        });
-        store.createIndex("afternoonTimeIn", "afternoonTimeIn", {
-          unique: false,
-        });
-        store.createIndex("afternoonTimeOut", "afternoonTimeOut", {
-          unique: false,
-        });
-        store.createIndex("createdAt", "createdAt", { unique: false });
-        store.createIndex("updatedAt", "updatedAt", { unique: false });
-      }
+      storeDefinitions.forEach((def) => {
+        if (!db.objectStoreNames.contains(def.name)) {
+          const store = db.createObjectStore(def.name, def.options);
+
+          if (def.indexes) {
+            def.indexes.forEach((idx) => {
+              store.createIndex(idx.name, idx.keyPath, idx.options || {});
+            });
+          }
+        }
+      });
     };
 
     request.onsuccess = (event) => {
@@ -47,127 +31,107 @@ function initDB() {
       resolve(db);
     };
 
-    request.onerror = (event) => {
-      reject("Error opening database");
-    };
+    request.onerror = () => reject("Error opening database");
   });
 }
 
 const crudOperations = {
-  // Create
-  createUser: (item) => {
+  createData: (storeName, data) => {
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["studentInfoTbl"], "readwrite");
-      const store = transaction.objectStore("studentInfoTbl");
-      const request = store.add(item);
-
-      transaction.onerror = () => {
-        console.error("Transaction error:", transaction.error);
-      };
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
+      const request = store.add(data);
 
       request.onsuccess = () => resolve(request.result);
       request.onerror = () =>
-        reject(new Error(`Error adding item: ${request.error}`));
+        reject(
+          new Error(`Error adding data to ${storeName}: ${request.error}`)
+        );
     });
   },
 
-  // Read (single item)
-  getItem: (id) => {
+  getData: (storeName, id) => {
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["studentInfoTbl"], "readonly");
-      const store = transaction.objectStore("studentInfoTbl");
+      const transaction = db.transaction([storeName], "readonly");
+      const store = transaction.objectStore(storeName);
       const request = store.get(id);
 
       request.onsuccess = () => resolve(request.result || null);
       request.onerror = () =>
-        reject(new Error(`Error getting item ${id}: ${request.error}`));
+        reject(
+          new Error(`Error getting data from ${storeName}: ${request.error}`)
+        );
     });
   },
 
-  // Read (all items)
-  getAllItems: () => {
+  getAllData: (storeName) => {
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["studentInfoTbl"], "readonly");
-      const store = transaction.objectStore("studentInfoTbl");
+      const transaction = db.transaction([storeName], "readonly");
+      const store = transaction.objectStore(storeName);
       const request = store.getAll();
 
       request.onsuccess = () => resolve(request.result);
       request.onerror = () =>
-        reject(new Error(`Error getting all items: ${request.error}`));
+        reject(
+          new Error(
+            `Error getting all data from ${storeName}: ${request.error}`
+          )
+        );
     });
   },
 
-  // Update
-  updateItem: (id, updates) => {
+  updateData: (storeName, id, updates) => {
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["studentInfoTbl"], "readwrite");
-      const store = transaction.objectStore("studentInfoTbl");
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
 
-      store.get(id).onsuccess = (event) => {
-        const existingItem = event.target.result;
-        if (!existingItem) {
-          reject(new Error(`Item ${id} not found`));
+      const getRequest = store.get(id);
+      getRequest.onsuccess = (event) => {
+        const existing = event.target.result;
+        if (!existing) {
+          reject(new Error(`Item ${id} not found in ${storeName}`));
           return;
         }
 
-        const updatedItem = {
-          ...existingItem,
-          ...updates,
-          updatedAt: new Date(),
-        };
-        const putRequest = store.put(updatedItem);
+        const updated = { ...existing, ...updates, updatedAt: new Date() };
+        const putRequest = store.put(updated);
 
         putRequest.onsuccess = () => resolve(putRequest.result);
         putRequest.onerror = () =>
-          reject(new Error(`Error updating item ${id}: ${putRequest.error}`));
+          reject(new Error(`Error updating ${storeName}: ${putRequest.error}`));
       };
 
-      store.get(id).onerror = () => {
-        reject(
-          new Error(
-            `Error finding item ${id} for update: ${event.target.error}`
-          )
-        );
-      };
+      getRequest.onerror = () =>
+        reject(new Error(`Error fetching for update from ${storeName}`));
     });
   },
 
-  // Delete
-  deleteItem: (id) => {
+  deleteData: (storeName, id) => {
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["studentInfoTbl"], "readwrite");
-      const store = transaction.objectStore("itestudentInfoTblms");
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
       const request = store.delete(id);
 
       request.onsuccess = () => resolve();
       request.onerror = () =>
-        reject(new Error(`Error deleting item ${id}: ${request.error}`));
+        reject(new Error(`Error deleting from ${storeName}: ${request.error}`));
     });
   },
 
-  // Additional useful operations
-  getItemsByIndex: (indexName, value) => {
+  getByIndex: (storeName, indexName, value) => {
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["studentInfoTbl"], "readonly");
-      const store = transaction.objectStore("studentInfoTbl");
+      const transaction = db.transaction([storeName], "readonly");
+      const store = transaction.objectStore(storeName);
       const index = store.index(indexName);
       const request = index.getAll(value);
 
       request.onsuccess = () => resolve(request.result);
       request.onerror = () =>
-        reject(new Error(`Error querying by ${indexName}: ${request.error}`));
-    });
-  },
-
-  getCount: () => {
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(["studentInfoTbl"], "readonly");
-      const store = transaction.objectStore("studentInfoTbl");
-      const request = store.count();
-
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () =>
-        reject(new Error(`Error getting count: ${request.error}`));
+        reject(
+          new Error(
+            `Error querying ${storeName}.${indexName}: ${request.error}`
+          )
+        );
     });
   },
 };

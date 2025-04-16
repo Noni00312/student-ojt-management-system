@@ -137,3 +137,23 @@ export const firebaseCRUD = {
     }
   },
 };
+
+export const cachedFirebaseCRUD = {
+  getDataById: async (tableName, id) => {
+    try {
+      const cachedData = await getFromIndexedDB("studentInfoTbl", id);
+      if (cachedData) {
+        console.log("Returning cached data from IndexedDB");
+        return cachedData;
+      }
+      const freshData = await firebaseCRUD.getDataById(tableName, id);
+
+      await saveToIndexedDB("studentInfoTbl", freshData);
+
+      return freshData;
+    } catch (error) {
+      console.error("Error in cached getDataById:", error);
+      throw error;
+    }
+  },
+};

@@ -26,6 +26,7 @@ login.addEventListener("click", (e) => {
       }
 
       localStorage.setItem("userId", user.uid);
+
       window.location.href = "/pages/dashboard.html";
       login.disabled = false;
       login.textContent = "LOGIN";

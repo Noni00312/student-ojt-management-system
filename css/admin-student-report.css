@@ -229,7 +229,7 @@ body {
 }
 
 #user-name {
-  color: #9ccd62;
+  color: #6e1423;
   font-size: 1.5rem;
   font-weight: 600;
   margin-top: -20px;
@@ -281,7 +281,7 @@ body {
 
 .attendance-status-container p small {
   font-size: 0.8rem;
-  color: #9ccd62;
+  color: #6e1423;
 }
 
 .attendance-status-container p span {
@@ -311,11 +311,11 @@ body {
   font-size: 1.5rem;
   color: #f6f8e2;
   margin: 10px;
-  color: #9ccd62;
+  color: #6e1423;
 }
 .phone-email-container p small {
   font-size: 0.8rem;
-  color: #9ccd62;
+  color: #6e1423;
 }
 
 .phone-email-container p span {
@@ -372,10 +372,10 @@ body {
 .days div:hover,
 .fade-date:hover {
   background-color: white;
-  color: #9ccd62;
+  color: #6e1423;
 }
 .days .today {
-  background-color: #9ccd62;
+  background-color: #6e1423;
   color: white;
 }
 .days .fade-date {

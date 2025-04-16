@@ -1,360 +1,346 @@
-
 :root {
-    --accent : #9CCD62;
-    --accent-darken : #85ad53;
-    --primary: #F6F8E2;
-    --forecolor: #3C3D42;
-    --secondary: #E0DDCA;
-    --maroon: #801414;
-    --cyan-dark: #004E4E;
+  --accent: #6e1423;
+  --accent-darken: #590f1c;
+  --primary: #f6f8e2;
+  --forecolor: #3c3d42;
+  --secondary: #e0ddca;
+  --maroon: #801414;
+  --cyan-dark: #004e4e;
 
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-html, body {
-    max-width: 100%; 
+html,
+body {
+  max-width: 100%;
 }
 
-section{
- margin-top: 180px;
+section {
+  margin-top: 180px;
 }
 
 .update-profile {
-    display: flex;
-    align-items: center;
-    border: none;
-    border-radius: 40px !important;
-    outline: none;
-    padding: 8px 28px;
-    background-color: var(--accent);
-    color: var(--primary);
-    font-size: x-small;
-    font-weight: semi-bold;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 168ms ease-out;
-  }
-
-
-.form-floating h2, .form-floating p{
-    color: var(--accent) !important;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 40px !important;
+  outline: none;
+  padding: 8px 28px;
+  background-color: var(--accent);
+  color: var(--primary);
+  font-size: x-small;
+  font-weight: semi-bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 168ms ease-out;
 }
 
-
-.form-floating h2{
-    margin-top: 20px;
+.form-floating h2,
+.form-floating p {
+  color: #fff !important;
 }
 
-.form-floating input{
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border-color: #FFF;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
+.form-floating h2 {
+  margin-top: 20px;
+}
+
+.form-floating input {
+  background-color: #3c3d42 !important;
+  box-shadow: none !important;
+  border-color: #fff;
+  color: var(--primary) !important;
+  padding-left: 20px !important;
+  padding-right: 30px !important;
 }
 
 .form-floating input:focus {
-    border-color: #9CCD62 !important; 
-    color: var(--primary) !important;  
+  border-color: #6e1423 !important;
+  color: var(--primary) !important;
 }
 
 .form-floating input:-webkit-autofill {
-    background-color: #3C3D42 !important; 
-    color: var(--primary) !important;
-    -webkit-box-shadow: 0 0 0px 1000px #3C3D42 inset !important; 
+  background-color: #3c3d42 !important;
+  color: var(--primary) !important;
+  -webkit-box-shadow: 0 0 0px 1000px #3c3d42 inset !important;
 }
 
 .form-floating input:-webkit-autofill:focus {
-    background-color: #3C3D42 !important;
-    color: var(--primary) !important;
-    -webkit-box-shadow: 0 0 0px 1000px #3C3D42 inset !important;
+  background-color: #3c3d42 !important;
+  color: var(--primary) !important;
+  -webkit-box-shadow: 0 0 0px 1000px #3c3d42 inset !important;
 }
 
 .form-floating input:-webkit-autofill,
 .form-floating input:-webkit-autofill:hover,
 .form-floating input:-webkit-autofill:focus {
-    -webkit-text-fill-color: var(--primary) !important;
-    transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: var(--primary) !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
-.form-floating label{
-    color: #FFF !important;
-    font-size: small;
+.form-floating label {
+  color: #fff !important;
+  font-size: small;
 }
 
 .form-floating:focus-within label {
-    color: #9CCD62 !important;
+  color: #ffffff !important;
 }
 
-
-.form-floating h5{
-    color: var(--primary) !important;
+.form-floating h5 {
+  color: var(--primary) !important;
 }
 
 .form-floating select {
-    background-color: #3C3D42 !important; 
-    box-shadow: none !important;
-    border-color: #FFF;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
+  background-color: #3c3d42 !important;
+  box-shadow: none !important;
+  border-color: #fff;
+  color: var(--primary) !important;
+  padding-left: 20px !important;
+  padding-right: 30px !important;
 }
 
 .form-floating select:focus {
-    border-color: #9CCD62 !important; 
-    color: var(--primary) !important;  
+  border-color: #6e1423 !important;
+  color: var(--primary) !important;
 }
 
 .form-floating select::-ms-expand {
-    display: none; 
+  display: none;
 }
 
 .form-floating select option {
-    background-color: #3C3D42 !important; 
-    color: var(--primary) !important;
+  background-color: #3c3d42 !important;
+  color: var(--primary) !important;
 }
 
-
 i {
-    color: #FFF !important ;
+  color: #fff !important ;
 }
 
 .form-floating:focus-within i {
-    color: #9CCD62 !important;
+  color: #6e1423 !important;
 }
-
 
 .profile-icon {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    margin-right: 20px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-right: 20px;
 }
 
-
 .modal-profile-icon {
-    width: 150px;
-    height: 150px;
+  width: 150px;
+  height: 150px;
 }
 
 .modal {
-    overflow: hidden !important;
+  overflow: hidden !important;
 }
 
 .modal-dialog {
-    margin: 0 auto !important;
-    max-height: 100vh !important;
-    display: flex;
-    align-items: center;
-    min-height: calc(100% - 1rem);
+  margin: 0 auto !important;
+  max-height: 100vh !important;
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
 }
 
 .modal-content {
-    max-height: 95vh !important; 
-    overflow: hidden !important;
+  max-height: 95vh !important;
+  overflow: hidden !important;
 }
 
 .modal-body {
-    max-height: calc(100vh - 150px); 
-    padding: 1rem;
-    
+  max-height: calc(100vh - 150px);
+  padding: 1rem;
 }
 
 .modal-open {
-    overflow: hidden;
-    padding-right: 0 !important;
+  overflow: hidden;
+  padding-right: 0 !important;
 }
 
-
 #img-button {
-    background-color: transparent;
-    border: none;
-    position: relative;
+  background-color: transparent;
+  border: none;
+  position: relative;
 }
 
 #img-button:hover .edit-icon {
-    color: #007bff; 
+  color: #007bff;
 }
 
-.edit-profile-modal{
-    background-color: #3C3D42 !important;
+.edit-profile-modal {
+  background-color: #3c3d42 !important;
 }
 
-
-#return-button{
-    color: var(--primary) !important;
-    margin-left: 15px ;
+#return-button {
+  color: var(--primary) !important;
+  margin-left: 15px;
 }
 
-#edit-button{
-    padding: 20px;
-    color: var(--accent) !important;
+#edit-button {
+  padding: 20px;
+  color: var(--accent) !important;
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0;
-    width: 100%; 
-    height: 100%;
-    cursor: pointer;
-    z-index: 2;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 2;
 }
 
 .bi-clock-fill {
-    pointer-events: none; 
-    z-index: 1; 
+  pointer-events: none;
+  z-index: 1;
 }
 
-#profile-card{
-    border-radius: 16px !important;
-    -webkit-box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76); 
-    box-shadow: 0px 5px 16px -4px rgba(0,0,0,0.76);
-    border: none;
-    background-color: var(--forecolor);
+#profile-card {
+  border-radius: 16px !important;
+  -webkit-box-shadow: 0px 5px 16px -4px rgba(0, 0, 0, 0.76);
+  box-shadow: 0px 5px 16px -4px rgba(0, 0, 0, 0.76);
+  border: none;
+  background-color: var(--forecolor);
 }
-
 
 .logout-button {
-    display: inline-flex; 
-    justify-content: center; 
-    align-items: center; 
-    border-radius: 40px !important;
-    outline: none;
-    margin-top: 50px;
-    padding: 16px 48px;
-    background-color: #F44336;
-    color: var(--primary) !important;
-    font-size: 1rem !important;
-    font-weight: bold;
-    letter-spacing: 2px;
-    text-decoration: none;
-    text-align: center;
-    width: auto;
-    min-width: 150px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px !important;
+  outline: none;
+  margin-top: 50px;
+  padding: 16px 48px;
+  background-color: #f44336;
+  color: var(--primary) !important;
+  font-size: 1rem !important;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-align: center;
+  width: auto;
+  min-width: 150px;
 }
 
 .logout-button-container {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    width: 100%; 
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .logout-button:hover {
-    background-color: #da3c31 !important;
-    color: var(--primary) !important;
+  background-color: #da3c31 !important;
+  color: var(--primary) !important;
 }
 
 .logout-button:active {
-    background-color: #26272b;
+  background-color: #26272b;
 }
 
-
 #work-schedule-label {
-    color: var(--accent) !important;
-    margin-bottom: 10px;
-    font-size: 1rem;
+  color: #fff !important;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 .work-schedule-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .work-schedule-option {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 20px;
-    border: 1px solid #FFF  !important;
-    border-radius: 5px;
-    background-color: var(--forecolor)  !important;
-    color: var(--primary);
-    font-size: 5rem;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  border: 1px solid #fff !important;
+  border-radius: 5px;
+  background-color: var(--forecolor) !important;
+  color: var(--primary);
+  font-size: 5rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .btn-check {
-    display: none;
+  display: none;
 }
 
 .btn-check:checked + .work-schedule-option {
-    background-color: var(--accent)  !important;
-    color: var(--forecolor);
-    border-color: var(--accent-darken)  !important;
+  background-color: var(--accent) !important;
+  color: var(--forecolor);
+  border-color: var(--accent-darken) !important;
 }
 
 .work-schedule-option:hover {
-    background-color: var(--accent-darken);
-    color: var(--primary);
-    border-color: var(--accent-darken);
+  background-color: var(--accent-darken);
+  color: var(--primary);
+  border-color: var(--accent-darken);
 }
 
-@media (max-width: 768px) {   
-    .modal {
-        overflow: auto !important; 
-    }
-    
-    .modal-dialog {
-        margin: 0.5rem auto !important; 
-        max-height: none !important;
-        display: block; 
-        align-items: normal;
-        min-height: auto;
-    }
-    
-    .modal-content {
-        max-height: none !important;
-        overflow: visible !important;
-        height: auto;
-    }
-    
-    .modal-body {
-        max-height: none !important;
-        overflow: visible !important;
-    }
-    
-    .modal-open {
-        overflow: auto !important;
-        padding-right: 0 !important;
-    }
-    
-    .modal-dialog {
-        width: 95%;
-        margin: 0.5rem auto !important;
-    }
-    
-    section{
-        margin-top: 230px;
-    }
-    #nav-container{
-        display: flex;
-        justify-content: start !important;
-    }
+@media (max-width: 768px) {
+  .modal {
+    overflow: auto !important;
+  }
 
-        
-    .form-floating h2{
-        margin-top: 20px;
-    }
+  .modal-dialog {
+    margin: 0.5rem auto !important;
+    max-height: none !important;
+    display: block;
+    align-items: normal;
+    min-height: auto;
+  }
 
+  .modal-content {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto;
+  }
 
-    #username-id{
-        display: flex;
-        margin-left: 110px;
-    }
+  .modal-body {
+    max-height: none !important;
+    overflow: visible !important;
+  }
 
-    
-    .logout-button {
-        width: 100%;
-    }
+  .modal-open {
+    overflow: auto !important;
+    padding-right: 0 !important;
+  }
 
+  .modal-dialog {
+    width: 95%;
+    margin: 0.5rem auto !important;
+  }
+
+  section {
+    margin-top: 230px;
+  }
+  #nav-container {
+    display: flex;
+    justify-content: start !important;
+  }
+
+  .form-floating h2 {
+    margin-top: 20px;
+  }
+
+  #username-id {
+    display: flex;
+    margin-left: 110px;
+  }
+
+  .logout-button {
+    width: 100%;
+  }
 }

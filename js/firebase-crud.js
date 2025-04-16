@@ -136,6 +136,44 @@ export const firebaseCRUD = {
       throw new Error(`Failed to query data: ${error.message}`);
     }
   },
+
+
+
+
+  // // Add this to your firebaseCRUD object in firebase-crud.js
+  // searchData: async (tableName, field, searchTerm) => {
+  //   if (!tableName || typeof tableName !== "string") {
+  //     throw new Error("Invalid table name");
+  //   }
+  //   if (!field || typeof field !== "string") {
+  //     throw new Error("Invalid field name");
+  //   }
+  //   if (!searchTerm || typeof searchTerm !== "string") {
+  //     throw new Error("Invalid search term");
+  //   }
+
+  //   try {
+  //     // First try to get matches that start with the search term
+  //     const startQuery = query(
+  //       collection(db, tableName),
+  //       where(field, ">=", searchTerm),
+  //       where(field, "<=", searchTerm + "\uf8ff")
+  //     );
+
+  //     const querySnapshot = await getDocs(startQuery);
+  //     return querySnapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error searching data: ", error);
+  //     throw new Error(`Failed to search data: ${error.message}`);
+  //   }
+  // }
+
+
+
+
 };
 
 export const cachedFirebaseCRUD = {
@@ -156,4 +194,5 @@ export const cachedFirebaseCRUD = {
       throw error;
     }
   },
+
 };

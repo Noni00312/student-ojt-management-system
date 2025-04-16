@@ -134,6 +134,17 @@ const crudOperations = {
         );
     });
   },
+  clearTable: async (tableName) => {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([tableName], "readwrite");
+      const objectStore = transaction.objectStore(tableName);
+
+      const request = objectStore.clear();
+
+      request.onsuccess = () => resolve(true);
+      request.onerror = (event) => reject(event.target.error);
+    });
+  },
 };
 
 // export { initDB, crudOperations };

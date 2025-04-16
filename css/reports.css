@@ -85,7 +85,7 @@ input {
 }
 
 .add-search-container button {
-  background-color: #9ccd62;
+  background-color: #6e1423;
   border: none;
   width: 80px;
   justify-content: center;
@@ -162,7 +162,7 @@ input {
 .add-image-button,
 .view-image-button {
   border-radius: 10px;
-  background-color: #9ccd62;
+  background-color: #6e1423;
   transition: all 168ms ease-in-out;
   cursor: pointer;
   text-decoration: none;
@@ -170,7 +170,7 @@ input {
 
 .add-image-button:hover,
 .view-image-button:hover {
-  background-color: #87b353;
+  background-color: #590f1c;
 }
 
 #report-content {
@@ -179,7 +179,7 @@ input {
 
 #add-report-button:hover,
 #view-report-button:hover {
-  background-color: #87b353;
+  background-color: #590f1c;
 }
 
 .delete-report-button {
@@ -236,4 +236,8 @@ input {
 
 .view-image-container img:hover {
   transform: scale(1.05);
+}
+
+#report-search-input {
+  background-color: #ffffff !important;
 }

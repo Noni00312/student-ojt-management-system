@@ -78,11 +78,15 @@ async function switchCamera() {
 function openCameraModal(stream) {
   const cameraModalElem = document.getElementById("cameraModal");
   const video = document.getElementById("video");
+  const canvas = document.getElementById("canvas");
+  const confirmButton = document.getElementById("confirm-img");
 
   if (!currentModal) {
     currentModal = new bootstrap.Modal(cameraModalElem);
   }
-
+  video.classList.remove("d-none");
+  canvas.classList.add("d-none");
+  confirmButton.style.op;
   video.srcObject = stream;
   video.play();
 
@@ -110,6 +114,7 @@ document.getElementById("captureBtn").addEventListener("click", function () {
   const video = document.getElementById("video");
   const canvas = document.getElementById("canvas");
   const context = canvas.getContext("2d");
+  const confirmButton = document.getElementById("confirm-img");
 
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
@@ -118,6 +123,7 @@ document.getElementById("captureBtn").addEventListener("click", function () {
 
   video.classList.add("d-none");
   canvas.classList.remove("d-none");
+  // confirmButton.removeAttribute("disabled");
 
   const imageData = canvas.toDataURL("image/png");
   console.log("Captured image:", imageData.substring(0, 30) + "...");

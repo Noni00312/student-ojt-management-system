@@ -1,3 +1,5 @@
+import { firebaseCRUD } from "./firebase-crud.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   let db;
   const request = indexedDB.open("SOJTMSDB", 1);
@@ -30,11 +32,269 @@ document.addEventListener("DOMContentLoaded", function () {
     setupAddModal();
     setupViewModal();
     setupDateSearch();
+    setupUploadButton();
   };
 
   request.onerror = function (event) {
     console.error("IndexedDB error:", event.target.error);
   };
+
+  function setupUploadButton() {
+    const uploadButton = document.getElementById("upload-reports-btn");
+    if (!uploadButton) return;
+
+    uploadButton.addEventListener("click", async function () {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("User not authenticated. Please login again.");
+        return;
+      }
+
+      if (
+        !confirm("Are you sure you want to upload all reports to the server?")
+      ) {
+        return;
+      }
+
+      try {
+        // Get all reports from IndexedDB
+        const transaction = db.transaction(["reportTbl"], "readonly");
+        const store = transaction.objectStore("reportTbl");
+        const index = store.index("userId");
+        const request = index.getAll(userId);
+
+        request.onsuccess = async function (event) {
+          const reports = event.target.result;
+          if (reports.length === 0) {
+            alert("No reports to upload");
+            return;
+          }
+
+          // Process each report
+          for (const report of reports) {
+            try {
+              // Convert images to base64 strings for Firebase
+              const imagesBase64 = [];
+              if (report.images && report.images.length > 0) {
+                for (const imageBlob of report.images) {
+                  const base64String = await blobToBase64(imageBlob);
+                  imagesBase64.push(base64String);
+                }
+              }
+
+              // Prepare data for Firebase
+              const firebaseReport = {
+                title: report.title,
+                content: report.content,
+                createdAt: report.createdAt,
+                userId: report.userId,
+                images: imagesBase64,
+                localId: report.id, // Store the local ID for reference
+              };
+
+              // Upload to Firebase using firebaseCRUD
+              await firebaseCRUD.createData("reports", firebaseReport);
+
+              // Delete from IndexedDB after successful upload
+              const deleteTransaction = db.transaction(
+                ["reportTbl"],
+                "readwrite"
+              );
+              const deleteStore = deleteTransaction.objectStore("reportTbl");
+              deleteStore.delete(report.id);
+            } catch (error) {
+              console.error(`Error uploading report ${report.id}:`, error);
+              // Continue with next report even if one fails
+            }
+          }
+
+          alert("Reports uploaded successfully!");
+          displayReports(); // Refresh the UI
+        };
+
+        request.onerror = function (event) {
+          console.error(
+            "Error fetching reports from IndexedDB:",
+            event.target.error
+          );
+          alert("Error fetching reports from local storage");
+        };
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("Error uploading reports: " + error.message);
+      }
+    });
+  }
+
+  // Helper function to convert Blob to Base64
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // ========================
+  function setupUploadButton() {
+    const uploadButton = document.getElementById("upload-report-button");
+    if (!uploadButton) return;
+
+    uploadButton.addEventListener("click", async function () {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("User not authenticated. Please login again.");
+        return;
+      }
+
+      if (
+        !confirm("Are you sure you want to upload all reports to the server?")
+      ) {
+        return;
+      }
+
+      try {
+        // Get all reports from IndexedDB
+        const transaction = db.transaction(["reportTbl"], "readonly");
+        const store = transaction.objectStore("reportTbl");
+        const index = store.index("userId");
+        const request = index.getAll(userId);
+
+        request.onsuccess = async function (event) {
+          const reports = event.target.result;
+          if (reports.length === 0) {
+            alert("No reports to upload");
+            return;
+          }
+
+          // Process each report
+          for (const report of reports) {
+            try {
+              console.log(`Processing report ${report.id}`);
+
+              // Create composite document ID
+              const reportId = `${userId}_${report.id}`;
+
+              // Create report data
+              const firebaseReport = {
+                title: report.title,
+                content: report.content,
+                createdAt: report.createdAt,
+                userId: userId,
+                localId: report.id,
+                hasImages: report.images && report.images.length > 0,
+              };
+
+              // Create/update the report document with our composite ID
+              await firebaseCRUD.setDataWithId(
+                "reports",
+                reportId,
+                firebaseReport
+              );
+              console.log(`Created report document with ID: ${reportId}`);
+
+              // If there are images, upload them to the subcollection
+              if (report.images && report.images.length > 0) {
+                console.log(
+                  `Uploading ${report.images.length} images for report ${reportId}`
+                );
+
+                // First delete any existing images in the subcollection (optional)
+                // await deleteSubcollection(`reports/${reportId}/images`);
+
+                for (const [index, imageBlob] of report.images.entries()) {
+                  try {
+                    const base64String = await blobToBase64(imageBlob);
+                    console.log(
+                      `Uploading image ${index + 1} of ${report.images.length}`
+                    );
+
+                    // Create image document with auto-generated ID in the subcollection
+                    await firebaseCRUD.createData(
+                      `reports/${reportId}/images`,
+                      {
+                        imageData: base64String,
+                        uploadedAt: new Date().toISOString(),
+                        order: index,
+                        originalName: `image_${index + 1}.jpg`,
+                        reportId: reportId, // Reference back to parent report
+                      }
+                    );
+
+                    console.log(`Successfully uploaded image ${index + 1}`);
+                  } catch (imageError) {
+                    console.error(
+                      `Error uploading image ${index + 1}:`,
+                      imageError
+                    );
+                  }
+                }
+              }
+
+              // Delete from IndexedDB after successful upload
+              const deleteTransaction = db.transaction(
+                ["reportTbl"],
+                "readwrite"
+              );
+              const deleteStore = deleteTransaction.objectStore("reportTbl");
+              deleteStore.delete(report.id);
+              console.log(`Deleted local report ${report.id}`);
+            } catch (reportError) {
+              console.error(
+                `Error processing report ${report.id}:`,
+                reportError
+              );
+            }
+          }
+
+          alert("Reports uploaded successfully!");
+          displayReports();
+        };
+
+        request.onerror = function (event) {
+          console.error(
+            "Error fetching reports from IndexedDB:",
+            event.target.error
+          );
+          alert("Error fetching reports from local storage");
+        };
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("Error uploading reports: " + error.message);
+      }
+    });
+  }
+
+  // Helper function to delete a subcollection (optional)
+  // async function deleteSubcollection(path) {
+  //   const querySnapshot = await firebase.firestore().collection(path).get();
+  //   const batch = firebase.firestore().batch();
+  //   querySnapshot.forEach((doc) => {
+  //     batch.delete(doc.ref);
+  //   });
+  //   await batch.commit();
+  // }
+
+  // Helper function to convert blob to base64
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(",")[1]); // remove data URL prefix
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // Helper function to convert Blob to Base64
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
 
   // ========================
   // ADD REPORT MODAL FUNCTIONS

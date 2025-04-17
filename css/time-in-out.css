@@ -99,11 +99,13 @@ tbody tr:last-child td:last-child {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
+  transform: scaleX(-1);
 }
 .video-canvas-container canvas {
   width: 100%;
   height: 100%;
   object-fit: cover !important;
+  transform: scaleX(-1);
 }
 
 .capture-btn-container {

@@ -4,6 +4,8 @@ import {
   sendEmailVerification,
 } from "./firebase-config.js";
 
+import { firebaseCRUD } from "./firebase-crud.js";
+
 const email = document.getElementById("email");
 const password = document.getElementById("password-input");
 const confirmPassword = document.getElementById("confirm-password-input");

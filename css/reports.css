@@ -14,7 +14,7 @@ body {
 
 input {
   border: none;
-  background-color: #f6f8e2 !important;
+  background-color: #fff !important;
   border-radius: 30px !important;
   padding: 16px 32px !important;
 }
@@ -43,7 +43,7 @@ input {
 }
 .report-card span,
 .report-content-container p {
-  color: #f6f8e2;
+  color: #fff;
 }
 
 #separator {
@@ -116,7 +116,7 @@ input {
   border-radius: 0 !important;
   padding: 8px 16px !important;
   outline: none;
-  color: #f6f8e2;
+  color: #fff;
 }
 
 .report-title::placeholder {

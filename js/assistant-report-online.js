@@ -1,13 +1,17 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
 // DOM elements
-const reportsContainer = document.getElementById("reports-container");
-const reportSearchInput = document.getElementById("report-search-input");
-const viewReportModal = document.getElementById("viewReportModal");
-const reportTitleInput = document.getElementById("report-title");
-const reportContentTextarea = document.getElementById("report-content");
+const reportsContainer = document.querySelector(".card-container");
+const reportSearchInput = document.getElementById(
+  "assistant-report-search-input"
+);
+const viewReportModal = document.getElementById("viewAssistantReportModal");
+const reportTitleInput = document.getElementById("assistant-report-title");
+const reportContentTextarea = document.getElementById(
+  "assistant-report-content"
+);
 const reportImagesContainer = document.querySelector(
-  ".report-images .image-container"
+  ".assistant-report-images .image-container"
 );
 
 // Initialize the page
@@ -17,11 +21,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupEventListeners();
   } catch (error) {
     console.error("Initialization error:", error);
-    alert("Failed to load reports. Please try again later.");
+    alert("Failed to load assistant reports. Please try again later.");
   }
 });
 
-// Display all reports from Firebase
+// Display all assistant reports from Firebase
 async function displayReports(filterDate = null) {
   try {
     reportsContainer.innerHTML = ""; // Clear existing content
@@ -32,9 +36,9 @@ async function displayReports(filterDate = null) {
       throw new Error("User not authenticated");
     }
 
-    // Query reports for this user
+    // Query assistant reports for this user
     let reports = await firebaseCRUD.queryData(
-      "reports",
+      "assistantreports",
       "userId",
       "==",
       userId
@@ -43,6 +47,11 @@ async function displayReports(filterDate = null) {
     if (filterDate) {
       // Convert filterDate to Date object for comparison
       const searchDate = new Date(filterDate);
+      const searchDateStr = searchDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
 
       reports = reports.filter((report) => {
         // Handle both Timestamp and string formats
@@ -62,10 +71,13 @@ async function displayReports(filterDate = null) {
           return false;
         }
 
-        // Compare dates using locale string (ignores time)
-        return (
-          reportDate.toLocaleDateString() === searchDate.toLocaleDateString()
-        );
+        const reportDateStr = reportDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
+
+        return reportDateStr === searchDateStr;
       });
     }
 
@@ -84,7 +96,7 @@ async function displayReports(filterDate = null) {
 
     if (reports.length === 0) {
       reportsContainer.innerHTML =
-        '<p class="text-center mt-3">No reports found</p>';
+        '<p class="text-center mt-3">No assistant reports found</p>';
       return;
     }
 
@@ -94,12 +106,11 @@ async function displayReports(filterDate = null) {
       reportsContainer.appendChild(reportCard);
     }
   } catch (error) {
-    console.error("Error displaying reports:", error);
+    console.error("Error displaying assistant reports:", error);
     throw error;
   }
 }
-
-// Create a report card element
+// Create an assistant report card element
 async function createReportCard(report) {
   const reportDate = new Date(report.createdAt);
   const formattedDate = reportDate.toLocaleDateString("en-US", {
@@ -110,15 +121,17 @@ async function createReportCard(report) {
 
   const card = document.createElement("a");
   card.href = "#";
-  card.className = "report-card mb-2";
+  card.className = "assistant-report-card mb-2";
   card.dataset.id = report.id;
   card.dataset.bsToggle = "modal";
-  card.dataset.bsTarget = "#viewReportModal";
+  card.dataset.bsTarget = "#viewAssistantReportModal";
 
   // Check if report has images
   let hasImages = false;
   try {
-    const images = await firebaseCRUD.getAllData(`reports/${report.id}/images`);
+    const images = await firebaseCRUD.getAllData(
+      `assistantreports/${report.id}/images`
+    );
     hasImages = images.length > 0;
   } catch (error) {
     console.error("Error checking for images:", error);
@@ -126,10 +139,10 @@ async function createReportCard(report) {
 
   card.innerHTML = `
     <span id="title" class="text-truncate" style="width: calc(100% - 10px);">${
-      report.title || "Untitled Report"
+      report.title || "Untitled Assistant Report"
     }</span>
     <span id="separator"></span>
-    <div class="report-content-container">
+    <div class="assistant-report-content-container">
         <p class="text-truncate m-0" style="width: calc(100% - 40px);">${
           report.content || "No content"
         }</p>
@@ -145,7 +158,7 @@ async function createReportCard(report) {
   return card;
 }
 
-// Show report details in modal
+// Show assistant report details in modal
 async function showReportDetails(report) {
   const reportDate = new Date(report.createdAt);
   const formattedDate = reportDate.toLocaleDateString("en-US", {
@@ -156,7 +169,7 @@ async function showReportDetails(report) {
     minute: "2-digit",
   });
 
-  reportTitleInput.value = report.title || "Untitled Report";
+  reportTitleInput.value = report.title || "Untitled Assistant Report";
   reportContentTextarea.value = `${
     report.content || ""
   }\n\nSubmitted on: ${formattedDate}`;
@@ -167,7 +180,7 @@ async function showReportDetails(report) {
   try {
     // Fetch all image documents from the subcollection
     const imageDocs = await firebaseCRUD.getAllData(
-      `reports/${report.id}/images`
+      `assistantreports/${report.id}/images`
     );
 
     if (imageDocs.length > 0) {
@@ -182,7 +195,7 @@ async function showReportDetails(report) {
 
           const img = document.createElement("img");
           img.src = imageDoc.imageData;
-          img.alt = "Report image";
+          img.alt = "Assistant report image";
           img.style.maxWidth = "100px";
           img.style.maxHeight = "100px";
           img.style.cursor = "pointer";
@@ -245,14 +258,7 @@ function setupEventListeners() {
     });
   }
 
-  // Refresh button
-  const refreshBtn = document.getElementById("refresh-reports-btn");
-  if (refreshBtn) {
-    refreshBtn.addEventListener("click", () => {
-      reportSearchInput.value = ""; // Clear filter
-      displayReports();
-    });
-  }
+  // Function to show image in modal
 }
 
 // Export functions if needed

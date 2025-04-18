@@ -3,7 +3,7 @@
   "short_name": "SOJTMS",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#F6F8E2",
+  "background_color": "#6e1423",
   "theme_color": "#6e1423",
   "orientation": "portrait-primary",
   "icons": [

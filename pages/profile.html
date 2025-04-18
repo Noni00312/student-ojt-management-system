@@ -68,7 +68,7 @@
 
           <div
             id="student-id-container"
-            class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="student-id-label" class="student-id-label">Student ID</p>
             <h5 id="student-id" class="student-id">2112889</h5>
@@ -76,7 +76,7 @@
 
           <div
             id="email-container"
-            class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="email-label" class="email-label">Email</p>
             <h5 id="email" class="email">name@sample.com</h5>
@@ -84,7 +84,7 @@
 
           <div
             id="phone-container"
-            class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="phone-label" class="phone-label">Phone</p>
             <h5 id="phone-number" class="phone-number">09123452398</h5>
@@ -92,25 +92,15 @@
 
           <div
             id="gender-container"
-            class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="gender-label" class="gender-label">Gender</p>
             <h5 id="gender" class="gender">Male</h5>
           </div>
 
           <div
-            id="separator-1"
-            class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative"
-          >
-            <div
-              class="separator-line"
-              style="border: 1.5px solid #f6f8e2"
-            ></div>
-          </div>
-
-          <div
             id="address-container"
-            class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-8 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="address-label" class="address-label">Address</p>
             <h5 id="address" class="address">
@@ -337,7 +327,7 @@
                     <input
                       type="text"
                       class="form-control ps-3 pe-1"
-                      id="student-id"
+                      id="modal-student-id"
                       name="student-id"
                       placeholder="Enter your student ID"
                       required
@@ -354,7 +344,7 @@
                     <input
                       type="tel"
                       class="form-control ps-3 pe-1"
-                      id="phone-number"
+                      id="modal-phone-number"
                       name="phone-number"
                       placeholder="Enter your phone number"
                       required
@@ -370,7 +360,7 @@
                     ></i>
                     <select
                       class="form-select ps-3 pe-1"
-                      id="gender"
+                      id="modal-gender"
                       name="gender"
                       required
                     >
@@ -390,7 +380,7 @@
                     <input
                       type="text"
                       class="form-control ps-3 pe-1"
-                      id="address"
+                      id="modal-address"
                       name="address"
                       placeholder="Enter your address"
                       required
@@ -399,22 +389,38 @@
                   </div>
 
                   <div
-                    class="form-floating col-md-12 mt-3 ps-1 pe-1 position-relative"
+                    class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative"
                   >
                     <i
                       class="bi bi-buildings-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
                     ></i>
                     <select
                       class="form-select ps-3 pe-1"
-                      id="company-name"
+                      id="modal-company-name"
                       name="company-name"
                       required
                     >
                       <option value="" selected></option>
-                      <option value="DAR">DAR</option>
-                      <option value="DOST">DOST</option>
                     </select>
                     <label for="company-name">Company Name</label>
+                  </div>
+
+                  <div
+                    class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative"
+                  >
+                    <i
+                      class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                    ></i>
+                    <input
+                      type="text"
+                      class="form-control ps-3 pe-1"
+                      id="modal-company-address"
+                      name="company-address"
+                      placeholder="Enter company address"
+                      required
+                      readonly
+                    />
+                    <label for="company-address">Company Address</label>
                   </div>
 
                   <div
@@ -531,7 +537,7 @@
                     <input
                       type="time"
                       class="form-control ps-3 pe-1"
-                      id="morning-time-in"
+                      id="modal-morning-time-in"
                       name="morning-time-in"
                     />
                     <label for="morning-time-in">Morning - Time in</label>
@@ -546,7 +552,7 @@
                     <input
                       type="time"
                       class="form-control ps-3 pe-1"
-                      id="morning-time-out"
+                      id="modal-morning-time-out"
                       name="morning-time-out"
                     />
                     <label for="morning-time-out">Morning - Time out</label>
@@ -561,7 +567,7 @@
                     <input
                       type="time"
                       class="form-control ps-3 pe-1"
-                      id="afternoon-time-in"
+                      id="modal-afternoon-time-in"
                       name="afternoon-time-in"
                     />
                     <label for="afternoon-time-in">Afternoon - Time in</label>
@@ -576,7 +582,7 @@
                     <input
                       type="time"
                       class="form-control ps-3 pe-1"
-                      id="afternoon-time-out"
+                      id="modal-afternoon-time-out"
                       name="afternoon-time-out"
                     />
                     <label for="afternoon-time-out">Afternoon - Time out</label>
@@ -600,6 +606,10 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
+
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/firebase-crud.js"></script>
+    <script src="/js/index-db-crud.js"></script>
     <script type="module" src="/js/profile.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/ui.js"></script>

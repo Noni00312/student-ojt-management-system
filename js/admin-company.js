@@ -618,6 +618,122 @@ document.addEventListener('DOMContentLoaded', function () {
 //     }
 // });
 
+
+
+// $("#ojtFormU").validate({
+//     rules: {
+//         companyNameU: {
+//             required: true,
+//             minlength: 2,
+//         },
+//         companyAddressU: {
+//             required: true,
+//             minlength: 2,
+//         },
+//     },
+//     messages: {
+//         companyNameU: {
+//             required: "Please enter company name",
+//             minlength: "Company name must be at least 2 characters long",
+//         },
+//         companyAddressU: {
+//             required: "Please enter company address",
+//             minlength: "Company address must be at least 2 characters long",
+//         },
+//     },
+//     errorPlacement: function (error, element) {
+//         error.appendTo($("#" + element.attr("name") + "-error"));
+//     },
+//     submitHandler: function (form, event) {
+//         event.preventDefault();
+
+//         const submitButton = $(form).find('button[type="submit"]');
+//         const companyId = document.getElementById('updateCompanyModal')?.getAttribute('data-company-id');
+//         const previewImage = document.querySelector('#updateCompanyModal #update-preview-image');
+//         const newCompanyName = form.companyNameU.value.trim();
+//         const newCompanyAddress = form.companyAddressU.value.trim();
+
+//         // Check if required elements exist
+//         if (!companyId) {
+//             alert("Company ID not found");
+//             submitButton.prop("disabled", false).text("Update Company");
+//             return;
+//         }
+
+//         submitButton.prop("disabled", true).html(`
+//             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+//             Checking...
+//         `);
+
+//         // First check if company name exists (excluding current company)
+//         checkCompanyNameExists(newCompanyName, companyId, newCompanyAddress)
+//             .then(nameExists => {
+//                 if (nameExists) {
+//                     alert("A company with this name already exists!");
+//                     submitButton.prop("disabled", false).text("Update Company");
+//                     return Promise.reject("Duplicate company name");
+//                 }
+
+//                 // If name is unique, proceed with update
+//                 submitButton.html(`
+//                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+//                     Updating...
+//                 `);
+
+//                 // Create the base update data
+//                 const companyData = {
+//                     companyName: newCompanyName,
+//                     companyAddress: form.companyAddressU.value,
+//                     updatedAt: new Date().toISOString()
+//                 };
+
+//                 // Handle image updates
+//                 if (uploadedImageBase64) {
+//                     companyData.image = uploadedImageBase64;
+//                 } else if (previewImage?.src && previewImage.style.display !== 'none') {
+//                     // Keep existing image - don't include image field
+//                 } else {
+//                     companyData.image = "";
+//                 }
+
+//                 return import("./firebase-crud.js")
+//                     .then(({ firebaseCRUD }) => {
+//                         return firebaseCRUD.updateData("company", companyId, companyData);
+//                     });
+//             })
+//             .then(() => {
+//                 alert("Company updated successfully!");
+
+//                 // Reset form and UI
+//                 form.reset();
+//                 const modal = bootstrap.Modal.getInstance(document.getElementById('updateCompanyModal'));
+//                 modal?.hide();
+
+//                 if (previewImage) {
+//                     previewImage.src = '';
+//                     previewImage.style.display = 'none';
+//                 }
+//                 const cameraIcon = document.querySelector('#updateCompanyModal #camera-icon');
+//                 if (cameraIcon) {
+//                     cameraIcon.style.display = 'block';
+//                 }
+//                 uploadedImageBase64 = "";
+
+//                 // Refresh the list
+//                 loadCompanies();
+//             })
+//             .catch((error) => {
+//                 if (error !== "Duplicate company name") {
+//                     console.error("Update error:", error);
+//                     alert(`Update failed: ${error.message}`);
+//                 }
+//             })
+//             .finally(() => {
+//                 submitButton.prop("disabled", false).text("Update Company");
+//             });
+//     }
+// });
+
 $("#ojtFormU").validate({
     rules: {
         companyNameU: {
@@ -649,6 +765,7 @@ $("#ojtFormU").validate({
         const companyId = document.getElementById('updateCompanyModal')?.getAttribute('data-company-id');
         const previewImage = document.querySelector('#updateCompanyModal #update-preview-image');
         const newCompanyName = form.companyNameU.value.trim();
+        const newCompanyAddress = form.companyAddressU.value.trim();
 
         // Check if required elements exist
         if (!companyId) {
@@ -662,25 +779,24 @@ $("#ojtFormU").validate({
             Checking...
         `);
 
-        // First check if company name exists (excluding current company)
-        checkCompanyNameExists(newCompanyName, companyId)
-            .then(nameExists => {
-                if (nameExists) {
-                    alert("A company with this name already exists!");
+        // Check for duplicate name+address combination (excluding current company)
+        checkCompanyDuplicate(newCompanyName, newCompanyAddress, companyId)
+            .then(duplicateExists => {
+                if (duplicateExists) {
+                    alert("A company with this name and address already exists!");
                     submitButton.prop("disabled", false).text("Update Company");
-                    return Promise.reject("Duplicate company name");
+                    return Promise.reject("Duplicate company");
                 }
 
-                // If name is unique, proceed with update
+                // If no duplicate, proceed with update
                 submitButton.html(`
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     Updating...
                 `);
 
-                // Create the base update data
                 const companyData = {
                     companyName: newCompanyName,
-                    companyAddress: form.companyAddressU.value,
+                    companyAddress: newCompanyAddress,
                     updatedAt: new Date().toISOString()
                 };
 
@@ -720,7 +836,7 @@ $("#ojtFormU").validate({
                 loadCompanies();
             })
             .catch((error) => {
-                if (error !== "Duplicate company name") {
+                if (error !== "Duplicate company") {
                     console.error("Update error:", error);
                     alert(`Update failed: ${error.message}`);
                 }
@@ -731,8 +847,32 @@ $("#ojtFormU").validate({
     }
 });
 
-// Helper function (should be defined in the same scope)
-async function checkCompanyNameExists(companyName, excludeId = null) {
+
+
+
+
+
+// // Helper function (should be defined in the same scope)
+// async function checkCompanyNameExists(companyName, excludeId = null) {
+//     try {
+//         const { firebaseCRUD } = await import("./firebase-crud.js");
+//         const companies = await firebaseCRUD.getAllData("company");
+
+//         return companies.some(company => {
+//             const nameMatches = company.companyName &&
+//                 company.companyName.toLowerCase() === companyName.toLowerCase();
+//             const isSameCompany = excludeId && company.id === excludeId;
+//             return nameMatches && !isSameCompany;
+//         });
+//     } catch (error) {
+//         console.error("Error checking company name:", error);
+//         return true;
+//     }
+// }
+
+
+// Updated helper function to check for name+address duplicates
+async function checkCompanyDuplicate(companyName, companyAddress, excludeId = null) {
     try {
         const { firebaseCRUD } = await import("./firebase-crud.js");
         const companies = await firebaseCRUD.getAllData("company");
@@ -740,15 +880,16 @@ async function checkCompanyNameExists(companyName, excludeId = null) {
         return companies.some(company => {
             const nameMatches = company.companyName &&
                 company.companyName.toLowerCase() === companyName.toLowerCase();
+            const addressMatches = company.companyAddress &&
+                company.companyAddress.toLowerCase() === companyAddress.toLowerCase();
             const isSameCompany = excludeId && company.id === excludeId;
-            return nameMatches && !isSameCompany;
+            return nameMatches && addressMatches && !isSameCompany;
         });
     } catch (error) {
-        console.error("Error checking company name:", error);
+        console.error("Error checking company:", error);
         return true;
     }
 }
-
 
 
 

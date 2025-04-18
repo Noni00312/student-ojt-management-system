@@ -13,6 +13,7 @@ body {
 .font-darker-light-color {
   color: #e0ddca !important;
 }
+
 .student-report-section {
   height: 100%;
   min-height: 0;
@@ -150,6 +151,7 @@ body {
   right: 1rem;
   z-index: 1;
 }
+
 .company-container img {
   width: 100%;
   aspect-ratio: 1/1;
@@ -313,6 +315,7 @@ body {
   margin: 10px;
   color: #6e1423;
 }
+
 .phone-email-container p small {
   font-size: 0.8rem;
   color: #6e1423;
@@ -325,6 +328,7 @@ body {
 #appoint-assistant-btn {
   margin-bottom: 16px;
 }
+
 /* calendar */
 
 .calendar {
@@ -334,6 +338,7 @@ body {
   color: white;
   padding: 0 20px 20px 20px;
 }
+
 .header {
   width: 100%;
   display: flex;
@@ -341,6 +346,7 @@ body {
   align-items: center;
   padding: 10px;
 }
+
 .btn {
   cursor: pointer;
 }
@@ -349,15 +355,18 @@ body {
   font-weight: bold;
   font-size: 20px;
 }
+
 .weekdays,
 .days {
   display: flex;
   flex-wrap: wrap;
 }
+
 .days {
   height: 260px;
   gap: 2px;
 }
+
 .weekdays div,
 .days div {
   width: 13.91%;
@@ -365,19 +374,23 @@ body {
   padding: 10px 0;
   border-radius: 5px;
 }
+
 .days div {
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
 .days div:hover,
 .fade-date:hover {
   background-color: white;
   color: #6e1423;
 }
+
 .days .today {
   background-color: #6e1423;
   color: white;
 }
+
 .days .fade-date {
   color: #999999ab !important;
 }
@@ -391,4 +404,8 @@ body {
 /* calendar */
 #edit-info-form i {
   color: #3c3d42 !important;
+}
+
+.image-container {
+  scroll-behavior: smooth;
 }

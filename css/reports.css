@@ -6,12 +6,6 @@ body {
   padding: 0;
 }
 
-.main-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
 input {
   border: none;
   background-color: #fff !important;
@@ -188,7 +182,7 @@ input {
 }
 
 /* Add this to your reports.css or styles.css */
-#image-container img {
+.image-container img {
   cursor: pointer;
   transition: transform 0.2s;
 }

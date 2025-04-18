@@ -8,6 +8,7 @@ import {
   updateDoc,
   deleteDoc,
   setDoc,
+  collectionGroup,
   query,
   where,
 } from "./firebase-config.js";
@@ -16,6 +17,20 @@ export const firebaseCRUD = {
   createData: async function (path, data) {
     const docRef = await addDoc(collection(db, path), data);
     return docRef;
+  },
+
+  getCollectionGroup: async function (collectionName) {
+    try {
+      const querySnapshot = await getDocs(collectionGroup(db, collectionName));
+      return querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        ref: doc.ref, // Include the reference for path parsing
+      }));
+    } catch (error) {
+      console.error("Error fetching collection group:", error);
+      throw error;
+    }
   },
 
   setDataWithId: async function (collectionName, id, data) {

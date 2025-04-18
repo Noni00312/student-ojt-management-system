@@ -174,6 +174,7 @@ $(document).ready(function () {
         const studentData = {
           userId: form.userId.value,
           userType: form.userType.value,
+          emailAddress: form.emailAddress.value,
           studentId: form.studentId.value,
           phoneNumber: form.phoneNumber.value,
           firstName: form.firstName.value,

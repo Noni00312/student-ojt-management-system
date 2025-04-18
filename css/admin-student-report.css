@@ -409,3 +409,28 @@ body {
 .image-container {
   scroll-behavior: smooth;
 }
+
+
+/* .student-report-container {
+  max-height: 80vh;
+  
+  overflow-y: auto;
+  padding-right: 8px;
+ 
+} */
+
+.student-report-container {
+  max-height: 80vh;
+  /* You can adjust this */
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding-right: 8px;
+  /* Optional: gives space for the scrollbar */
+}
+
+
+
+
+/* .student-report-container {
+  scroll-behavior: smooth;
+} */

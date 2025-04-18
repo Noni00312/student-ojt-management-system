@@ -7,11 +7,26 @@ import {
   getDoc,
   updateDoc,
   deleteDoc,
+  setDoc,
   query,
   where,
 } from "./firebase-config.js";
 
 export const firebaseCRUD = {
+  createData: async function (path, data) {
+    const docRef = await addDoc(collection(db, path), data);
+    return docRef;
+  },
+
+  setDataWithId: async function (collectionName, id, data) {
+    try {
+      await setDoc(doc(db, collectionName, id), data);
+      return { id };
+    } catch (error) {
+      console.error("Error setting document with ID: ", error);
+      throw new Error(`Failed to set document: ${error.message}`);
+    }
+  },
   createData: async (tableName, tableData) => {
     if (!tableName || typeof tableName !== "string") {
       throw new Error("Invalid table name");
@@ -137,9 +152,6 @@ export const firebaseCRUD = {
     }
   },
 
-
-
-
   // // Add this to your firebaseCRUD object in firebase-crud.js
   // searchData: async (tableName, field, searchTerm) => {
   //   if (!tableName || typeof tableName !== "string") {
@@ -170,10 +182,6 @@ export const firebaseCRUD = {
   //     throw new Error(`Failed to search data: ${error.message}`);
   //   }
   // }
-
-
-
-
 };
 
 export const cachedFirebaseCRUD = {
@@ -194,5 +202,4 @@ export const cachedFirebaseCRUD = {
       throw error;
     }
   },
-
 };

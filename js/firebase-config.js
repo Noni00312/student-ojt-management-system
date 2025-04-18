@@ -15,6 +15,7 @@ import {
   getDoc,
   updateDoc,
   deleteDoc,
+  setDoc,
   query,
   where,
   enableIndexedDbPersistence,
@@ -57,6 +58,7 @@ export {
   getDoc,
   updateDoc,
   deleteDoc,
+  setDoc,
   query,
   where,
 };

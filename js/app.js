@@ -89,6 +89,38 @@ window.dbReady = initDB("SOJTMSDB", 1, [
       },
     ],
   },
+
+  {
+    name: "workHoursTbl",
+    options: { keyPath: "id" },
+    indexes: [
+      {
+        name: "userId",
+        keyPath: "userId",
+      },
+      {
+        name: "date",
+        keyPath: "date",
+      },
+      {
+        name: "totalWorkedMinutes",
+        keyPath: "totalWorkedMinutes",
+      },
+      {
+        name: "totalWorkedFormatted",
+        keyPath: "totalWorkedFormatted",
+      },
+    ],
+  },
+  {
+    name: "dailySummaryTbl",
+    options: { keyPath: "id" },
+    indexes: [
+      { name: "userId", keyPath: "userId" },
+      { name: "date", keyPath: "date" },
+      { name: "status", keyPath: "status" },
+    ],
+  },
 ]).then(() => {
   console.log("IndexedDB is ready.");
 });

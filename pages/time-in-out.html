@@ -387,31 +387,26 @@
     <script src="/js/time-in-out.js"></script>
 
     <script>
-      // Function to update date and time
       function updateDateTime() {
         const now = new Date();
 
-        // Format date (e.g., "March 03, 2024")
         const options = { year: "numeric", month: "long", day: "numeric" };
         const dateString = now.toLocaleDateString("en-US", options);
 
-        // Format time (e.g., "12:00:32 am")
         let hours = now.getHours();
         const minutes = String(now.getMinutes()).padStart(2, "0");
         const seconds = String(now.getSeconds()).padStart(2, "0");
         const ampm = hours >= 12 ? "pm" : "am";
 
         hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
+        hours = hours ? hours : 12;
 
         const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
 
-        // Update the DOM
         document.getElementById("date").textContent = dateString;
         document.getElementById("time").textContent = timeString;
       }
 
-      // Update immediately and then every second
       updateDateTime();
       setInterval(updateDateTime, 1000);
     </script>

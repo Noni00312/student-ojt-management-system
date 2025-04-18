@@ -239,11 +239,11 @@ function getTimeSlot(currentMinutes, schedule) {
     return "morningTimeIn";
   }
 
-  if (currentMinutes >= morningOut && currentMinutes < afternoonIn) {
+  if (currentMinutes >= morningOut && currentMinutes < afternoonIn - 30) {
     return "morningTimeOut";
   }
 
-  if (currentMinutes >= afternoonIn && currentMinutes < afternoonOut) {
+  if (currentMinutes >= afternoonIn - 30 && currentMinutes < afternoonOut) {
     return "afternoonTimeIn";
   }
 
@@ -270,11 +270,12 @@ async function updateAttendanceButtonState() {
 
   const currentTime = getCurrentTimeInMinutes();
   const allLogs = await crudOperations.getAllData("timeInOut");
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("en-CA");
 
   const completedAttendance = await crudOperations.getAllData(
     "completeAttendanceTbl"
   );
+
   const alreadyCompleted = completedAttendance.some(
     (entry) =>
       entry.userId === userId &&
@@ -328,6 +329,12 @@ async function updateAttendanceButtonState() {
     button.disabled = true;
     cameraBtn.disabled = true;
   }
+
+  console.log("Current slot:", currentSlot);
+  console.log(
+    "Today logs:",
+    todayLogs.map((log) => log.type)
+  );
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -429,7 +436,7 @@ async function populateAttendanceImages() {
   }
 
   const allLogs = await crudOperations.getAllData("timeInOut");
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("en-CA");
   const todayLogs = allLogs.filter(
     (log) => log.userId === userId && log.date === today
   );
@@ -443,6 +450,7 @@ async function populateAttendanceImages() {
     if (match) {
       img.src = match.image;
     } else {
+      console.log("noni");
       img.src = "../assets/img/icons8_full_image_480px_1.png";
     }
   });
@@ -469,46 +477,6 @@ async function checkCompleteAttendance(userId, date) {
     hasLogs: todaysLogs.length > 0,
     logs: todaysLogs,
   };
-}
-
-function calculateWorkHours(logs, schedule) {
-  function toMinutes(timeStr) {
-    const [h, m] = timeStr.split(":").map(Number);
-    return h * 60 + m;
-  }
-
-  const getLogTime = (type) => {
-    const log = logs.find((log) => log.type === type);
-    return log ? toMinutes(log.time) : null;
-  };
-
-  const scheduleMorningIn = toMinutes(schedule.morningTimeIn);
-  const scheduleMorningOut = toMinutes(schedule.morningTimeOut);
-  const scheduleAfternoonIn = toMinutes(schedule.afternoonTimeIn);
-  const scheduleAfternoonOut = toMinutes(schedule.afternoonTimeOut);
-
-  const actualMorningIn = getLogTime("morningTimeIn");
-  const actualMorningOut = getLogTime("morningTimeOut");
-  const actualAfternoonIn = getLogTime("afternoonTimeIn");
-  const actualAfternoonOut = getLogTime("afternoonTimeOut");
-
-  let morningDuration = 0;
-  if (actualMorningIn !== null && actualMorningOut !== null) {
-    const morningStart = Math.max(actualMorningIn, scheduleMorningIn);
-    morningDuration = actualMorningOut - morningStart;
-  }
-
-  let afternoonDuration = 0;
-  if (actualAfternoonIn !== null && actualAfternoonOut !== null) {
-    const afternoonStart = Math.max(actualAfternoonIn, scheduleAfternoonIn);
-    const afternoonEnd = Math.min(actualAfternoonOut, scheduleAfternoonOut);
-    afternoonDuration = afternoonEnd - afternoonStart;
-  }
-
-  const totalMinutes = morningDuration + afternoonDuration;
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-  return { hours, minutes, totalMinutes };
 }
 
 document
@@ -542,6 +510,7 @@ document
       "afternoonTimeIn",
       "afternoonTimeOut",
     ];
+
     const typesLogged = logsForDate.map((log) => log.type);
     const isComplete = requiredTypes.every((type) =>
       typesLogged.includes(type)
@@ -550,20 +519,6 @@ document
     const uploadBtn = document.getElementById("upload-btn");
     const submitIncidentBtn = document.getElementById("incident-submit");
 
-    const allUsers = await crudOperations.getAllData("studentInfoTbl");
-    const schedule = allUsers.find((u) => u.userId === userId);
-    const { hours, minutes, totalMinutes } = calculateWorkHours(
-      logsForDate,
-      schedule
-    );
-
-    await crudOperations.upsert("workHoursTbl", {
-      id: `${userId}_${date}`,
-      userId,
-      date,
-      totalWorkedMinutes: totalMinutes,
-      totalWorkedFormatted: `${hours}h ${minutes}m`,
-    });
     const uploadLogs = async () => {
       uploadBtn.disabled = true;
       uploadBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Uploading...`;
@@ -571,9 +526,7 @@ document
       try {
         const { firebaseCRUD } = await import("./firebase-crud.js");
 
-        const dateDocPath = `attendancelogs/${userId}/${date}`;
         const logsByType = {};
-
         logsForDate.forEach((log) => {
           logsByType[log.type] = {
             timestamp: log.time
@@ -588,48 +541,27 @@ document
           };
         });
 
-        const summaryData = {
-          userId,
-          date,
-          totalWorkedMinutes: totalMinutes,
-          totalWorkedFormatted: `${hours}h ${minutes}m`,
-          uploadedAt: new Date().toISOString(),
-        };
-
-        await firebaseCRUD.setDataWithId(dateDocPath, "summary", summaryData);
+        const dateDocPath = `attendancelogs/${userId}/${date}`;
 
         for (const [type, logData] of Object.entries(logsByType)) {
           const cleanData = Object.fromEntries(
             Object.entries(logData).filter(([_, value]) => value !== undefined)
           );
+
           await firebaseCRUD.setDataWithId(dateDocPath, type, cleanData);
         }
 
-        const workHoursEntries = await crudOperations.getByIndex(
-          "workHoursTbl",
-          "userId",
-          userId
-        );
-        const thisDateEntry = workHoursEntries.find(
-          (entry) => entry.date === date
-        );
-        if (thisDateEntry) {
-          await crudOperations.deleteData("workHoursTbl", thisDateEntry.id);
-        }
+        await crudOperations.upsert("completeAttendanceTbl", {
+          userId: userId,
+          date: date,
+          status: "complete",
+        });
 
         for (const log of logsForDate) {
           await crudOperations.deleteData("timeInOut", log.id);
         }
 
         alert("Logs uploaded successfully.");
-
-        await crudOperations.upsert("completeAttendanceTbl", {
-          id: `${userId}_${date}`,
-          userId,
-          date,
-          status: "complete",
-        });
-
         uploadBtn.innerHTML = `Upload Attendance`;
         uploadBtn.classList.add("d-none");
         ClearData();
@@ -666,9 +598,10 @@ document
           const { firebaseCRUD } = await import("./firebase-crud.js");
 
           const incidentDocPath = `incidentreports/${userId}/${date}`;
+
           await firebaseCRUD.setDataWithId(incidentDocPath, "report", {
-            userId,
-            date,
+            userId: userId,
+            date: date,
             report: reportText,
             createdAt: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),

@@ -40,11 +40,52 @@ window.dbReady = initDB("SOJTMSDB", 1, [
       {
         name: "companyName",
         keyPath: "companyName",
-        options: { unique: true },
+        options: { unique: false },
       },
       {
         name: "companyLocation",
         keyPath: "companyLocation",
+      },
+    ],
+  },
+  {
+    name: "timeInOut",
+    options: { keyPath: "id", autoIncrement: true },
+    indexes: [
+      {
+        name: "userId",
+        keyPath: "userId",
+      },
+      {
+        name: "time",
+        keyPath: "time",
+      },
+      {
+        name: "image",
+        keyPath: "image",
+      },
+      {
+        name: "date",
+        keyPath: "date",
+      },
+    ],
+  },
+
+  {
+    name: "completeAttendanceTbl",
+    options: { keyPath: "userId" },
+    indexes: [
+      {
+        name: "userId",
+        keyPath: "userId",
+      },
+      {
+        name: "date",
+        keyPath: "date",
+      },
+      {
+        name: "status",
+        keyPath: "status",
       },
     ],
   },

@@ -145,6 +145,18 @@ const crudOperations = {
       request.onerror = (event) => reject(event.target.error);
     });
   },
+
+  upsert: async function (storeName, data) {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
+
+      const request = store.put(data);
+
+      request.onsuccess = () => resolve(true);
+      request.onerror = (e) => reject(e.target.error);
+    });
+  },
 };
 
 // export { initDB, crudOperations };

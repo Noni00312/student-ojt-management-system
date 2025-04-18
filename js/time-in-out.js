@@ -392,8 +392,18 @@ document
       document.getElementById("attendance-form").reset();
 
       alert("Attendance recorded successfully!");
+
       await populateAttendanceImages();
+
       updateAttendanceButtonState();
+
+      const attendanceTime = document.getElementById("attendance-time");
+      const attendanceDate = document.getElementById("attendance-date");
+      const attendanceImg = document.getElementById("attendance-img");
+
+      attendanceTime.textContent = "";
+      attendanceDate.textContent = "";
+      attendanceImg.textContent = "";
     } catch (error) {
       alert("Failed to record attendance.");
     }
@@ -481,6 +491,7 @@ document
       "afternoonTimeIn",
       "afternoonTimeOut",
     ];
+
     const typesLogged = logsForDate.map((log) => log.type);
     const isComplete = requiredTypes.every((type) =>
       typesLogged.includes(type)
@@ -508,6 +519,8 @@ document
       alert("Logs uploaded successfully.");
       uploadBtn.innerHTML = `Upload Attendance`;
       uploadBtn.classList.add("d-none");
+      // clear all data
+      ClearData();
     };
 
     if (!isComplete) {
@@ -553,3 +566,17 @@ document
       await uploadLogs();
     }
   });
+
+function ClearData() {
+  const imageSlots = document.querySelectorAll(".attendance-slot");
+  const attendanceTime = document.getElementById("attendance-time");
+  const attendanceDate = document.getElementById("attendance-date");
+  const attendanceImg = document.getElementById("attendance-img");
+
+  attendanceTime.textContent = "";
+  attendanceDate.textContent = "";
+  attendanceImg.textContent = "";
+  imageSlots.forEach((img) => {
+    img.src = "../assets/img/icons8_full_image_480px_1.png";
+  });
+}

@@ -58,6 +58,14 @@
               hidden
             />
 
+            <input
+              type="text"
+              id="email-address"
+              name="emailAddress"
+              value=""
+              hidden
+            />
+
             <div
               class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
             >
@@ -499,9 +507,11 @@
           body.removeChild(loadingIndicator);
 
           const userIdInput = document.getElementById("user-id");
+          const emailInput = document.getElementById("email-address");
 
-          if (userIdInput) {
+          if (userIdInput && emailInput) {
             userIdInput.value = user.uid;
+            emailInput.value = user.email;
           } else {
             console.error("Element with ID 'user-id' not found");
             const newInput = document.createElement("input");

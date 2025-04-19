@@ -34,7 +34,7 @@
     <!-- Student Report-->
     <section class="d-flex flex-row student-report-section gap-2 p-2" style="height: 90vh; min-height: 90vh">
       <div class="report-date-container p-2" style="
-          min-width: 560px;
+          min-width: 60px;
           width: 25%;
           height: calc(100vh - 80px);
           background-color: #3c3d42;
@@ -107,18 +107,18 @@
             <div class="attendance-status-container">
               <p>
                 <small class="font-sm">Present</small>
-                <span class="number">36</span>
+                <span class="number" id="Present">36</span>
               </p>
               <p>
                 <small class="font-sm">Late</small>
-                <span class="number">36</span>
+                <span class="number" id="Late">36</span>
               </p>
               <p>
                 <small class="font-sm">Absent</small>
-                <span class="number">36</span>
+                <span class="number" id="Absent">36</span>
               </p>
-              <i class="bi bi-calendar-fill" role="button" data-bs-toggle="modal"
-                data-bs-target="#calendarDataModal"></i>
+              <!-- <i class="bi bi-calendar-fill" role="button" data-bs-toggle="modal"
+                data-bs-target="#calendarDataModal"></i> -->
             </div>
             <div class="phone-email-container">
               <span class="tt" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="09513651694">
@@ -246,7 +246,7 @@
       </div>
     </div> -->
 
-    <div class="modal fade" id="calendarDataModal" data-bs-backdrop="static" tabindex="-1"
+    <!-- <div class="modal fade" id="calendarDataModal" data-bs-backdrop="static" tabindex="-1"
       aria-labelledby="calendarDataModalLabel">
       <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
@@ -274,7 +274,8 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
+
     <!-- Attendance Calendar -->
     <!-- Attendance Calendar -->
 
@@ -611,7 +612,7 @@
 
 
 
-    <script>
+    <!-- <script>
       document.addEventListener('DOMContentLoaded', function () {
         // Current date
         let currentDate = new Date();
@@ -698,7 +699,7 @@
         renderCalendar();
       });
     </script>
-
+ -->
 
 
 

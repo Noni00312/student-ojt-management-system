@@ -282,21 +282,7 @@ import { firebaseCRUD } from "./firebase-crud.js";
 // import { firebaseCRUD } from './firebase-crud.js';
 
 document.addEventListener('DOMContentLoaded', async function () {
-  // try {
-  //   // Get userId from URL or localStorage
-  //   const userId = getUserIdFromUrl() || localStorage.getItem('userId');
-  //   console.log(userId);
 
-  //   if (userId) {
-  //     await loadStudentReports(userId);
-  //   } else {
-  //     console.error("No user ID found");
-  //     // window.location.href = 'admin-student.html';
-  //   }
-  // } catch (error) {
-  //   console.error("Initialization error:", error);
-  //   showErrorToast("Failed to initialize: " + error.message);
-  // }
 
   try {
     // Get userId from URL or localStorage
@@ -306,6 +292,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (userId) {
       await loadStudentReports(userId);
       await loadStudentData(userId); // Add this line to load student data
+      await loadAttendanceData(userId); // Add this line to load attendance data
 
 
       // Added: Check if already assistant when page loads
@@ -437,6 +424,163 @@ function setDefaultImage(imgElement) {
     imgElement.alt = "Default company background image";
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// // New function to load attendance data
+// async function loadAttendanceData(userId) {
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+//     const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+
+//     if (!attendanceRecords || attendanceRecords.length === 0) {
+//       console.log("No attendance records found");
+//       return;
+//     }
+
+//     // Initialize counters
+//     let presentCount = 0;
+//     let lateCount = 0;
+//     let absentCount = 0;
+//     let totalWorkHours = 0;
+//     let totalMinutes = 0;
+
+//     // Calculate statistics
+//     attendanceRecords.forEach(record => {
+//       if (record.isPresent === "True") {
+//         presentCount++;
+//         if (record.isLate === "True") {
+//           lateCount++;
+//         }
+//       } else {
+//         absentCount++;
+//       }
+
+//       // Sum up work hours and minutes
+//       if (record.workHours) {
+//         totalWorkHours += parseFloat(record.workHours) || 0;
+//       }
+//       if (record.totalMinutes) {
+//         totalMinutes += parseInt(record.totalMinutes) || 0;
+//       }
+//     });
+
+//     // Convert total minutes to hours and remaining minutes
+//     const additionalHours = Math.floor(totalMinutes / 60);
+//     const remainingMinutes = totalMinutes % 60;
+//     totalWorkHours += additionalHours;
+
+//     // Format accumulated time
+//     const accumulatedTime = `${totalWorkHours}:${remainingMinutes.toString().padStart(2, '0')}:00`;
+
+//     // Update the DOM
+//     updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
+
+//   } catch (error) {
+//     console.error("Error loading attendance data:", error);
+//   }
+// }
+
+// // Helper function to update the attendance display
+// function updateAttendanceDisplay(present, late, absent, accumulatedTime) {
+//   // Update attendance numbers
+//   const presentElement = document.querySelector('.attendance-status-container p:nth-child(1) .number');
+//   const lateElement = document.querySelector('.attendance-status-container p:nth-child(2) .number');
+//   const absentElement = document.querySelector('.attendance-status-container p:nth-child(3) .number');
+//   const timeElement = document.querySelector('.time-life-container span');
+
+//   if (presentElement) presentElement.textContent = present;
+//   if (lateElement) lateElement.textContent = late;
+//   if (absentElement) absentElement.textContent = absent;
+//   if (timeElement) timeElement.textContent = accumulatedTime;
+// }
+
+
+// Updated function with proper time formatting
+async function loadAttendanceData(userId) {
+  try {
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+
+    if (!attendanceRecords || attendanceRecords.length === 0) {
+      console.log("No attendance records found");
+      return;
+    }
+
+    // Initialize counters
+    let presentCount = 0;
+    let lateCount = 0;
+    let absentCount = 0;
+    let totalWorkHours = 0;
+    let totalMinutes = 0;
+
+    // Calculate statistics
+    attendanceRecords.forEach(record => {
+      if (record.isPresent === "True") {
+        presentCount++;
+        if (record.isLate === "True") {
+          lateCount++;
+        }
+      } else {
+        absentCount++;
+      }
+
+      // Sum up work hours and minutes
+      if (record.workHours) {
+        totalWorkHours += parseFloat(record.workHours) || 0;
+      }
+      if (record.totalMinutes) {
+        totalMinutes += parseInt(record.totalMinutes) || 0;
+      }
+    });
+
+    // Convert all time to seconds first for accurate calculation
+    const totalSeconds = (totalWorkHours * 3600) + (totalMinutes * 60);
+
+    // Calculate hours, minutes, seconds
+    const hours = Math.floor(totalSeconds / 3600);
+    const remainingSeconds = totalSeconds % 3600;
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
+
+    // Format as HH:MM:SS with leading zeros
+    const accumulatedTime = [
+      hours.toString().padStart(2, '0'),
+      minutes.toString().padStart(2, '0'),
+      seconds.toString().padStart(2, '0')
+    ].join(':');
+
+    // Update the DOM
+    updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
+
+  } catch (error) {
+    console.error("Error loading attendance data:", error);
+  }
+}
+
+// Helper function to update the attendance display (unchanged)
+function updateAttendanceDisplay(present, late, absent, accumulatedTime) {
+  const presentElement = document.querySelector('.attendance-status-container p:nth-child(1) .number');
+  const lateElement = document.querySelector('.attendance-status-container p:nth-child(2) .number');
+  const absentElement = document.querySelector('.attendance-status-container p:nth-child(3) .number');
+  const timeElement = document.querySelector('.time-life-container span');
+
+  if (presentElement) presentElement.textContent = present;
+  if (lateElement) lateElement.textContent = late;
+  if (absentElement) absentElement.textContent = absent;
+  if (timeElement) timeElement.textContent = accumulatedTime;
+}
+
+
 
 
 

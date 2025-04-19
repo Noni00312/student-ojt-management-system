@@ -15,6 +15,8 @@ import {
   getDoc,
   updateDoc,
   deleteDoc,
+  setDoc,
+  collectionGroup,
   query,
   where,
   enableIndexedDbPersistence,
@@ -57,6 +59,8 @@ export {
   getDoc,
   updateDoc,
   deleteDoc,
+  setDoc,
+  collectionGroup,
   query,
   where,
 };

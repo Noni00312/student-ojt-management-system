@@ -1,4 +1,3 @@
-
 .modal-profile-icon {
     width: 150px;
     height: 150px;
@@ -17,14 +16,14 @@
 }
 
 .modal-content {
-    max-height: 95vh !important; 
+    max-height: 95vh !important;
     overflow: hidden !important;
 }
 
 .modal-body {
-    max-height: calc(100vh - 150px); 
+    max-height: calc(100vh - 150px);
     padding: 1rem;
-    
+
 }
 
 .modal-open {
@@ -32,7 +31,8 @@
     padding-right: 0 !important;
 }
 
-.add-company-modal, .update-company-modal {
+.add-company-modal,
+.update-company-modal {
     background-color: #3C3D42 !important;
 }
 
@@ -49,34 +49,35 @@
 }
 
 
-.modal-input h2, .modal-input p{
+.modal-input h2,
+.modal-input p {
     color: var(--accent) !important;
 }
 
 
-.modal-input h2{
+.modal-input h2 {
     margin-top: 20px;
 }
 
-.modal-input input{
+.modal-input input {
     background-color: #3C3D42 !important;
     box-shadow: none !important;
     border-color: #FFF;
-    border-radius: 20px!important;
+    border-radius: 20px !important;
     color: var(--primary) !important;
     padding-left: 20px !important;
     padding-right: 30px !important;
 }
 
 .modal-input input:focus {
-    border-color: #9CCD62 !important; 
-    color: var(--primary) !important;  
+    border-color: #9CCD62 !important;
+    color: var(--primary) !important;
 }
 
 .modal-input input:-webkit-autofill {
-    background-color: #3C3D42 !important; 
+    background-color: #3C3D42 !important;
     color: var(--primary) !important;
-    -webkit-box-shadow: 0 0 0px 1000px #3C3D42 inset !important; 
+    -webkit-box-shadow: 0 0 0px 1000px #3C3D42 inset !important;
 }
 
 .modal-input input:-webkit-autofill:focus {
@@ -92,7 +93,7 @@
     transition: background-color 5000s ease-in-out 0s;
 }
 
-.modal-input label{
+.modal-input label {
     color: #FFF !important;
     font-size: small;
 }
@@ -102,12 +103,12 @@
 }
 
 
-.modal-input h5{
+.modal-input h5 {
     color: var(--primary) !important;
 }
 
 .modal-input select {
-    background-color: #3C3D42 !important; 
+    background-color: #3C3D42 !important;
     box-shadow: none !important;
     border-color: #FFF;
     color: var(--primary) !important;
@@ -116,68 +117,485 @@
 }
 
 .modal-input select:focus {
-    border-color: #9CCD62 !important; 
-    color: var(--primary) !important;  
-}
-
-.modal-input select::-ms-expand {
-    display: none; 
-}
-
-.modal-input select option {
-    background-color: #3C3D42 !important; 
+    border-color: #9CCD62 !important;
     color: var(--primary) !important;
 }
 
-#add-company-button, #update-company-button {
+.modal-input select::-ms-expand {
+    display: none;
+}
+
+.modal-input select option {
+    background-color: #3C3D42 !important;
+    color: var(--primary) !important;
+}
+
+#add-company-button,
+#update-company-button {
     width: 100%;
     cursor: pointer;
     border-radius: 10px !important;
     height: 50px;
 }
-#add-company-button:hover, #update-company-button:hover {
+
+#add-company-button:hover,
+#update-company-button:hover {
     background-color: #4caf50 !important;
 }
 
 i {
-    color: #FFF !important ;
+    color: #FFF !important;
 }
 
 .modal-input:focus-within i {
     color: #9CCD62 !important;
 }
 
-@media (max-width: 768px) {   
+@media (max-width: 768px) {
     .modal {
-        overflow: auto !important; 
+        overflow: auto !important;
     }
-    
+
     .modal-dialog {
-        margin: 0.5rem auto !important; 
+        margin: 0.5rem auto !important;
         max-height: none !important;
-        display: block; 
+        display: block;
         align-items: normal;
         min-height: auto;
     }
-    
+
     .modal-content {
         max-height: none !important;
         overflow: visible !important;
         height: auto;
     }
-    
+
     .modal-body {
         max-height: none !important;
         overflow: visible !important;
     }
-    
+
     .modal-open {
         overflow: auto !important;
         padding-right: 0 !important;
     }
-    
+
     .modal-dialog {
         width: 95%;
         margin: 0.5rem auto !important;
     }
+}
+
+
+
+/* charles */
+/* Company logo styling */
+/* .company-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    z-index: 1000;
+    animation: fadeIn 0.3s;
+}
+
+.toast.success {
+    background-color: #28a745;
+}
+
+.toast.error {
+    background-color: #dc3545;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} */
+
+
+
+
+
+
+
+/* Company image styling */
+/* .curved-border-container .content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.company-image-container {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+}
+
+.company-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.company-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    color: #748E54;
+    font-size: 24px;
+}
+
+.text-container {
+    flex-grow: 1;
+    min-width: 0;
+
+}
+
+.text-container h6 {
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-container p {
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.action-button {
+    flex-shrink: 0;
+} */
+
+
+
+/* Company card with background image >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* .company-card {
+    position: relative;
+    height: 180px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f8f9fa;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.company-card:hover {
+    transform: translateY(-5px);
+}
+
+.company-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.company-card .content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    color: white;
+}
+
+.company-card .text-container h6 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.company-card .text-container p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.company-card .action-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.company-card .action-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+
+.company-card:not([style*="background-image"]) {
+    background: linear-gradient(135deg, #748E54 0%, #9CCD62 100%);
+} */
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+
+/* Company Card Container */
+/* .company-card {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.company-card:hover {
+    transform: translateY(-5px);
+}
+
+
+.company-image-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+
+.company-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s ease;
+}
+
+.company-card:hover .company-image {
+    transform: scale(1.05);
+}
+
+
+.no-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #748E54 0%, #9CCD62 100%);
+    color: white;
+    font-size: 3rem;
+}
+
+
+.company-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+
+.company-content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    color: white;
+    z-index: 2;
+}
+
+.company-info h5 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.company-info p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    opacity: 0.9;
+}
+
+
+.edit-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 3;
+}
+
+.edit-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+} */
+
+
+
+/* Company Card Styles */
+.company-card {
+    position: relative;
+    height: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.company-image-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.company-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #748E54 0%, #9CCD62 100%);
+    color: white;
+    font-size: 3rem;
+}
+
+.company-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+.company-content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    color: white;
+}
+
+.company-info h5 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.company-info p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    opacity: 0.9;
+}
+
+.edit-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+
+
+
+
+
+#camera-button {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+#camera-button:hover {
+    border-color: #748E54;
+}
+
+#preview-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+/* Add to your CSS */
+.search-input .spinner-border {
+    margin-right: 8px;
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+.search-input .bi-search {
+    transition: all 0.3s ease;
 }

@@ -1,4 +1,5 @@
 import { auth, signInWithEmailAndPassword } from "./firebase-config.js";
+import { firebaseCRUD } from "./firebase-crud.js";
 
 const login = document.getElementById("login-button");
 const errorLabel = document.getElementById("error-label");
@@ -12,9 +13,8 @@ login.addEventListener("click", (e) => {
   login.disabled = true;
   login.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         Logging in...`;
-
   signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       const user = userCredential.user;
 
       if (user.emailVerified === false) {
@@ -26,7 +26,14 @@ login.addEventListener("click", (e) => {
       }
 
       localStorage.setItem("userId", user.uid);
-      window.location.href = "/pages/dashboard.html";
+
+      try {
+        await fetchAndCacheUserData();
+        window.location.href = "/pages/dashboard.html";
+      } catch (error) {
+        console.error("Failed to fetch and cache user data:", error);
+      }
+
       login.disabled = false;
       login.textContent = "LOGIN";
     })
@@ -64,9 +71,41 @@ login.addEventListener("click", (e) => {
           errorMessage = "Email/password login is not enabled.";
           break;
       }
+
       login.disabled = false;
       login.textContent = "LOGIN";
       errorLabel.textContent = errorMessage;
       errorLabel.classList.add("text-danger");
     });
 });
+
+async function fetchAndCacheUserData() {
+  const uid = localStorage.getItem("userId");
+  if (!uid) {
+    console.error("User UID not found in localStorage");
+    return;
+  }
+
+  try {
+    const userDocs = await firebaseCRUD.queryData(
+      "students",
+      "userId",
+      "==",
+      uid
+    );
+
+    if (!userDocs || userDocs.length === 0) {
+      console.warn("No matching user data found in Firestore.");
+      return;
+    }
+
+    const userData = userDocs[0];
+
+    await window.dbReady;
+    await crudOperations.createData("studentInfoTbl", userData);
+
+    console.log("User data cached to IndexedDB:", userData);
+  } catch (err) {
+    console.error("Failed to fetch and cache user data:", err);
+  }
+}

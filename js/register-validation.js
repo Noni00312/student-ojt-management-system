@@ -1,4 +1,24 @@
 $(document).ready(function () {
+  $.validator.addMethod(
+    "atLeastOneChecked",
+    function (value, element) {
+      console.log(
+        "Checked boxes:",
+        $('input[name="weeklySchedule[]"]:checked').length
+      );
+      return $('input[name="weeklySchedule[]"]:checked').length > 0;
+    },
+    "Choose at least one day."
+  );
+
+  $.validator.addMethod(
+    "validTimeSequence",
+    function () {
+      return isTimeSequenceValid();
+    },
+    "Please ensure the times are in proper order."
+  );
+
   $("#additional-info-form").validate({
     rules: {
       studentId: {
@@ -33,24 +53,28 @@ $(document).ready(function () {
       companyName: {
         required: true,
       },
-      // companyAddress: {
-      //     required: true,
-      //     minlength: 5
-      // },
+      "weeklySchedule[]": {
+        atLeastOneChecked: true,
+      },
       morningTimeIn: {
         required: true,
+        validTimeSequence: true,
       },
       morningTimeOut: {
         required: true,
+        validTimeSequence: true,
       },
       afternoonTimeIn: {
         required: true,
+        validTimeSequence: true,
       },
       afternoonTimeOut: {
         required: true,
+        validTimeSequence: true,
       },
     },
-    message: {
+
+    messages: {
       studentId: {
         required: "Please enter your student ID",
         minlength: "Your student ID must be at least 2 characters long",
@@ -71,7 +95,7 @@ $(document).ready(function () {
       },
       lastName: {
         required: "Please enter your last name",
-        minlength: "Your middle name must be at least 2 characters long",
+        minlength: "Your last name must be at least 2 characters long",
       },
       gender: {
         required: "Please choose a gender",
@@ -82,7 +106,9 @@ $(document).ready(function () {
       },
       companyName: {
         required: "Please enter your company name",
-        minlength: "Your company name must be at least 2 characters long",
+      },
+      "weeklySchedule[]": {
+        atLeastOneChecked: "Choose at least one day for weekly schedule.",
       },
       companyAddress: {
         required: "Please enter your company address",
@@ -92,69 +118,126 @@ $(document).ready(function () {
         required: "Please enter your morning time in",
       },
       morningTimeOut: {
-        required: "Please enter your morning time out",
+        greaterThan: "Time out must be after Morning time in.",
       },
       afternoonTimeIn: {
-        required: "Please enter your afternoon time in",
+        greaterThan: "Afternoon time in must be after Morning time out.",
       },
       afternoonTimeOut: {
-        required: "Please enter your afternoon time out",
+        greaterThan: "Time out must be after Afternoon time in.",
       },
     },
-    errorPlacement: function (error, element) {
-      error.appendTo($("#" + element.attr("name") + "-error"));
-    },
-    submitHandler: function (form) {
-      const submitButton = $(form).find('button[type="submit"]');
 
+    errorPlacement: function (error, element) {
+      const baseName = element.attr("name").replace(/\[\]$/, "");
+      const errorContainer = $("#" + baseName + "-error");
+
+      if (errorContainer.length) {
+        error.appendTo(errorContainer);
+      } else {
+        if (element.attr("type") === "checkbox") {
+          error.insertAfter(element.closest("div"));
+        } else {
+          error.insertAfter(element);
+        }
+      }
+    },
+    submitHandler: async function (form, event) {
+      if (event) event.preventDefault();
+      const submitButton = $(form).find('button[type="submit"]');
       submitButton.prop("disabled", true);
       submitButton.html(`
-        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-        Registering...
-      `);
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Registering...
+  `);
 
-      const studentData = {
-        userId: form.userId.value,
-        userType: form.userType.value,
-        studentId: form.studentId.value,
-        phoneNumber: form.phoneNumber.value,
-        firstName: form.firstName.value,
-        middleName: form.middleName.value,
-        lastName: form.lastName.value,
-        suffix: form.suffix.value,
-        gender: form.gender.value,
-        address: form.address.value,
-        companyName: form.companyName.value,
-        // companyAddress : form.companyAddress.value,
-        morningTimeIn: form.morningTimeIn.value,
-        morningTimeOut: form.morningTimeOut.value,
-        afternoonTimeIn: form.afternoonTimeIn.value,
-        afternoonTimeOut: form.afternoonTimeOut.value,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      try {
+        const selectedDays = {};
+        $(".weekdays-container input[type='checkbox']").each(function () {
+          selectedDays[$(this).val()] = $(this).is(":checked");
+        });
 
-      import("./firebase-crud.js")
-        .then(({ firebaseCRUD }) => {
-          firebaseCRUD
-            .createStudent(studentData)
-            .then(() => {
-              alert("Registration successful!");
-              window.location.href = "../pages/login.html";
-            })
-            .catch((error) => {
-              console.error("Registration error:", error);
-              alert(`Registration failed: ${error.message}`);
+        const fileInput = document.getElementById("img-input");
+        let imageBase64 = null;
 
-              submitButton.prop("disabled", false);
-              submitButton.text("Create account");
-            });
-        })
-        .catch((err) => {
-          console.error("Failed to load firebase-crud:", err);
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          try {
+            imageBase64 = await ImageConverter.imageToBase64(
+              fileInput.files[0]
+            );
+            ImageConverter.validateBase64(imageBase64);
+          } catch (error) {
+            console.warn("Image conversion warning:", error.message);
+          }
+        }
+
+        const studentData = {
+          userId: form.userId.value,
+          userType: form.userType.value,
+          emailAddress: form.emailAddress.value,
+          studentId: form.studentId.value,
+          phoneNumber: form.phoneNumber.value,
+          firstName: form.firstName.value,
+          middleName: form.middleName.value,
+          lastName: form.lastName.value,
+          suffix: form.suffix.value,
+          gender: form.gender.value,
+          address: form.address.value,
+          companyName: form.companyName.value,
+          companyAddress: form.companyAddress.value,
+          weeklySchedule: selectedDays,
+          morningTimeIn: form.morningTimeIn.value,
+          morningTimeOut: form.morningTimeOut.value,
+          afternoonTimeIn: form.afternoonTimeIn.value,
+          afternoonTimeOut: form.afternoonTimeOut.value,
+          userImg: imageBase64,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        try {
+          const { firebaseCRUD } = await import("./firebase-crud.js");
+          const result = await firebaseCRUD.createData("students", studentData);
+
+          alert("Registration successful!");
+          window.location.href = "../pages/login.html";
+        } catch (error) {
+          console.error("Full error object:", error);
+          console.error("HTTP status:", error.response?.status);
+          alert(`Registration failed: ${error.message}`);
           submitButton.prop("disabled", false);
           submitButton.text("Create account");
-        });
+        }
+      } catch (error) {
+        console.error("Registration error:", error);
+        alert(`Registration failed: ${error.message}`);
+        submitButton.prop("disabled", false);
+        submitButton.text("Create account");
+      }
     },
   });
 });
+
+$(
+  "#morning-time-in, #morning-time-out, #afternoon-time-in, #afternoon-time-out"
+).on("change", function () {
+  $("#additional-info-form").validate().element("#morning-time-in");
+  $("#additional-info-form").validate().element("#morning-time-out");
+  $("#additional-info-form").validate().element("#afternoon-time-in");
+  $("#additional-info-form").validate().element("#afternoon-time-out");
+});
+
+function isTimeSequenceValid() {
+  const morningIn = $("#morning-time-in").val();
+  const morningOut = $("#morning-time-out").val();
+  const afternoonIn = $("#afternoon-time-in").val();
+  const afternoonOut = $("#afternoon-time-out").val();
+
+  if (!morningIn || !morningOut || !afternoonIn || !afternoonOut) return true;
+
+  return (
+    morningIn < morningOut &&
+    morningOut < afternoonIn &&
+    afternoonIn < afternoonOut
+  );
+}

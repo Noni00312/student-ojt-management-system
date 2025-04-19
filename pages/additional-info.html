@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/additional-info.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -49,7 +50,21 @@
               value="student"
               hidden
             />
-            <!-- <input type="text" id="company-address" name="companyAddress" value="" hidden> -->
+            <input
+              type="text"
+              id="company-address"
+              name="companyAddress"
+              value=""
+              hidden
+            />
+
+            <input
+              type="text"
+              id="email-address"
+              name="emailAddress"
+              value=""
+              hidden
+            />
 
             <div
               class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
@@ -248,14 +263,99 @@
                 aria-label="Floating label select example"
                 name="companyName"
               >
-                <option value=""></option>
-                <option value="male">DAR</option>
-                <option value="female">DOST</option>
+                <!-- generate companies -->
               </select>
               <label for="company-name">Company name</label>
 
               <span
                 id="companyName-error"
+                class="text-danger"
+                style="font-size: 12px"
+              ></span>
+            </div>
+
+            <div class="col-md-12 d-flex flex-column mb-3 p-0">
+              <label for="weekday">Weekly schedule</label>
+              <div
+                class="weekdays-container d-flex align-items-center flex-wrap gap-1 justify-content-between mt-2"
+              >
+                <span id="weekday">
+                  <input
+                    type="checkbox"
+                    name="weeklySchedule[]"
+                    id="monday"
+                    value="MON"
+                    class=""
+                  />
+                  <label for="monday">MON</label>
+                </span>
+
+                <span id="weekday">
+                  <input
+                    type="checkbox"
+                    name="weeklySchedule[]"
+                    id="tuesday"
+                    value="TUES"
+                    class=""
+                  />
+                  <label for="tuesday">TUES</label>
+                </span>
+
+                <span id="weekday">
+                  <input
+                    type="checkbox"
+                    name="weeklySchedule[]"
+                    id="wednesday"
+                    value="WED"
+                    class=""
+                  />
+                  <label for="wednesday">WED</label>
+                </span>
+                <span id="weekday">
+                  <input
+                    type="checkbox"
+                    name="weeklySchedule[]"
+                    id="thursday"
+                    value="THURS"
+                    class=""
+                  />
+                  <label for="thursday">THURS</label>
+                </span>
+                <span id="weekday">
+                  <input
+                    type="checkbox"
+                    name="weeklySchedule[]"
+                    id="friday"
+                    value="FRI"
+                    class=""
+                  />
+                  <label for="friday">FRI</label>
+                </span>
+
+                <span id="weekday">
+                  <input
+                    type="checkbox"
+                    name="weeklySchedule[]"
+                    id="saturday"
+                    value="SAT"
+                    class=""
+                  />
+                  <label for="saturday">SAT</label>
+                </span>
+
+                <span id="weekday">
+                  <input
+                    type="checkbox"
+                    name="weeklySchedule[]"
+                    id="sunday"
+                    value="SUN"
+                    class=""
+                  />
+                  <label for="sunday">SUN</label>
+                </span>
+              </div>
+              <span
+                id="weeklySchedule-error"
                 class="text-danger"
                 style="font-size: 12px"
               ></span>
@@ -332,6 +432,24 @@
                 style="font-size: 12px"
               ></span>
             </div>
+
+            <div class="p-0 mt-3 image-upload-container">
+              <img
+                src="../assets/img/icons8_male_user_480px_1.png"
+                width="48px"
+                height="48px"
+                id="preview-img"
+              />
+              <div class="file-dialog">
+                <input
+                  class="form-control form-control-lg"
+                  id="img-input"
+                  type="file"
+                  name="userImg"
+                  accept="image/*"
+                />
+              </div>
+            </div>
           </div>
 
           <button
@@ -356,8 +474,11 @@
     <script src="/js/jQuery.js"></script>
     <script src="/js/jquery.validate.min.js"></script>
     <script type="module" src="/js/firebase-config.js"></script>
+    <script src="/js/image-handler.js"></script>
     <script src="/js/register-validation.js"></script>
+    <script src="/js/index-db-crud.js"></script>
     <script src="/js/app.js"></script>
+    <script type="module" src="/js/additional-info.js"></script>
     <script src="/js/ui.js"></script>
 
     <script type="module">
@@ -367,15 +488,14 @@
       function protectPersonalInfoPage() {
         const body = document.body;
 
-        // Create and show loading indicator
         const loadingIndicator = document.createElement("div");
         loadingIndicator.innerHTML = `
-    <div class="d-flex justify-content-center align-items-center" style="height: 100vh; z-index: 1000;">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-  `;
+            <div class="d-flex justify-content-center align-items-center" style="height: 100vh; z-index: 1000;">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          `;
         body.appendChild(loadingIndicator);
 
         onAuthStateChanged(auth, (user) => {
@@ -384,17 +504,16 @@
             return;
           }
 
-          // User is verified - restore original content
           body.removeChild(loadingIndicator);
 
-          // SAFE ELEMENT ACCESS:
           const userIdInput = document.getElementById("user-id");
+          const emailInput = document.getElementById("email-address");
 
-          if (userIdInput) {
+          if (userIdInput && emailInput) {
             userIdInput.value = user.uid;
+            emailInput.value = user.email;
           } else {
             console.error("Element with ID 'user-id' not found");
-            // Either create the element or handle the missing element case
             const newInput = document.createElement("input");
             newInput.type = "hidden";
             newInput.id = "user-id";
@@ -403,6 +522,25 @@
           }
         });
       }
+
+      const fileInput = document.getElementById("img-input");
+      fileInput.addEventListener("change", function (e) {
+        const preview = document.getElementById("preview-img");
+
+        if (this.files && this.files[0]) {
+          const selectedFile = this.files[0];
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            // preview.style.display = "block";
+          };
+
+          reader.readAsDataURL(selectedFile);
+        } else {
+          preview.src = "../assets/img/icons8_male_user_480px_1.png";
+        }
+      });
 
       document.addEventListener("DOMContentLoaded", protectPersonalInfoPage);
     </script>

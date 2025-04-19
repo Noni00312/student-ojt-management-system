@@ -365,7 +365,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
   #nav-container {
     display: flex;
-    justify-content: start !important;
   }
 
   .form-floating h2 {

@@ -101,7 +101,6 @@
       </div>
     </nav>
 
-    <!-- Reports -->
     <section class="container mt-2 d-flex flex-column .reports-section">
       <h1 class="fw-bold" style="color: #3c3d42 !important">REPORTS</h1>
 
@@ -120,24 +119,27 @@
         </button>
       </div>
 
-      <div class="card-container flex-grow-1 overflow-auto mt-2"></div>
+      <div
+        class="card-container flex-grow-1 overflow-auto mt-2"
+        id="report-container"
+      ></div>
 
       <div
-        class="upload-view-container mt-3 w-100 d-flex flex-column justify-content-center align-items-center"
+        class="upload-view-container mt-3 d-flex flex-column justify-content-center align-items-center position-fixed bottom-0 end-0 p-3"
       >
         <button
           name="upload-report"
           id="upload-report-button"
-          class="w-100 d-flex align-items-center justify-content-center"
+          class="upload-icon"
         >
-          Upload
+          <i class="bi bi-cloud-arrow-up-fill text-light"></i>
         </button>
-        <a href="/pages/report-online.html" class="mt-1">View online reports</a>
+        <a href="/pages/report-online.html" class="mt-1 upload-icon">
+          <i class="bi bi-eye-fill text-light"></i>
+        </a>
       </div>
     </section>
-    <!-- Reports -->
 
-    <!-- Add report modal -->
     <div
       class="modal fade"
       id="addReportModal"
@@ -175,9 +177,7 @@
               <div
                 class="image-container d-flex align-items-center flex-grow-1 me-3 p-6"
                 id="add-image-container"
-              >
-                <!-- Dynamically added images will appear here -->
-              </div>
+              ></div>
 
               <label
                 for="add-image-input"
@@ -212,9 +212,7 @@
         </div>
       </div>
     </div>
-    <!-- Add report modal -->
 
-    <!-- view/update report modal -->
     <div
       class="modal fade"
       id="viewReportModal"
@@ -287,9 +285,7 @@
         </div>
       </div>
     </div>
-    <!-- view/update report modal -->
 
-    <!-- Delete confirmation modal -->
     <div
       class="modal fade"
       id="deleteConfirmationModal"
@@ -325,9 +321,7 @@
         </div>
       </div>
     </div>
-    <!-- Delete confirmation modal -->
 
-    <!-- Image View Modal -->
     <div
       class="modal fade"
       id="viewImageModal"
@@ -361,9 +355,7 @@
         </div>
       </div>
     </div>
-    <!-- Image View Modal -->
 
-    <!-- Side bar -->
     <div
       class="offcanvas offcanvas-start primary-background-color"
       tabindex="-1"
@@ -429,7 +421,6 @@
         </ul>
       </div>
     </div>
-    <!-- Side bar -->
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"

@@ -87,7 +87,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
 
       try {
-        // Get all reports from IndexedDB
         const transaction = db.transaction(["reportTbl"], "readonly");
         const store = transaction.objectStore("reportTbl");
         const index = store.index("userId");
@@ -100,10 +99,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             return;
           }
 
-          // Process each report
           for (const report of reports) {
             try {
-              // Convert images to base64 strings for Firebase
               const imagesBase64 = [];
               if (report.images && report.images.length > 0) {
                 for (const imageBlob of report.images) {
@@ -112,20 +109,17 @@ document.addEventListener("DOMContentLoaded", async function () {
                 }
               }
 
-              // Prepare data for Firebase
               const firebaseReport = {
                 title: report.title,
                 content: report.content,
                 createdAt: report.createdAt,
                 userId: report.userId,
                 images: imagesBase64,
-                localId: report.id, // Store the local ID for reference
+                localId: report.id,
               };
 
-              // Upload to Firebase using firebaseCRUD
               await firebaseCRUD.createData("reports", firebaseReport);
 
-              // Delete from IndexedDB after successful upload
               const deleteTransaction = db.transaction(
                 ["reportTbl"],
                 "readwrite"
@@ -134,12 +128,11 @@ document.addEventListener("DOMContentLoaded", async function () {
               deleteStore.delete(report.id);
             } catch (error) {
               console.error(`Error uploading report ${report.id}:`, error);
-              // Continue with next report even if one fails
             }
           }
 
           alert("Reports uploaded successfully!");
-          displayReports(); // Refresh the UI
+          displayReports();
         };
 
         request.onerror = function (event) {
@@ -156,7 +149,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // Helper function to convert Blob to Base64
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -166,7 +158,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // ========================
   function setupUploadButton() {
     const uploadButton = document.getElementById("upload-report-button");
     if (!uploadButton) return;
@@ -185,7 +176,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
 
       try {
-        // Get all reports from IndexedDB
         const transaction = db.transaction(["reportTbl"], "readonly");
         const store = transaction.objectStore("reportTbl");
         const index = store.index("userId");
@@ -198,15 +188,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             return;
           }
 
-          // Process each report
           for (const report of reports) {
             try {
               console.log(`Processing report ${report.id}`);
 
-              // Create composite document ID
               const reportId = `${userId}_${report.id}`;
 
-              // Create report data
               const firebaseReport = {
                 title: report.title,
                 content: report.content,
@@ -216,7 +203,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 hasImages: report.images && report.images.length > 0,
               };
 
-              // Create/update the report document with our composite ID
               await firebaseCRUD.setDataWithId(
                 "reports",
                 reportId,
@@ -224,14 +210,10 @@ document.addEventListener("DOMContentLoaded", async function () {
               );
               console.log(`Created report document with ID: ${reportId}`);
 
-              // If there are images, upload them to the subcollection
               if (report.images && report.images.length > 0) {
                 console.log(
                   `Uploading ${report.images.length} images for report ${reportId}`
                 );
-
-                // First delete any existing images in the subcollection (optional)
-                // await deleteSubcollection(`reports/${reportId}/images`);
 
                 for (const [index, imageBlob] of report.images.entries()) {
                   try {
@@ -240,7 +222,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                       `Uploading image ${index + 1} of ${report.images.length}`
                     );
 
-                    // Create image document with auto-generated ID in the subcollection
                     await firebaseCRUD.createData(
                       `reports/${reportId}/images`,
                       {
@@ -248,7 +229,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         uploadedAt: new Date().toISOString(),
                         order: index,
                         originalName: `image_${index + 1}.jpg`,
-                        reportId: reportId, // Reference back to parent report
+                        reportId: reportId,
                       }
                     );
 
@@ -262,7 +243,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 }
               }
 
-              // Delete from IndexedDB after successful upload
               const deleteTransaction = db.transaction(
                 ["reportTbl"],
                 "readwrite"
@@ -296,27 +276,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // Helper function to delete a subcollection (optional)
-  // async function deleteSubcollection(path) {
-  //   const querySnapshot = await firebase.firestore().collection(path).get();
-  //   const batch = firebase.firestore().batch();
-  //   querySnapshot.forEach((doc) => {
-  //     batch.delete(doc.ref);
-  //   });
-  //   await batch.commit();
-  // }
-
-  // Helper function to convert blob to base64
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]); // remove data URL prefix
+      reader.onload = () => resolve(reader.result.split(",")[1]);
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
   }
 
-  // Helper function to convert Blob to Base64
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -326,9 +294,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // ========================
-  // ADD REPORT MODAL FUNCTIONS
-  // ========================
   function setupAddModal() {
     const addImageInput = document.getElementById("add-image-input");
     const addImageContainer = document.getElementById("add-image-container");
@@ -370,7 +335,6 @@ document.addEventListener("DOMContentLoaded", async function () {
               const index = parseInt(img.dataset.imageIndex);
               addModalImages.splice(index, 1);
               container.remove();
-              // Update indices for remaining images
               const remainingImages = addImageContainer.querySelectorAll("img");
               remainingImages.forEach((img, newIndex) => {
                 img.dataset.imageIndex = newIndex;
@@ -411,7 +375,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         const transaction = db.transaction(["reportTbl"], "readwrite");
         const store = transaction.objectStore("reportTbl");
 
-        // Generate a unique reportId
         const reportId = Date.now().toString();
 
         const reportData = {
@@ -464,21 +427,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // ========================
-  // VIEW/UPDATE REPORT MODAL FUNCTIONS
-  // ========================
   function setupViewModal() {
     const viewImageContainer = document.getElementById("view-image-container");
     const updateReportForm = document.getElementById("update-report-form");
     const viewImageInput = document.getElementById("view-image-input");
     const viewReportModal = document.getElementById("viewReportModal");
 
-    // Reset pending changes when modal is shown
     viewReportModal.addEventListener("show.bs.modal", function () {
       pendingImageChanges = { toAdd: [], toDelete: [] };
     });
 
-    // Reset pending changes when modal is hidden without saving
     viewReportModal.addEventListener("hide.bs.modal", function () {
       pendingImageChanges = { toAdd: [], toDelete: [] };
     });
@@ -489,7 +447,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const files = event.target.files;
 
-        // Add new files to pending changes
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
@@ -503,7 +460,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           pendingImageChanges.toAdd.push(file);
         }
 
-        // Show preview of pending additions
         refreshViewModalImages(currentReportId, true);
       });
     }
@@ -558,7 +514,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         getRequest.onsuccess = function () {
           const report = getRequest.result;
 
-          // Verify the report belongs to the current user
           if (report.userId !== userId) {
             alert("You are not authorized to edit this report");
             return;
@@ -567,16 +522,13 @@ document.addEventListener("DOMContentLoaded", async function () {
           report.title = title;
           report.content = content;
 
-          // Process image changes only when update is clicked
           if (!report.images) report.images = [];
 
-          // Remove deleted images
-          pendingImageChanges.toDelete.sort((a, b) => b - a); // Sort descending to avoid index issues
+          pendingImageChanges.toDelete.sort((a, b) => b - a);
           pendingImageChanges.toDelete.forEach((index) => {
             report.images.splice(index, 1);
           });
 
-          // Add new images
           pendingImageChanges.toAdd.forEach((file) => {
             report.images.push(file);
           });
@@ -586,10 +538,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             alert("Report updated successfully!");
             displayReports();
 
-            // Reset pending changes
             pendingImageChanges = { toAdd: [], toDelete: [] };
 
-            // Close the modal
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("viewReportModal")
             );
@@ -646,9 +596,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // ========================
-  // IMAGE VIEW MODAL FUNCTIONS
-  // ========================
   document
     .getElementById("delete-image-btn")
     .addEventListener("click", function () {
@@ -661,23 +608,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("viewImageModal").dataset.reportId;
 
       if (isPending) {
-        // Remove from pending additions
         pendingImageChanges.toAdd.splice(imageIndex, 1);
       } else {
-        // Add to pending deletions
         pendingImageChanges.toDelete.push(imageIndex);
       }
 
-      // Refresh the view
       refreshViewModalImages(reportId, true);
 
-      // Close the modal
       bootstrap.Modal.getInstance(
         document.getElementById("viewImageModal")
       ).hide();
     });
 
-  // Helper function to refresh view modal images
   function refreshViewModalImages(reportId, showPending = false) {
     const viewImageContainer = document.getElementById("view-image-container");
     viewImageContainer.innerHTML = "";
@@ -690,7 +632,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       const report = getRequest.result;
       if (!report) return;
 
-      // Display existing images (excluding pending deletions)
       if (report.images) {
         report.images.forEach((blob, index) => {
           if (!pendingImageChanges.toDelete.includes(index)) {
@@ -721,7 +662,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
       }
 
-      // Display pending additions
       if (showPending && pendingImageChanges.toAdd.length > 0) {
         pendingImageChanges.toAdd.forEach((file, index) => {
           const reader = new FileReader();
@@ -756,7 +696,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
   }
 
-  // Close the image modal when clicking the X
   document
     .querySelector("#viewImageModal .bi-x-lg")
     .addEventListener("click", function () {
@@ -765,9 +704,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       ).hide();
     });
 
-  // ========================
-  // HELPER FUNCTIONS
-  // ========================
   function loadReportDetails(reportId) {
     const transaction = db.transaction(["reportTbl"], "readonly");
     const store = transaction.objectStore("reportTbl");
@@ -785,7 +721,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         viewModal.querySelector("#update-report-form").dataset.reportId =
           reportId;
 
-        // Display images
         refreshViewModalImages(reportId);
       }
     };
@@ -809,7 +744,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (reports.length > 0) {
         cardContainer.innerHTML = "";
 
-        // Sort reports by date (newest first)
         reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         reports.forEach((report) => {
@@ -854,9 +788,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
   }
 
-  // ========================
-  // DATE SEARCH FUNCTIONALITY
-  // ========================
   function setupDateSearch() {
     const dateInput = document.getElementById("report-search-input");
     if (dateInput) {
@@ -880,7 +811,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const transaction = db.transaction(["reportTbl"], "readonly");
     const store = transaction.objectStore("reportTbl");
 
-    // First get all reports for the current user using the userId index
     const userIndex = store.index("userId");
     const userRequest = userIndex.getAll(userId);
 
@@ -889,12 +819,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       const cardContainer = document.querySelector(".card-container");
 
       if (!selectedDate) {
-        // If no date selected, just display all user reports
         displayReports();
         return;
       }
 
-      // Filter user reports by date
       const filteredReports = userReports.filter((report) => {
         const reportDate = new Date(report.createdAt);
         const searchDate = new Date(selectedDate);

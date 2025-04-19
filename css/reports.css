@@ -1,3 +1,17 @@
+:root {
+  --accent: #6e1423;
+  --accent-darken: #590f1c;
+  --primary: #fff;
+  --forecolor: #3c3d42;
+  --secondary: #fff;
+  --maroon: #801414;
+  --cyan-dark: #004e4e;
+
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 html,
 body {
   overflow: hidden;
@@ -12,6 +26,46 @@ input {
   border-radius: 30px !important;
   padding: 16px 32px !important;
 }
+
+button {
+  padding: 0px 0px;
+}
+
+#add-report-button,
+#view-report-button {
+  padding: 16px 48px;
+}
+
+.upload-icon {
+  color: #fff;
+  height: 80px !important;
+  width: 80px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50% !important;
+  outline: none;
+  background-color: var(--accent);
+  color: var(--primary);
+  font-size: 2rem !important;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 168ms ease-out;
+  box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.39);
+  -webkit-box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.39);
+  -moz-box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.39);
+}
+
+.upload-icon:hover {
+  background-color: var(--accent-darken) !important;
+}
+
+.upload-icon:active {
+  background-color: var(--accent-darken) !important;
+}
+
 .img-thumbnail-container {
   position: relative;
   display: inline-block;
@@ -89,7 +143,7 @@ input {
   font-weight: 400;
 }
 .card-container {
-  height: calc(100vh - 90px - 205.625px);
+  height: calc(100vh - 205.625px);
   overflow-y: auto;
   border-radius: 0.25rem;
   padding: 0.5rem;
@@ -202,7 +256,6 @@ input {
   width: 20px !important;
 }
 
-/* Add this to your reports.css or styles.css */
 .image-container img {
   cursor: pointer;
   height: 100%;
@@ -220,7 +273,6 @@ input {
   border-radius: 5px;
 }
 
-/* Add to your reports.css */
 .view-image-container {
   overflow-x: auto;
   overflow-y: hidden;

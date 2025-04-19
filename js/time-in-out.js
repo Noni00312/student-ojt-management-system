@@ -1,3 +1,86 @@
+document
+  .getElementById("absent-incident-submit")
+  .addEventListener("click", async function (e) {
+    const button = e.target;
+    button.disabled = true;
+    button.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Submitting...`;
+
+    if (!navigator.onLine) {
+      alert("You are offline. Please connect to the internet first.");
+      x;
+      button.disabled = false;
+      button.innerHTML = `Submit`;
+      return;
+    }
+
+    const userId = localStorage.getItem("userId");
+    const reasonSelect = document.getElementById("absent-incident-header");
+    const descriptionField = document.getElementById("absent-incident-text");
+    const reason = reasonSelect.value;
+    const reportText = descriptionField.value.trim();
+
+    if (!reportText) {
+      alert("Please state your explanation before trying to submit.");
+      button.disabled = false;
+      button.innerHTML = `Submit`;
+      return;
+    }
+
+    const date = new Date().toISOString().split("T")[0];
+    const absentModal = bootstrap.Modal.getInstance(
+      document.getElementById("absentModal")
+    );
+
+    try {
+      const { firebaseCRUD } = await import("./firebase-crud.js");
+
+      const incidentData = {
+        userId,
+        date,
+        reason,
+        report: reportText,
+        createdAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      };
+
+      const incidentDocPath = `incidentreports`;
+
+      await firebaseCRUD.createData(incidentDocPath, incidentData);
+
+      descriptionField.value = "";
+
+      absentModal.hide();
+      alert("Absent report successfully saved.");
+    } catch (err) {
+      console.error("Failed to upload incident report:", err);
+      alert("Failed to upload incident report. Please try again.");
+    } finally {
+      button.disabled = false;
+      button.innerHTML = `Submit`;
+    }
+  });
+
+async function CheckSchedule() {
+  const userId = localStorage.getItem("userId");
+
+  const studentInfoArr = await crudOperations.getByIndex(
+    "studentInfoTbl",
+    "userId",
+    userId
+  );
+  const studentInfo = studentInfoArr[0];
+
+  const weeklySchedule = studentInfo.weeklySchedule;
+
+  const dayNames = ["SUN", "MON", "TUES", "WED", "THURS", "FRI", "SAT"];
+  const todayDay = new Date().getDay();
+  const today = dayNames[todayDay];
+
+  const hasScheduleToday = weeklySchedule[today] === true;
+
+  return hasScheduleToday;
+}
+
 let currentStream = null;
 let currentFacingMode = "environment";
 let currentModal = null;
@@ -239,11 +322,11 @@ function getTimeSlot(currentMinutes, schedule) {
     return "morningTimeIn";
   }
 
-  if (currentMinutes >= morningOut && currentMinutes < afternoonIn - 30) {
+  if (currentMinutes >= morningOut && currentMinutes < afternoonIn) {
     return "morningTimeOut";
   }
 
-  if (currentMinutes >= afternoonIn - 30 && currentMinutes < afternoonOut) {
+  if (currentMinutes >= afternoonIn && currentMinutes < afternoonOut) {
     return "afternoonTimeIn";
   }
 
@@ -310,22 +393,22 @@ async function updateAttendanceButtonState() {
   }
 
   if (slot === "morningTimeIn" && !isLogged("morningTimeIn")) {
-    button.textContent = "mor Time In";
+    button.textContent = "Time In";
     button.disabled = false;
   } else if (slot === "morningTimeOut" && !isLogged("morningTimeOut")) {
-    button.textContent = "mor Time Out";
+    button.textContent = "Time Out";
     button.disabled = false;
     cameraBtn.disabled = false;
   } else if (slot === "afternoonTimeIn" && !isLogged("afternoonTimeIn")) {
-    button.textContent = "aft Time In";
+    button.textContent = "Time In";
     button.disabled = false;
     cameraBtn.disabled = false;
   } else if (slot === "afternoonTimeOut" && !isLogged("afternoonTimeOut")) {
-    button.textContent = "aft Time Out";
+    button.textContent = "Time Out";
     button.disabled = false;
     cameraBtn.disabled = false;
   } else {
-    button.textContent = "Attendance Complete or Not Time Yet";
+    button.textContent = "Not Time Yet";
     button.disabled = true;
     cameraBtn.disabled = true;
   }
@@ -345,6 +428,38 @@ window.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  const dataArray = await crudOperations.getByIndex(
+    "studentInfoTbl",
+    "userId",
+    userId
+  );
+  const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+  const img = document.getElementById("user-profile");
+  const timeInContainer = document.querySelector(".time-in-cotainer");
+  const logImgContainer = document.querySelector(".log-img-container");
+  const noSheduleContainer = document.querySelector(".no-schedule-container");
+  const absentButton = document.querySelector("#absent-button");
+  img.src = data.userImg
+    ? data.userImg
+    : "../assets/img/icons8_male_user_480px_1";
+
+  (async () => {
+    const hasScheduleToday = await CheckSchedule();
+    if (hasScheduleToday) {
+      noSheduleContainer.classList.add("d-none");
+      timeInContainer.classList.remove("d-none");
+      logImgContainer.classList.remove("d-none");
+      absentButton.classList.remove("d-none");
+      6;
+    } else {
+      timeInContainer.classList.add("d-none");
+      logImgContainer.classList.add("d-none");
+      absentButton.classList.add("d-none");
+      noSheduleContainer.classList.remove("d-none");
+    }
+  })();
+
   updateAttendanceButtonState();
   await populateAttendanceImages();
   setInterval(updateAttendanceButtonState, 30000);
@@ -353,8 +468,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 document
   .getElementById("time-in-out-button")
   .addEventListener("click", async function (event) {
-    event.preventDefault();
-
     const timeEl = document
       .getElementById("attendance-time")
       .textContent.trim();
@@ -407,7 +520,6 @@ document
       document.getElementById("preview").classList.add("d-none");
       document.getElementById("retry-again").classList.add("d-none");
       document.getElementById("camera-button").classList.remove("d-none");
-      document.getElementById("attendance-form").reset();
 
       alert("Attendance recorded successfully!");
 
@@ -436,6 +548,7 @@ async function populateAttendanceImages() {
   }
 
   const allLogs = await crudOperations.getAllData("timeInOut");
+
   const today = new Date().toLocaleDateString("en-CA");
   const todayLogs = allLogs.filter(
     (log) => log.userId === userId && log.date === today
@@ -450,7 +563,7 @@ async function populateAttendanceImages() {
     if (match) {
       img.src = match.image;
     } else {
-      console.log("noni");
+      // console.log("noni");
       img.src = "../assets/img/icons8_full_image_480px_1.png";
     }
   });
@@ -477,6 +590,53 @@ async function checkCompleteAttendance(userId, date) {
     hasLogs: todaysLogs.length > 0,
     logs: todaysLogs,
   };
+}
+
+// 🔁 Helper to calculate total worked time (morning + afternoon)
+function calculateWorkHours(logs, schedule) {
+  function toMinutes(timeStr) {
+    const [h, m] = timeStr.split(":").map(Number);
+    return h * 60 + m;
+  }
+
+  const getLogTime = (type) => {
+    const log = logs.find((log) => log.type === type);
+    return log ? toMinutes(log.time) : null;
+  };
+
+  const scheduleMorningIn = toMinutes(schedule.morningTimeIn);
+  const scheduleMorningOut = toMinutes(schedule.morningTimeOut);
+  const scheduleAfternoonIn = toMinutes(schedule.afternoonTimeIn);
+  const scheduleAfternoonOut = toMinutes(schedule.afternoonTimeOut);
+
+  const actualMorningIn = getLogTime("morningTimeIn");
+  const actualMorningOut = getLogTime("morningTimeOut");
+  const actualAfternoonIn = getLogTime("afternoonTimeIn");
+  const actualAfternoonOut = getLogTime("afternoonTimeOut");
+
+  let morningDuration = 0;
+  if (actualMorningIn !== null && actualMorningOut !== null) {
+    const morningStart = Math.max(actualMorningIn, scheduleMorningIn);
+    morningDuration = actualMorningOut - morningStart;
+  }
+
+  let afternoonDuration = 0;
+  if (actualAfternoonIn !== null && actualAfternoonOut !== null) {
+    const afternoonStart = Math.max(actualAfternoonIn, scheduleAfternoonIn);
+    const afternoonEnd = Math.min(actualAfternoonOut, scheduleAfternoonOut);
+    afternoonDuration = afternoonEnd - afternoonStart;
+  }
+
+  const totalMinutes = morningDuration + afternoonDuration;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  const isPresent = actualMorningIn !== null || actualAfternoonIn !== null;
+  const isLate =
+    (actualMorningIn !== null && actualMorningIn > scheduleMorningIn) ||
+    (actualAfternoonIn !== null && actualAfternoonIn > scheduleAfternoonIn);
+
+  return { hours, minutes, totalMinutes, isLate, isPresent };
 }
 
 document
@@ -510,7 +670,6 @@ document
       "afternoonTimeIn",
       "afternoonTimeOut",
     ];
-
     const typesLogged = logsForDate.map((log) => log.type);
     const isComplete = requiredTypes.every((type) =>
       typesLogged.includes(type)
@@ -519,12 +678,32 @@ document
     const uploadBtn = document.getElementById("upload-btn");
     const submitIncidentBtn = document.getElementById("incident-submit");
 
+    // Helper to convert time string to minutes
+    const toMinutes = (t) => {
+      const [h, m] = t.split(":").map(Number);
+      return h * 60 + m;
+    };
+
     const uploadLogs = async () => {
       uploadBtn.disabled = true;
       uploadBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Uploading...`;
 
       try {
         const { firebaseCRUD } = await import("./firebase-crud.js");
+
+        const userInfoArr = await crudOperations.getByIndex(
+          "studentInfoTbl",
+          "userId",
+          userId
+        );
+        const userInfo = userInfoArr[0];
+
+        const schedule = {
+          morningTimeIn: userInfo.morningTimeIn,
+          morningTimeOut: userInfo.morningTimeOut,
+          afternoonTimeIn: userInfo.afternoonTimeIn,
+          afternoonTimeOut: userInfo.afternoonTimeOut,
+        };
 
         const logsByType = {};
         logsForDate.forEach((log) => {
@@ -541,21 +720,44 @@ document
           };
         });
 
-        const dateDocPath = `attendancelogs/${userId}/${date}`;
+        const workHours = calculateWorkHours(logsForDate, schedule);
 
+        const lateMorning =
+          logsByType["morningTimeIn"] &&
+          toMinutes(logsByType["morningTimeIn"].time) >
+            toMinutes(schedule.morningTimeIn);
+
+        const lateAfternoon =
+          logsByType["afternoonTimeIn"] &&
+          toMinutes(logsByType["afternoonTimeIn"].time) >
+            toMinutes(schedule.afternoonTimeIn);
+
+        const isLate = lateMorning || lateAfternoon;
+
+        const attendanceStatus = {
+          userId,
+          date,
+          status: "complete",
+          workHours: workHours.hours,
+          workMinutes: workHours.minutes,
+          totalMinutes: workHours.totalMinutes,
+          isLate,
+          isPresent: true,
+        };
+
+        const dateDocPath = `attendancelogs/${userId}/${date}`;
         for (const [type, logData] of Object.entries(logsByType)) {
           const cleanData = Object.fromEntries(
             Object.entries(logData).filter(([_, value]) => value !== undefined)
           );
-
           await firebaseCRUD.setDataWithId(dateDocPath, type, cleanData);
         }
 
-        await crudOperations.upsert("completeAttendanceTbl", {
-          userId: userId,
-          date: date,
-          status: "complete",
-        });
+        await crudOperations.upsert("completeAttendanceTbl", attendanceStatus);
+        await firebaseCRUD.createData(
+          "completeAttendanceTbl",
+          attendanceStatus
+        );
 
         for (const log of logsForDate) {
           await crudOperations.deleteData("timeInOut", log.id);
@@ -573,7 +775,36 @@ document
       }
     };
 
-    if (!isComplete) {
+    const studentInfoArr = await crudOperations.getByIndex(
+      "studentInfoTbl",
+      "userId",
+      userId
+    );
+    const studentInfo = studentInfoArr[0];
+
+    const userSchedule = {
+      morningTimeIn: studentInfo.morningTimeIn,
+      afternoonTimeIn: studentInfo.afternoonTimeIn,
+    };
+
+    const actualMorningIn = logsForDate.find(
+      (log) => log.type === "morningTimeIn"
+    );
+    const actualAfternoonIn = logsForDate.find(
+      (log) => log.type === "afternoonTimeIn"
+    );
+
+    const isLateMorning =
+      actualMorningIn &&
+      toMinutes(actualMorningIn.time) > toMinutes(userSchedule.morningTimeIn);
+    const isLateAfternoon =
+      actualAfternoonIn &&
+      toMinutes(actualAfternoonIn.time) >
+        toMinutes(userSchedule.afternoonTimeIn);
+
+    const isLate = isLateMorning || isLateAfternoon;
+
+    if (!isComplete || isLate) {
       const incidentModal = new bootstrap.Modal(
         document.getElementById("incidentModal")
       );
@@ -586,6 +817,13 @@ document
         const reportText = document
           .getElementById("incident-text")
           .value.trim();
+        const reason = document.getElementById("incident-reason").value;
+
+        if (!reason) {
+          alert("Please select a reason for the incident.");
+          return;
+        }
+
         if (!reportText) {
           alert("Please explain the incident before submitting.");
           return;
@@ -596,16 +834,18 @@ document
 
         try {
           const { firebaseCRUD } = await import("./firebase-crud.js");
-
-          const incidentDocPath = `incidentreports/${userId}/${date}`;
-
-          await firebaseCRUD.setDataWithId(incidentDocPath, "report", {
-            userId: userId,
-            date: date,
+          const incidentData = {
+            userId,
+            date,
+            reason,
             report: reportText,
             createdAt: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
-          });
+          };
+
+          const incidentDocPath = `incidentreports`;
+
+          await firebaseCRUD.createData(incidentDocPath, incidentData);
 
           incidentModal.hide();
           await uploadLogs();

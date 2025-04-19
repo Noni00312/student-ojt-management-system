@@ -134,6 +134,7 @@ const crudOperations = {
         );
     });
   },
+
   clearTable: async (tableName) => {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([tableName], "readwrite");

@@ -428,9 +428,47 @@ body {
   /* Optional: gives space for the scrollbar */
 }
 
-
+.report p-3 mb-4 rounded {
+  background-color: #3c3d42;
+}
 
 
 /* .student-report-container {
   scroll-behavior: smooth;
 } */
+
+
+
+/* Add these styles for the color highlights */
+.day {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.day.green {
+  background-color: #367c38;
+  color: white;
+}
+
+.day.red {
+  background-color: #F44336;
+  color: white;
+}
+
+.day.yellow {
+  background-color: #cabf60;
+  color: #333;
+}
+
+.day.other-month {
+  opacity: 0.3;
+}

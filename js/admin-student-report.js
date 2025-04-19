@@ -282,21 +282,7 @@ import { firebaseCRUD } from "./firebase-crud.js";
 // import { firebaseCRUD } from './firebase-crud.js';
 
 document.addEventListener('DOMContentLoaded', async function () {
-  // try {
-  //   // Get userId from URL or localStorage
-  //   const userId = getUserIdFromUrl() || localStorage.getItem('userId');
-  //   console.log(userId);
 
-  //   if (userId) {
-  //     await loadStudentReports(userId);
-  //   } else {
-  //     console.error("No user ID found");
-  //     // window.location.href = 'admin-student.html';
-  //   }
-  // } catch (error) {
-  //   console.error("Initialization error:", error);
-  //   showErrorToast("Failed to initialize: " + error.message);
-  // }
 
   try {
     // Get userId from URL or localStorage
@@ -305,6 +291,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (userId) {
       await loadStudentReports(userId);
+      await loadStudentData(userId); // Add this line to load student data
+      await loadAttendanceData(userId); // Add this line to load attendance data
+
 
       // Added: Check if already assistant when page loads
       try {
@@ -332,6 +321,273 @@ document.addEventListener('DOMContentLoaded', async function () {
     showErrorToast("Failed to initialize: " + error.message);
   }
 });
+
+
+
+// Updated loadStudentData function with company image fetching
+async function loadStudentData(userId) {
+  try {
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+
+    if (!students || students.length === 0) {
+      console.log("No student data found");
+      return;
+    }
+
+    const studentData = students[0];
+
+    // Update the modal with student data
+    const companyNameEl = document.getElementById('company-name');
+    const companyImageEl = document.querySelector('.company-container img');
+    const userNameEl = document.getElementById('user-name');
+    const phoneEl = document.querySelector('.phone-email-container p span');
+    const emailEl = document.querySelector('.email-add');
+    const phoneTooltip = document.querySelector('.phone-email-container .tt[data-bs-title]');
+    const emailTooltip = document.querySelector('.phone-email-container .tt[data-bs-title="edagardobalan24@gmail.com"]');
+
+    // Construct full name
+    let fullName = studentData.firstName || '';
+    if (studentData.middleName) fullName += ' ' + studentData.middleName;
+    if (studentData.lastName) fullName += ' ' + studentData.lastName;
+    if (studentData.suffix) fullName += ' ' + studentData.suffix;
+
+    // Update elements
+    if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
+    if (userNameEl) userNameEl.textContent = fullName;
+
+    if (phoneEl) phoneEl.textContent = studentData.phoneNumber || 'N/A';
+    if (emailEl) emailEl.textContent = studentData.emailAddress || 'N/A';
+
+    if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', studentData.phoneNumber || '');
+    if (emailTooltip) emailTooltip.setAttribute('data-bs-title', studentData.emailAddress || '');
+
+    // Fetch and display company image if company name exists
+    if (studentData.companyName) {
+      await loadCompanyImage(studentData.companyName, companyImageEl);
+    }
+
+  } catch (error) {
+    console.error("Error loading student data:", error);
+    showErrorToast("Failed to load student data: " + error.message);
+  }
+}
+
+
+
+
+async function loadCompanyImage(companyName) {
+  try {
+    const imageElement = document.getElementById('image');
+    if (!imageElement) {
+      console.error("Image element not found");
+      return;
+    }
+
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const companies = await firebaseCRUD.queryData("company", "companyName", "==", companyName);
+
+    if (companies && companies.length > 0 && companies[0].image) {
+      const base64Image = companies[0].image;
+      console.log("Full Base64 image length:", base64Image.length);
+
+      // Verify the Base64 string is complete
+      if (base64Image.endsWith('==') || base64Image.endsWith('=') ||
+        (base64Image.length % 4 === 0)) {
+        imageElement.src = base64Image;
+        imageElement.alt = `${companyName} logo`;
+        console.log("Image source set successfully");
+
+        // Add onload and onerror handlers for debugging
+        imageElement.onload = () => console.log("Image loaded successfully");
+        imageElement.onerror = () => {
+          console.error("Error loading image");
+          setDefaultImage(imageElement);
+        };
+      } else {
+        console.error("Incomplete Base64 string");
+        setDefaultImage(imageElement);
+      }
+    } else {
+      console.log("No company image found, using default");
+      setDefaultImage(imageElement);
+    }
+  } catch (error) {
+    console.error("Error loading company image:", error);
+    setDefaultImage(document.getElementById('image'));
+  }
+}
+
+function setDefaultImage(imgElement) {
+  if (imgElement) {
+    imgElement.src = "../assets/img/Department-of-Agrarian-Reform.jpeg";
+    imgElement.alt = "Default company background image";
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// // New function to load attendance data
+// async function loadAttendanceData(userId) {
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+//     const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+
+//     if (!attendanceRecords || attendanceRecords.length === 0) {
+//       console.log("No attendance records found");
+//       return;
+//     }
+
+//     // Initialize counters
+//     let presentCount = 0;
+//     let lateCount = 0;
+//     let absentCount = 0;
+//     let totalWorkHours = 0;
+//     let totalMinutes = 0;
+
+//     // Calculate statistics
+//     attendanceRecords.forEach(record => {
+//       if (record.isPresent === "True") {
+//         presentCount++;
+//         if (record.isLate === "True") {
+//           lateCount++;
+//         }
+//       } else {
+//         absentCount++;
+//       }
+
+//       // Sum up work hours and minutes
+//       if (record.workHours) {
+//         totalWorkHours += parseFloat(record.workHours) || 0;
+//       }
+//       if (record.totalMinutes) {
+//         totalMinutes += parseInt(record.totalMinutes) || 0;
+//       }
+//     });
+
+//     // Convert total minutes to hours and remaining minutes
+//     const additionalHours = Math.floor(totalMinutes / 60);
+//     const remainingMinutes = totalMinutes % 60;
+//     totalWorkHours += additionalHours;
+
+//     // Format accumulated time
+//     const accumulatedTime = `${totalWorkHours}:${remainingMinutes.toString().padStart(2, '0')}:00`;
+
+//     // Update the DOM
+//     updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
+
+//   } catch (error) {
+//     console.error("Error loading attendance data:", error);
+//   }
+// }
+
+// // Helper function to update the attendance display
+// function updateAttendanceDisplay(present, late, absent, accumulatedTime) {
+//   // Update attendance numbers
+//   const presentElement = document.querySelector('.attendance-status-container p:nth-child(1) .number');
+//   const lateElement = document.querySelector('.attendance-status-container p:nth-child(2) .number');
+//   const absentElement = document.querySelector('.attendance-status-container p:nth-child(3) .number');
+//   const timeElement = document.querySelector('.time-life-container span');
+
+//   if (presentElement) presentElement.textContent = present;
+//   if (lateElement) lateElement.textContent = late;
+//   if (absentElement) absentElement.textContent = absent;
+//   if (timeElement) timeElement.textContent = accumulatedTime;
+// }
+
+
+// Updated function with proper time formatting
+async function loadAttendanceData(userId) {
+  try {
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+
+    if (!attendanceRecords || attendanceRecords.length === 0) {
+      console.log("No attendance records found");
+      return;
+    }
+
+    // Initialize counters
+    let presentCount = 0;
+    let lateCount = 0;
+    let absentCount = 0;
+    let totalWorkHours = 0;
+    let totalMinutes = 0;
+
+    // Calculate statistics
+    attendanceRecords.forEach(record => {
+      if (record.isPresent === "True") {
+        presentCount++;
+        if (record.isLate === "True") {
+          lateCount++;
+        }
+      } else {
+        absentCount++;
+      }
+
+      // Sum up work hours and minutes
+      if (record.workHours) {
+        totalWorkHours += parseFloat(record.workHours) || 0;
+      }
+      if (record.totalMinutes) {
+        totalMinutes += parseInt(record.totalMinutes) || 0;
+      }
+    });
+
+    // Convert all time to seconds first for accurate calculation
+    const totalSeconds = (totalWorkHours * 3600) + (totalMinutes * 60);
+
+    // Calculate hours, minutes, seconds
+    const hours = Math.floor(totalSeconds / 3600);
+    const remainingSeconds = totalSeconds % 3600;
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
+
+    // Format as HH:MM:SS with leading zeros
+    const accumulatedTime = [
+      hours.toString().padStart(2, '0'),
+      minutes.toString().padStart(2, '0'),
+      seconds.toString().padStart(2, '0')
+    ].join(':');
+
+    // Update the DOM
+    updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
+
+  } catch (error) {
+    console.error("Error loading attendance data:", error);
+  }
+}
+
+// Helper function to update the attendance display (unchanged)
+function updateAttendanceDisplay(present, late, absent, accumulatedTime) {
+  const presentElement = document.querySelector('.attendance-status-container p:nth-child(1) .number');
+  const lateElement = document.querySelector('.attendance-status-container p:nth-child(2) .number');
+  const absentElement = document.querySelector('.attendance-status-container p:nth-child(3) .number');
+  const timeElement = document.querySelector('.time-life-container span');
+
+  if (presentElement) presentElement.textContent = present;
+  if (lateElement) lateElement.textContent = late;
+  if (absentElement) absentElement.textContent = absent;
+  if (timeElement) timeElement.textContent = accumulatedTime;
+}
+
+
+
+
+
+
+
+
+
 
 // Updated appoint assistant functionality
 document.getElementById('appoint-assistant-btn')?.addEventListener('click', async function () {
@@ -445,7 +701,7 @@ async function displayReports(reports) {
     const images = await loadReportImages(report.id);
 
     const reportElement = document.createElement('div');
-    reportElement.className = 'report p-2';
+    reportElement.className = 'report p-3 mb-4 rounded';
 
 
     reportElement.innerHTML = `
@@ -681,8 +937,8 @@ async function initializeDropdowns() {
   const genderSelect = document.getElementById('gender');
   // Clear and repopulate to ensure fresh state
   genderSelect.innerHTML = `
-    <option value="male">Male</option>
-    <option value="female">Female</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
   `;
 
   // Initialize company dropdown

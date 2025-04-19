@@ -76,9 +76,10 @@ function populateDates(dates) {
 
   if (dates.length === 0) {
     container.innerHTML = `
-            <div class="col-12 text-center py-4">
+            <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
-                <p class="mt-2">No incident reports found</p>
+                <h6 class="mt-2">No Incident Reports Available</h6>
+                <p class="mt-1">No incident reports have been sent on any of the dates.</p>
             </div>
         `;
     return;

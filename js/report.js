@@ -1,6 +1,6 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   let db;
   const request = indexedDB.open("SOJTMSDB", 1);
   let currentReportId = null;
@@ -38,6 +38,43 @@ document.addEventListener("DOMContentLoaded", function () {
   request.onerror = function (event) {
     console.error("IndexedDB error:", event.target.error);
   };
+
+
+  try {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("No userId found in localStorage");
+      return;
+    }
+
+    await window.dbReady;
+
+    const img = document.getElementById("user-img");
+
+    const dataArray = await crudOperations.getByIndex(
+      "studentInfoTbl",
+      "userId",
+      userId
+    );
+
+    console.log("User data from IndexedDB:", dataArray);
+
+    const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+    if (data != null) {
+
+      img.src = data.userImg;
+
+
+    } else {
+      console.warn("No user data found for this user.");
+    }
+  } catch (err) {
+    console.error("Failed to get user data from IndexedDB", err);
+  }
+
+
 
   function setupUploadButton() {
     const uploadButton = document.getElementById("upload-reports-btn");
@@ -759,7 +796,13 @@ document.addEventListener("DOMContentLoaded", function () {
           cardContainer.appendChild(card);
         });
       } else {
-        cardContainer.innerHTML = "<p>No reports found</p>";
+        cardContainer.innerHTML = `
+            <div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No Reports Found</h6>
+                <p class="mt-1">Offline reports that have not been sent to the server will be displayed here.</p>
+            </div>
+        `;
       }
     };
   }
@@ -849,7 +892,13 @@ document.addEventListener("DOMContentLoaded", function () {
           cardContainer.appendChild(card);
         });
       } else {
-        cardContainer.innerHTML = "<p>No reports found for this date</p>";
+        cardContainer.innerHTML = `
+            <div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No Reports Found For This Date</h6>
+                <p class="mt-1">Please choose a different date or create a new report.</p>
+            </div>
+        `;
       }
     };
 

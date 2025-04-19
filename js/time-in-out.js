@@ -1,3 +1,86 @@
+document
+  .getElementById("absent-incident-submit")
+  .addEventListener("click", async function (e) {
+    const button = e.target;
+    button.disabled = true;
+    button.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Submitting...`;
+
+    if (!navigator.onLine) {
+      alert("You are offline. Please connect to the internet first.");
+      x;
+      button.disabled = false;
+      button.innerHTML = `Submit`;
+      return;
+    }
+
+    const userId = localStorage.getItem("userId");
+    const reasonSelect = document.getElementById("absent-incident-header");
+    const descriptionField = document.getElementById("absent-incident-text");
+    const reason = reasonSelect.value;
+    const reportText = descriptionField.value.trim();
+
+    if (!reportText) {
+      alert("Please state your explanation before trying to submit.");
+      button.disabled = false;
+      button.innerHTML = `Submit`;
+      return;
+    }
+
+    const date = new Date().toISOString().split("T")[0];
+    const absentModal = bootstrap.Modal.getInstance(
+      document.getElementById("absentModal")
+    );
+
+    try {
+      const { firebaseCRUD } = await import("./firebase-crud.js");
+
+      const incidentData = {
+        userId,
+        date,
+        reason,
+        report: reportText,
+        createdAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      };
+
+      const incidentDocPath = `incidentreports`;
+
+      await firebaseCRUD.createData(incidentDocPath, incidentData);
+
+      descriptionField.value = "";
+
+      absentModal.hide();
+      alert("Absent report successfully saved.");
+    } catch (err) {
+      console.error("Failed to upload incident report:", err);
+      alert("Failed to upload incident report. Please try again.");
+    } finally {
+      button.disabled = false;
+      button.innerHTML = `Submit`;
+    }
+  });
+
+async function CheckSchedule() {
+  const userId = localStorage.getItem("userId");
+
+  const studentInfoArr = await crudOperations.getByIndex(
+    "studentInfoTbl",
+    "userId",
+    userId
+  );
+  const studentInfo = studentInfoArr[0];
+
+  const weeklySchedule = studentInfo.weeklySchedule;
+
+  const dayNames = ["SUN", "MON", "TUES", "WED", "THURS", "FRI", "SAT"];
+  const todayDay = new Date().getDay();
+  const today = dayNames[todayDay];
+
+  const hasScheduleToday = weeklySchedule[today] === true;
+
+  return hasScheduleToday;
+}
+
 let currentStream = null;
 let currentFacingMode = "environment";
 let currentModal = null;
@@ -229,35 +312,6 @@ function getCurrentTimeInMinutes() {
   return now.getHours() * 60 + now.getMinutes();
 }
 
-// function getTimeSlot(currentMinutes, schedule) {
-//   const morningIn = convertTimeToMinutes(schedule.morningTimeIn);
-//   const morningOut = convertTimeToMinutes(schedule.morningTimeOut);
-//   const afternoonIn = convertTimeToMinutes(schedule.afternoonTimeIn);
-//   const afternoonOut = convertTimeToMinutes(schedule.afternoonTimeOut);
-
-//   if (currentMinutes >= morningIn - 60 && currentMinutes < morningOut) {
-//     return "morningTimeIn";
-//   }
-
-//   if (currentMinutes >= morningOut && currentMinutes < afternoonIn - 30) {
-//     return "morningTimeOut";
-//   }
-
-//   if (currentMinutes >= afternoonIn - 30 && currentMinutes < afternoonOut) {
-//     return "afternoonTimeIn";
-//   }
-
-//   if (currentMinutes >= afternoonOut) {
-//     return "afternoonTimeOut";
-//   }
-
-//   if (currentMinutes < morningIn - 60) {
-//     return "disabledUntilMorning";
-//   }
-
-//   return "waiting";
-// }
-
 function getTimeSlot(currentMinutes, schedule) {
   const morningIn = convertTimeToMinutes(schedule.morningTimeIn);
   const morningOut = convertTimeToMinutes(schedule.morningTimeOut);
@@ -339,18 +393,18 @@ async function updateAttendanceButtonState() {
   }
 
   if (slot === "morningTimeIn" && !isLogged("morningTimeIn")) {
-    button.textContent = "mor Time In";
+    button.textContent = "Time In";
     button.disabled = false;
   } else if (slot === "morningTimeOut" && !isLogged("morningTimeOut")) {
-    button.textContent = "mor Time Out";
+    button.textContent = "Time Out";
     button.disabled = false;
     cameraBtn.disabled = false;
   } else if (slot === "afternoonTimeIn" && !isLogged("afternoonTimeIn")) {
-    button.textContent = "aft Time In";
+    button.textContent = "Time In";
     button.disabled = false;
     cameraBtn.disabled = false;
   } else if (slot === "afternoonTimeOut" && !isLogged("afternoonTimeOut")) {
-    button.textContent = "aft Time Out";
+    button.textContent = "Time Out";
     button.disabled = false;
     cameraBtn.disabled = false;
   } else {
@@ -374,6 +428,38 @@ window.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  const dataArray = await crudOperations.getByIndex(
+    "studentInfoTbl",
+    "userId",
+    userId
+  );
+  const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+  const img = document.getElementById("user-profile");
+  const timeInContainer = document.querySelector(".time-in-cotainer");
+  const logImgContainer = document.querySelector(".log-img-container");
+  const noSheduleContainer = document.querySelector(".no-schedule-container");
+  const absentButton = document.querySelector("#absent-button");
+  img.src = data.userImg
+    ? data.userImg
+    : "../assets/img/icons8_male_user_480px_1";
+
+  (async () => {
+    const hasScheduleToday = await CheckSchedule();
+    if (hasScheduleToday) {
+      noSheduleContainer.classList.add("d-none");
+      timeInContainer.classList.remove("d-none");
+      logImgContainer.classList.remove("d-none");
+      absentButton.classList.remove("d-none");
+      6;
+    } else {
+      timeInContainer.classList.add("d-none");
+      logImgContainer.classList.add("d-none");
+      absentButton.classList.add("d-none");
+      noSheduleContainer.classList.remove("d-none");
+    }
+  })();
+
   updateAttendanceButtonState();
   await populateAttendanceImages();
   setInterval(updateAttendanceButtonState, 30000);
@@ -382,8 +468,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 document
   .getElementById("time-in-out-button")
   .addEventListener("click", async function (event) {
-    event.preventDefault();
-
     const timeEl = document
       .getElementById("attendance-time")
       .textContent.trim();
@@ -436,7 +520,6 @@ document
       document.getElementById("preview").classList.add("d-none");
       document.getElementById("retry-again").classList.add("d-none");
       document.getElementById("camera-button").classList.remove("d-none");
-      document.getElementById("attendance-form").reset();
 
       alert("Attendance recorded successfully!");
 
@@ -556,503 +639,6 @@ function calculateWorkHours(logs, schedule) {
   return { hours, minutes, totalMinutes, isLate, isPresent };
 }
 
-// document
-//   .getElementById("upload-btn")
-//   .addEventListener("click", async function () {
-//     if (!navigator.onLine)
-//       return alert("You are offline. Please connect to the internet first.");
-
-//     const confirmUpload = confirm("Are you sure you want to upload this data?");
-//     if (!confirmUpload) return;
-
-//     const date = prompt("Enter the date to upload (YYYY-MM-DD):");
-//     if (!date) return alert("Upload cancelled. No date provided.");
-
-//     const userId = localStorage.getItem("userId");
-//     const userLogs = await crudOperations.getByIndex(
-//       "timeInOut",
-//       "userId",
-//       userId
-//     );
-//     const logsForDate = userLogs.filter((log) => log.date === date);
-
-//     if (logsForDate.length === 0) {
-//       alert("No attendance logs found for this date.");
-//       return;
-//     }
-
-//     const requiredTypes = [
-//       "morningTimeIn",
-//       "morningTimeOut",
-//       "afternoonTimeIn",
-//       "afternoonTimeOut",
-//     ];
-
-//     const typesLogged = logsForDate.map((log) => log.type);
-//     const isComplete = requiredTypes.every((type) =>
-//       typesLogged.includes(type)
-//     );
-
-//     const uploadBtn = document.getElementById("upload-btn");
-//     const submitIncidentBtn = document.getElementById("incident-submit");
-
-//     const uploadLogs = async () => {
-//       uploadBtn.disabled = true;
-//       uploadBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Uploading...`;
-
-//       try {
-//         const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//         const logsByType = {};
-//         logsForDate.forEach((log) => {
-//           logsByType[log.type] = {
-//             timestamp: log.time
-//               ? new Date(`${log.date}T${log.time}`).toISOString()
-//               : null,
-//             date: log.date,
-//             time: log.time || null,
-//             userId: log.userId,
-//             type: log.type,
-//             image: log.image || null,
-//             uploadedAt: new Date().toISOString(),
-//           };
-//         });
-
-//         const dateDocPath = `attendancelogs/${userId}/${date}`;
-
-//         for (const [type, logData] of Object.entries(logsByType)) {
-//           const cleanData = Object.fromEntries(
-//             Object.entries(logData).filter(([_, value]) => value !== undefined)
-//           );
-
-//           await firebaseCRUD.setDataWithId(dateDocPath, type, cleanData);
-//         }
-
-//         await crudOperations.upsert("completeAttendanceTbl", {
-//           userId: userId,
-//           date: date,
-//           status: "complete",
-//         });
-
-//         for (const log of logsForDate) {
-//           await crudOperations.deleteData("timeInOut", log.id);
-//         }
-
-//         alert("Logs uploaded successfully.");
-//         uploadBtn.innerHTML = `Upload Attendance`;
-//         uploadBtn.classList.add("d-none");
-//         ClearData();
-//       } catch (error) {
-//         console.error("Upload failed:", error);
-//         alert(`Failed to upload logs: ${error.message}`);
-//         uploadBtn.disabled = false;
-//         uploadBtn.innerHTML = `Upload Attendance`;
-//       }
-//     };
-
-//     if (!isComplete) {
-//       const incidentModal = new bootstrap.Modal(
-//         document.getElementById("incidentModal")
-//       );
-//       incidentModal.show();
-
-//       submitIncidentBtn.disabled = false;
-//       submitIncidentBtn.innerHTML = `Submit Report`;
-
-//       submitIncidentBtn.onclick = async () => {
-//         const reportText = document
-//           .getElementById("incident-text")
-//           .value.trim();
-//         if (!reportText) {
-//           alert("Please explain the incident before submitting.");
-//           return;
-//         }
-
-//         submitIncidentBtn.disabled = true;
-//         submitIncidentBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Submitting...`;
-
-//         try {
-//           const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//           const incidentDocPath = `incidentreports/${userId}/${date}`;
-
-//           await firebaseCRUD.setDataWithId(incidentDocPath, "report", {
-//             userId: userId,
-//             date: date,
-//             report: reportText,
-//             createdAt: new Date().toISOString(),
-//             lastUpdated: new Date().toISOString(),
-//           });
-
-//           incidentModal.hide();
-//           await uploadLogs();
-//         } catch (err) {
-//           console.error("Failed to upload incident report:", err);
-//           alert("Failed to upload incident report. Please try again.");
-//           submitIncidentBtn.disabled = false;
-//           submitIncidentBtn.innerHTML = `Submit Report`;
-//         }
-//       };
-//     } else {
-//       await uploadLogs();
-//     }
-//   });
-
-// document
-//   .getElementById("upload-btn")
-//   .addEventListener("click", async function () {
-//     if (!navigator.onLine)
-//       return alert("You are offline. Please connect to the internet first.");
-
-//     const confirmUpload = confirm("Are you sure you want to upload this data?");
-//     if (!confirmUpload) return;
-
-//     const date = prompt("Enter the date to upload (YYYY-MM-DD):");
-//     if (!date) return alert("Upload cancelled. No date provided.");
-
-//     const userId = localStorage.getItem("userId");
-//     const userLogs = await crudOperations.getByIndex(
-//       "timeInOut",
-//       "userId",
-//       userId
-//     );
-//     const logsForDate = userLogs.filter((log) => log.date === date);
-
-//     if (logsForDate.length === 0) {
-//       alert("No attendance logs found for this date.");
-//       return;
-//     }
-
-//     const requiredTypes = [
-//       "morningTimeIn",
-//       "morningTimeOut",
-//       "afternoonTimeIn",
-//       "afternoonTimeOut",
-//     ];
-
-//     const typesLogged = logsForDate.map((log) => log.type);
-//     const isComplete = requiredTypes.every((type) =>
-//       typesLogged.includes(type)
-//     );
-
-//     const uploadBtn = document.getElementById("upload-btn");
-//     const submitIncidentBtn = document.getElementById("incident-submit");
-
-//     // const uploadLogs = async () => {
-
-//     //   uploadBtn.disabled = true;
-//     //   uploadBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Uploading...`;
-
-//     //   try {
-//     //     const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//     //     const logsByType = {};
-//     //     logsForDate.forEach((log) => {
-//     //       logsByType[log.type] = {
-//     //         timestamp: log.time
-//     //           ? new Date(`${log.date}T${log.time}`).toISOString()
-//     //           : null,
-//     //         date: log.date,
-//     //         time: log.time || null,
-//     //         userId: log.userId,
-//     //         type: log.type,
-//     //         image: log.image || null,
-//     //         uploadedAt: new Date().toISOString(),
-//     //       };
-//     //     });
-
-//     //     const dateDocPath = `attendancelogs/${userId}/${date}`;
-
-//     //     for (const [type, logData] of Object.entries(logsByType)) {
-//     //       const cleanData = Object.fromEntries(
-//     //         Object.entries(logData).filter(([_, value]) => value !== undefined)
-//     //       );
-
-//     //       await firebaseCRUD.setDataWithId(dateDocPath, type, cleanData);
-//     //     }
-
-//     //     // 📌 WORK HOUR + LATE CHECK STARTS HERE
-//     //     const studentData = await crudOperations.getById(
-//     //       "studentInfoTbl",
-//     //       userId
-//     //     );
-//     //     const schedule = studentData?.schedule || {};
-
-//     //     const dayOfWeek = new Date(date)
-//     //       .toLocaleDateString("en-US", {
-//     //         weekday: "short",
-//     //       })
-//     //       .toUpperCase(); // "MON", "TUE", etc.
-
-//     //     const isScheduledToday = schedule?.[dayOfWeek] === true;
-//     //     let status = "unknown";
-//     //     let workSummary = {};
-
-//     //     if (isScheduledToday) {
-//     //       const result = calculateWorkHours(logsForDate, studentData.schedule);
-//     //       workSummary = result;
-
-//     //       if (!result.isPresent) {
-//     //         status = "absent";
-//     //       } else if (result.isLate) {
-//     //         status = "late";
-//     //       } else {
-//     //         status = "present";
-//     //       }
-
-//     //       await crudOperations.upsert("completeAttendanceTbl", {
-//     //         userId,
-//     //         date,
-//     //         status,
-//     //         totalMinutes: result.totalMinutes,
-//     //         hours: result.hours,
-//     //         minutes: result.minutes,
-//     //       });
-//     //     } else {
-//     //       // Not scheduled = not recorded
-//     //       await crudOperations.upsert("completeAttendanceTbl", {
-//     //         userId,
-//     //         date,
-//     //         status: "not scheduled",
-//     //       });
-//     //     }
-
-//     //     // 🗑 Clean up local logs after upload
-//     //     for (const log of logsForDate) {
-//     //       await crudOperations.deleteData("timeInOut", log.id);
-//     //     }
-
-//     //     alert("Logs uploaded successfully.");
-//     //     uploadBtn.innerHTML = `Upload Attendance`;
-//     //     uploadBtn.classList.add("d-none");
-//     //     ClearData();
-//     //   } catch (error) {
-//     //     console.error("Upload failed:", error);
-//     //     alert(`Failed to upload logs: ${error.message}`);
-//     //     uploadBtn.disabled = false;
-//     //     uploadBtn.innerHTML = `Upload Attendance`;
-//     //   }
-//     // };
-
-//     const uploadLogs = async () => {
-//       uploadBtn.disabled = true;
-//       uploadBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Uploading...`;
-
-//       try {
-//         const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//         // Get user schedule from studentInfoTbl
-//         const userId = localStorage.getItem("userId");
-//         const userInfoArr = await crudOperations.getByIndex(
-//           "studentInfoTbl",
-//           "userId",
-//           userId
-//         );
-//         const userInfo = userInfoArr[0]; // It returns an array
-
-//         const schedule = {
-//           morningTimeIn: userInfo.morningTimeIn,
-//           morningTimeOut: userInfo.morningTimeOut,
-//           afternoonTimeIn: userInfo.afternoonTimeIn,
-//           afternoonTimeOut: userInfo.afternoonTimeOut,
-//         };
-//         // console.log("Schedule:", schedule);
-
-//         const logsByType = {};
-//         logsForDate.forEach((log) => {
-//           logsByType[log.type] = {
-//             timestamp: log.time
-//               ? new Date(`${log.date}T${log.time}`).toISOString()
-//               : null,
-//             date: log.date,
-//             time: log.time || null,
-//             userId: log.userId,
-//             type: log.type,
-//             image: log.image || null,
-//             uploadedAt: new Date().toISOString(),
-//           };
-//         });
-
-//         const workHours = calculateWorkHours(logsForDate, schedule);
-
-//         // ⏰ Lateness Check
-//         const toMinutes = (t) => {
-//           const [h, m] = t.split(":").map(Number);
-//           return h * 60 + m;
-//         };
-
-//         const lateMorning =
-//           logsByType["morningTimeIn"] &&
-//           toMinutes(logsByType["morningTimeIn"].time) >
-//             toMinutes(schedule.morningTimeIn);
-
-//         const lateAfternoon =
-//           logsByType["afternoonTimeIn"] &&
-//           toMinutes(logsByType["afternoonTimeIn"].time) >
-//             toMinutes(schedule.afternoonTimeIn);
-
-//         const isLate = lateMorning || lateAfternoon;
-
-//         const attendanceStatus = {
-//           userId,
-//           date,
-//           status: "complete",
-//           workHours: workHours.hours,
-//           workMinutes: workHours.minutes,
-//           totalMinutes: workHours.totalMinutes,
-//           isLate: isLate,
-//           isPresent: true,
-//         };
-
-//         // Upload logs
-//         const dateDocPath = `attendancelogs/${userId}/${date}`;
-//         for (const [type, logData] of Object.entries(logsByType)) {
-//           const cleanData = Object.fromEntries(
-//             Object.entries(logData).filter(([_, value]) => value !== undefined)
-//           );
-//           await firebaseCRUD.setDataWithId(dateDocPath, type, cleanData);
-//         }
-
-//         // Upload summary to completeAttendanceTbl
-//         await crudOperations.upsert("completeAttendanceTbl", attendanceStatus);
-
-//         // Delete local logs
-//         for (const log of logsForDate) {
-//           await crudOperations.deleteData("timeInOut", log.id);
-//         }
-
-//         alert("Logs uploaded successfully.");
-//         uploadBtn.innerHTML = `Upload Attendance`;
-//         uploadBtn.classList.add("d-none");
-//         ClearData();
-//       } catch (error) {
-//         console.error("Upload failed:", error);
-//         alert(`Failed to upload logs: ${error.message}`);
-//         uploadBtn.disabled = false;
-//         uploadBtn.innerHTML = `Upload Attendance`;
-//       }
-//     };
-
-//     // const { hours, minutes, totalMinutes } = calculateWorkHours(
-//     //   logsForDate,
-//     //   userSchedule
-//     // );
-
-//     // Helper to convert time string to minutes
-//     function toMinutes(timeStr) {
-//       const [h, m] = timeStr.split(":").map(Number);
-//       return h * 60 + m;
-//     }
-
-//     // Check lateness
-//     const actualMorningIn = logsForDate.find(
-//       (log) => log.type === "morningTimeIn"
-//     );
-//     const actualAfternoonIn = logsForDate.find(
-//       (log) => log.type === "afternoonTimeIn"
-//     );
-
-//     const isLateMorning =
-//       actualMorningIn &&
-//       toMinutes(actualMorningIn.time) > toMinutes(userSchedule.morningTimeIn);
-//     const isLateAfternoon =
-//       actualAfternoonIn &&
-//       toMinutes(actualAfternoonIn.time) >
-//         toMinutes(userSchedule.afternoonTimeIn);
-//     const isLate = isLateMorning || isLateAfternoon;
-
-//     if (!isComplete || isLate) {
-//       const incidentModal = new bootstrap.Modal(
-//         document.getElementById("incidentModal")
-//       );
-//       incidentModal.show();
-
-//       submitIncidentBtn.disabled = false;
-//       submitIncidentBtn.innerHTML = `Submit Report`;
-
-//       // submitIncidentBtn.onclick = async () => {
-
-//       //   const reportText = document
-//       //     .getElementById("incident-text")
-//       //     .value.trim();
-//       //   if (!reportText) {
-//       //     alert("Please explain the incident before submitting.");
-//       //     return;
-//       //   }
-
-//       //   submitIncidentBtn.disabled = true;
-//       //   submitIncidentBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Submitting...`;
-
-//       //   try {
-//       //     const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//       //     const incidentDocPath = `incidentreports/${userId}/${date}`;
-
-//       //     await firebaseCRUD.setDataWithId(incidentDocPath, "report", {
-//       //       userId: userId,
-//       //       date: date,
-//       //       report: reportText,
-//       //       createdAt: new Date().toISOString(),
-//       //       lastUpdated: new Date().toISOString(),
-//       //     });
-
-//       //     incidentModal.hide();
-//       //     await uploadLogs();
-//       //   } catch (err) {
-//       //     console.error("Failed to upload incident report:", err);
-//       //     alert("Failed to upload incident report. Please try again.");
-//       //     submitIncidentBtn.disabled = false;
-//       //     submitIncidentBtn.innerHTML = `Submit Report`;
-//       //   }
-//       // };
-
-//       submitIncidentBtn.onclick = async () => {
-//         const reportText = document
-//           .getElementById("incident-text")
-//           .value.trim();
-//         const reason = document.getElementById("incident-reason").value;
-
-//         if (!reason) {
-//           alert("Please select a reason for the incident.");
-//           return;
-//         }
-
-//         if (!reportText) {
-//           alert("Please explain the incident before submitting.");
-//           return;
-//         }
-
-//         submitIncidentBtn.disabled = true;
-//         submitIncidentBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Submitting...`;
-
-//         try {
-//           const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//           const incidentDocPath = `incidentreports/${userId}/${date}`;
-
-//           await firebaseCRUD.setDataWithId(incidentDocPath, "report", {
-//             userId,
-//             date,
-//             reason,
-//             report: reportText,
-//             createdAt: new Date().toISOString(),
-//             lastUpdated: new Date().toISOString(),
-//           });
-
-//           incidentModal.hide();
-//           await uploadLogs();
-//         } catch (err) {
-//           console.error("Failed to upload incident report:", err);
-//           alert("Failed to upload incident report. Please try again.");
-//           submitIncidentBtn.disabled = false;
-//           submitIncidentBtn.innerHTML = `Submit Report`;
-//         }
-//       };
-//     } else {
-//       await uploadLogs();
-//     }
-//   });
-
 document
   .getElementById("upload-btn")
   .addEventListener("click", async function () {
@@ -1168,6 +754,10 @@ document
         }
 
         await crudOperations.upsert("completeAttendanceTbl", attendanceStatus);
+        await firebaseCRUD.createData(
+          "completeAttendanceTbl",
+          attendanceStatus
+        );
 
         for (const log of logsForDate) {
           await crudOperations.deleteData("timeInOut", log.id);
@@ -1244,16 +834,18 @@ document
 
         try {
           const { firebaseCRUD } = await import("./firebase-crud.js");
-
-          const incidentDocPath = `incidentreports`;
-          await firebaseCRUD.setDataWithId(incidentDocPath, userId, {
+          const incidentData = {
             userId,
             date,
             reason,
             report: reportText,
             createdAt: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
-          });
+          };
+
+          const incidentDocPath = `incidentreports`;
+
+          await firebaseCRUD.createData(incidentDocPath, incidentData);
 
           incidentModal.hide();
           await uploadLogs();

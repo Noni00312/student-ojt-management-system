@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       userId
     );
 
-    console.log("User data from IndexedDB:", dataArray);
+    // console.log("User data from IndexedDB:", dataArray);
 
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
@@ -59,7 +59,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         data.afternoonTimeOut
       );
 
-      img.src = data.userImg;
+      img.src = data.userImg
+        ? data.userImg
+        : "../assets/img/icons8_male_user_480px_1";
+
       companyName.textContent = data.companyName;
       companyAddress.textContent = data.companyAddress;
 

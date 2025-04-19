@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   request.onupgradeneeded = function (event) {
     db = event.target.result;
 
-    // Delete the old object store if it exists
     if (db.objectStoreNames.contains("reportTbl")) {
       db.deleteObjectStore("reportTbl");
     }
@@ -39,7 +38,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("IndexedDB error:", event.target.error);
   };
 
-
   try {
     const userId = localStorage.getItem("userId");
 
@@ -63,18 +61,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
     if (data != null) {
-
       img.src = data.userImg;
-
-
     } else {
       console.warn("No user data found for this user.");
     }
   } catch (err) {
     console.error("Failed to get user data from IndexedDB", err);
   }
-
-
 
   function setupUploadButton() {
     const uploadButton = document.getElementById("upload-reports-btn");
@@ -352,20 +345,41 @@ document.addEventListener("DOMContentLoaded", async function () {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-          if (file.size > 5000000) {
+          if (file.size > 1000000) {
             alert(`File ${file.name} is too large`);
             continue;
           }
 
           const reader = new FileReader();
           reader.onload = function (e) {
+            const container = document.createElement("div");
+            container.className = "img-thumbnail-container";
+
             const img = document.createElement("img");
             img.src = e.target.result;
-            img.className = "img-thumbnail me-2 mb-2";
+            img.className = "img-thumbnail";
             img.style.maxWidth = "80px";
             img.style.maxHeight = "80px";
             img.dataset.imageIndex = addModalImages.length;
-            addImageContainer.appendChild(img);
+
+            const deleteBtn = document.createElement("span");
+            deleteBtn.className = "delete-img-btn";
+            deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
+            deleteBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              const index = parseInt(img.dataset.imageIndex);
+              addModalImages.splice(index, 1);
+              container.remove();
+              // Update indices for remaining images
+              const remainingImages = addImageContainer.querySelectorAll("img");
+              remainingImages.forEach((img, newIndex) => {
+                img.dataset.imageIndex = newIndex;
+              });
+            });
+
+            container.appendChild(img);
+            container.appendChild(deleteBtn);
+            addImageContainer.appendChild(container);
 
             addModalImages.push(file);
           };
@@ -482,7 +496,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-          if (file.size > 5000000) {
+          if (file.size > 1000000) {
             alert(`File ${file.name} is too large`);
             continue;
           }
@@ -497,6 +511,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     viewImageContainer.addEventListener("click", function (e) {
       if (e.target.tagName === "IMG") {
         e.preventDefault();
+        const container = e.target.closest(".img-thumbnail-container");
+        if (!container) return;
+
         const imgIndex = parseInt(e.target.dataset.imageIndex);
         const isPendingAddition = e.target.dataset.pending === "true";
 
@@ -677,14 +694,29 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (report.images) {
         report.images.forEach((blob, index) => {
           if (!pendingImageChanges.toDelete.includes(index)) {
+            const container = document.createElement("div");
+            container.className = "img-thumbnail-container";
+
             const img = document.createElement("img");
             img.src = URL.createObjectURL(blob);
-            img.className = "img-thumbnail me-2 mb-2";
+            img.className = "img-thumbnail";
             img.style.maxWidth = "80px";
             img.style.maxHeight = "80px";
             img.dataset.imageIndex = index;
             img.dataset.pending = "false";
-            viewImageContainer.appendChild(img);
+
+            const deleteBtn = document.createElement("span");
+            deleteBtn.className = "delete-img-btn";
+            deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
+            deleteBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              pendingImageChanges.toDelete.push(index);
+              refreshViewModalImages(reportId, showPending);
+            });
+
+            container.appendChild(img);
+            container.appendChild(deleteBtn);
+            viewImageContainer.appendChild(container);
           }
         });
       }
@@ -694,14 +726,29 @@ document.addEventListener("DOMContentLoaded", async function () {
         pendingImageChanges.toAdd.forEach((file, index) => {
           const reader = new FileReader();
           reader.onload = function (e) {
+            const container = document.createElement("div");
+            container.className = "img-thumbnail-container";
+
             const img = document.createElement("img");
             img.src = e.target.result;
-            img.className = "img-thumbnail me-2 mb-2";
+            img.className = "img-thumbnail";
             img.style.maxWidth = "80px";
             img.style.maxHeight = "80px";
             img.dataset.imageIndex = index;
             img.dataset.pending = "true";
-            viewImageContainer.appendChild(img);
+
+            const deleteBtn = document.createElement("span");
+            deleteBtn.className = "delete-img-btn";
+            deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
+            deleteBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              pendingImageChanges.toAdd.splice(index, 1);
+              refreshViewModalImages(reportId, showPending);
+            });
+
+            container.appendChild(img);
+            container.appendChild(deleteBtn);
+            viewImageContainer.appendChild(container);
           };
           reader.readAsDataURL(file);
         });

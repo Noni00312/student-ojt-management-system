@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // DOM elements
     const userImg = document.querySelector(".profile-icon");
-    const userName = document.querySelector("#nav-container h3");
+    const userName = document.querySelector("#profile-name");
     const studentId = document.getElementById("student-id");
     const emailAddress = document.getElementById("email");
     const phoneNumber = document.getElementById("phone-number");
@@ -374,7 +374,7 @@ function setupEditButton(editButton) {
 
 function updateProfileUI(data) {
   const userImg = document.querySelector(".profile-icon");
-  const userName = document.querySelector("#nav-container h3");
+  const userName = document.querySelector("#profile-name");
   const studentId = document.getElementById("student-id");
   const emailAddress = document.getElementById("email");
   const phoneNumber = document.getElementById("phone-number");
@@ -605,3 +605,32 @@ function setupCompanySelectListener() {
     }
   });
 }
+
+// Add this to your profile.js file, preferably near the bottom before the closing script tag
+
+document.addEventListener("DOMContentLoaded", function () {
+  const logoutButton = document.getElementById("logout-button");
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", async function (e) {
+      e.preventDefault();
+
+      try {
+        // Clear the studentInfoTbl from IndexedDB
+        await crudOperations.clearTable("studentInfoTbl");
+
+        // Clear any user-related data from localStorage
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userToken");
+
+        // Redirect to login page
+        window.location.href = "/pages/login.html";
+      } catch (error) {
+        console.error("Error during logout:", error);
+        // Even if clearing fails, still redirect to login
+        window.location.href = "/pages/login.html";
+      }
+    });
+  }
+});

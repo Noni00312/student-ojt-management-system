@@ -1,5 +1,3 @@
-import { firebaseCRUD } from "./firebase-crud.js";
-
 document.addEventListener("DOMContentLoaded", function () {
   let db;
   const request = indexedDB.open("SOJTMSDB", 1);
@@ -28,155 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
     setupAddModal();
     setupViewModal();
     setupDateSearch();
-    setupUploadButton();
   };
 
   request.onerror = function (event) {
     console.error("IndexedDB error:", event.target.error);
   };
-
-  function setupUploadButton() {
-    const uploadButton = document.getElementById("upload-report-button");
-    if (!uploadButton) return;
-
-    uploadButton.addEventListener("click", async function () {
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        alert("User not authenticated. Please login again.");
-        return;
-      }
-
-      if (
-        !confirm(
-          "Are you sure you want to upload all assistant reports to the server?"
-        )
-      ) {
-        return;
-      }
-
-      try {
-        // Get all reports from IndexedDB
-        const transaction = db.transaction(["assistantReportTbl"], "readonly");
-        const store = transaction.objectStore("assistantReportTbl");
-        const index = store.index("userId");
-        const request = index.getAll(userId);
-
-        request.onsuccess = async function (event) {
-          const reports = event.target.result;
-          if (reports.length === 0) {
-            alert("No assistant reports to upload");
-            return;
-          }
-
-          // Process each report
-          for (const report of reports) {
-            try {
-              console.log(`Processing assistant report ${report.id}`);
-
-              // Create composite document ID
-              const reportId = `${userId}_${report.id}`;
-
-              // Convert images to base64 strings
-              const imagesBase64 = [];
-              if (report.images && report.images.length > 0) {
-                for (const [index, imageBlob] of report.images.entries()) {
-                  const base64String = await blobToBase64(imageBlob);
-                  imagesBase64.push(base64String);
-                }
-              }
-
-              // Create report data for Firebase
-              const firebaseReport = {
-                title: report.title,
-                content: report.content,
-                createdAt: report.createdAt,
-                userId: userId,
-                localId: report.id,
-                hasImages: report.images && report.images.length > 0,
-              };
-
-              // Create/update the report document with our composite ID
-              await firebaseCRUD.setDataWithId(
-                "assistantreports",
-                reportId,
-                firebaseReport
-              );
-              console.log(
-                `Created assistant report document with ID: ${reportId}`
-              );
-
-              // If there are images, upload them to the subcollection
-              if (imagesBase64.length > 0) {
-                console.log(
-                  `Uploading ${imagesBase64.length} images for report ${reportId}`
-                );
-
-                for (const [index, base64String] of imagesBase64.entries()) {
-                  try {
-                    // Create image document with auto-generated ID in the subcollection
-                    await firebaseCRUD.createData(
-                      `assistantreports/${reportId}/images`,
-                      {
-                        imageData: base64String,
-                        uploadedAt: new Date().toISOString(),
-                        order: index,
-                        originalName: `image_${index + 1}.jpg`,
-                        reportId: reportId,
-                      }
-                    );
-                    console.log(`Successfully uploaded image ${index + 1}`);
-                  } catch (imageError) {
-                    console.error(
-                      `Error uploading image ${index + 1}:`,
-                      imageError
-                    );
-                  }
-                }
-              }
-
-              // Delete from IndexedDB after successful upload
-              const deleteTransaction = db.transaction(
-                ["assistantReportTbl"],
-                "readwrite"
-              );
-              const deleteStore =
-                deleteTransaction.objectStore("assistantReportTbl");
-              deleteStore.delete(report.id);
-              console.log(`Deleted local assistant report ${report.id}`);
-            } catch (reportError) {
-              console.error(
-                `Error processing assistant report ${report.id}:`,
-                reportError
-              );
-            }
-          }
-
-          alert("Assistant reports uploaded successfully!");
-          displayReports();
-        };
-
-        request.onerror = function (event) {
-          console.error(
-            "Error fetching assistant reports from IndexedDB:",
-            event.target.error
-          );
-          alert("Error fetching assistant reports from local storage");
-        };
-      } catch (error) {
-        console.error("Upload error:", error);
-        alert("Error uploading assistant reports: " + error.message);
-      }
-    });
-  }
-
-  function blobToBase64(blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
 
   // ========================
   // ADD REPORT MODAL FUNCTIONS
@@ -697,7 +551,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   }
-
   function filterReportsByDate(selectedDate) {
     if (!db) {
       console.error("Database not initialized");
@@ -727,24 +580,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Convert selected date to formatted string for comparison
-      const searchDate = new Date(selectedDate);
-      const formattedSearchDate = searchDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-
-      // Filter user reports by formatted date string
+      // Filter user reports by date
       const filteredReports = userReports.filter((report) => {
         const reportDate = new Date(report.createdAt);
-        const formattedReportDate = reportDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
+        const searchDate = new Date(selectedDate);
 
-        return formattedReportDate === formattedSearchDate;
+        return (
+          reportDate.getFullYear() === searchDate.getFullYear() &&
+          reportDate.getMonth() === searchDate.getMonth() &&
+          reportDate.getDate() === searchDate.getDate()
+        );
       });
 
       if (filteredReports.length > 0) {

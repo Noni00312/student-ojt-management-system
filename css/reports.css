@@ -12,6 +12,32 @@ input {
   border-radius: 30px !important;
   padding: 16px 32px !important;
 }
+.img-thumbnail-container {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.img-thumbnail-container .delete-img-btn {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.delete-img-btn:hover {
+  background: #f8f9fa;
+}
 
 .reports-section {
   flex: 1;
@@ -118,7 +144,7 @@ input {
 }
 
 .report-images {
-  height: 70px;
+  height: 100px;
 }
 
 .image-container {
@@ -146,11 +172,6 @@ input {
 
 .image-container::-webkit-scrollbar-track {
   background: transparent;
-}
-
-.image-container img {
-  height: 100%;
-  display: inline-block;
 }
 
 .add-image-button,
@@ -184,11 +205,8 @@ input {
 /* Add this to your reports.css or styles.css */
 .image-container img {
   cursor: pointer;
-  transition: transform 0.2s;
-}
-
-#image-container img:hover {
-  transform: scale(1.05);
+  height: 100%;
+  display: inline-block;
 }
 
 .view-image-modal {
@@ -205,11 +223,10 @@ input {
 /* Add to your reports.css */
 .view-image-container {
   overflow-x: auto;
+  overflow-y: hidden;
   white-space: nowrap;
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 8px;
-  padding-bottom: 8px; /* Space for scrollbar */
+  scrollbar-color: #b1adbd transparent;
+  scrollbar-width: thin;
 }
 
 .view-image-container::-webkit-scrollbar,
@@ -221,15 +238,6 @@ input {
 .image-container::-webkit-scrollbar-thumb {
   background-color: #748e54;
   border-radius: 10px;
-}
-
-.view-image-container img {
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.view-image-container img:hover {
-  transform: scale(1.05);
 }
 
 #report-search-input {

@@ -133,3 +133,35 @@ input {
     max-width: 100px;
     height: auto;
   }
+
+/* Full Screen Image Modal Styles */
+#fullScreenImageModal .modal-content {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+  }
+  
+  #fullScreenImageModal .modal-body {
+    padding: 0;
+  }
+  
+  #fullScreenImageModal .modal-footer {
+    padding-bottom: 2rem;
+  }
+  
+  #fullScreenImageModal .btn-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 10;
+    opacity: 1;
+    filter: invert(1);
+  }
+  
+  /* Animation for modal */
+  .modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    transform: translateY(-50px);
+  }
+  
+  .modal.show .modal-dialog {
+    transform: none;
+  }

@@ -1,3 +1,54 @@
+document.addEventListener("DOMContentLoaded", function () {
+  // Check if current page is history.html or report-online.html
+  const currentPage = window.location.pathname.split("/").pop();
+  const onlinePages = [
+    "history.html",
+    "report-online.html",
+    "report-online.html",
+    "assistant-report-online.html",
+    "admin-assistant-report.html",
+    "admin-assistant.html",
+    "admin-company.html",
+    "admin-dashboard.html",
+    "admin-incident-report-student.html",
+    "admin-incident-report.html",
+    "admin-profile.html",
+    "admin-student-report.html",
+    "admin-student.html",
+    "admin-t-i-o-company.html",
+    "admin-t-i-o-students.html",
+    "admin-t-i-o.html",
+    "login.html",
+    "register.html",
+    "additional-info.html",
+  ];
+
+  if (onlinePages.includes(currentPage)) {
+    // Check internet connection
+    if (!navigator.onLine) {
+      // Redirect to no-internet page
+      window.location.href = "/pages/no-internet.html";
+    }
+
+    // Also listen for online/offline changes
+    window.addEventListener("offline", function () {
+      window.location.href = "/pages/no-internet.html";
+    });
+  }
+
+  // Optional: For links to these pages, check before navigating
+  document
+    .querySelectorAll('a[href*="history.html"], a[href*="report-online.html"]')
+    .forEach((link) => {
+      link.addEventListener("click", function (e) {
+        if (!navigator.onLine) {
+          e.preventDefault();
+          window.location.href = "/pages/no-internet.html";
+        }
+      });
+    });
+});
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/sw.js")

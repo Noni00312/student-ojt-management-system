@@ -1,6 +1,6 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   let db;
   const request = indexedDB.open("SOJTMSDB", 1);
   let currentReportId = null;
@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
   request.onupgradeneeded = function (event) {
     db = event.target.result;
 
-    // Delete the old object store if it exists
     if (db.objectStoreNames.contains("reportTbl")) {
       db.deleteObjectStore("reportTbl");
     }
@@ -39,6 +38,37 @@ document.addEventListener("DOMContentLoaded", function () {
     console.error("IndexedDB error:", event.target.error);
   };
 
+  try {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("No userId found in localStorage");
+      return;
+    }
+
+    await window.dbReady;
+
+    const img = document.getElementById("user-img");
+
+    const dataArray = await crudOperations.getByIndex(
+      "studentInfoTbl",
+      "userId",
+      userId
+    );
+
+    console.log("User data from IndexedDB:", dataArray);
+
+    const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+    if (data != null) {
+      img.src = data.userImg;
+    } else {
+      console.warn("No user data found for this user.");
+    }
+  } catch (err) {
+    console.error("Failed to get user data from IndexedDB", err);
+  }
+
   function setupUploadButton() {
     const uploadButton = document.getElementById("upload-reports-btn");
     if (!uploadButton) return;
@@ -57,7 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        // Get all reports from IndexedDB
         const transaction = db.transaction(["reportTbl"], "readonly");
         const store = transaction.objectStore("reportTbl");
         const index = store.index("userId");
@@ -70,10 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
           }
 
-          // Process each report
           for (const report of reports) {
             try {
-              // Convert images to base64 strings for Firebase
               const imagesBase64 = [];
               if (report.images && report.images.length > 0) {
                 for (const imageBlob of report.images) {
@@ -82,20 +109,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
               }
 
-              // Prepare data for Firebase
               const firebaseReport = {
                 title: report.title,
                 content: report.content,
                 createdAt: report.createdAt,
                 userId: report.userId,
                 images: imagesBase64,
-                localId: report.id, // Store the local ID for reference
+                localId: report.id,
               };
 
-              // Upload to Firebase using firebaseCRUD
               await firebaseCRUD.createData("reports", firebaseReport);
 
-              // Delete from IndexedDB after successful upload
               const deleteTransaction = db.transaction(
                 ["reportTbl"],
                 "readwrite"
@@ -104,12 +128,11 @@ document.addEventListener("DOMContentLoaded", function () {
               deleteStore.delete(report.id);
             } catch (error) {
               console.error(`Error uploading report ${report.id}:`, error);
-              // Continue with next report even if one fails
             }
           }
 
           alert("Reports uploaded successfully!");
-          displayReports(); // Refresh the UI
+          displayReports();
         };
 
         request.onerror = function (event) {
@@ -126,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Helper function to convert Blob to Base64
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -136,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ========================
   function setupUploadButton() {
     const uploadButton = document.getElementById("upload-report-button");
     if (!uploadButton) return;
@@ -155,7 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        // Get all reports from IndexedDB
         const transaction = db.transaction(["reportTbl"], "readonly");
         const store = transaction.objectStore("reportTbl");
         const index = store.index("userId");
@@ -168,15 +188,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
           }
 
-          // Process each report
           for (const report of reports) {
             try {
               console.log(`Processing report ${report.id}`);
 
-              // Create composite document ID
               const reportId = `${userId}_${report.id}`;
 
-              // Create report data
               const firebaseReport = {
                 title: report.title,
                 content: report.content,
@@ -186,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 hasImages: report.images && report.images.length > 0,
               };
 
-              // Create/update the report document with our composite ID
               await firebaseCRUD.setDataWithId(
                 "reports",
                 reportId,
@@ -194,14 +210,10 @@ document.addEventListener("DOMContentLoaded", function () {
               );
               console.log(`Created report document with ID: ${reportId}`);
 
-              // If there are images, upload them to the subcollection
               if (report.images && report.images.length > 0) {
                 console.log(
                   `Uploading ${report.images.length} images for report ${reportId}`
                 );
-
-                // First delete any existing images in the subcollection (optional)
-                // await deleteSubcollection(`reports/${reportId}/images`);
 
                 for (const [index, imageBlob] of report.images.entries()) {
                   try {
@@ -210,7 +222,6 @@ document.addEventListener("DOMContentLoaded", function () {
                       `Uploading image ${index + 1} of ${report.images.length}`
                     );
 
-                    // Create image document with auto-generated ID in the subcollection
                     await firebaseCRUD.createData(
                       `reports/${reportId}/images`,
                       {
@@ -218,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         uploadedAt: new Date().toISOString(),
                         order: index,
                         originalName: `image_${index + 1}.jpg`,
-                        reportId: reportId, // Reference back to parent report
+                        reportId: reportId,
                       }
                     );
 
@@ -232,7 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
               }
 
-              // Delete from IndexedDB after successful upload
               const deleteTransaction = db.transaction(
                 ["reportTbl"],
                 "readwrite"
@@ -266,27 +276,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Helper function to delete a subcollection (optional)
-  // async function deleteSubcollection(path) {
-  //   const querySnapshot = await firebase.firestore().collection(path).get();
-  //   const batch = firebase.firestore().batch();
-  //   querySnapshot.forEach((doc) => {
-  //     batch.delete(doc.ref);
-  //   });
-  //   await batch.commit();
-  // }
-
-  // Helper function to convert blob to base64
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]); // remove data URL prefix
+      reader.onload = () => resolve(reader.result.split(",")[1]);
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
   }
 
-  // Helper function to convert Blob to Base64
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -296,9 +294,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ========================
-  // ADD REPORT MODAL FUNCTIONS
-  // ========================
   function setupAddModal() {
     const addImageInput = document.getElementById("add-image-input");
     const addImageContainer = document.getElementById("add-image-container");
@@ -315,20 +310,40 @@ document.addEventListener("DOMContentLoaded", function () {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-          if (file.size > 5000000) {
+          if (file.size > 1000000) {
             alert(`File ${file.name} is too large`);
             continue;
           }
 
           const reader = new FileReader();
           reader.onload = function (e) {
+            const container = document.createElement("div");
+            container.className = "img-thumbnail-container";
+
             const img = document.createElement("img");
             img.src = e.target.result;
-            img.className = "img-thumbnail me-2 mb-2";
+            img.className = "img-thumbnail";
             img.style.maxWidth = "80px";
             img.style.maxHeight = "80px";
             img.dataset.imageIndex = addModalImages.length;
-            addImageContainer.appendChild(img);
+
+            const deleteBtn = document.createElement("span");
+            deleteBtn.className = "delete-img-btn";
+            deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
+            deleteBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              const index = parseInt(img.dataset.imageIndex);
+              addModalImages.splice(index, 1);
+              container.remove();
+              const remainingImages = addImageContainer.querySelectorAll("img");
+              remainingImages.forEach((img, newIndex) => {
+                img.dataset.imageIndex = newIndex;
+              });
+            });
+
+            container.appendChild(img);
+            container.appendChild(deleteBtn);
+            addImageContainer.appendChild(container);
 
             addModalImages.push(file);
           };
@@ -360,7 +375,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const transaction = db.transaction(["reportTbl"], "readwrite");
         const store = transaction.objectStore("reportTbl");
 
-        // Generate a unique reportId
         const reportId = Date.now().toString();
 
         const reportData = {
@@ -413,21 +427,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ========================
-  // VIEW/UPDATE REPORT MODAL FUNCTIONS
-  // ========================
   function setupViewModal() {
     const viewImageContainer = document.getElementById("view-image-container");
     const updateReportForm = document.getElementById("update-report-form");
     const viewImageInput = document.getElementById("view-image-input");
     const viewReportModal = document.getElementById("viewReportModal");
 
-    // Reset pending changes when modal is shown
     viewReportModal.addEventListener("show.bs.modal", function () {
       pendingImageChanges = { toAdd: [], toDelete: [] };
     });
 
-    // Reset pending changes when modal is hidden without saving
     viewReportModal.addEventListener("hide.bs.modal", function () {
       pendingImageChanges = { toAdd: [], toDelete: [] };
     });
@@ -438,21 +447,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const files = event.target.files;
 
-        // Add new files to pending changes
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-          if (file.size > 5000000) {
+          if (file.size > 1000000) {
             alert(`File ${file.name} is too large`);
             continue;
           }
           pendingImageChanges.toAdd.push(file);
         }
 
-        // Show preview of pending additions
         refreshViewModalImages(currentReportId, true);
       });
     }
@@ -460,6 +467,9 @@ document.addEventListener("DOMContentLoaded", function () {
     viewImageContainer.addEventListener("click", function (e) {
       if (e.target.tagName === "IMG") {
         e.preventDefault();
+        const container = e.target.closest(".img-thumbnail-container");
+        if (!container) return;
+
         const imgIndex = parseInt(e.target.dataset.imageIndex);
         const isPendingAddition = e.target.dataset.pending === "true";
 
@@ -504,7 +514,6 @@ document.addEventListener("DOMContentLoaded", function () {
         getRequest.onsuccess = function () {
           const report = getRequest.result;
 
-          // Verify the report belongs to the current user
           if (report.userId !== userId) {
             alert("You are not authorized to edit this report");
             return;
@@ -513,16 +522,13 @@ document.addEventListener("DOMContentLoaded", function () {
           report.title = title;
           report.content = content;
 
-          // Process image changes only when update is clicked
           if (!report.images) report.images = [];
 
-          // Remove deleted images
-          pendingImageChanges.toDelete.sort((a, b) => b - a); // Sort descending to avoid index issues
+          pendingImageChanges.toDelete.sort((a, b) => b - a);
           pendingImageChanges.toDelete.forEach((index) => {
             report.images.splice(index, 1);
           });
 
-          // Add new images
           pendingImageChanges.toAdd.forEach((file) => {
             report.images.push(file);
           });
@@ -532,10 +538,8 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Report updated successfully!");
             displayReports();
 
-            // Reset pending changes
             pendingImageChanges = { toAdd: [], toDelete: [] };
 
-            // Close the modal
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("viewReportModal")
             );
@@ -592,9 +596,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ========================
-  // IMAGE VIEW MODAL FUNCTIONS
-  // ========================
   document
     .getElementById("delete-image-btn")
     .addEventListener("click", function () {
@@ -607,23 +608,18 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("viewImageModal").dataset.reportId;
 
       if (isPending) {
-        // Remove from pending additions
         pendingImageChanges.toAdd.splice(imageIndex, 1);
       } else {
-        // Add to pending deletions
         pendingImageChanges.toDelete.push(imageIndex);
       }
 
-      // Refresh the view
       refreshViewModalImages(reportId, true);
 
-      // Close the modal
       bootstrap.Modal.getInstance(
         document.getElementById("viewImageModal")
       ).hide();
     });
 
-  // Helper function to refresh view modal images
   function refreshViewModalImages(reportId, showPending = false) {
     const viewImageContainer = document.getElementById("view-image-container");
     viewImageContainer.innerHTML = "";
@@ -636,35 +632,63 @@ document.addEventListener("DOMContentLoaded", function () {
       const report = getRequest.result;
       if (!report) return;
 
-      // Display existing images (excluding pending deletions)
       if (report.images) {
         report.images.forEach((blob, index) => {
           if (!pendingImageChanges.toDelete.includes(index)) {
+            const container = document.createElement("div");
+            container.className = "img-thumbnail-container";
+
             const img = document.createElement("img");
             img.src = URL.createObjectURL(blob);
-            img.className = "img-thumbnail me-2 mb-2";
+            img.className = "img-thumbnail";
             img.style.maxWidth = "80px";
             img.style.maxHeight = "80px";
             img.dataset.imageIndex = index;
             img.dataset.pending = "false";
-            viewImageContainer.appendChild(img);
+
+            const deleteBtn = document.createElement("span");
+            deleteBtn.className = "delete-img-btn";
+            deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
+            deleteBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              pendingImageChanges.toDelete.push(index);
+              refreshViewModalImages(reportId, showPending);
+            });
+
+            container.appendChild(img);
+            container.appendChild(deleteBtn);
+            viewImageContainer.appendChild(container);
           }
         });
       }
 
-      // Display pending additions
       if (showPending && pendingImageChanges.toAdd.length > 0) {
         pendingImageChanges.toAdd.forEach((file, index) => {
           const reader = new FileReader();
           reader.onload = function (e) {
+            const container = document.createElement("div");
+            container.className = "img-thumbnail-container";
+
             const img = document.createElement("img");
             img.src = e.target.result;
-            img.className = "img-thumbnail me-2 mb-2";
+            img.className = "img-thumbnail";
             img.style.maxWidth = "80px";
             img.style.maxHeight = "80px";
             img.dataset.imageIndex = index;
             img.dataset.pending = "true";
-            viewImageContainer.appendChild(img);
+
+            const deleteBtn = document.createElement("span");
+            deleteBtn.className = "delete-img-btn";
+            deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
+            deleteBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              pendingImageChanges.toAdd.splice(index, 1);
+              refreshViewModalImages(reportId, showPending);
+            });
+
+            container.appendChild(img);
+            container.appendChild(deleteBtn);
+            viewImageContainer.appendChild(container);
           };
           reader.readAsDataURL(file);
         });
@@ -672,7 +696,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // Close the image modal when clicking the X
   document
     .querySelector("#viewImageModal .bi-x-lg")
     .addEventListener("click", function () {
@@ -681,9 +704,6 @@ document.addEventListener("DOMContentLoaded", function () {
       ).hide();
     });
 
-  // ========================
-  // HELPER FUNCTIONS
-  // ========================
   function loadReportDetails(reportId) {
     const transaction = db.transaction(["reportTbl"], "readonly");
     const store = transaction.objectStore("reportTbl");
@@ -701,7 +721,6 @@ document.addEventListener("DOMContentLoaded", function () {
         viewModal.querySelector("#update-report-form").dataset.reportId =
           reportId;
 
-        // Display images
         refreshViewModalImages(reportId);
       }
     };
@@ -725,7 +744,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (reports.length > 0) {
         cardContainer.innerHTML = "";
 
-        // Sort reports by date (newest first)
         reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         reports.forEach((report) => {
@@ -759,14 +777,17 @@ document.addEventListener("DOMContentLoaded", function () {
           cardContainer.appendChild(card);
         });
       } else {
-        cardContainer.innerHTML = "<p>No reports found</p>";
+        cardContainer.innerHTML = `
+            <div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No Reports Found</h6>
+                <p class="mt-1">Offline reports that have not been sent to the server will be displayed here.</p>
+            </div>
+        `;
       }
     };
   }
 
-  // ========================
-  // DATE SEARCH FUNCTIONALITY
-  // ========================
   function setupDateSearch() {
     const dateInput = document.getElementById("report-search-input");
     if (dateInput) {
@@ -791,7 +812,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const transaction = db.transaction(["reportTbl"], "readonly");
     const store = transaction.objectStore("reportTbl");
 
-    // First get all reports for the current user using the userId index
     const userIndex = store.index("userId");
     const userRequest = userIndex.getAll(userId);
 
@@ -800,12 +820,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const cardContainer = document.querySelector(".card-container");
 
       if (!selectedDate) {
-        // If no date selected, just display all user reports
         displayReports();
         return;
       }
 
-      // Filter user reports by date
       const filteredReports = userReports.filter((report) => {
         const reportDate = new Date(report.createdAt);
         const searchDate = new Date(selectedDate);
@@ -850,7 +868,13 @@ document.addEventListener("DOMContentLoaded", function () {
           cardContainer.appendChild(card);
         });
       } else {
-        cardContainer.innerHTML = "<p>No reports found for this date</p>";
+        cardContainer.innerHTML = `
+            <div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No Reports Found For This Date</h6>
+                <p class="mt-1">Please choose a different date or create a new report.</p>
+            </div>
+        `;
       }
     };
 

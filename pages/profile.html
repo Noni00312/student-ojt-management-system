@@ -21,31 +21,34 @@
     <title>SOJTMS - Profile</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg fixed-top accent-bg-color">
-      <div
-        id="nav-container"
-        class="container d-flex align-items-center justify-content-between w-100"
-      >
-        <div class="text-white">
-          <a
-            id="return-button"
-            class="text-decoration-none"
-            href="/pages/dashboard.html"
-          >
-            <i class="bi bi-arrow-left fs-3"></i>
-          </a>
-
-          <div class="d-flex align-items-center">
-            <img
-              class="profile-icon"
-              src="/assets/img/icons8_male_user_480px_1.png"
-              loading="lazy"
-            />
-            <h3 class="fw-bold">Last Name, First Name I.</h3>
-          </div>
-        </div>
+    <div id="nav-container" class="container w-100 mt-3">
+      <div>
+        <a
+          id="return-button"
+          class="text-decoration-none"
+          href="/pages/dashboard.html"
+        >
+          <i class="bi bi-arrow-left fs-3"></i>
+        </a>
       </div>
-    </nav>
+
+      <!-- Center: Profile Image and Name -->
+      <div class="d-flex flex-column align-items-center p-2">
+        <img
+          class="profile-icon mb-2"
+          src="/assets/img/icons8_male_user_480px_1.png"
+          loading="lazy"
+          style="width: 100px; height: 100px; border-radius: 50%"
+        />
+        <h3 id="profile-name" class="text-dark fw-bold text-center mb-0">
+          - - -
+        </h3>
+        <h5 id="student-id" class="student-id text-dark">- - -</h5>
+      </div>
+
+      <!-- Right: Spacer for symmetry -->
+      <div style="width: 40px"></div>
+    </div>
 
     <section class="container px-4 px-md-4">
       <div id="profile-card" class="px-5 py-sm-3 d-flex flex-column">
@@ -67,45 +70,36 @@
           </div>
 
           <div
-            id="student-id-container"
-            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="student-id-label" class="student-id-label">Student ID</p>
-            <h5 id="student-id" class="student-id">2112889</h5>
-          </div>
-
-          <div
             id="email-container"
-            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-lg-6 col-md-12 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="email-label" class="email-label">Email</p>
-            <h5 id="email" class="email">name@sample.com</h5>
+            <h5 id="email" class="email">- - -</h5>
           </div>
 
           <div
             id="phone-container"
-            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="phone-label" class="phone-label">Phone</p>
-            <h5 id="phone-number" class="phone-number">09123452398</h5>
+            <h5 id="phone-number" class="phone-number">- - -</h5>
           </div>
+          <div class="separator-line" style="border: 1.5px solid #f6f8e2"></div>
 
           <div
             id="gender-container"
-            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="gender-label" class="gender-label">Gender</p>
-            <h5 id="gender" class="gender">Male</h5>
+            <h5 id="gender" class="gender">- - -</h5>
           </div>
 
           <div
             id="address-container"
-            class="form-floating col-md-8 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="address-label" class="address-label">Address</p>
-            <h5 id="address" class="address">
-              BRGY Kinamaligan, PRK 4, Masbate City, MASBATE, Philippines
-            </h5>
+            <h5 id="address" class="address">- - -</h5>
           </div>
 
           <div
@@ -120,36 +114,32 @@
 
           <div
             id="company-name-container"
-            class="form-floating col-md-5 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="company-name-label" class="company-name-label">
               Company Name
             </p>
-            <h5 id="company-name" class="company-name">
-              Sample Company Name Sample
-            </h5>
+            <h5 id="company-name" class="company-name">- - -</h5>
           </div>
 
           <div
             id="company-address-container"
-            class="form-floating col-md-5 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="company-address-label" class="company-address-label">
               Company Address
             </p>
-            <h5 id="company-address" class="company-address">
-              Sample Company Address Sample
-            </h5>
+            <h5 id="company-address" class="company-address">- - -</h5>
           </div>
 
           <div
             id="work-schedule-container"
-            class="form-floating col-md-2 mb-3 ps-1 pe-1 position-relative"
+            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
           >
             <p id="work-schedule-label" class="work-schedule-label">
               Work Schedule
             </p>
-            <h5 id="work-schedule" class="work-schedule">MWF</h5>
+            <h5 id="work-schedule" class="work-schedule">- - -</h5>
           </div>
 
           <div
@@ -169,7 +159,7 @@
             <p id="morning-time-in-label" class="morning-time-in-label">
               Morning - Time in
             </p>
-            <h5 id="morning-time-in" class="morning-time-in">07:30 AM</h5>
+            <h5 id="morning-time-in" class="morning-time-in">- - -</h5>
           </div>
 
           <div
@@ -179,7 +169,7 @@
             <p id="morning-time-out-label" class="morning-time-out-label">
               Morning - Time out
             </p>
-            <h5 id="morning-time-out" class="morning-time-out">11:30 AM</h5>
+            <h5 id="morning-time-out" class="morning-time-out">- - -</h5>
           </div>
 
           <div
@@ -189,7 +179,7 @@
             <p id="afternoon-time-in-label" class="afternoon-time-in-label">
               Afternoon - Time in
             </p>
-            <h5 id="afternoon-time-in" class="afternoon-time-in">01:00 PM</h5>
+            <h5 id="afternoon-time-in" class="afternoon-time-in">- - -</h5>
           </div>
 
           <div
@@ -199,7 +189,7 @@
             <p id="afternoon-time-out-label" class="afternoon-time-out-label">
               Afternoon - Time out
             </p>
-            <h5 id="afternoon-time-out" class="afternoon-time-out">05:00 PM</h5>
+            <h5 id="afternoon-time-out" class="afternoon-time-out">- - -</h5>
           </div>
         </div>
       </div>
@@ -591,7 +581,11 @@
               </div>
 
               <div class="d-flex justify-content-center">
-                <button type="submit" class="mt-2 mb-3 d-block update-profile">
+                <button
+                  id="update-profile"
+                  type="submit"
+                  class="mt-2 mb-3 d-block update-profile"
+                >
                   <span>Update Profile</span>
                 </button>
               </div>

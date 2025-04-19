@@ -17,24 +17,23 @@ body {
   max-width: 100%;
 }
 
-section {
-  margin-top: 180px;
-}
-
-.update-profile {
-  display: flex;
+#update-profile {
+  display: inline-flex;
+  justify-content: center;
   align-items: center;
-  border: none;
   border-radius: 40px !important;
   outline: none;
-  padding: 8px 28px;
-  background-color: var(--accent);
-  color: var(--primary);
-  font-size: x-small;
-  font-weight: semi-bold;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 168ms ease-out;
+  margin-top: 50px;
+  padding: 16px 48px;
+  background-color: #ffffff;
+  color: var(--accent) !important;
+  font-size: 1rem !important;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-align: center;
+  width: auto;
+  min-width: 350px;
 }
 
 .form-floating h2,
@@ -176,14 +175,43 @@ i {
   background-color: #3c3d42 !important;
 }
 
+section {
+  margin-top: 50px;
+}
+
 #return-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px !important;
+  outline: none;
+  padding: 16px 48px;
+  background-color: var(--accent);
   color: var(--primary) !important;
-  margin-left: 15px;
+  font-size: 1rem !important;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-align: center;
+  width: auto;
 }
 
 #edit-button {
   padding: 20px;
-  color: var(--accent) !important;
+  color: white !important;
+}
+
+#edit-button:hover {
+  padding: 20px;
+  color: white !important;
+}
+
+#edit-button:active {
+  color: white !important;
+}
+
+#edit-button:disabled {
+  color: white !important;
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator {
@@ -208,7 +236,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   -webkit-box-shadow: 0px 5px 16px -4px rgba(0, 0, 0, 0.76);
   box-shadow: 0px 5px 16px -4px rgba(0, 0, 0, 0.76);
   border: none;
-  background-color: var(--forecolor);
+  background-color: var(--accent);
 }
 
 .logout-button {
@@ -219,7 +247,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   outline: none;
   margin-top: 50px;
   padding: 16px 48px;
-  background-color: #f44336;
+  background-color: var(--accent);
   color: var(--primary) !important;
   font-size: 1rem !important;
   font-weight: bold;
@@ -227,7 +255,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   text-decoration: none;
   text-align: center;
   width: auto;
-  min-width: 150px;
+  min-width: 350px;
 }
 
 .logout-button-container {
@@ -239,7 +267,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .logout-button:hover {
-  background-color: #da3c31 !important;
+  background-color: var(--accent-darken) !important;
   color: var(--primary) !important;
 }
 
@@ -335,12 +363,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     margin: 0.5rem auto !important;
   }
 
-  section {
-    margin-top: 180px;
-  }
   #nav-container {
     display: flex;
-    justify-content: start !important;
   }
 
   .form-floating h2 {
@@ -354,5 +378,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
   .logout-button {
     width: 100%;
+    min-width: 150px;
   }
 }

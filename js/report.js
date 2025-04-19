@@ -796,6 +796,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
     }
   }
+
   function filterReportsByDate(selectedDate) {
     if (!db) {
       console.error("Database not initialized");

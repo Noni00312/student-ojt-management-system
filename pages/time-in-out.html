@@ -336,7 +336,7 @@
     <!-- Camera  -->
 
     <!-- incedent report modal -->
-    <div
+    <!-- <div
       class="modal fade"
       id="incidentModal"
       tabindex="-1"
@@ -361,6 +361,64 @@
               rows="4"
             ></textarea>
           </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button id="incident-submit" class="btn btn-primary">
+              Submit Report
+            </button>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div
+      class="modal fade"
+      id="incidentModal"
+      tabindex="-1"
+      aria-labelledby="incidentReportModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-dark">Incident Report</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-floating mb-3">
+              <select
+                class="form-select"
+                id="incident-reason"
+                aria-label="Incident Reason"
+              >
+                <option value="" selected disabled>Select a reason</option>
+                <option value="Incomplete attendance">
+                  Incomplete attendance
+                </option>
+                <option value="Late">Late</option>
+                <option value="Absent">Absent</option>
+                <option value="Half day">Half day</option>
+              </select>
+              <label for="incident-reason">Reason for incident report</label>
+            </div>
+            <div class="form-floating">
+              <textarea
+                id="incident-text"
+                class="form-control"
+                placeholder="Leave your report here"
+                style="height: 100px"
+              ></textarea>
+              <label for="incident-text">Explain the incident</label>
+            </div>
+          </div>
+
           <div class="modal-footer">
             <button class="btn btn-secondary" data-bs-dismiss="modal">
               Close

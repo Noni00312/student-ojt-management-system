@@ -34,7 +34,7 @@
     <!-- Student Report-->
     <section class="d-flex flex-row student-report-section gap-2 p-2" style="height: 90vh; min-height: 90vh">
       <div class="report-date-container p-2" style="
-          min-width: 60px;
+          min-width: 560px;
           width: 25%;
           height: calc(100vh - 80px);
           background-color: #3c3d42;
@@ -96,7 +96,7 @@
               </p>
               <i class="bi bi-x-lg fs-5" role="button" data-bs-dismiss="modal" aria-label="Close"></i>
             </div>
-            <img src="../assets/img/Department-of-Agrarian-Reform.jpeg" alt="company background image" />
+            <img src="" id="image" alt="company background image" />
           </div>
           <div class="picture-edit-container">
             <div class="user-img-container">
@@ -382,7 +382,7 @@
 
 
     <!-- Image View Modal -->
-    <div class="modal fade" id="viewImageModal" tabindex="-1" aria-hidden="true">
+    <!-- <div class="modal fade" id="viewImageModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -391,9 +391,23 @@
           <div class="modal-body text-center">
             <img id="modal-image-view" src="" class="img-fluid" alt="Report Image">
           </div>
-          <!-- <div class="modal-footer">
-            <button type="button" class="btn btn-danger" id="delete-image-btn">Delete Image</button>
-          </div> -->
+          
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Image View Modal -->
+    <div class="modal fade" id="viewImageModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl"> <!-- Changed to modal-xl -->
+        <div class="modal-content bg-dark"> <!-- Added dark background -->
+          <div class="modal-header border-0"> <!-- Removed border -->
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center p-0"> <!-- Removed padding -->
+            <img id="modal-image-view" src="" class="img-fluid" alt="Report Image"
+              style="max-height: 85vh; object-fit: contain; width: auto; margin: 0 auto;">
+            <!-- Improved image sizing -->
+          </div>
         </div>
       </div>
     </div>

@@ -305,6 +305,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (userId) {
       await loadStudentReports(userId);
+      await loadStudentData(userId); // Add this line to load student data
+
 
       // Added: Check if already assistant when page loads
       try {
@@ -332,6 +334,116 @@ document.addEventListener('DOMContentLoaded', async function () {
     showErrorToast("Failed to initialize: " + error.message);
   }
 });
+
+
+
+// Updated loadStudentData function with company image fetching
+async function loadStudentData(userId) {
+  try {
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+
+    if (!students || students.length === 0) {
+      console.log("No student data found");
+      return;
+    }
+
+    const studentData = students[0];
+
+    // Update the modal with student data
+    const companyNameEl = document.getElementById('company-name');
+    const companyImageEl = document.querySelector('.company-container img');
+    const userNameEl = document.getElementById('user-name');
+    const phoneEl = document.querySelector('.phone-email-container p span');
+    const emailEl = document.querySelector('.email-add');
+    const phoneTooltip = document.querySelector('.phone-email-container .tt[data-bs-title]');
+    const emailTooltip = document.querySelector('.phone-email-container .tt[data-bs-title="edagardobalan24@gmail.com"]');
+
+    // Construct full name
+    let fullName = studentData.firstName || '';
+    if (studentData.middleName) fullName += ' ' + studentData.middleName;
+    if (studentData.lastName) fullName += ' ' + studentData.lastName;
+    if (studentData.suffix) fullName += ' ' + studentData.suffix;
+
+    // Update elements
+    if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
+    if (userNameEl) userNameEl.textContent = fullName;
+
+    if (phoneEl) phoneEl.textContent = studentData.phoneNumber || 'N/A';
+    if (emailEl) emailEl.textContent = studentData.emailAddress || 'N/A';
+
+    if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', studentData.phoneNumber || '');
+    if (emailTooltip) emailTooltip.setAttribute('data-bs-title', studentData.emailAddress || '');
+
+    // Fetch and display company image if company name exists
+    if (studentData.companyName) {
+      await loadCompanyImage(studentData.companyName, companyImageEl);
+    }
+
+  } catch (error) {
+    console.error("Error loading student data:", error);
+    showErrorToast("Failed to load student data: " + error.message);
+  }
+}
+
+
+
+
+async function loadCompanyImage(companyName) {
+  try {
+    const imageElement = document.getElementById('image');
+    if (!imageElement) {
+      console.error("Image element not found");
+      return;
+    }
+
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const companies = await firebaseCRUD.queryData("company", "companyName", "==", companyName);
+
+    if (companies && companies.length > 0 && companies[0].image) {
+      const base64Image = companies[0].image;
+      console.log("Full Base64 image length:", base64Image.length);
+
+      // Verify the Base64 string is complete
+      if (base64Image.endsWith('==') || base64Image.endsWith('=') ||
+        (base64Image.length % 4 === 0)) {
+        imageElement.src = base64Image;
+        imageElement.alt = `${companyName} logo`;
+        console.log("Image source set successfully");
+
+        // Add onload and onerror handlers for debugging
+        imageElement.onload = () => console.log("Image loaded successfully");
+        imageElement.onerror = () => {
+          console.error("Error loading image");
+          setDefaultImage(imageElement);
+        };
+      } else {
+        console.error("Incomplete Base64 string");
+        setDefaultImage(imageElement);
+      }
+    } else {
+      console.log("No company image found, using default");
+      setDefaultImage(imageElement);
+    }
+  } catch (error) {
+    console.error("Error loading company image:", error);
+    setDefaultImage(document.getElementById('image'));
+  }
+}
+
+function setDefaultImage(imgElement) {
+  if (imgElement) {
+    imgElement.src = "../assets/img/Department-of-Agrarian-Reform.jpeg";
+    imgElement.alt = "Default company background image";
+  }
+}
+
+
+
+
+
+
+
 
 // Updated appoint assistant functionality
 document.getElementById('appoint-assistant-btn')?.addEventListener('click', async function () {
@@ -445,7 +557,7 @@ async function displayReports(reports) {
     const images = await loadReportImages(report.id);
 
     const reportElement = document.createElement('div');
-    reportElement.className = 'report p-2';
+    reportElement.className = 'report p-3 mb-4 rounded';
 
 
     reportElement.innerHTML = `
@@ -681,8 +793,8 @@ async function initializeDropdowns() {
   const genderSelect = document.getElementById('gender');
   // Clear and repopulate to ensure fresh state
   genderSelect.innerHTML = `
-    <option value="male">Male</option>
-    <option value="female">Female</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
   `;
 
   // Initialize company dropdown

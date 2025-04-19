@@ -428,7 +428,9 @@ body {
   /* Optional: gives space for the scrollbar */
 }
 
-
+.report p-3 mb-4 rounded {
+  background-color: #3c3d42;
+}
 
 
 /* .student-report-container {

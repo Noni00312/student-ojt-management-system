@@ -1,28 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    // try {
-    //     // Get userId from URL or localStorage
-    //     const userId = getUserIdFromUrl() || localStorage.getItem('userId');
-    //     console.log(userId);
 
-    //     if (userId) {
-    //         // First verify this is actually an assistant
-    //         const { firebaseCRUD } = await import("./firebase-crud.js");
-    //         const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
-
-    //         if (!students || students.length === 0) throw new Error("Assistant not found");
-    //         if (students[0].userType !== "studentAssistant") {
-    //             throw new Error("This user is not an assistant");
-    //         }
-
-    //         await loadAssistantReports(userId);
-    //     } else {
-    //         console.error("No user ID found");
-    //         // window.location.href = 'admin-assistant.html';
-    //     }
-    // } catch (error) {
-    //     console.error("Initialization error:", error);
-    //     showErrorToast("Failed to initialize: " + error.message);
-    // }
 
 
 
@@ -33,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         if (userId) {
             await loadAssistantReports(userId);
+            await loadStudentData(userId); // Add this line to load student data
 
             // Added: Check if already assistant when page loads
             try {
@@ -63,6 +41,177 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 
+
+// // New function to load student data
+// async function loadStudentData(userId) {
+//     try {
+//         const { firebaseCRUD } = await import("./firebase-crud.js");
+//         const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+
+//         if (!students || students.length === 0) {
+//             console.log("No student data found");
+//             return;
+//         }
+
+//         const studentData = students[0];
+
+//         // Update the modal with student data
+//         const companyNameEl = document.getElementById('company-name');
+//         const userNameEl = document.getElementById('user-name');
+//         const phoneEl = document.querySelector('.phone-email-container p span');
+//         const emailEl = document.querySelector('.email-add');
+//         const phoneTooltip = document.querySelector('.phone-email-container .tt[data-bs-title]');
+//         const emailTooltip = document.querySelector('.phone-email-container .tt[data-bs-title="edagardobalan24@gmail.com"]');
+
+//         // Construct full name
+//         let fullName = studentData.firstName || '';
+//         if (studentData.middleName) fullName += ' ' + studentData.middleName;
+//         if (studentData.lastName) fullName += ' ' + studentData.lastName;
+//         if (studentData.suffix) fullName += ' ' + studentData.suffix;
+
+//         // Update elements
+//         if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
+//         if (userNameEl) userNameEl.textContent = fullName;
+
+//         if (phoneEl) phoneEl.textContent = studentData.phoneNumber || 'N/A';
+//         if (emailEl) emailEl.textContent = studentData.emailAddress || 'N/A';
+
+//         if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', studentData.phoneNumber || '');
+//         if (emailTooltip) emailTooltip.setAttribute('data-bs-title', studentData.emailAddress || '');
+
+//     } catch (error) {
+//         console.error("Error loading student data:", error);
+//         showErrorToast("Failed to load student data: " + error.message);
+//     }
+// }
+
+
+
+// Updated loadStudentData function with company image fetching
+async function loadStudentData(userId) {
+    try {
+        const { firebaseCRUD } = await import("./firebase-crud.js");
+        const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+
+        if (!students || students.length === 0) {
+            console.log("No student data found");
+            return;
+        }
+
+        const studentData = students[0];
+
+        // Update the modal with student data
+        const companyNameEl = document.getElementById('company-name');
+        const companyImageEl = document.querySelector('.company-container img');
+        const userNameEl = document.getElementById('user-name');
+        const phoneEl = document.querySelector('.phone-email-container p span');
+        const emailEl = document.querySelector('.email-add');
+        const phoneTooltip = document.querySelector('.phone-email-container .tt[data-bs-title]');
+        const emailTooltip = document.querySelector('.phone-email-container .tt[data-bs-title="edagardobalan24@gmail.com"]');
+
+        // Construct full name
+        let fullName = studentData.firstName || '';
+        if (studentData.middleName) fullName += ' ' + studentData.middleName;
+        if (studentData.lastName) fullName += ' ' + studentData.lastName;
+        if (studentData.suffix) fullName += ' ' + studentData.suffix;
+
+        // Update elements
+        if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
+        if (userNameEl) userNameEl.textContent = fullName;
+
+        if (phoneEl) phoneEl.textContent = studentData.phoneNumber || 'N/A';
+        if (emailEl) emailEl.textContent = studentData.emailAddress || 'N/A';
+
+        if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', studentData.phoneNumber || '');
+        if (emailTooltip) emailTooltip.setAttribute('data-bs-title', studentData.emailAddress || '');
+
+        // Fetch and display company image if company name exists
+        if (studentData.companyName) {
+            await loadCompanyImage(studentData.companyName, companyImageEl);
+        }
+
+    } catch (error) {
+        console.error("Error loading student data:", error);
+        showErrorToast("Failed to load student data: " + error.message);
+    }
+}
+
+// // New function to load company image
+// async function loadCompanyImage(companyName, imageElement) {
+//     try {
+//         const { firebaseCRUD } = await import("./firebase-crud.js");
+
+//         // Query the company collection by company name
+//         const companies = await firebaseCRUD.queryData("company", "companyName", "==", companyName);
+
+//         console.log(companies)
+//         if (companies && companies.length > 0 && companies[0].companyImage) {
+//             // Update the image source with the URL from the company collection
+//             imageElement.src = companies[0].companyImage;
+//             imageElement.alt = `${companyName} logo`;
+//         } else {
+//             // Fallback to default image if no company image found
+//             // imageElement.src = "../assets/img/Department-of-Agrarian-Reform.jpeg";
+//             imageElement.alt = "Default company background image";
+//         }
+//     } catch (error) {
+//         console.error("Error loading company image:", error);
+//         // Fallback to default image in case of error
+//         // imageElement.src = "../assets/img/Department-of-Agrarian-Reform.jpeg";
+//         imageElement.alt = "Default company background image";
+//     }
+// }
+
+
+
+async function loadCompanyImage(companyName) {
+    try {
+        const imageElement = document.getElementById('image');
+        if (!imageElement) {
+            console.error("Image element not found");
+            return;
+        }
+
+        const { firebaseCRUD } = await import("./firebase-crud.js");
+        const companies = await firebaseCRUD.queryData("company", "companyName", "==", companyName);
+
+        if (companies && companies.length > 0 && companies[0].image) {
+            const base64Image = companies[0].image;
+            console.log("Full Base64 image length:", base64Image.length);
+
+            // Verify the Base64 string is complete
+            if (base64Image.endsWith('==') || base64Image.endsWith('=') ||
+                (base64Image.length % 4 === 0)) {
+                imageElement.src = base64Image;
+                imageElement.alt = `${companyName} logo`;
+                console.log("Image source set successfully");
+
+                // Add onload and onerror handlers for debugging
+                imageElement.onload = () => console.log("Image loaded successfully");
+                imageElement.onerror = () => {
+                    console.error("Error loading image");
+                    setDefaultImage(imageElement);
+                };
+            } else {
+                console.error("Incomplete Base64 string");
+                setDefaultImage(imageElement);
+            }
+        } else {
+            console.log("No company image found, using default");
+            setDefaultImage(imageElement);
+        }
+    } catch (error) {
+        console.error("Error loading company image:", error);
+        setDefaultImage(document.getElementById('image'));
+    }
+}
+
+function setDefaultImage(imgElement) {
+    if (imgElement) {
+        imgElement.src = "../assets/img/Department-of-Agrarian-Reform.jpeg";
+        imgElement.alt = "Default company background image";
+    }
+}
 
 // Updated appoint assistant functionality
 document.getElementById('appoint-assistant-btn')?.addEventListener('click', async function () {
@@ -180,7 +329,7 @@ async function displayReports(reports) {
         const images = await loadReportImages(report.id);
 
         const reportElement = document.createElement('div');
-        reportElement.className = 'report p-2';
+        reportElement.className = 'report p-3 mb-4 rounded';
 
         reportElement.innerHTML = `
       <p class="text-end text-light">
@@ -318,182 +467,6 @@ function showErrorToast(message) {
 
 
 
-
-
-
-
-// document.querySelector('[data-bs-target="#editDataModal"]')?.addEventListener('click', async function () {
-//     try {
-//         const userId = getUserIdFromUrl() || localStorage.getItem('userId');
-//         if (!userId) throw new Error("No user ID found");
-
-//         const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//         // Initialize dropdowns first
-//         await initializeDropdowns();
-
-//         // Then load and set student data
-//         await loadAndSetStudentData(userId);
-
-//     } catch (error) {
-//         console.error("Error loading student data:", error);
-//         showErrorToast("Failed to load student data: " + error.message);
-//     }
-// });
-
-// async function initializeDropdowns() {
-//     // Initialize gender dropdown
-//     const genderSelect = document.getElementById('gender');
-//     // Clear and repopulate to ensure fresh state
-//     genderSelect.innerHTML = `
-//     <option value="male">Male</option>
-//     <option value="female">Female</option>
-//   `;
-
-//     // Initialize company dropdown
-//     const companySelect = document.getElementById('companyName');
-//     // Clear existing options except the first empty one
-//     companySelect.innerHTML = '<option value="">Select a company</option>';
-
-//     // Load companies from database
-//     try {
-//         const companies = await firebaseCRUD.getAllData("company");
-
-//         if (companies) {
-//             // Convert to array if it's an object
-//             const companiesArray = Array.isArray(companies) ? companies : Object.values(companies);
-
-//             if (companiesArray?.length) {
-//                 companiesArray.forEach(company => {
-//                     if (company?.companyName) {
-//                         const option = document.createElement('option');
-//                         option.value = company.companyName;
-//                         option.textContent = company.companyName;
-//                         companySelect.appendChild(option);
-//                     }
-//                 });
-//             }
-//         }
-//     } catch (error) {
-//         console.warn("Could not load company list:", error);
-//         // Add default companies if the fetch fails
-//         ['DAR', 'DOST'].forEach(company => {
-//             const option = document.createElement('option');
-//             option.value = company;
-//             option.textContent = company;
-//             companySelect.appendChild(option);
-//         });
-//     }
-// }
-
-
-
-
-
-// async function loadAndSetStudentData(userId) {
-//     // Get student data
-//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
-//     if (!students || students.length === 0) throw new Error("Student not found");
-
-//     const student = students[0];
-
-//     // Set basic form fields
-//     document.getElementById('user-id').value = userId;
-//     document.getElementById('student-id').value = student.studentId || '';
-//     document.getElementById('phone-number').value = student.phoneNumber || '';
-//     document.getElementById('first-name').value = student.firstName || '';
-//     document.getElementById('middle-name').value = student.middleName || '';
-//     document.getElementById('last-name').value = student.lastName || '';
-//     document.getElementById('sufix').value = student.suffix || '';
-//     document.getElementById('address').value = student.address || '';
-
-//     // Set gender selection (dropdown is already populated)
-//     if (student.gender) {
-//         document.getElementById('gender').value = student.gender;
-//     }
-
-//     // Set company selection (dropdown is already populated)
-//     if (student.companyName) {
-//         document.getElementById('companyName').value = student.companyName;
-//     }
-
-//     // Set time values
-//     document.getElementById('morning-time-in').value = student.morningTimeIn || '';
-//     document.getElementById('morning-time-out').value = student.morningTimeOut || '';
-//     document.getElementById('afternoon-time-in').value = student.afternoonTimeIn || '';
-//     document.getElementById('afternoon-time-out').value = student.afternoonTimeOut || '';
-
-//     // Set user type
-//     document.getElementById('user-type').value = student.userType || 'student';
-
-//     // Set profile image if available
-//     if (student.userImg) {
-//         document.getElementById('user-profile-img').src = student.userImg;
-//     }
-// }
-
-
-
-
-
-
-
-// // Form submission handler
-// document.getElementById('edit-info-form')?.addEventListener('submit', async function (e) {
-//     e.preventDefault();
-
-//     try {
-//         const userId = getUserIdFromUrl() || localStorage.getItem('userId');
-//         if (!userId) throw new Error("No user ID found");
-
-//         const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//         // Get form data
-//         const formData = {
-//             studentId: document.getElementById('student-id').value,
-//             phoneNumber: document.getElementById('phone-number').value,
-//             firstName: document.getElementById('first-name').value,
-//             middleName: document.getElementById('middle-name').value,
-//             lastName: document.getElementById('last-name').value,
-//             suffix: document.getElementById('sufix').value,
-//             gender: document.getElementById('gender').value,
-//             address: document.getElementById('address').value,
-//             companyName: document.getElementById('companyName').value,
-//             morningTimeIn: document.getElementById('morning-time-in').value,
-//             morningTimeOut: document.getElementById('morning-time-out').value,
-//             afternoonTimeIn: document.getElementById('afternoon-time-in').value,
-//             afternoonTimeOut: document.getElementById('afternoon-time-out').value,
-//             userType: document.getElementById('user-type').value,
-//             updatedAt: new Date().toISOString()
-//         };
-
-//         // First query the student to get their document ID
-//         const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
-//         if (!students || students.length === 0) throw new Error("Student not found");
-
-//         const studentDocId = students[0].id;
-
-//         // Update student data
-//         await firebaseCRUD.updateData("students", studentDocId, formData);
-
-//         // Show success message
-//         showErrorToast("Student information updated successfully!");
-
-//         // Close the modal
-//         const editModal = bootstrap.Modal.getInstance(document.getElementById('editDataModal'));
-//         editModal.hide();
-
-//         // Refresh the displayed student info
-//         displayStudentInfo({ ...students[0], ...formData });
-
-//     } catch (error) {
-//         console.error("Error updating student:", error);
-//         showErrorToast("Failed to update student: " + error.message);
-//     }
-// });
-
-
-
 // Edit button click handler
 document.querySelector('[data-bs-target="#editDataModal"]')?.addEventListener('click', async function () {
     try {
@@ -519,8 +492,8 @@ async function initializeDropdowns(firebaseCRUD) {
     // Initialize gender dropdown
     const genderSelect = document.getElementById('gender');
     genderSelect.innerHTML = `
-    <option value="male">Male</option>
-    <option value="female">Female</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
   `;
 
     // Initialize company dropdown

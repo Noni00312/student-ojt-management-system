@@ -150,6 +150,12 @@ tbody tr:last-child td:last-child {
   overflow-x: hidden;
 }
 
-#upload-btn:disabled {
+#upload-btn:disabled,
+#absent-button:disabled {
   background-color: #6e14239c;
+}
+
+.view-image-modal {
+  border-radius: 20px !important;
+  background-color: #3c3d42 !important;
 }

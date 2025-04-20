@@ -16,584 +16,510 @@
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/assets/img/icons/LOGO 96.png" />
     <link rel="app-mobile-web-app-status-bar" href="#6e1423" />
-    <meta name="theme-color" content="#748E54" />
+    <meta name="theme-color" content="#6e1423" />
 
-    <title>SOJTMS - Profile</title>
+    <title>Personal Information | SOJTMS</title>
   </head>
   <body>
-    <div id="nav-container" class="container w-100 mt-3">
-      <div>
-        <a
-          id="return-button"
-          class="text-decoration-none"
-          href="/pages/dashboard.html"
-        >
-          <i class="bi bi-arrow-left fs-3"></i>
-        </a>
-      </div>
 
-      <!-- Center: Profile Image and Name -->
-      <div class="d-flex flex-column align-items-center p-2">
-        <img
-          class="profile-icon mb-2"
-          src="/assets/img/icons8_male_user_480px_1.png"
-          loading="lazy"
-          style="width: 100px; height: 100px; border-radius: 50%"
-        />
-        <h3 id="profile-name" class="text-dark fw-bold text-center mb-0">
-          - - -
-        </h3>
-        <h5 id="student-id" class="student-id text-dark">- - -</h5>
-      </div>
+    <div class="row cards-box">
+      <div class="card-container col-lg-5">
 
-      <!-- Right: Spacer for symmetry -->
-      <div style="width: 40px"></div>
+        
+        <div class="upper-container">
+          
+
+    <div id="user-info-header" class="form-floating col-md-12 w-100 position-absolute p-4 d-flex justify-content-between">
+      <a
+        id="return-button"
+        class="text-decoration-none"
+        href="/pages/dashboard.html"
+      >
+        <i class="bi bi-arrow-return-left fs-3"></i>
+      </a>
+    
+      <a
+        id="edit-button"
+        class="text-decoration-none edit-button"
+        href=""
+        data-bs-toggle="modal"
+        data-bs-target="#editProfileModal"
+      >
+        <i class="bi bi-pencil fs-3"></i>
+      </a>
     </div>
-
-    <section class="container px-4 px-md-4">
-      <div id="profile-card" class="px-5 py-sm-3 d-flex flex-column">
-        <div class="row">
-          <div
-            id="user-info-header"
-            class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative d-flex justify-content-between"
-          >
-            <h2 id="user-info-title" class="user-info-title">User Info</h2>
-            <a
-              id="edit-button"
-              class="text-decoration-none edit-button"
-              href=""
-              data-bs-toggle="modal"
-              data-bs-target="#editProfileModal"
-            >
-              <i class="bi bi-pencil fs-3"></i>
-            </a>
+    
+          <div class="image-container">
+            <img class="profile-icon" src="/assets/img/icons8_male_user_480px_1.png" />
           </div>
-
-          <div
-            id="email-container"
-            class="form-floating col-lg-6 col-md-12 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="email-label" class="email-label">Email</p>
-            <h5 id="email" class="email">- - -</h5>
+        </div>
+    
+        <div class="lower-container">
+          <div class="profile-header">
+            <h3 id="profile-name"></h3>
+            <h4 id="student-id"></h4>
           </div>
-
-          <div
-            id="phone-container"
-            class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="phone-label" class="phone-label">Phone</p>
-            <h5 id="phone-number" class="phone-number">- - -</h5>
-          </div>
-          <div class="separator-line" style="border: 1.5px solid #f6f8e2"></div>
-
-          <div
-            id="gender-container"
-            class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="gender-label" class="gender-label">Gender</p>
-            <h5 id="gender" class="gender">- - -</h5>
-          </div>
-
-          <div
-            id="address-container"
-            class="form-floating col-md-6 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="address-label" class="address-label">Address</p>
-            <h5 id="address" class="address">- - -</h5>
-          </div>
-
-          <div
-            id="separator-2"
-            class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative"
-          >
-            <div
-              class="separator-line"
-              style="border: 1.5px solid #f6f8e2"
-            ></div>
-          </div>
-
-          <div
-            id="company-name-container"
-            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="company-name-label" class="company-name-label">
-              Company Name
-            </p>
-            <h5 id="company-name" class="company-name">- - -</h5>
-          </div>
-
-          <div
-            id="company-address-container"
-            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="company-address-label" class="company-address-label">
-              Company Address
-            </p>
-            <h5 id="company-address" class="company-address">- - -</h5>
-          </div>
-
-          <div
-            id="work-schedule-container"
-            class="form-floating col-md-4 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="work-schedule-label" class="work-schedule-label">
-              Work Schedule
-            </p>
-            <h5 id="work-schedule" class="work-schedule">- - -</h5>
-          </div>
-
-          <div
-            id="separator-3"
-            class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative"
-          >
-            <div
-              class="separator-line"
-              style="border: 1.5px solid #f6f8e2"
-            ></div>
-          </div>
-
-          <div
-            id="morning-time-in-container"
-            class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative"
-          >
-            <p id="morning-time-in-label" class="morning-time-in-label">
-              Morning - Time in
-            </p>
-            <h5 id="morning-time-in" class="morning-time-in">- - -</h5>
-          </div>
-
-          <div
-            id="morning-time-out-container"
-            class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative"
-          >
-            <p id="morning-time-out-label" class="morning-time-out-label">
-              Morning - Time out
-            </p>
-            <h5 id="morning-time-out" class="morning-time-out">- - -</h5>
-          </div>
-
-          <div
-            id="afternoon-time-in-container"
-            class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative"
-          >
-            <p id="afternoon-time-in-label" class="afternoon-time-in-label">
-              Afternoon - Time in
-            </p>
-            <h5 id="afternoon-time-in" class="afternoon-time-in">- - -</h5>
-          </div>
-
-          <div
-            id="afternoon-time-out-container"
-            class="form-floating col-md-3 mb-1 ps-1 pe-1 position-relative"
-          >
-            <p id="afternoon-time-out-label" class="afternoon-time-out-label">
-              Afternoon - Time out
-            </p>
-            <h5 id="afternoon-time-out" class="afternoon-time-out">- - -</h5>
+          <div class="profile-details">
+            <div class="detail-row">
+              <div class="detail-item">
+                <p class="detail-label">Email</p>
+                <h5 id="email" class="detail-value"></h5>
+              </div>
+              <div class="detail-item">
+                <p class="detail-label">Phone</p>
+                <h5 id="phone-number" class="detail-value"></h5>
+              </div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-item">
+                <p class="detail-label">Gender</p>
+                <h5 id="gender" class="detail-value"></h5>
+              </div>
+              <div class="detail-item">
+                <p class="detail-label">Address</p>
+                <h5 id="address" class="detail-value"></h5>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="logout-button-container">
-        <button id="logout-button" class="logout-button mt-4">
-          <span>Logout</span>
-          <span><i class="bi bi-box-arrow-right"></i></span>
-        </button>
-      </div>
-
-      <!-- Edit Profile Modal -->
-      <div
-        class="modal fade"
-        id="editProfileModal"
-        data-bs-backdrop="static"
-        tabindex="-1"
-        aria-labelledby="editProfileModal"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content pe-3 ps-3 edit-profile-modal">
-            <div class="d-flex justify-content-between pt-4 pe-4 ps-4">
-              <h4 class="modal-title" id="exampleModalLabel">Edit Profile</h4>
-              <i
-                class="bi bi-x-lg fs-6 text-white"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></i>
+      
+      <div class="department-card-container col-lg-5">
+        <div class="department-overlay-container"></div>
+        <div class="department-container">
+          <div class="department-header">
+            <h3 id="company-name" class="company-name"></h3>
+            <h6 id="company-address" class="company-address"></h6>
+          </div>
+          <div class="schedule-section">
+            <div class="schedule-header">
+              <p class="schedule-label">Work Schedule</p>
+              <h5 id="work-schedule" class="schedule-value"></h5>
             </div>
+            <div class="time-grid">
+              <div class="time-slot">
+                <p class="time-label">Morning - Time in</p>
+                <h5 id="morning-time-in" class="time-value"></h5>
+              </div>
+              <div class="time-slot">
+                <p class="time-label">Morning - Time out</p>
+                <h5 id="morning-time-out" class="time-value"></h5>
+              </div>
+              <div class="time-slot">
+                <p class="time-label">Afternoon - Time in</p>
+                <h5 id="afternoon-time-in" class="time-value"></h5>
+              </div>
+              <div class="time-slot">
+                <p class="time-label">Afternoon - Time out</p>
+                <h5 id="afternoon-time-out" class="time-value"></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <form id="ojtForm">
-              <div class="modal-body">
+    
+    <div class="logout-button-container d-flex justify-content-center align-items-center flex-column">
+      <button id="logout-button" class="logout-button mt-4">
+        <span><i class="bi bi-box-arrow-right"></i></span>
+      </button>
+      
+    </div>
+
+    
+
+    
+    <div
+    class="modal fade"
+    id="editProfileModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-labelledby="editProfileModal"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content pe-3 ps-3 edit-profile-modal">
+        <div class="d-flex justify-content-between pt-4 pe-4 ps-4">
+          <h4 class="modal-title text-light" id="exampleModalLabel">Edit Profile</h4>
+          <i
+            class="bi bi-x-lg fs-6 text-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></i>
+        </div>
+
+        <form id="ojtForm">
+          <div class="modal-body">
+            <div
+              class="row d-flex align-items-center justify-content-center"
+            >
+              <div
+                class="col-md-3 d-flex justify-content-center position-relative"
+              >
+                <button id="img-button" class="position-relative">
+                  <img
+                    class="pt-1 modal-profile-icon"
+                    src="/assets/img/icons8_male_user_480px_1.png"
+                    loading="lazy"
+                  />
+                </button>
+              </div>
+
+              <div class="col-md-9 row">
                 <div
-                  class="row d-flex align-items-center justify-content-center"
+                  class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
                 >
-                  <div
-                    class="col-md-3 d-flex justify-content-center position-relative"
-                  >
-                    <button id="img-button" class="position-relative">
-                      <img
-                        class="pt-1 modal-profile-icon"
-                        src="/assets/img/icons8_male_user_480px_1.png"
-                        loading="lazy"
-                      />
-                    </button>
-                  </div>
+                  <i
+                    class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                  ></i>
+                  <input
+                    type="text"
+                    class="form-control ps-3 pe-1"
+                    id="first-name"
+                    name="first-name"
+                    placeholder="Enter your first name"
+                    required
+                  />
+                  <label for="first-name">First Name</label>
+                </div>
 
-                  <div class="col-md-9 row">
-                    <div
-                      class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
-                    >
-                      <i
-                        class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                      ></i>
-                      <input
-                        type="text"
-                        class="form-control ps-3 pe-1"
-                        id="first-name"
-                        name="first-name"
-                        placeholder="Enter your first name"
-                        required
-                      />
-                      <label for="first-name">First Name</label>
-                    </div>
+                <div
+                  class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
+                >
+                  <i
+                    class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                  ></i>
+                  <input
+                    type="text"
+                    class="form-control ps-3 pe-1"
+                    id="middle-name"
+                    name="middle-name"
+                    placeholder="Enter your middle name"
+                  />
+                  <label for="middle-name">Middle Name</label>
+                </div>
 
-                    <div
-                      class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
-                    >
-                      <i
-                        class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                      ></i>
-                      <input
-                        type="text"
-                        class="form-control ps-3 pe-1"
-                        id="middle-name"
-                        name="middle-name"
-                        placeholder="Enter your middle name"
-                      />
-                      <label for="middle-name">Middle Name</label>
-                    </div>
+                <div
+                  class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
+                >
+                  <i
+                    class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                  ></i>
+                  <input
+                    type="text"
+                    class="form-control ps-3 pe-1"
+                    id="last-name"
+                    name="last-name"
+                    placeholder="Enter your last name"
+                    required
+                  />
+                  <label for="last-name">Last Name</label>
+                </div>
 
-                    <div
-                      class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
-                    >
-                      <i
-                        class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                      ></i>
-                      <input
-                        type="text"
-                        class="form-control ps-3 pe-1"
-                        id="last-name"
-                        name="last-name"
-                        placeholder="Enter your last name"
-                        required
-                      />
-                      <label for="last-name">Last Name</label>
-                    </div>
-
-                    <div
-                      class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
-                    >
-                      <i
-                        class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                      ></i>
-                      <input
-                        type="text"
-                        class="form-control ps-3 pe-1"
-                        id="suffix"
-                        name="suffix"
-                        placeholder="Enter your suffix"
-                      />
-                      <label for="suffix">Suffix</label>
-                    </div>
-                  </div>
-
-                  <div class="separator-line"></div>
-
-                  <div
-                    class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="text"
-                      class="form-control ps-3 pe-1"
-                      id="modal-student-id"
-                      name="student-id"
-                      placeholder="Enter your student ID"
-                      required
-                    />
-                    <label for="student-id">Student ID</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-telephone-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="tel"
-                      class="form-control ps-3 pe-1"
-                      id="modal-phone-number"
-                      name="phone-number"
-                      placeholder="Enter your phone number"
-                      required
-                    />
-                    <label for="phone-number">Phone Number</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-gender-ambiguous position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <select
-                      class="form-select ps-3 pe-1"
-                      id="modal-gender"
-                      name="gender"
-                      required
-                    >
-                      <option value="" selected></option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                    </select>
-                    <label for="gender">Gender</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="text"
-                      class="form-control ps-3 pe-1"
-                      id="modal-address"
-                      name="address"
-                      placeholder="Enter your address"
-                      required
-                    />
-                    <label for="address">Address</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-buildings-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <select
-                      class="form-select ps-3 pe-1"
-                      id="modal-company-name"
-                      name="company-name"
-                      required
-                    >
-                      <option value="" selected></option>
-                    </select>
-                    <label for="company-name">Company Name</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="text"
-                      class="form-control ps-3 pe-1"
-                      id="modal-company-address"
-                      name="company-address"
-                      placeholder="Enter company address"
-                      required
-                      readonly
-                    />
-                    <label for="company-address">Company Address</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-12 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <div class="work-schedule-options d-flex flex-wrap gap-4">
-                      <!-- <p class="work-schedule-label" id="work-schedule-label">Work Schedule: </p> -->
-                      <input
-                        type="checkbox"
-                        class="btn-check"
-                        id="btn-sun"
-                        name="work-schedule"
-                        value="Sun"
-                        autocomplete="off"
-                      />
-                      <label
-                        class="btn btn-outline-primary work-schedule-option"
-                        for="btn-sun"
-                        >Sun</label
-                      >
-
-                      <input
-                        type="checkbox"
-                        class="btn-check"
-                        id="btn-mon"
-                        name="work-schedule"
-                        value="Mon"
-                        autocomplete="off"
-                      />
-                      <label
-                        class="btn btn-outline-primary work-schedule-option"
-                        for="btn-mon"
-                        >Mon</label
-                      >
-
-                      <input
-                        type="checkbox"
-                        class="btn-check"
-                        id="btn-tue"
-                        name="work-schedule"
-                        value="Tue"
-                        autocomplete="off"
-                      />
-                      <label
-                        class="btn btn-outline-primary work-schedule-option"
-                        for="btn-tue"
-                        >Tue</label
-                      >
-
-                      <input
-                        type="checkbox"
-                        class="btn-check"
-                        id="btn-wed"
-                        name="work-schedule"
-                        value="Wed"
-                        autocomplete="off"
-                      />
-                      <label
-                        class="btn btn-outline-primary work-schedule-option"
-                        for="btn-wed"
-                        >Wed</label
-                      >
-
-                      <input
-                        type="checkbox"
-                        class="btn-check"
-                        id="btn-thu"
-                        name="work-schedule"
-                        value="Thu"
-                        autocomplete="off"
-                      />
-                      <label
-                        class="btn btn-outline-primary work-schedule-option"
-                        for="btn-thu"
-                        >Thu</label
-                      >
-
-                      <input
-                        type="checkbox"
-                        class="btn-check"
-                        id="btn-fri"
-                        name="work-schedule"
-                        value="Fri"
-                        autocomplete="off"
-                      />
-                      <label
-                        class="btn btn-outline-primary work-schedule-option"
-                        for="btn-fri"
-                        >Fri</label
-                      >
-
-                      <input
-                        type="checkbox"
-                        class="btn-check"
-                        id="btn-sat"
-                        name="work-schedule"
-                        value="Sat"
-                        autocomplete="off"
-                      />
-                      <label
-                        class="btn btn-outline-primary work-schedule-option"
-                        for="btn-sat"
-                        >Sat</label
-                      >
-                    </div>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="time"
-                      class="form-control ps-3 pe-1"
-                      id="modal-morning-time-in"
-                      name="morning-time-in"
-                    />
-                    <label for="morning-time-in">Morning - Time in</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="time"
-                      class="form-control ps-3 pe-1"
-                      id="modal-morning-time-out"
-                      name="morning-time-out"
-                    />
-                    <label for="morning-time-out">Morning - Time out</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="time"
-                      class="form-control ps-3 pe-1"
-                      id="modal-afternoon-time-in"
-                      name="afternoon-time-in"
-                    />
-                    <label for="afternoon-time-in">Afternoon - Time in</label>
-                  </div>
-
-                  <div
-                    class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="time"
-                      class="form-control ps-3 pe-1"
-                      id="modal-afternoon-time-out"
-                      name="afternoon-time-out"
-                    />
-                    <label for="afternoon-time-out">Afternoon - Time out</label>
-                  </div>
+                <div
+                  class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
+                >
+                  <i
+                    class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                  ></i>
+                  <input
+                    type="text"
+                    class="form-control ps-3 pe-1"
+                    id="suffix"
+                    name="suffix"
+                    placeholder="Enter your suffix"
+                  />
+                  <label for="suffix">Suffix</label>
                 </div>
               </div>
 
-              <div class="d-flex justify-content-center">
-                <button
-                  id="update-profile"
-                  type="submit"
-                  class="mt-2 mb-3 d-block update-profile"
-                >
-                  <span>Update Profile</span>
-                </button>
+              <div class="separator-line"></div>
+
+              <div
+                class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <input
+                  type="text"
+                  class="form-control ps-3 pe-1"
+                  id="modal-student-id"
+                  name="student-id"
+                  placeholder="Enter your student ID"
+                  required
+                />
+                <label for="student-id">Student ID</label>
               </div>
-            </form>
+
+              <div
+                class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-telephone-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <input
+                  type="tel"
+                  class="form-control ps-3 pe-1"
+                  id="modal-phone-number"
+                  name="phone-number"
+                  placeholder="Enter your phone number"
+                  required
+                />
+                <label for="phone-number">Phone Number</label>
+              </div>
+
+              <div
+                class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-gender-ambiguous position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <select
+                  class="form-select ps-3 pe-1"
+                  id="modal-gender"
+                  name="gender"
+                  required
+                >
+                  <option value="" selected></option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+                <label for="gender">Gender</label>
+              </div>
+
+              <div
+                class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <input
+                  type="text"
+                  class="form-control ps-3 pe-1"
+                  id="modal-address"
+                  name="address"
+                  placeholder="Enter your address"
+                  required
+                />
+                <label for="address">Address</label>
+              </div>
+
+              <div
+                class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-buildings-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <select
+                  class="form-select ps-3 pe-1"
+                  id="modal-company-name"
+                  name="company-name"
+                  required
+                >
+                  <option value="" selected></option>
+                </select>
+                <label for="company-name">Company Name</label>
+              </div>
+
+              <div
+                class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <input
+                  type="text"
+                  class="form-control ps-3 pe-1"
+                  id="modal-company-address"
+                  name="company-address"
+                  placeholder="Enter company address"
+                  required
+                  readonly
+                />
+                <label for="company-address">Company Address</label>
+              </div>
+
+              <div
+                class="form-floating col-md-12 mt-3 ps-1 pe-1 position-relative"
+              >
+                <div class="work-schedule-options d-flex flex-wrap gap-4">
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    id="btn-sun"
+                    name="work-schedule"
+                    value="Sun"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-primary work-schedule-option"
+                    for="btn-sun"
+                    >Sun</label
+                  >
+
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    id="btn-mon"
+                    name="work-schedule"
+                    value="Mon"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-primary work-schedule-option"
+                    for="btn-mon"
+                    >Mon</label
+                  >
+
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    id="btn-tue"
+                    name="work-schedule"
+                    value="Tue"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-primary work-schedule-option"
+                    for="btn-tue"
+                    >Tue</label
+                  >
+
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    id="btn-wed"
+                    name="work-schedule"
+                    value="Wed"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-primary work-schedule-option"
+                    for="btn-wed"
+                    >Wed</label
+                  >
+
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    id="btn-thu"
+                    name="work-schedule"
+                    value="Thu"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-primary work-schedule-option"
+                    for="btn-thu"
+                    >Thu</label
+                  >
+
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    id="btn-fri"
+                    name="work-schedule"
+                    value="Fri"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-primary work-schedule-option"
+                    for="btn-fri"
+                    >Fri</label
+                  >
+
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    id="btn-sat"
+                    name="work-schedule"
+                    value="Sat"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-outline-primary work-schedule-option"
+                    for="btn-sat"
+                    >Sat</label
+                  >
+                </div>
+              </div>
+
+              <div
+                class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <input
+                  type="time"
+                  class="form-control ps-3 pe-1"
+                  id="modal-morning-time-in"
+                  name="morning-time-in"
+                />
+                <label for="morning-time-in">Morning - Time in</label>
+              </div>
+
+              <div
+                class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <input
+                  type="time"
+                  class="form-control ps-3 pe-1"
+                  id="modal-morning-time-out"
+                  name="morning-time-out"
+                />
+                <label for="morning-time-out">Morning - Time out</label>
+              </div>
+
+              <div
+                class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <input
+                  type="time"
+                  class="form-control ps-3 pe-1"
+                  id="modal-afternoon-time-in"
+                  name="afternoon-time-in"
+                />
+                <label for="afternoon-time-in">Afternoon - Time in</label>
+              </div>
+
+              <div
+                class="form-floating col-md-3 mt-3 ps-1 pe-1 position-relative"
+              >
+                <i
+                  class="bi bi-clock-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
+                ></i>
+                <input
+                  type="time"
+                  class="form-control ps-3 pe-1"
+                  id="modal-afternoon-time-out"
+                  name="afternoon-time-out"
+                />
+                <label for="afternoon-time-out">Afternoon - Time out</label>
+              </div>
+            </div>
           </div>
-        </div>
+
+          <div class="d-flex justify-content-center">
+            <button
+              id="update-profile"
+              type="submit"
+              class="mt-2 mb-3 d-block update-profile"
+            >
+              <span>Update Profile</span>
+            </button>
+          </div>
+        </form>
       </div>
-    </section>
+    </div>
+  </div>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"

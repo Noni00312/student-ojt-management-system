@@ -1,6 +1,5 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
-// DOM elements
 const reportsContainer = document.getElementById("reports-container");
 const reportSearchInput = document.getElementById("report-search-input");
 const viewReportModal = document.getElementById("viewReportModal");
@@ -10,13 +9,12 @@ const reportImagesContainer = document.querySelector(
   ".report-images .image-container"
 );
 
-// Initialize the page
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     showLoading(true);
     await displayReports();
     setupEventListeners();
-    setupDateSearch(); // Add this line
+    setupDateSearch(); 
   } catch (error) {
     console.error("Initialization error:", error);
     showError("Failed to load reports. Please try again later.");
@@ -56,18 +54,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// Display all reports from Firebase
 async function displayReports(filterDate = null) {
   try {
     showLoading(true);
 
-    // Get the current user ID
     const userId = localStorage.getItem("userId");
     if (!userId) {
       throw new Error("User not authenticated");
     }
 
-    // Query reports for this user
     let reports = await firebaseCRUD.queryData(
       "reports",
       "userId",
@@ -76,35 +71,28 @@ async function displayReports(filterDate = null) {
     );
 
     if (filterDate) {
-      // Convert filterDate to Date object for comparison
       const searchDate = new Date(filterDate);
 
       reports = reports.filter((report) => {
-        // Handle both Timestamp and string formats
         let reportDate;
         if (
           report.createdAt &&
           typeof report.createdAt === "object" &&
           report.createdAt.toDate
         ) {
-          // Firebase Timestamp object
           reportDate = report.createdAt.toDate();
         } else if (typeof report.createdAt === "string") {
-          // ISO string
           reportDate = new Date(report.createdAt);
         } else {
-          // Unknown format, skip this report
           return false;
         }
 
-        // Compare dates using locale string (ignores time)
         return (
           reportDate.toLocaleDateString() === searchDate.toLocaleDateString()
         );
       });
     }
 
-    // Sort by date (newest first)
     reports.sort((a, b) => {
       const dateA =
         a.createdAt && typeof a.createdAt === "object" && a.createdAt.toDate
@@ -128,7 +116,6 @@ async function displayReports(filterDate = null) {
       return;
     }
 
-    // Create report cards
     for (const report of reports) {
       const reportCard = await createReportCard(report);
       reportsContainer.appendChild(reportCard);
@@ -141,7 +128,6 @@ async function displayReports(filterDate = null) {
     showLoading(false);
   }
 }
-// Create a report card element
 async function createReportCard(report) {
   const reportDate = new Date(report.createdAt);
   const formattedDate = reportDate.toLocaleDateString("en-US", {
@@ -157,7 +143,6 @@ async function createReportCard(report) {
   card.dataset.bsToggle = "modal";
   card.dataset.bsTarget = "#viewReportModal";
 
-  // Check if report has images
   let hasImages = false;
   try {
     const images = await firebaseCRUD.getAllData(`reports/${report.id}/images`);
@@ -179,7 +164,6 @@ async function createReportCard(report) {
     </div>
   `;
 
-  // Add click event to show report details
   card.addEventListener("click", async () => {
     await showReportDetails(report);
   });
@@ -187,7 +171,6 @@ async function createReportCard(report) {
   return card;
 }
 
-// Show report details in modal
 async function showReportDetails(report) {
   const reportDate = new Date(report.createdAt);
   const formattedDate = reportDate.toLocaleDateString("en-US", {
@@ -203,18 +186,15 @@ async function showReportDetails(report) {
     report.content || ""
   }\n\nSubmitted on: ${formattedDate}`;
 
-  // Clear previous images
   reportImagesContainer.innerHTML = "";
 
   try {
-    // Fetch all image documents from the subcollection
     const imageDocs = await firebaseCRUD.getAllData(
       `reports/${report.id}/images`
     );
 
     if (imageDocs.length > 0) {
       imageDocs.forEach((imageDoc) => {
-        // Access the imageData field from each document
         if (imageDoc.imageData) {
           const imgWrapper = document.createElement("div");
           imgWrapper.className = "image-wrapper";
@@ -231,12 +211,10 @@ async function showReportDetails(report) {
           img.style.objectFit = "cover";
           img.style.borderRadius = "5px";
 
-          // Add click to view in modal functionality
           img.addEventListener("click", () => {
             showImageInModal(imageDoc.imageData);
           });
 
-          // Optional: Add zoom icon overlay
           const zoomIcon = document.createElement("i");
           zoomIcon.className = "bi bi-zoom-in";
           zoomIcon.style.position = "absolute";
@@ -266,7 +244,6 @@ async function showReportDetails(report) {
   }
 }
 
-// Function to show image in modal
 function showImageInModal(imageSrc) {
   const modalImageView = document.getElementById("modal-image-view");
   const viewImageModal = new bootstrap.Modal(
@@ -277,9 +254,7 @@ function showImageInModal(imageSrc) {
   viewImageModal.show();
 }
 
-// Setup event listeners
 function setupEventListeners() {
-  // Refresh button
   const refreshBtn = document.getElementById("refresh-reports-btn");
   if (refreshBtn) {
     refreshBtn.addEventListener("click", () => {
@@ -314,9 +289,6 @@ function showError(message) {
   `;
 }
 
-// ========================
-// FIREBASE DATE SEARCH FUNCTIONALITY
-// ========================
 function setupDateSearch() {
   const dateInput = document.getElementById("report-search-input");
   if (dateInput) {
@@ -330,22 +302,18 @@ async function filterReportsByDate(selectedDate) {
   try {
     showLoading(true);
 
-    // Get the current user ID
     const userId = localStorage.getItem("userId");
     if (!userId) {
       throw new Error("User not authenticated");
     }
 
-    // Clear the current reports display
     reportsContainer.innerHTML = "";
 
     if (!selectedDate) {
-      // If no date selected, display all reports
       await displayReports();
       return;
     }
 
-    // Query reports for this user
     let reports = await firebaseCRUD.queryData(
       "reports",
       "userId",
@@ -353,29 +321,22 @@ async function filterReportsByDate(selectedDate) {
       userId
     );
 
-    // Convert selectedDate to Date object for comparison
     const searchDate = new Date(selectedDate);
 
-    // Filter reports by date
     const filteredReports = reports.filter((report) => {
-      // Handle both Timestamp and string formats
       let reportDate;
       if (
         report.createdAt &&
         typeof report.createdAt === "object" &&
         report.createdAt.toDate
       ) {
-        // Firebase Timestamp object
         reportDate = report.createdAt.toDate();
       } else if (typeof report.createdAt === "string") {
-        // ISO string
         reportDate = new Date(report.createdAt);
       } else {
-        // Unknown format, skip this report
         return false;
       }
 
-      // Compare dates (year, month, day only)
       return (
         reportDate.getFullYear() === searchDate.getFullYear() &&
         reportDate.getMonth() === searchDate.getMonth() &&
@@ -394,7 +355,6 @@ async function filterReportsByDate(selectedDate) {
       return;
     }
 
-    // Sort by date (newest first)
     filteredReports.sort((a, b) => {
       const dateA =
         a.createdAt && typeof a.createdAt === "object" && a.createdAt.toDate
@@ -407,7 +367,6 @@ async function filterReportsByDate(selectedDate) {
       return dateB - dateA;
     });
 
-    // Display the filtered reports
     for (const report of filteredReports) {
       const reportCard = await createReportCard(report);
       reportsContainer.appendChild(reportCard);
@@ -420,5 +379,4 @@ async function filterReportsByDate(selectedDate) {
   }
 }
 
-// Export functions if needed
 export { displayReports, showReportDetails };

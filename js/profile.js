@@ -1,4 +1,3 @@
-// profile.js
 import { firebaseCRUD } from "./firebase-crud.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -11,7 +10,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     await window.dbReady;
 
-    // DOM elements
     const userImg = document.querySelector(".profile-icon");
     const userName = document.querySelector("#profile-name");
     const studentId = document.getElementById("student-id");
@@ -29,13 +27,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     const editButton = document.getElementById("edit-button");
     const editProfileModal = document.getElementById("editProfileModal");
 
-    // Setup edit button based on network status
     setupEditButton(editButton);
 
-    // Get user data - try IndexedDB first, then Firebase if online
     let data;
     try {
-      // Get data from IndexedDB using userId as index
       const dataArray = await crudOperations.getByIndex(
         "studentInfoTbl",
         "userId",
@@ -43,7 +38,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
       data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
-      // Always try to get fresh data from Firebase if online
       if (navigator.onLine) {
         const firebaseData = await firebaseCRUD.queryData(
           "students",
@@ -54,7 +48,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (firebaseData && firebaseData.length > 0) {
           data = { ...data, ...firebaseData[0] };
-          // Store the document ID for future updates
           data.id = firebaseData[0].id;
           await crudOperations.updateData(
             "studentInfoTbl",
@@ -68,19 +61,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     if (data) {
-      // Update UI with user data
       updateProfileUI(data);
 
-      // Load company data for the select dropdown
       await loadCompanyData();
 
-      // Populate edit form with fresh data
       populateEditForm(data);
     } else {
       console.warn("No user data found for this user.");
     }
 
-    // Setup edit form submission
     const editForm = document.getElementById("ojtForm");
     editForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -117,17 +106,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             SAT: formData.getAll("work-schedule").includes("Sat"),
           },
           updatedAt: new Date().toISOString(),
-          userId: userId, // Ensure userId is preserved
+          userId: userId, 
         };
 
-        // Use the document ID if it exists, otherwise use userId
-        // In your update function:
-        const docId = data?.id; // This should be the Firestore document ID
+        const docId = data?.id;
         await firebaseCRUD.updateData("students", docId, updatedData);
         const success = await updateUserData(docId, updatedData);
 
         if (success) {
-          // Refresh UI with updated data
           const updatedDataArray = await crudOperations.getByIndex(
             "studentInfoTbl",
             "userId",
@@ -138,7 +124,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             : updatedDataArray;
           updateProfileUI(updatedUserData);
 
-          // Close modal
           const modal = bootstrap.Modal.getInstance(editProfileModal);
           modal.hide();
 
@@ -154,7 +139,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         submitButton.innerHTML = "<span>Update Profile</span>";
       }
     });
-    // Setup image upload
     const imgButton = document.getElementById("img-button");
     const imgInput = document.createElement("input");
     imgInput.type = "file";
@@ -171,7 +155,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       const file = e.target.files[0];
       if (!file) return;
 
-      // Show preview immediately
       const editProfileImg = document.querySelector(".modal-profile-icon");
       const previewUrl = URL.createObjectURL(file);
       editProfileImg.src = previewUrl;
@@ -184,22 +167,18 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const newImageData = await handleImageUpload(userId, file);
 
-        // Update both modal and main profile image
         editProfileImg.src = newImageData;
         document.querySelector(".profile-icon").src = newImageData;
 
-        // Revoke the object URL to free memory
         URL.revokeObjectURL(previewUrl);
       } catch (error) {
         console.error("Error handling image upload:", error);
-        // Revert to previous image if available
         const previousImage = document.querySelector(".profile-icon").src;
         editProfileImg.src = previousImage;
         alert("Failed to update profile image. Please try again.");
       }
     });
 
-    // Add hover effect for image button
     imgButton.addEventListener("mouseenter", () => {
       const pencilIcon = document.createElement("i");
       pencilIcon.className =
@@ -260,13 +239,10 @@ function formatWeeklySchedule(weeklySchedule) {
 
 async function updateUserData(docId, updatedData) {
   try {
-    // Always update IndexedDB first for immediate UI updates
     await crudOperations.updateData("studentInfoTbl", docId, updatedData);
     console.log("IndexedDB updated successfully");
 
-    // Update Firebase if online
     if (navigator.onLine) {
-      // Use the document ID if it exists, otherwise use userId
       await firebaseCRUD.updateData("students", docId, updatedData);
       console.log("Firebase updated successfully");
     }
@@ -287,7 +263,6 @@ async function handleImageUpload(userId, file) {
       reader.readAsDataURL(file);
     });
 
-    // Get the document ID first
     const studentData = await firebaseCRUD.queryData(
       "students",
       "userId",
@@ -299,7 +274,6 @@ async function handleImageUpload(userId, file) {
     }
     const docId = studentData[0].id;
 
-    // Update with the correct document ID
     await firebaseCRUD.updateData("students", docId, { userImg: base64Image });
     return base64Image;
   } catch (error) {
@@ -327,20 +301,7 @@ function setupEditButton(editButton) {
     }
   };
 
-  // Initial state
   updateButtonState();
-
-  // // Handle click events
-  // editButton.addEventListener("click", (e) => {
-  //   if (!navigator.onLine) {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     alert(
-  //       "Editing profile requires an internet connection. Please check your network and try again."
-  //     );
-  //     return false;
-  //   }
-  // });
 
   editButton.addEventListener("click", (e) => {
     if (!navigator.onLine) {
@@ -351,11 +312,9 @@ function setupEditButton(editButton) {
     }
   });
 
-  // Listen for network changes
   window.addEventListener("online", updateButtonState);
   window.addEventListener("offline", updateButtonState);
 
-  // Prevent modal opening through other means
   const modal = new bootstrap.Modal(
     document.getElementById("editProfileModal")
   );
@@ -433,7 +392,6 @@ function updateProfileUI(data) {
     afternoonTimeOut.textContent = `${afternoonOutTime} ${afternoonOutPeriod}`;
   }
 }
-// Modify the populateEditForm function to ensure it uses modal field IDs
 function populateEditForm(data) {
   const firstNameInput = document.getElementById("first-name");
   const middleNameInput = document.getElementById("middle-name");
@@ -455,7 +413,6 @@ function populateEditForm(data) {
   );
   const editProfileImg = document.querySelector(".modal-profile-icon");
 
-  // Populate form fields
   if (data.firstName) firstNameInput.value = data.firstName.trim();
   if (data.middleName) middleNameInput.value = data.middleName.trim();
   if (data.lastName) lastNameInput.value = data.lastName.trim();
@@ -466,7 +423,6 @@ function populateEditForm(data) {
 
   if (data.gender) {
     genderInput.value = data.gender;
-    // Add this to ensure the select displays the correct value
     const options = genderInput.options;
     for (let i = 0; i < options.length; i++) {
       if (options[i].value === data.gender) {
@@ -475,10 +431,8 @@ function populateEditForm(data) {
       }
     }
   }
-  // Set company name and address if they exist
   if (data.companyName) {
     companyNameInput.value = data.companyName;
-    // Trigger change event to populate address
     const event = new Event("change");
     companyNameInput.dispatchEvent(event);
   }
@@ -487,17 +441,14 @@ function populateEditForm(data) {
     companyAddressInput.value = data.companyAddress;
   }
 
-  // Time fields
   if (data.morningTimeIn) morningTimeInInput.value = data.morningTimeIn;
   if (data.morningTimeOut) morningTimeOutInput.value = data.morningTimeOut;
   if (data.afternoonTimeIn) afternoonTimeInInput.value = data.afternoonTimeIn;
   if (data.afternoonTimeOut)
     afternoonTimeOutInput.value = data.afternoonTimeOut;
 
-  // Image
   if (data.userImg) editProfileImg.src = data.userImg;
 
-  // Work schedule checkboxes (keep your existing implementation)
   if (data.weeklySchedule) {
     const dayMapping = {
       SUN: "btn-sun",
@@ -526,7 +477,6 @@ function populateEditForm(data) {
   }
 }
 
-// Add these new functions
 async function loadCompanyData() {
   try {
     const companies = await firebaseCRUD.getAllData("company");
@@ -536,7 +486,6 @@ async function loadCompanyData() {
       return;
     }
 
-    // Cache companies in IndexedDB
     const existingCompanies = await crudOperations.getAllData("companyTbl");
     if (existingCompanies && existingCompanies.length > 0) {
       await crudOperations.clearTable("companyTbl");
@@ -546,7 +495,6 @@ async function loadCompanyData() {
       await crudOperations.createData("companyTbl", company);
     }
 
-    // Populate company dropdown
     await populateCompanyDropdown();
     setupCompanySelectListener();
   } catch (err) {
@@ -557,7 +505,6 @@ async function loadCompanyData() {
 async function populateCompanyDropdown() {
   const selectCompany = document.getElementById("modal-company-name");
 
-  // Clear existing options except the first one
   while (selectCompany.options.length > 1) {
     selectCompany.remove(1);
   }
@@ -606,31 +553,108 @@ function setupCompanySelectListener() {
   });
 }
 
-// Add this to your profile.js file, preferably near the bottom before the closing script tag
-
 document.addEventListener("DOMContentLoaded", function () {
   const logoutButton = document.getElementById("logout-button");
 
-  if (logoutButton) {
-    logoutButton.addEventListener("click", async function (e) {
-      e.preventDefault();
-
-      try {
-        // Clear the studentInfoTbl from IndexedDB
-        await crudOperations.clearTable("studentInfoTbl");
-
-        // Clear any user-related data from localStorage
-        localStorage.removeItem("userId");
-        localStorage.removeItem("userEmail");
-        localStorage.removeItem("userToken");
-
-        // Redirect to login page
-        window.location.href = "/pages/login.html";
-      } catch (error) {
-        console.error("Error during logout:", error);
-        // Even if clearing fails, still redirect to login
-        window.location.href = "/pages/login.html";
-      }
-    });
+ function updateLogoutButtonState() {
+  if (!navigator.onLine) {
+    logoutButton.disabled = true;
+    logoutButton.title = "Internet connection required to logout";
+    logoutButton.style.cursor = "not-allowed";
+    logoutButton.style.opacity = "0.6";
+  } else {
+    logoutButton.disabled = false;
+    logoutButton.title = "";
+    logoutButton.style.cursor = "pointer";
+    logoutButton.style.opacity = "1";
   }
+}
+
+updateLogoutButtonState();
+
+window.addEventListener('online', updateLogoutButtonState);
+window.addEventListener('offline', updateLogoutButtonState);
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", async function (e) {
+    e.preventDefault();
+
+    if (!navigator.onLine) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'No Internet Connection',
+        text: 'You need an internet connection to logout properly',
+      });
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: 'Logout?',
+      text: "Are you sure you want to logout?",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, logout!'
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      Swal.fire({
+        title: 'Logging out...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      await crudOperations.clearTable("studentInfoTbl");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userToken");
+
+      window.location.href = "/pages/login.html";
+    } catch (error) {
+      console.error("Error during logout:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Logout Error',
+        text: 'An error occurred while logging out'
+      });
+    }
+  });
+}
+
 });
+
+async function showLogoutConfirmation() {
+  return new Promise((resolve) => {
+    const confirmed = confirm("Are you sure you want to logout?");
+    resolve(confirmed);
+    
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    document.body.appendChild(modalContainer);
+    
+    const modal = new bootstrap.Modal(document.getElementById('logoutConfirmationModal'));
+    modal.show();
+    
+    document.getElementById('confirmLogout').addEventListener('click', () => {
+      modal.hide();
+      resolve(true);
+      setTimeout(() => {
+        document.body.removeChild(modalContainer);
+      }, 500);
+    });
+    
+    modalContainer.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
+      resolve(false);
+      setTimeout(() => {
+        document.body.removeChild(modalContainer);
+      }, 500);
+    });
+  });
+}

@@ -150,9 +150,8 @@
             style="height: 200px"
           />
         </div>
-        <span role="button" class="d-none my-4 text-primary" id="retry-again">
-          Retry again.
-        </span>
+        <button class="d-none my-4" id="retry-again">Retake Photo</button>
+
         <div class="attendance-detail-container p-3 d-none mb-3">
           <p class="m-0 p-0 text-truncate">
             Time:
@@ -195,6 +194,7 @@
                   border-radius: 10px !important;
                 "
               />
+              <p class="mb-1 time-stamp"></p>
               <div class="small text-muted">Morning In</div>
             </div>
           </div>
@@ -213,6 +213,7 @@
                   border-radius: 10px !important;
                 "
               />
+              <p class="mb-1 time-stamp"></p>
               <div class="small text-muted">Morning Out</div>
             </div>
           </div>
@@ -231,14 +232,16 @@
                   border-radius: 10px !important;
                 "
               />
+              <p class="mb-1 time-stamp"></p>
               <div class="small text-muted">Afternoon In</div>
             </div>
           </div>
           <div class="col-6 col-lg-3 mb-3">
             <div
-              class="img-container text-center d-flex align-items-center justify-content-center flex-column gap-2"
+              class="img-container text-center d-flex align-items-center justify-content-center flex-column gap-1"
             >
               <img
+                id="afternoon-out-img"
                 src=""
                 alt="Afternoon Out"
                 class="img-fluid attendance-slot"
@@ -248,7 +251,11 @@
                   object-fit: contain;
                   border-radius: 10px !important;
                 "
+                role="button"
+                data-bs-toggle="modal"
+                data-bs-target="#viewImageModal"
               />
+              <p class="mb-1 time-stamp"></p>
               <div class="small text-muted">Afternoon Out</div>
             </div>
           </div>
@@ -261,7 +268,7 @@
         Upload Attendance
       </button>
       <div
-        class="no-schedule-container position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4"
+        class="no-schedule-container position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4 d-none"
       >
         <i class="bi bi-emoji-sunglasses fs-1 text-secondary"></i>
         <h6 class="mt-2 text-secondary">No schedule</h6>
@@ -271,9 +278,7 @@
       </div>
       `
     </section>
-    <!-- Time in/out section -->
 
-    <!-- Side bar -->
     <div
       class="offcanvas offcanvas-start primary-background-color"
       tabindex="-1"
@@ -339,9 +344,7 @@
         </ul>
       </div>
     </div>
-    <!-- Side bar -->
 
-    <!-- Camera  -->
     <div
       class="modal fade"
       id="cameraModal"
@@ -377,7 +380,6 @@
         </div>
       </div>
     </div>
-    <!-- Camera  -->
 
     <div
       class="modal fade"
@@ -437,8 +439,6 @@
       </div>
     </div>
 
-    <!-- absent modal -->
-
     <div
       class="modal fade"
       id="absentModal"
@@ -488,7 +488,39 @@
       </div>
     </div>
 
-    <!-- absent modal -->
+    <div
+      class="modal fade"
+      id="viewImageModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby=""
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3 view-image-modal">
+          <div class="d-flex justify-content-between w-100 mb-2">
+            <h5 class="modal-title fs-5 text-white" id="viewImageModalLabel">
+              Image Preview
+            </h5>
+            <i
+              class="bi bi-x-lg fs-6 text-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></i>
+          </div>
+          <div class="modal-body p-0 d-flex justify-content-center">
+            <img
+              id="modal-image-view"
+              src=""
+              alt="Preview"
+              class="img-fluid"
+              style="max-height: 70vh; object-fit: contain"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
@@ -502,6 +534,26 @@
     <script src="/js/time-in-out.js"></script>
 
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const imageSlots = document.querySelectorAll(".attendance-slot");
+
+        imageSlots.forEach((img) => {
+          img.addEventListener("click", function () {
+            const imageSrc = img.getAttribute("src");
+
+            if (imageSrc) {
+              const modalImg = document.getElementById("modal-image-view");
+              modalImg.setAttribute("src", imageSrc);
+
+              const modal = new bootstrap.Modal(
+                document.getElementById("viewImageModal")
+              );
+              modal.show();
+            }
+          });
+        });
+      });
+
       function updateDateTime() {
         const now = new Date();
 

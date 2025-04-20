@@ -34,6 +34,19 @@ document
     try {
       const { firebaseCRUD } = await import("./firebase-crud.js");
 
+      const attendanceStatus = {
+        userId,
+        date,
+        status: "absent",
+        workHours: 0,
+        workMinutes: 0,
+        totalMinutes: 0,
+        isLate: false,
+        isPresent: false,
+      };
+
+      await crudOperations.upsert("completeAttendanceTbl", attendanceStatus);
+
       const incidentData = {
         userId,
         date,
@@ -51,6 +64,7 @@ document
 
       absentModal.hide();
       alert("Absent report successfully saved.");
+      checkCompletionStatus();
     } catch (err) {
       console.error("Failed to upload incident report:", err);
       alert("Failed to upload incident report. Please try again.");
@@ -195,6 +209,43 @@ function onModalHidden() {
   cameraModalElem.removeEventListener("hidden.bs.modal", onModalHidden);
 }
 
+function getBase64Size(base64String) {
+  const base64 = base64String.split(",")[1];
+  return Math.ceil((base64.length * 3) / 4);
+}
+
+async function compressImageToUnder1MB(imgElement, maxSizeBytes = 1048576) {
+  let quality = 0.9;
+  let maxWidth = imgElement.width;
+  let maxHeight = imgElement.height;
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  let base64;
+
+  while (true) {
+    canvas.width = maxWidth;
+    canvas.height = maxHeight;
+    ctx.clearRect(0, 0, maxWidth, maxHeight);
+    ctx.drawImage(imgElement, 0, 0, maxWidth, maxHeight);
+
+    base64 = canvas.toDataURL("image/jpeg", quality);
+    const size = getBase64Size(base64);
+
+    if (size <= maxSizeBytes || maxWidth < 100 || maxHeight < 100) {
+      break;
+    }
+    quality -= 0.05;
+    maxWidth *= 0.9;
+    maxHeight *= 0.9;
+    maxWidth = Math.floor(maxWidth);
+    maxHeight = Math.floor(maxHeight);
+  }
+
+  return base64;
+}
+
 document.getElementById("captureBtn").addEventListener("click", function () {
   const video = document.getElementById("video");
   const canvas = document.getElementById("canvas");
@@ -220,7 +271,6 @@ document.getElementById("captureBtn").addEventListener("click", function () {
   retry.classList.remove("d-none");
 
   const imageData = canvas.toDataURL("image/png");
-  console.log("Captured image:", imageData.substring(0, 30) + "...");
 });
 
 document.getElementById("retry").addEventListener("click", function () {
@@ -322,11 +372,11 @@ function getTimeSlot(currentMinutes, schedule) {
     return "morningTimeIn";
   }
 
-  if (currentMinutes >= morningOut && currentMinutes < afternoonIn) {
+  if (currentMinutes >= morningOut && currentMinutes < afternoonIn - 15) {
     return "morningTimeOut";
   }
 
-  if (currentMinutes >= afternoonIn && currentMinutes < afternoonOut) {
+  if (currentMinutes >= afternoonIn - 15 && currentMinutes < afternoonOut) {
     return "afternoonTimeIn";
   }
 
@@ -343,6 +393,46 @@ function getTimeSlot(currentMinutes, schedule) {
 
 let currentSlot = "";
 
+async function checkCompletionStatus() {
+  const userId = localStorage.getItem("userId");
+  await window.dbReady;
+
+  const allStudentData = await crudOperations.getAllData("studentInfoTbl");
+  const userData = allStudentData.find((item) => item.userId === userId);
+  if (!userData) return null;
+
+  const today = new Date().toLocaleDateString("en-CA");
+  const completedAttendance = await crudOperations.getAllData(
+    "completeAttendanceTbl"
+  );
+
+  const completionEntry = completedAttendance.find(
+    (entry) => entry.userId === userId && entry.date === today
+  );
+
+  const status = completionEntry?.status;
+
+  const button = document.getElementById("time-in-out-button");
+  const cameraBtn = document.getElementById("camera-button");
+  const uploadBtn = document.getElementById("upload-btn");
+  const absentButton = document.getElementById("absent-button");
+
+  if (completionEntry) {
+    if (status === "complete") {
+      button.textContent = "Attendance Already Completed Today";
+    } else {
+      button.textContent = "You Are Absent For Today.";
+    }
+    button.disabled = true;
+    cameraBtn.disabled = true;
+    absentButton.disabled = true;
+    uploadBtn.classList.add("d-none");
+    return status;
+  }
+
+  return null;
+}
+
 async function updateAttendanceButtonState() {
   const userId = localStorage.getItem("userId");
   await window.dbReady;
@@ -355,32 +445,25 @@ async function updateAttendanceButtonState() {
   const allLogs = await crudOperations.getAllData("timeInOut");
   const today = new Date().toLocaleDateString("en-CA");
 
-  const completedAttendance = await crudOperations.getAllData(
-    "completeAttendanceTbl"
-  );
-
-  const alreadyCompleted = completedAttendance.some(
-    (entry) =>
-      entry.userId === userId &&
-      entry.date === today &&
-      entry.status === "complete"
-  );
-
   const button = document.getElementById("time-in-out-button");
   const cameraBtn = document.getElementById("camera-button");
   const uploadBtn = document.getElementById("upload-btn");
+  const absentButton = document.getElementById("absent-button");
 
-  if (alreadyCompleted) {
+  const status = await checkCompletionStatus(userId, today);
+
+  if (status === "complete" || status === "absent") {
     button.textContent = "Attendance Already Completed Today";
     button.disabled = true;
     cameraBtn.disabled = true;
+    absentButton.disabled = true;
     uploadBtn.classList.add("d-none");
     return;
   }
-
   const todayLogs = allLogs.filter(
     (log) => log.date === today && log.userId === userId
   );
+
   const isLogged = (slot) => todayLogs.some((log) => log.type === slot);
 
   const slot = getTimeSlot(currentTime, userData);
@@ -395,6 +478,7 @@ async function updateAttendanceButtonState() {
   if (slot === "morningTimeIn" && !isLogged("morningTimeIn")) {
     button.textContent = "Time In";
     button.disabled = false;
+    cameraBtn.disabled = false;
   } else if (slot === "morningTimeOut" && !isLogged("morningTimeOut")) {
     button.textContent = "Time Out";
     button.disabled = false;
@@ -412,19 +496,12 @@ async function updateAttendanceButtonState() {
     button.disabled = true;
     cameraBtn.disabled = true;
   }
-
-  console.log("Current slot:", currentSlot);
-  console.log(
-    "Today logs:",
-    todayLogs.map((log) => log.type)
-  );
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
   await window.dbReady;
   const userId = localStorage.getItem("userId");
   if (!userId) {
-    console.warn("No user ID found in localStorage.");
     return;
   }
 
@@ -451,7 +528,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       timeInContainer.classList.remove("d-none");
       logImgContainer.classList.remove("d-none");
       absentButton.classList.remove("d-none");
-      6;
     } else {
       timeInContainer.classList.add("d-none");
       logImgContainer.classList.add("d-none");
@@ -460,33 +536,35 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   })();
 
-  updateAttendanceButtonState();
+  await updateAttendanceButtonState();
   await populateAttendanceImages();
   setInterval(updateAttendanceButtonState, 30000);
 });
 
 document
   .getElementById("time-in-out-button")
-  .addEventListener("click", async function (event) {
+  .addEventListener("click", async function () {
     const timeEl = document
       .getElementById("attendance-time")
       .textContent.trim();
-    const imgEl = document.getElementById("attendance-img").textContent.trim();
+    const imgBase64 = document
+      .getElementById("attendance-img")
+      .textContent.trim();
     const dateEl = document
       .getElementById("attendance-date")
       .textContent.trim();
 
-    if (!timeEl || !imgEl || !dateEl) {
+    if (!timeEl || !imgBase64 || !dateEl) {
       alert("Please take a photo first.");
       return;
     }
 
-    const attendanceDate = convertToISODate(dateEl);
     await window.dbReady;
-
     const userId = localStorage.getItem("userId");
-    const allLogs = await crudOperations.getAllData("timeInOut");
+    const attendanceDate = convertToISODate(dateEl);
+    const attendanceTime = convertTo24Hour(timeEl);
 
+    const allLogs = await crudOperations.getAllData("timeInOut");
     const alreadyLogged = allLogs.some(
       (log) =>
         log.date === attendanceDate &&
@@ -501,13 +579,18 @@ document
       return;
     }
 
-    const attendanceTime = convertTo24Hour(timeEl);
+    const sizeInBytes = getBase64Size(imgBase64);
+    let imageToUse = imgBase64;
+
+    if (sizeInBytes > 1048576) {
+      imageToUse = await compressImageToUnder1MB(imgBase64);
+    }
 
     const userData = {
       userId,
       time: attendanceTime,
       date: attendanceDate,
-      image: imgEl,
+      image: imageToUse,
       type: currentSlot,
     };
 
@@ -520,22 +603,19 @@ document
       document.getElementById("preview").classList.add("d-none");
       document.getElementById("retry-again").classList.add("d-none");
       document.getElementById("camera-button").classList.remove("d-none");
+      document.getElementById("absent-button").disabled = true;
 
       alert("Attendance recorded successfully!");
 
       await populateAttendanceImages();
-
       updateAttendanceButtonState();
 
-      const attendanceTime = document.getElementById("attendance-time");
-      const attendanceDate = document.getElementById("attendance-date");
-      const attendanceImg = document.getElementById("attendance-img");
-
-      attendanceTime.textContent = "";
-      attendanceDate.textContent = "";
-      attendanceImg.textContent = "";
+      document.getElementById("attendance-time").textContent = "";
+      document.getElementById("attendance-date").textContent = "";
+      document.getElementById("attendance-img").textContent = "";
     } catch (error) {
       alert("Failed to record attendance.");
+      console.error(error);
     }
   });
 
@@ -543,9 +623,7 @@ async function populateAttendanceImages() {
   await window.dbReady;
 
   const userId = localStorage.getItem("userId");
-  if (!userId) {
-    return;
-  }
+  if (!userId) return;
 
   const allLogs = await crudOperations.getAllData("timeInOut");
 
@@ -560,11 +638,19 @@ async function populateAttendanceImages() {
     const type = img.getAttribute("data-type");
     const match = todayLogs.find((log) => log.type === type);
 
+    const container = img.closest(".img-container");
+    const timeStamp = container.querySelector(".time-stamp");
+
     if (match) {
       img.src = match.image;
+      if (timeStamp) {
+        timeStamp.textContent = `Captured at: ${match.time}`;
+      }
     } else {
-      // console.log("noni");
-      img.src = "../assets/img/icons8_full_image_480px_1.png";
+      img.src = "../assets/img/icons8_no_image_500px.png";
+      if (timeStamp) {
+        timeStamp.textContent = "";
+      }
     }
   });
 }
@@ -592,7 +678,6 @@ async function checkCompleteAttendance(userId, date) {
   };
 }
 
-// 🔁 Helper to calculate total worked time (morning + afternoon)
 function calculateWorkHours(logs, schedule) {
   function toMinutes(timeStr) {
     const [h, m] = timeStr.split(":").map(Number);
@@ -678,7 +763,6 @@ document
     const uploadBtn = document.getElementById("upload-btn");
     const submitIncidentBtn = document.getElementById("incident-submit");
 
-    // Helper to convert time string to minutes
     const toMinutes = (t) => {
       const [h, m] = t.split(":").map(Number);
       return h * 60 + m;
@@ -862,15 +946,13 @@ document
   });
 
 function ClearData() {
-  const imageSlots = document.querySelectorAll(".attendance-slot");
-  const attendanceTime = document.getElementById("attendance-time");
-  const attendanceDate = document.getElementById("attendance-date");
-  const attendanceImg = document.getElementById("attendance-img");
+  document.getElementById("attendance-time").textContent = "";
+  document.getElementById("attendance-date").textContent = "";
+  document.getElementById("attendance-img").textContent = "";
+  document.querySelector(".time-stamp").textContent = "";
 
-  attendanceTime.textContent = "";
-  attendanceDate.textContent = "";
-  attendanceImg.textContent = "";
+  const imageSlots = document.querySelectorAll(".attendance-slot");
   imageSlots.forEach((img) => {
-    img.src = "../assets/img/icons8_full_image_480px_1.png";
+    img.src = "icons8_no_image_500px.png";
   });
 }

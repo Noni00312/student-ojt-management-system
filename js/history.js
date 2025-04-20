@@ -2,6 +2,26 @@ import { firebaseCRUD } from "./firebase-crud.js";
 import { getDoc, doc } from "./firebase-config.js";
 import { db } from "./firebase-config.js";
 
+document.addEventListener("click", (e) => {
+  const link = e.target.closest(".view-image-link");
+  if (link) {
+    e.preventDefault();
+    const modalImg = document.getElementById("modal-image-view");
+    modalImg.src = link.querySelector("img").src;
+  }
+});
+
+const viewHistoryModal = new bootstrap.Modal(
+  document.getElementById("viewHistoryModal")
+);
+const viewImageModalElement = document.getElementById("viewImageModal");
+
+viewImageModalElement.addEventListener("hidden.bs.modal", () => {
+  const modalImg = document.getElementById("modal-image-view");
+  modalImg.src = "";
+  viewHistoryModal.show();
+});
+
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const userId = localStorage.getItem("userId");
@@ -43,67 +63,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 let allAttendanceDates = [];
 
-// async function getAllIncidentDates() {
-//   const userId = localStorage.getItem("userId");
-//   if (!userId) return;
-
-//   const container = document.querySelector(".card-container .row");
-//   container.innerHTML = "";
-
-//   try {
-//     const data = await firebaseCRUD.queryData(
-//       "completeAttendanceTbl",
-//       "userId",
-//       "==",
-//       userId
-//     );
-
-//     console.log("Fetched data:", data);
-
-//     if (!Array.isArray(data) || data.length === 0) {
-//       container.innerHTML = `<p class="text-center text-muted">No attendance records found.</p>`;
-//       return;
-//     }
-
-//     data.forEach((record) => {
-//       if (!record.date) return;
-
-//       const date = new Date(record.date);
-//       const isoDate = date.toLocaleDateString("en-CA");
-//       const day = date
-//         .toLocaleDateString("en-US", { weekday: "short" })
-//         .toUpperCase();
-//       const readableDate = date.toLocaleDateString("en-US", {
-//         month: "long",
-//         day: "numeric",
-//         year: "numeric",
-//       });
-
-//       const card = document.createElement("div");
-//       card.className = "col-12 col-md-6 col-lg-4 mb-2 px-2";
-
-//       card.innerHTML = `
-//             <a href="#" class="history-card mb-2" data-bs-toggle="modal" data-bs-target="#viewHistoryModal" data-date="${isoDate}">
-//               <span>${day}</span>
-//               <span class="separator"></span>
-//               <span class="date">${readableDate}</span>
-//             </a>
-//           `;
-
-//       container.appendChild(card);
-
-//       card.querySelector("a").addEventListener("click", (e) => {
-//         e.preventDefault();
-//         const selectedDate = e.currentTarget.getAttribute("data-date");
-//         populateHistoryModal(selectedDate);
-//       });
-//     });
-//   } catch (error) {
-//     console.error("Error fetching history dates:", error);
-//     throw new Error(`Failed to fetch data: ${error.message}`);
-//   }
-// }
-
 document
   .getElementById("history-search-input")
   .addEventListener("input", (e) => {
@@ -126,14 +85,13 @@ async function getAllIncidentDates() {
       userId
     );
 
-    console.log("Fetched data:", data);
+    data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (!Array.isArray(data) || data.length === 0) {
       container.innerHTML = `<p class="text-center text-muted">No attendance records found.</p>`;
       return;
     }
 
-    // 🌟 Store processed data for filtering later
     allAttendanceDates = data.map((record) => {
       const date = new Date(record.date);
       const isoDate = date.toLocaleDateString("en-CA");
@@ -147,14 +105,13 @@ async function getAllIncidentDates() {
       });
 
       return {
-        rawDate: isoDate, // 🌟 used in filtering
+        rawDate: isoDate,
         day,
         readableDate,
-        original: record, // optional, keep full original data
+        original: record,
       };
     });
 
-    // 🌟 Populate the UI
     populateDates(allAttendanceDates);
   } catch (error) {
     console.error("Error fetching history dates:", error);
@@ -265,11 +222,16 @@ function updateSlot(slotIndex, log) {
 
   if (log && log.image) {
     anchor.href = log.image;
+
+    img.classList.remove("scale-in");
+    void img.offsetWidth;
     img.src = log.image;
+    img.classList.add("scale-in");
+
     time.textContent = formatTime(log.timestamp);
   } else {
     anchor.href = "#";
-    img.src = "../assets/img/icons8_no_image_480px.png";
+    img.src = "../assets/img/icons8_no_image_500px.png";
     time.textContent = "--:--:--";
   }
 }

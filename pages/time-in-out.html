@@ -17,7 +17,7 @@
     <link rel="app-mobile-web-app-status-bar" href="#6e1423" />
     <meta name="theme-color" content="#6e1423" />
 
-    <title>Student OJT Management Student</title>
+    <title>Time in/out | SOJTMS</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
@@ -96,6 +96,33 @@
         </div>
       </div>
     </nav>
+
+    <div
+      id="page-loading-overlay"
+      style="
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        transition: opacity 0.3s;
+      "
+    >
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      ></div>
+      <div style="margin-top: 1rem; font-size: 1.2rem">
+        Loading, please wait...
+      </div>
+    </div>
 
     <!-- Time in/out section -->
     <section class="container">
@@ -261,11 +288,8 @@
           </div>
         </div>
       </div>
-      <button
-        id="upload-btn"
-        class="w-100 d-flex align-items-center justify-content-center d-none"
-      >
-        Upload Attendance
+      <button id="upload-btn" class="rounded-circle d-none">
+        <i class="bi bi-cloud-arrow-up-fill text-light fs-1"></i>
       </button>
       <div
         class="no-schedule-container position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4 d-none"

@@ -48,12 +48,18 @@
           >
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="#"
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-dashboard.html"
                   >Home</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="#"
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-t-i-o.html"
                   >Time in/out</a
                 >
               </li>
@@ -81,10 +87,7 @@
     </nav>
 
     <!--Admin Time in/out section -->
-    <section
-      class="container mt-2 d-flex flex-column"
-      style="height: calc(100vh - [navbarHeight]px - [otherElementsHeight]px)"
-    >
+    <section class="container mt-2 d-flex flex-column" style="height: 85vh">
       <h1 class="fw-bold" style="color: #3c3d42 !important">Time in/out</h1>
       <form class="form-floating" method="post" action="">
         <div class="mb-2">
@@ -93,16 +96,14 @@
             class="form-control"
             id="history-search-input"
             name="history-search-input"
+            style="background-color: #ffffff !important"
+            ;
           />
         </div>
       </form>
 
-      <div class="card-container flex-grow-1 overflow-auto">
-        <a href="/pages/admin-t-i-o-company.html" class="history-card mb-2">
-          <span>MON</span>
-          <span class="separator"></span>
-          <span class="date">March 30, 2024</span>
-        </a>
+      <div class="card-container h-100">
+        <div class="row mx-0"></div>
       </div>
     </section>
     <!--Admin Time in/out section -->
@@ -180,7 +181,7 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/app.js"></script>
-    <script src="/js/ui.js"></script>
+    <script src="../js/firebase-crud.js"></script>
+    <script src="../js/admin-t-i-o.js"></script>
   </body>
 </html>

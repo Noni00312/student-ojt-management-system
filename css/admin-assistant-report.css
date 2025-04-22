@@ -419,7 +419,7 @@ body {
 
 
 /* Add these styles for the color highlights */
-.day {
+/* .day {
   position: relative;
   width: 30px;
   height: 30px;
@@ -450,7 +450,7 @@ body {
 
 .day.other-month {
   opacity: 0.3;
-}
+} */
 
 
 /* Calendar Container */

@@ -294,6 +294,10 @@ document.addEventListener('DOMContentLoaded', async function () {
       await loadStudentData(userId); // Add this line to load student data
       await loadAttendanceData(userId); // Add this line to load attendance data
 
+      // Initialize calendar
+      const attendanceCalendar = initializeAttendanceCalendar();
+      await attendanceCalendar.init(userId);
+
 
       // Added: Check if already assistant when page loads
       try {
@@ -506,67 +510,122 @@ function setDefaultImage(imgElement) {
 
 
 // Updated function with proper time formatting
+// async function loadAttendanceData(userId) {
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+//     const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+
+//     if (!attendanceRecords || attendanceRecords.length === 0) {
+//       console.log("No attendance records found");
+//       return;
+//     }
+
+//     // Initialize counters
+//     let presentCount = 0;
+//     let lateCount = 0;
+//     let absentCount = 0;
+//     let totalWorkHours = 0;
+//     let totalMinutes = 0;
+
+//     // Calculate statistics
+//     attendanceRecords.forEach(record => {
+//       if (record.isPresent === "True") {
+//         presentCount++;
+//         if (record.isLate === "True") {
+//           lateCount++;
+//         }
+//       } else {
+//         absentCount++;
+//       }
+
+//       // Sum up work hours and minutes
+//       if (record.workHours) {
+//         totalWorkHours += parseFloat(record.workHours) || 0;
+//       }
+//       if (record.totalMinutes) {
+//         totalMinutes += parseInt(record.totalMinutes) || 0;
+//       }
+//     });
+
+//     // Convert all time to seconds first for accurate calculation
+//     const totalSeconds = (totalWorkHours * 3600) + (totalMinutes * 60);
+
+//     // Calculate hours, minutes, seconds
+//     const hours = Math.floor(totalSeconds / 3600);
+//     const remainingSeconds = totalSeconds % 3600;
+//     const minutes = Math.floor(remainingSeconds / 60);
+//     const seconds = remainingSeconds % 60;
+
+//     // Format as HH:MM:SS with leading zeros
+//     const accumulatedTime = [
+//       hours.toString().padStart(2, '0'),
+//       minutes.toString().padStart(2, '0'),
+//       seconds.toString().padStart(2, '0')
+//     ].join(':');
+
+//     // Update the DOM
+//     updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
+
+//   } catch (error) {
+//     console.error("Error loading attendance data:", error);
+//   }
+// }
+
 async function loadAttendanceData(userId) {
   try {
-    const { firebaseCRUD } = await import("./firebase-crud.js");
-    const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+      const { firebaseCRUD } = await import("./firebase-crud.js");
+      const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
 
-    if (!attendanceRecords || attendanceRecords.length === 0) {
-      console.log("No attendance records found");
-      return;
-    }
-
-    // Initialize counters
-    let presentCount = 0;
-    let lateCount = 0;
-    let absentCount = 0;
-    let totalWorkHours = 0;
-    let totalMinutes = 0;
-
-    // Calculate statistics
-    attendanceRecords.forEach(record => {
-      if (record.isPresent === "True") {
-        presentCount++;
-        if (record.isLate === "True") {
-          lateCount++;
-        }
-      } else {
-        absentCount++;
+      if (!attendanceRecords || attendanceRecords.length === 0) {
+          console.log("No attendance records found");
+          return;
       }
 
-      // Sum up work hours and minutes
-      if (record.workHours) {
-        totalWorkHours += parseFloat(record.workHours) || 0;
-      }
-      if (record.totalMinutes) {
-        totalMinutes += parseInt(record.totalMinutes) || 0;
-      }
-    });
+      // Initialize counters
+      let presentCount = 0;
+      let lateCount = 0;
+      let absentCount = 0;
+      let totalHours = 0;
+      let totalMinutes = 0;
 
-    // Convert all time to seconds first for accurate calculation
-    const totalSeconds = (totalWorkHours * 3600) + (totalMinutes * 60);
+      // Calculate statistics
+      attendanceRecords.forEach(record => {
+          // Convert to lowercase for case-insensitive comparison
+          const isPresent = String(record.isPresent).toLowerCase() === "true";
+          const isLate = String(record.isLate).toLowerCase() === "true";
 
-    // Calculate hours, minutes, seconds
-    const hours = Math.floor(totalSeconds / 3600);
-    const remainingSeconds = totalSeconds % 3600;
-    const minutes = Math.floor(remainingSeconds / 60);
-    const seconds = remainingSeconds % 60;
+          if (isPresent) {
+              presentCount++;
+              if (isLate) {
+                  lateCount++;
+              }
+          } else {
+              absentCount++;
+          }
 
-    // Format as HH:MM:SS with leading zeros
-    const accumulatedTime = [
-      hours.toString().padStart(2, '0'),
-      minutes.toString().padStart(2, '0'),
-      seconds.toString().padStart(2, '0')
-    ].join(':');
+          console.log(presentCount + " present");
+          console.log(lateCount + " late");
+          console.log(absentCount + " absent");
 
-    // Update the DOM
-    updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
+          // Sum hours and minutes
+          totalHours += parseInt(record.workHours) || 0;
+          totalMinutes += parseInt(record.totalMinutes) || 0;
+      });
+
+      // Convert excess minutes to hours
+      totalHours += Math.floor(totalMinutes / 60);
+      totalMinutes = totalMinutes % 60;
+
+      // Format as HH:MM:00
+      const accumulatedTime = `${totalHours.toString().padStart(2, '0')}:${totalMinutes.toString().padStart(2, '0')}:00`;
+
+      // Update the DOM
+      updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
 
   } catch (error) {
-    console.error("Error loading attendance data:", error);
+      console.error("Error loading attendance data:", error);
   }
 }
-
 // Helper function to update the attendance display (unchanged)
 function updateAttendanceDisplay(present, late, absent, accumulatedTime) {
   const presentElement = document.querySelector('.attendance-status-container p:nth-child(1) .number');
@@ -1082,3 +1141,130 @@ document.getElementById('edit-info-form')?.addEventListener('submit', async func
     showErrorToast("Failed to update student: " + error.message);
   }
 });
+
+
+
+
+
+
+// admin-student-report.js
+
+// Initialize Calendar Function
+function initializeAttendanceCalendar() {
+  // Current date
+  let currentDate = new Date();
+  let attendanceData = {}; // Store attendance data by date
+
+  // DOM elements
+  const monthYearElement = document.getElementById('month-year');
+  const daysElement = document.getElementById('days');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+
+  // Fetch attendance data
+  async function fetchAttendanceData(userId) {
+      try {
+          const { firebaseCRUD } = await import("./firebase-crud.js");
+          const records = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+          
+          // Organize data by date for easy lookup
+          records.forEach(record => {
+              if (record.date) {
+                  attendanceData[record.date] = {
+                      isPresent: String(record.isPresent).toLowerCase() === "true",
+                      isLate: String(record.isLate).toLowerCase() === "true"
+                  };
+              }
+          });
+      } catch (error) {
+          console.error("Error fetching attendance data:", error);
+      }
+  }
+
+  // Render calendar with attendance colors
+  async function renderCalendar() {
+      // Get current month and year
+      const currentMonth = currentDate.getMonth();
+      const currentYear = currentDate.getFullYear();
+
+      // Set month and year in header
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+      ];
+      monthYearElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+      // Get first day of month and total days in month
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+      // Clear days container
+      daysElement.innerHTML = '';
+
+      // Add days from previous month
+      for (let i = firstDay - 1; i >= 0; i--) {
+          const dayElement = document.createElement('div');
+          dayElement.classList.add('day', 'other-month');
+          dayElement.textContent = daysInLastMonth - i;
+          daysElement.appendChild(dayElement);
+      }
+
+      // Add days from current month with attendance colors
+      for (let i = 1; i <= daysInMonth; i++) {
+          const dayElement = document.createElement('div');
+          dayElement.classList.add('day');
+          dayElement.textContent = i;
+
+          // Format date as YYYY-MM-DD
+          const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+          
+          // Check attendance data for this date
+          if (attendanceData[formattedDate]) {
+              const record = attendanceData[formattedDate];
+              
+              if (record.isPresent && !record.isLate) {
+                  dayElement.classList.add('green'); // Present and on time
+              } else if (record.isPresent && record.isLate) {
+                  dayElement.classList.add('yellow'); // Present but late
+              } else if (!record.isPresent) {
+                  dayElement.classList.add('red'); // Absent
+              }
+          }
+
+          daysElement.appendChild(dayElement);
+      }
+
+      // Calculate total cells so far
+      const totalCells = firstDay + daysInMonth;
+      const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+
+      // Add days from next month if needed
+      for (let i = 1; i <= remainingCells; i++) {
+          const dayElement = document.createElement('div');
+          dayElement.classList.add('day', 'other-month');
+          dayElement.textContent = i;
+          daysElement.appendChild(dayElement);
+      }
+  }
+
+  // Event listeners for navigation
+  prevBtn.addEventListener('click', function () {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar();
+  });
+
+  nextBtn.addEventListener('click', function () {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      renderCalendar();
+  });
+
+  // Public method to initialize the calendar
+  return {
+      init: async function(userId) {
+          if (userId) {
+              await fetchAttendanceData(userId);
+          }
+          renderCalendar();
+      }
+  };
+}

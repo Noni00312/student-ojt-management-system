@@ -2,10 +2,6 @@ $(document).ready(function () {
   $.validator.addMethod(
     "atLeastOneChecked",
     function (value, element) {
-      console.log(
-        "Checked boxes:",
-        $('input[name="weeklySchedule[]"]:checked').length
-      );
       return $('input[name="weeklySchedule[]"]:checked').length > 0;
     },
     "Choose at least one day."
@@ -171,6 +167,22 @@ $(document).ready(function () {
           }
         }
 
+        let imageToUse = imageBase64;
+        if (imageBase64) {
+          if (imageBase64.length > 1048487) {
+            try {
+              const imgElement = await base64ToImage(imageBase64);
+              imageToUse = await compressImageToUnder1MB(imgElement);
+            } catch (err) {
+              console.warn(
+                "Image compression failed, using original image.",
+                err
+              );
+              imageToUse = imageBase64;
+            }
+          }
+        }
+
         const studentData = {
           userId: form.userId.value,
           userType: form.userType.value,
@@ -190,7 +202,7 @@ $(document).ready(function () {
           morningTimeOut: form.morningTimeOut.value,
           afternoonTimeIn: form.afternoonTimeIn.value,
           afternoonTimeOut: form.afternoonTimeOut.value,
-          userImg: imageBase64,
+          userImg: imageToUse,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
@@ -240,4 +252,54 @@ function isTimeSequenceValid() {
     morningOut < afternoonIn &&
     afternoonIn < afternoonOut
   );
+}
+
+function getBase64Size(base64String) {
+  if (!base64String) return 0;
+  const base64 = base64String.split(",")[1];
+  return Math.ceil((base64.length * 3) / 4);
+}
+
+function base64ToImage(base64String) {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.onload = function () {
+      resolve(img);
+    };
+    img.onerror = function (err) {
+      reject(new Error("Failed to load image from base64."));
+    };
+    img.src = base64String;
+  });
+}
+
+async function compressImageToUnder1MB(imgElement, maxSizeBytes = 1048487) {
+  let quality = 0.9;
+  let maxWidth = imgElement.width;
+  let maxHeight = imgElement.height;
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  let base64;
+
+  while (true) {
+    canvas.width = maxWidth;
+    canvas.height = maxHeight;
+    ctx.clearRect(0, 0, maxWidth, maxHeight);
+    ctx.drawImage(imgElement, 0, 0, maxWidth, maxHeight);
+
+    base64 = canvas.toDataURL("image/jpeg", quality);
+    const size = base64.length;
+
+    if (size <= maxSizeBytes || maxWidth < 100 || maxHeight < 100) {
+      break;
+    }
+    quality -= 0.05;
+    if (quality < 0.1) quality = 0.1;
+    maxWidth = Math.floor(maxWidth * 0.9);
+    maxHeight = Math.floor(maxHeight * 0.9);
+  }
+
+  return base64;
 }

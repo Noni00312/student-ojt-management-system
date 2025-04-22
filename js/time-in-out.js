@@ -74,25 +74,53 @@ document
     }
   });
 
+// async function CheckSchedule() {
+//   const userId = localStorage.getItem("userId");
+
+//   const studentInfoArr = await crudOperations.getByIndex(
+//     "studentInfoTbl",
+//     "userId",
+//     userId
+//   );
+//   const studentInfo = studentInfoArr[0];
+
+//   const weeklySchedule = studentInfo.weeklySchedule;
+
+//   const dayNames = ["SUN", "MON", "TUES", "WED", "THURS", "FRI", "SAT"];
+//   const todayDay = new Date().getDay();
+//   const today = dayNames[todayDay];
+
+//   const hasScheduleToday = weeklySchedule[today] === true;
+
+//   return hasScheduleToday;
+// }
+
 async function CheckSchedule() {
   const userId = localStorage.getItem("userId");
+  if (!userId) {
+    return false;
+  }
 
   const studentInfoArr = await crudOperations.getByIndex(
     "studentInfoTbl",
     "userId",
     userId
   );
+  if (!studentInfoArr || studentInfoArr.length === 0) {
+    return false;
+  }
+
   const studentInfo = studentInfoArr[0];
+  const weeklySchedule = studentInfo && studentInfo.weeklySchedule;
+  if (!weeklySchedule || typeof weeklySchedule !== "object") {
+    return false;
+  }
 
-  const weeklySchedule = studentInfo.weeklySchedule;
-
-  const dayNames = ["SUN", "MON", "TUES", "WED", "THURS", "FRI", "SAT"];
+  const dayNames = ["SUN", "MON", "TUE", "WED", "THURS", "FRI", "SAT"];
   const todayDay = new Date().getDay();
   const today = dayNames[todayDay];
 
-  const hasScheduleToday = weeklySchedule[today] === true;
-
-  return hasScheduleToday;
+  return weeklySchedule[today] === true;
 }
 
 let currentStream = null;
@@ -393,43 +421,81 @@ function getTimeSlot(currentMinutes, schedule) {
 
 let currentSlot = "";
 
-async function checkCompletionStatus() {
-  const userId = localStorage.getItem("userId");
+// async function checkCompletionStatus() {
+//   const userId = localStorage.getItem("userId");
+//   await window.dbReady;
+
+//   const allStudentData = await crudOperations.getAllData("studentInfoTbl");
+//   const userData = allStudentData.find((item) => item.userId === userId);
+//   if (!userData) return null;
+
+//   const today = new Date().toLocaleDateString("en-CA");
+//   const completedAttendance = await crudOperations.getAllData(
+//     "completeAttendanceTbl"
+//   );
+
+//   const completionEntry = completedAttendance.find(
+//     (entry) => entry.userId === userId && entry.date === today
+//   );
+
+//   const status = completionEntry?.status;
+
+//   const button = document.getElementById("time-in-out-button");
+//   const cameraBtn = document.getElementById("camera-button");
+//   const uploadBtn = document.getElementById("upload-btn");
+//   const absentButton = document.getElementById("absent-button");
+
+//   if (completionEntry) {
+//     if (status === "complete") {
+//       button.textContent = "Attendance Already Completed Today";
+//     } else {
+//       button.textContent = "You Are Absent For Today.";
+//     }
+//     button.disabled = true;
+//     cameraBtn.disabled = true;
+//     absentButton.disabled = true;
+//     uploadBtn.classList.add("d-none");
+//     return status;
+//   }
+
+//   return null;
+// }
+
+async function checkCompletionStatus(userId, date) {
   await window.dbReady;
 
   const allStudentData = await crudOperations.getAllData("studentInfoTbl");
   const userData = allStudentData.find((item) => item.userId === userId);
   if (!userData) return null;
 
-  const today = new Date().toLocaleDateString("en-CA");
   const completedAttendance = await crudOperations.getAllData(
     "completeAttendanceTbl"
   );
 
   const completionEntry = completedAttendance.find(
-    (entry) => entry.userId === userId && entry.date === today
+    (entry) => entry.userId === userId && entry.date === date
   );
 
-  const status = completionEntry?.status;
-
-  const button = document.getElementById("time-in-out-button");
-  const cameraBtn = document.getElementById("camera-button");
-  const uploadBtn = document.getElementById("upload-btn");
-  const absentButton = document.getElementById("absent-button");
-
   if (completionEntry) {
-    if (status === "complete") {
-      button.textContent = "Attendance Already Completed Today";
-    } else {
-      button.textContent = "You Are Absent For Today.";
-    }
-    button.disabled = true;
-    cameraBtn.disabled = true;
-    absentButton.disabled = true;
-    uploadBtn.classList.add("d-none");
-    return status;
+    return completionEntry.status;
   }
 
+  try {
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const onlineResults = await firebaseCRUD.queryData(
+      "completeAttendanceTbl",
+      "userId",
+      "==",
+      userId
+    );
+    const onlineEntry = onlineResults.find((entry) => entry.date === date);
+    if (onlineEntry) {
+      await crudOperations.upsert("completeAttendanceTbl", onlineEntry);
+      return onlineEntry.status;
+    }
+  } catch (err) {
+    console.warn("Could not check online attendance:", err);
+  }
   return null;
 }
 
@@ -460,6 +526,23 @@ async function updateAttendanceButtonState() {
     uploadBtn.classList.add("d-none");
     return;
   }
+
+  //----------- check if there is any log today ----- -- ///
+  const userLogs = await crudOperations.getByIndex(
+    "timeInOut",
+    "userId",
+    userId
+  );
+
+  const logsForDate = userLogs.filter((log) => log.date === today);
+
+  if (logsForDate.length > 0) {
+    absentButton.disabled = true;
+  } else {
+    absentButton.disabled = false;
+  }
+
+  //-------------------------------------
   const todayLogs = allLogs.filter(
     (log) => log.date === today && log.userId === userId
   );
@@ -498,10 +581,57 @@ async function updateAttendanceButtonState() {
   }
 }
 
+// window.addEventListener("DOMContentLoaded", async () => {
+//   await window.dbReady;
+//   const userId = localStorage.getItem("userId");
+//   if (!userId) {
+//     return;
+//   }
+
+//   const dataArray = await crudOperations.getByIndex(
+//     "studentInfoTbl",
+//     "userId",
+//     userId
+//   );
+//   const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+//   const img = document.getElementById("user-profile");
+//   const timeInContainer = document.querySelector(".time-in-cotainer");
+//   const logImgContainer = document.querySelector(".log-img-container");
+//   const noSheduleContainer = document.querySelector(".no-schedule-container");
+//   const absentButton = document.querySelector("#absent-button");
+//   img.src = data.userImg
+//     ? data.userImg
+//     : "../assets/img/icons8_male_user_480px_1";
+
+//   (async () => {
+//     const hasScheduleToday = await CheckSchedule();
+//     if (hasScheduleToday) {
+//       noSheduleContainer.classList.add("d-none");
+//       timeInContainer.classList.remove("d-none");
+//       logImgContainer.classList.remove("d-none");
+//       absentButton.classList.remove("d-none");
+//     } else {
+//       timeInContainer.classList.add("d-none");
+//       logImgContainer.classList.add("d-none");
+//       absentButton.classList.add("d-none");
+//       noSheduleContainer.classList.remove("d-none");
+//     }
+//   })();
+
+//   await updateAttendanceButtonState();
+//   await populateAttendanceImages();
+//   setInterval(updateAttendanceButtonState, 30000);
+// });
+
 window.addEventListener("DOMContentLoaded", async () => {
   await window.dbReady;
   const userId = localStorage.getItem("userId");
+  const logContainer = document.querySelector(".log-img-container");
+  logContainer.classList.add("d-none");
   if (!userId) {
+    const overlay = document.getElementById("page-loading-overlay");
+    if (overlay) overlay.style.display = "none";
     return;
   }
 
@@ -530,7 +660,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       absentButton.classList.remove("d-none");
     } else {
       timeInContainer.classList.add("d-none");
-      logImgContainer.classList.add("d-none");
       absentButton.classList.add("d-none");
       noSheduleContainer.classList.remove("d-none");
     }
@@ -538,7 +667,16 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   await updateAttendanceButtonState();
   await populateAttendanceImages();
-  setInterval(updateAttendanceButtonState, 30000);
+  setInterval(updateAttendanceButtonState, 8000);
+
+  // --- Hide the overlay when ready ---
+  const overlay = document.getElementById("page-loading-overlay");
+  if (overlay) {
+    overlay.style.opacity = "0";
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 300);
+  }
 });
 
 document
@@ -553,7 +691,6 @@ document
     const dateEl = document
       .getElementById("attendance-date")
       .textContent.trim();
-
     if (!timeEl || !imgBase64 || !dateEl) {
       alert("Please take a photo first.");
       return;
@@ -565,6 +702,7 @@ document
     const attendanceTime = convertTo24Hour(timeEl);
 
     const allLogs = await crudOperations.getAllData("timeInOut");
+
     const alreadyLogged = allLogs.some(
       (log) =>
         log.date === attendanceDate &&
@@ -655,28 +793,28 @@ async function populateAttendanceImages() {
   });
 }
 
-async function checkCompleteAttendance(userId, date) {
-  const allLogs = await crudOperations.getAllData("timeInOut");
+// async function checkCompleteAttendance(userId, date) {
+//   const allLogs = await crudOperations.getAllData("timeInOut");
 
-  const requiredTypes = [
-    "morningTimeIn",
-    "morningTimeOut",
-    "afternoonTimeIn",
-    "afternoonTimeOut",
-  ];
+//   const requiredTypes = [
+//     "morningTimeIn",
+//     "morningTimeOut",
+//     "afternoonTimeIn",
+//     "afternoonTimeOut",
+//   ];
 
-  const todaysLogs = allLogs.filter(
-    (log) => log.userId === userId && log.date === date
-  );
+//   const todaysLogs = allLogs.filter(
+//     (log) => log.userId === userId && log.date === date
+//   );
 
-  const types = todaysLogs.map((log) => log.type);
+//   const types = todaysLogs.map((log) => log.type);
 
-  return {
-    isComplete: requiredTypes.every((type) => types.includes(type)),
-    hasLogs: todaysLogs.length > 0,
-    logs: todaysLogs,
-  };
-}
+//   return {
+//     isComplete: requiredTypes.every((type) => types.includes(type)),
+//     hasLogs: todaysLogs.length > 0,
+//     logs: todaysLogs,
+//   };
+// }
 
 function calculateWorkHours(logs, schedule) {
   function toMinutes(timeStr) {
@@ -737,11 +875,13 @@ document
     if (!date) return alert("Upload cancelled. No date provided.");
 
     const userId = localStorage.getItem("userId");
+
     const userLogs = await crudOperations.getByIndex(
       "timeInOut",
       "userId",
       userId
     );
+
     const logsForDate = userLogs.filter((log) => log.date === date);
 
     if (logsForDate.length === 0) {
@@ -770,7 +910,7 @@ document
 
     const uploadLogs = async () => {
       uploadBtn.disabled = true;
-      uploadBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Uploading...`;
+      uploadBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>`;
 
       try {
         const { firebaseCRUD } = await import("./firebase-crud.js");
@@ -949,10 +1089,14 @@ function ClearData() {
   document.getElementById("attendance-time").textContent = "";
   document.getElementById("attendance-date").textContent = "";
   document.getElementById("attendance-img").textContent = "";
-  document.querySelector(".time-stamp").textContent = "";
 
-  const imageSlots = document.querySelectorAll(".attendance-slot");
-  imageSlots.forEach((img) => {
-    img.src = "icons8_no_image_500px.png";
+  document.querySelectorAll(".time-stamp").forEach((el) => {
+    el.textContent = "";
+  });
+
+  const fallbackSrc = "../assets/img/icons8_no_image_500px.png";
+  document.querySelectorAll(".attendance-slot").forEach((img) => {
+    img.src = fallbackSrc;
+    img.alt = "No image available";
   });
 }

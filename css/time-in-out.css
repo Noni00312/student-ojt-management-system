@@ -150,7 +150,6 @@ tbody tr:last-child td:last-child {
   overflow-x: hidden;
 }
 
-#upload-btn:disabled,
 #absent-button:disabled {
   background-color: #6e14239c;
 }
@@ -158,4 +157,29 @@ tbody tr:last-child td:last-child {
 .view-image-modal {
   border-radius: 20px !important;
   background-color: #3c3d42 !important;
+}
+
+#upload-btn {
+  width: 80px !important;
+  height: 80px !important;
+  position: fixed !important;
+  bottom: 32px;
+  right: 32px;
+  padding: 0;
+  z-index: 1000;
+  background-color: #6e1423;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18), 0 1.5px 4px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+
+#upload-btn:hover:not(:disabled) {
+  background-color: #a8324a;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22), 0 3px 8px rgba(0, 0, 0, 0.16);
+}
+
+#upload-btn:active:not(:disabled) {
+  background-color: #4d0a16;
 }

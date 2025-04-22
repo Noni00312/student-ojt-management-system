@@ -102,7 +102,7 @@ async function fetchAndCacheUserData() {
     const userData = userDocs[0];
 
     await window.dbReady;
-    await crudOperations.createData("studentInfoTbl", userData);
+    await crudOperations.upsert("studentInfoTbl", userData);
 
     console.log("User data cached to IndexedDB:", userData);
   } catch (err) {

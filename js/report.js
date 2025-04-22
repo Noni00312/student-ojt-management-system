@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     toAdd: [],
     toDelete: [],
   };
+
   request.onupgradeneeded = function (event) {
     db = event.target.result;
 
@@ -797,8 +798,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
   }
 });
-
-
 
 function compressImage(file, maxSizeKB = 200, quality = 0.7) {
   return new Promise((resolve, reject) => {

@@ -1,42 +1,66 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
-// DOM elements
-const reportsContainer = document.querySelector(".card-container");
-const reportSearchInput = document.getElementById(
-  "assistant-report-search-input"
-);
+const reportsContainer = document.getElementById("assistant-reports-container");
+const reportSearchInput = document.getElementById("assistant-report-search-input");
 const viewReportModal = document.getElementById("viewAssistantReportModal");
 const reportTitleInput = document.getElementById("assistant-report-title");
-const reportContentTextarea = document.getElementById(
-  "assistant-report-content"
-);
-const reportImagesContainer = document.querySelector(
-  ".assistant-report-images .image-container"
-);
+const reportContentTextarea = document.getElementById("assistant-report-content");
+const reportImagesContainer = document.getElementById("assistant-report-images-container");
 
-// Initialize the page
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    showLoading(true);
     await displayReports();
     setupEventListeners();
+    setupDateSearch(); 
   } catch (error) {
     console.error("Initialization error:", error);
-    alert("Failed to load assistant reports. Please try again later.");
+    showError("Failed to load assistant reports. Please try again later.");
+  } finally {
+    showLoading(false);
+  }
+
+  try {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("No userId found in localStorage");
+      return;
+    }
+
+    await window.dbReady;
+
+    const img = document.getElementById("user-img");
+
+    const dataArray = await crudOperations.getByIndex(
+      "studentInfoTbl",
+      "userId",
+      userId
+    );
+
+    console.log("User data from IndexedDB:", dataArray);
+
+    const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+    if (data != null) {
+      img.src = data.userImg;
+    } else {
+      console.warn("No user data found for this user.");
+    }
+  } catch (err) {
+    console.error("Failed to get user data from IndexedDB", err);
   }
 });
 
-// Display all assistant reports from Firebase
 async function displayReports(filterDate = null) {
   try {
-    reportsContainer.innerHTML = ""; // Clear existing content
+    showLoading(true);
 
-    // Get the current user ID
     const userId = localStorage.getItem("userId");
     if (!userId) {
       throw new Error("User not authenticated");
     }
 
-    // Query assistant reports for this user
     let reports = await firebaseCRUD.queryData(
       "assistantreports",
       "userId",
@@ -45,43 +69,28 @@ async function displayReports(filterDate = null) {
     );
 
     if (filterDate) {
-      // Convert filterDate to Date object for comparison
       const searchDate = new Date(filterDate);
-      const searchDateStr = searchDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
 
       reports = reports.filter((report) => {
-        // Handle both Timestamp and string formats
         let reportDate;
         if (
           report.createdAt &&
           typeof report.createdAt === "object" &&
           report.createdAt.toDate
         ) {
-          // Firebase Timestamp object
           reportDate = report.createdAt.toDate();
         } else if (typeof report.createdAt === "string") {
-          // ISO string
           reportDate = new Date(report.createdAt);
         } else {
-          // Unknown format, skip this report
           return false;
         }
 
-        const reportDateStr = reportDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        });
-
-        return reportDateStr === searchDateStr;
+        return (
+          reportDate.toLocaleDateString() === searchDate.toLocaleDateString()
+        );
       });
     }
 
-    // Sort by date (newest first)
     reports.sort((a, b) => {
       const dateA =
         a.createdAt && typeof a.createdAt === "object" && a.createdAt.toDate
@@ -95,22 +104,29 @@ async function displayReports(filterDate = null) {
     });
 
     if (reports.length === 0) {
-      reportsContainer.innerHTML =
-        '<p class="text-center mt-3">No assistant reports found</p>';
+      reportsContainer.innerHTML = `
+            <div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No Assistant Reports Found</h6>
+                <p class="mt-1">You currently don't have any assistant report.</p>
+            </div>
+        `;
       return;
     }
 
-    // Create report cards
     for (const report of reports) {
       const reportCard = await createReportCard(report);
       reportsContainer.appendChild(reportCard);
     }
   } catch (error) {
     console.error("Error displaying assistant reports:", error);
+    showError("Failed to load assistant reports. Please try again later.");
     throw error;
+  } finally {
+    showLoading(false);
   }
 }
-// Create an assistant report card element
+
 async function createReportCard(report) {
   const reportDate = new Date(report.createdAt);
   const formattedDate = reportDate.toLocaleDateString("en-US", {
@@ -126,12 +142,9 @@ async function createReportCard(report) {
   card.dataset.bsToggle = "modal";
   card.dataset.bsTarget = "#viewAssistantReportModal";
 
-  // Check if report has images
   let hasImages = false;
   try {
-    const images = await firebaseCRUD.getAllData(
-      `assistantreports/${report.id}/images`
-    );
+    const images = await firebaseCRUD.getAllData(`assistantreports/${report.id}/images`);
     hasImages = images.length > 0;
   } catch (error) {
     console.error("Error checking for images:", error);
@@ -150,7 +163,6 @@ async function createReportCard(report) {
     </div>
   `;
 
-  // Add click event to show report details
   card.addEventListener("click", async () => {
     await showReportDetails(report);
   });
@@ -158,7 +170,6 @@ async function createReportCard(report) {
   return card;
 }
 
-// Show assistant report details in modal
 async function showReportDetails(report) {
   const reportDate = new Date(report.createdAt);
   const formattedDate = reportDate.toLocaleDateString("en-US", {
@@ -174,18 +185,15 @@ async function showReportDetails(report) {
     report.content || ""
   }\n\nSubmitted on: ${formattedDate}`;
 
-  // Clear previous images
   reportImagesContainer.innerHTML = "";
 
   try {
-    // Fetch all image documents from the subcollection
     const imageDocs = await firebaseCRUD.getAllData(
       `assistantreports/${report.id}/images`
     );
 
     if (imageDocs.length > 0) {
       imageDocs.forEach((imageDoc) => {
-        // Access the imageData field from each document
         if (imageDoc.imageData) {
           const imgWrapper = document.createElement("div");
           imgWrapper.className = "image-wrapper";
@@ -202,12 +210,10 @@ async function showReportDetails(report) {
           img.style.objectFit = "cover";
           img.style.borderRadius = "5px";
 
-          // Add click to view in modal functionality
           img.addEventListener("click", () => {
             showImageInModal(imageDoc.imageData);
           });
 
-          // Optional: Add zoom icon overlay
           const zoomIcon = document.createElement("i");
           zoomIcon.className = "bi bi-zoom-in";
           zoomIcon.style.position = "absolute";
@@ -237,7 +243,6 @@ async function showReportDetails(report) {
   }
 }
 
-// Function to show image in modal
 function showImageInModal(imageSrc) {
   const modalImageView = document.getElementById("modal-image-view");
   const viewImageModal = new bootstrap.Modal(
@@ -248,18 +253,130 @@ function showImageInModal(imageSrc) {
   viewImageModal.show();
 }
 
-// Setup event listeners
 function setupEventListeners() {
-  // Date filter
-  if (reportSearchInput) {
-    reportSearchInput.addEventListener("change", (e) => {
-      const selectedDate = e.target.value;
-      displayReports(selectedDate);
+  const refreshBtn = document.getElementById("refresh-reports-btn");
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+      reportSearchInput.value = "";
+      displayReports();
     });
   }
-
-  // Function to show image in modal
 }
 
-// Export functions if needed
+function showLoading(show) {
+  const loader = document.getElementById("loading-indicator") || createLoader();
+  loader.style.display = show ? "block" : "none";
+}
+
+function createLoader() {
+  const loader = document.createElement("div");
+  loader.id = "loading-indicator";
+  loader.className = "text-center py-4";
+  loader.innerHTML =
+    '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
+  document.querySelector(".card-container").prepend(loader);
+  return loader;
+}
+
+function showError(message) {
+  const container = document.querySelector(".card-container");
+  container.innerHTML = `
+    <div class="col-12 text-center py-4">
+        <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
+        <p class="mt-2">${message}</p>
+        <button class="btn btn-primary mt-2" onclick="location.reload()">Retry</button>
+    </div>
+  `;
+}
+
+function setupDateSearch() {
+  const dateInput = document.getElementById("assistant-report-search-input");
+  if (dateInput) {
+    dateInput.addEventListener("change", function (e) {
+      filterReportsByDate(e.target.value);
+    });
+  }
+}
+
+async function filterReportsByDate(selectedDate) {
+  try {
+    showLoading(true);
+
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    reportsContainer.innerHTML = "";
+
+    if (!selectedDate) {
+      await displayReports();
+      return;
+    }
+
+    let reports = await firebaseCRUD.queryData(
+      "assistantreports",
+      "userId",
+      "==",
+      userId
+    );
+
+    const searchDate = new Date(selectedDate);
+
+    const filteredReports = reports.filter((report) => {
+      let reportDate;
+      if (
+        report.createdAt &&
+        typeof report.createdAt === "object" &&
+        report.createdAt.toDate
+      ) {
+        reportDate = report.createdAt.toDate();
+      } else if (typeof report.createdAt === "string") {
+        reportDate = new Date(report.createdAt);
+      } else {
+        return false;
+      }
+
+      return (
+        reportDate.getFullYear() === searchDate.getFullYear() &&
+        reportDate.getMonth() === searchDate.getMonth() &&
+        reportDate.getDate() === searchDate.getDate()
+      );
+    });
+
+    if (filteredReports.length === 0) {
+      reportsContainer.innerHTML = `
+        <div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
+          <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+          <h6 class="mt-2">No Assistant Reports Found For This Date</h6>
+          <p class="mt-1">Please choose a different date or create a new assistant report.</p>
+        </div>
+      `;
+      return;
+    }
+
+    filteredReports.sort((a, b) => {
+      const dateA =
+        a.createdAt && typeof a.createdAt === "object" && a.createdAt.toDate
+          ? a.createdAt.toDate()
+          : new Date(a.createdAt);
+      const dateB =
+        b.createdAt && typeof b.createdAt === "object" && b.createdAt.toDate
+          ? b.createdAt.toDate()
+          : new Date(b.createdAt);
+      return dateB - dateA;
+    });
+
+    for (const report of filteredReports) {
+      const reportCard = await createReportCard(report);
+      reportsContainer.appendChild(reportCard);
+    }
+  } catch (error) {
+    console.error("Error filtering assistant reports by date:", error);
+    showError("Failed to filter assistant reports. Please try again later.");
+  } finally {
+    showLoading(false);
+  }
+}
+
 export { displayReports, showReportDetails };

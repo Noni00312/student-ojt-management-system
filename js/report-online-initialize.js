@@ -1,7 +1,5 @@
-// Import the online reports module
 import { displayReports } from "./report-online.js";
 
-// Initialize online reports when the page loads
 if (window.location.pathname.includes("report.html")) {
   document.addEventListener("DOMContentLoaded", async () => {
     try {

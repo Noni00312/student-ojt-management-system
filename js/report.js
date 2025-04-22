@@ -70,220 +70,152 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function setupUploadButton() {
-    const uploadButton = document.getElementById("upload-reports-btn");
-    if (!uploadButton) return;
-
-    uploadButton.addEventListener("click", async function () {
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        alert("User not authenticated. Please login again.");
-        return;
-      }
-
-      if (
-        !confirm("Are you sure you want to upload all reports to the server?")
-      ) {
-        return;
-      }
-
-      try {
-        const transaction = db.transaction(["reportTbl"], "readonly");
-        const store = transaction.objectStore("reportTbl");
-        const index = store.index("userId");
-        const request = index.getAll(userId);
-
-        request.onsuccess = async function (event) {
-          const reports = event.target.result;
-          if (reports.length === 0) {
-            alert("No reports to upload");
-            return;
-          }
-
-          for (const report of reports) {
-            try {
-              const imagesBase64 = [];
-              if (report.images && report.images.length > 0) {
-                for (const imageBlob of report.images) {
-                  const base64String = await blobToBase64(imageBlob);
-                  imagesBase64.push(base64String);
-                }
-              }
-
-              const firebaseReport = {
-                title: report.title,
-                content: report.content,
-                createdAt: report.createdAt,
-                userId: report.userId,
-                images: imagesBase64,
-                localId: report.id,
-              };
-
-              await firebaseCRUD.createData("reports", firebaseReport);
-
-              const deleteTransaction = db.transaction(
-                ["reportTbl"],
-                "readwrite"
-              );
-              const deleteStore = deleteTransaction.objectStore("reportTbl");
-              deleteStore.delete(report.id);
-            } catch (error) {
-              console.error(`Error uploading report ${report.id}:`, error);
-            }
-          }
-
-          alert("Reports uploaded successfully!");
-          displayReports();
-        };
-
-        request.onerror = function (event) {
-          console.error(
-            "Error fetching reports from IndexedDB:",
-            event.target.error
-          );
-          alert("Error fetching reports from local storage");
-        };
-      } catch (error) {
-        console.error("Upload error:", error);
-        alert("Error uploading reports: " + error.message);
-      }
-    });
-  }
-
-  function blobToBase64(blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
-
-  function setupUploadButton() {
     const uploadButton = document.getElementById("upload-report-button");
     if (!uploadButton) return;
 
     uploadButton.addEventListener("click", async function () {
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        alert("User not authenticated. Please login again.");
-        return;
-      }
-
-      if (
-        !confirm("Are you sure you want to upload all reports to the server?")
-      ) {
-        return;
-      }
-
-      try {
-        const transaction = db.transaction(["reportTbl"], "readonly");
-        const store = transaction.objectStore("reportTbl");
-        const index = store.index("userId");
-        const request = index.getAll(userId);
-
-        request.onsuccess = async function (event) {
-          const reports = event.target.result;
-          if (reports.length === 0) {
-            alert("No reports to upload");
+        if (!navigator.onLine) {
+            alert("No internet connection. Please check your network and try again.");
             return;
-          }
+        }
 
-          for (const report of reports) {
-            try {
-              console.log(`Processing report ${report.id}`);
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            alert("User not authenticated. Please login again.");
+            return;
+        }
 
-              const reportId = `${userId}_${report.id}`;
+        if (!confirm("Are you sure you want to upload all reports to the server?")) {
+            return;
+        }
 
-              const firebaseReport = {
-                title: report.title,
-                content: report.content,
-                createdAt: report.createdAt,
-                userId: userId,
-                localId: report.id,
-                hasImages: report.images && report.images.length > 0,
-              };
+        try {
+            const originalIcon = uploadButton.innerHTML;
+            uploadButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            `;
+            uploadButton.disabled = true;
 
-              await firebaseCRUD.setDataWithId(
-                "reports",
-                reportId,
-                firebaseReport
-              );
-              console.log(`Created report document with ID: ${reportId}`);
+            const transaction = db.transaction(["reportTbl"], "readonly");
+            const store = transaction.objectStore("reportTbl");
+            const index = store.index("userId");
+            const request = index.getAll(userId);
 
-              if (report.images && report.images.length > 0) {
-                console.log(
-                  `Uploading ${report.images.length} images for report ${reportId}`
-                );
-
-                for (const [index, imageBlob] of report.images.entries()) {
-                  try {
-                    const base64String = await blobToBase64(imageBlob);
-                    console.log(
-                      `Uploading image ${index + 1} of ${report.images.length}`
-                    );
-
-                    await firebaseCRUD.createData(
-                      `reports/${reportId}/images`,
-                      {
-                        imageData: base64String,
-                        uploadedAt: new Date().toISOString(),
-                        order: index,
-                        originalName: `image_${index + 1}.jpg`,
-                        reportId: reportId,
-                      }
-                    );
-
-                    console.log(`Successfully uploaded image ${index + 1}`);
-                  } catch (imageError) {
-                    console.error(
-                      `Error uploading image ${index + 1}:`,
-                      imageError
-                    );
-                  }
+            request.onsuccess = async function (event) {
+                const reports = event.target.result;
+                if (reports.length === 0) {
+                    alert("No reports to upload");
+                    uploadButton.innerHTML = originalIcon;
+                    uploadButton.disabled = false;
+                    return;
                 }
-              }
 
-              const deleteTransaction = db.transaction(
-                ["reportTbl"],
-                "readwrite"
-              );
-              const deleteStore = deleteTransaction.objectStore("reportTbl");
-              deleteStore.delete(report.id);
-              console.log(`Deleted local report ${report.id}`);
-            } catch (reportError) {
-              console.error(
-                `Error processing report ${report.id}:`,
-                reportError
-              );
-            }
-          }
+                let uploadSuccess = true;
+                let errorMessage = "";
 
-          alert("Reports uploaded successfully!");
-          displayReports();
-        };
+                for (const report of reports) {
+                    try {
+                        console.log(`Processing report ${report.id}`);
 
-        request.onerror = function (event) {
-          console.error(
-            "Error fetching reports from IndexedDB:",
-            event.target.error
-          );
-          alert("Error fetching reports from local storage");
-        };
-      } catch (error) {
-        console.error("Upload error:", error);
-        alert("Error uploading reports: " + error.message);
-      }
+                        const reportId = `${userId}_${report.id}`;
+
+                        const firebaseReport = {
+                            title: report.title,
+                            content: report.content,
+                            createdAt: report.createdAt,
+                            userId: userId,
+                            localId: report.id,
+                            hasImages: report.images && report.images.length > 0,
+                        };
+
+                        await firebaseCRUD.setDataWithId(
+                            "reports",
+                            reportId,
+                            firebaseReport
+                        );
+                        console.log(`Created report document with ID: ${reportId}`);
+
+                        if (report.images && report.images.length > 0) {
+                            console.log(
+                                `Uploading ${report.images.length} images for report ${reportId}`
+                            );
+
+                            for (const [index, imageBlob] of report.images.entries()) {
+                                try {
+                                    const base64String = await blobToBase64(imageBlob);
+                                    console.log(
+                                        `Uploading image ${index + 1} of ${report.images.length}`
+                                    );
+
+                                    await firebaseCRUD.createData(
+                                        `reports/${reportId}/images`,
+                                        {
+                                            imageData: base64String,
+                                            uploadedAt: new Date().toISOString(),
+                                            order: index,
+                                            originalName: `image_${index + 1}.jpg`,
+                                            reportId: reportId,
+                                        }
+                                    );
+
+                                    console.log(`Successfully uploaded image ${index + 1}`);
+                                } catch (imageError) {
+                                    console.error(
+                                        `Error uploading image ${index + 1}:`,
+                                        imageError
+                                    );
+                                    uploadSuccess = false;
+                                    errorMessage = `Failed to upload some images. ${imageError.message}`;
+                                }
+                            }
+                        }
+
+                        const deleteTransaction = db.transaction(
+                            ["reportTbl"],
+                            "readwrite"
+                        );
+                        const deleteStore = deleteTransaction.objectStore("reportTbl");
+                        deleteStore.delete(report.id);
+                        console.log(`Deleted local report ${report.id}`);
+                    } catch (reportError) {
+                        console.error(
+                            `Error processing report ${report.id}:`,
+                            reportError
+                        );
+                        uploadSuccess = false;
+                        errorMessage = `Failed to upload some reports. ${reportError.message}`;
+                    }
+                }
+
+                uploadButton.innerHTML = originalIcon;
+                uploadButton.disabled = false;
+
+                if (uploadSuccess) {
+                    alert("All reports uploaded successfully!");
+                } else {
+                    alert(`Upload completed with some errors: ${errorMessage}`);
+                }
+
+                displayReports();
+            };
+
+            request.onerror = function (event) {
+                console.error(
+                    "Error fetching reports from IndexedDB:",
+                    event.target.error
+                );
+                alert("Error fetching reports from local storage");
+                uploadButton.innerHTML = originalIcon;
+                uploadButton.disabled = false;
+            };
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("Error uploading reports: " + error.message);
+            uploadButton.innerHTML = originalIcon;
+            uploadButton.disabled = false;
+        }
     });
-  }
-
-  function blobToBase64(blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
+}
 
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
@@ -301,53 +233,56 @@ document.addEventListener("DOMContentLoaded", async function () {
     let addModalImages = [];
 
     if (addImageInput && addImageContainer) {
-      addImageInput.addEventListener("change", function (event) {
+      addImageInput.addEventListener("change", async function (event) {
         const files = event.target.files;
-
+  
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-          if (file.size > 1000000) {
-            alert(`File ${file.name} is too large`);
-            continue;
-          }
-
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            const container = document.createElement("div");
-            container.className = "img-thumbnail-container";
-
-            const img = document.createElement("img");
-            img.src = e.target.result;
-            img.className = "img-thumbnail";
-            img.style.maxWidth = "80px";
-            img.style.maxHeight = "80px";
-            img.dataset.imageIndex = addModalImages.length;
-
-            const deleteBtn = document.createElement("span");
-            deleteBtn.className = "delete-img-btn";
-            deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
-            deleteBtn.addEventListener("click", function (e) {
-              e.stopPropagation();
-              const index = parseInt(img.dataset.imageIndex);
-              addModalImages.splice(index, 1);
-              container.remove();
-              const remainingImages = addImageContainer.querySelectorAll("img");
-              remainingImages.forEach((img, newIndex) => {
-                img.dataset.imageIndex = newIndex;
+  
+          try {
+            const compressedBlob = await compressImage(file, 500);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const container = document.createElement("div");
+              container.className = "img-thumbnail-container";
+  
+              const img = document.createElement("img");
+              img.src = e.target.result;
+              img.className = "img-thumbnail";
+              img.style.maxWidth = "80px";
+              img.style.maxHeight = "80px";
+              img.dataset.imageIndex = addModalImages.length;
+  
+              const deleteBtn = document.createElement("span");
+              deleteBtn.className = "delete-img-btn";
+              deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
+              deleteBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                const index = parseInt(img.dataset.imageIndex);
+                addModalImages.splice(index, 1);
+                container.remove();
+                const remainingImages = addImageContainer.querySelectorAll("img");
+                remainingImages.forEach((img, newIndex) => {
+                  img.dataset.imageIndex = newIndex;
+                });
               });
-            });
-
-            container.appendChild(img);
-            container.appendChild(deleteBtn);
-            addImageContainer.appendChild(container);
-
-            addModalImages.push(file);
-          };
-          reader.readAsDataURL(file);
+  
+              container.appendChild(img);
+              container.appendChild(deleteBtn);
+              addImageContainer.appendChild(container);
+  
+              addModalImages.push(compressedBlob);
+            };
+            reader.readAsDataURL(compressedBlob);
+          } catch (error) {
+            console.error("Error compressing image:", error);
+            alert(`Failed to process image ${file.name}: ${error.message}`);
+          }
         }
       });
     }
@@ -442,24 +377,27 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     if (viewImageInput) {
-      viewImageInput.addEventListener("change", function (event) {
+      viewImageInput.addEventListener("change", async function (event) {
         if (!currentReportId) return;
-
+    
         const files = event.target.files;
-
+    
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-          if (file.size > 1000000) {
-            alert(`File ${file.name} is too large`);
-            continue;
+    
+          try {
+            const compressedBlob = await compressImage(file, 500);
+            pendingImageChanges.toAdd.push(compressedBlob);
+          } catch (error) {
+            console.error("Error compressing image:", error);
+            alert(`Failed to process image ${file.name}: ${error.message}`);
           }
-          pendingImageChanges.toAdd.push(file);
         }
-
+    
         refreshViewModalImages(currentReportId, true);
       });
     }
@@ -595,30 +533,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     });
   }
-
-  document
-    .getElementById("delete-image-btn")
-    .addEventListener("click", function () {
-      const imageIndex = parseInt(
-        document.getElementById("viewImageModal").dataset.imageIndex
-      );
-      const isPending =
-        document.getElementById("viewImageModal").dataset.isPending === "true";
-      const reportId =
-        document.getElementById("viewImageModal").dataset.reportId;
-
-      if (isPending) {
-        pendingImageChanges.toAdd.splice(imageIndex, 1);
-      } else {
-        pendingImageChanges.toDelete.push(imageIndex);
-      }
-
-      refreshViewModalImages(reportId, true);
-
-      bootstrap.Modal.getInstance(
-        document.getElementById("viewImageModal")
-      ).hide();
-    });
 
   function refreshViewModalImages(reportId, showPending = false) {
     const viewImageContainer = document.getElementById("view-image-container");
@@ -883,3 +797,72 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
   }
 });
+
+
+
+function compressImage(file, maxSizeKB = 200, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    if (!file.type.match('image.*')) {
+      reject(new Error('File is not an image'));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const MAX_WIDTH = 512;
+        const MAX_HEIGHT = 512;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        let qualityAdjusted = quality;
+        let blob;
+        
+        const attemptCompression = () => {
+          canvas.toBlob((resultBlob) => {
+            if (!resultBlob) {
+              reject(new Error('Failed to compress image'));
+              return;
+            }
+
+            if (resultBlob.size / 512 <= maxSizeKB || qualityAdjusted <= 0.1) {
+              resolve(resultBlob);
+            } else {
+              qualityAdjusted = Math.max(0.1, qualityAdjusted - 0.1);
+              canvas.toBlob((newBlob) => {
+                blob = newBlob;
+                attemptCompression();
+              }, file.type, qualityAdjusted);
+            }
+          }, file.type, qualityAdjusted);
+        };
+
+        attemptCompression();
+      };
+      img.onerror = reject;
+      img.src = event.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}

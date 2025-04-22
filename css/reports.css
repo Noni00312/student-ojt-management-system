@@ -20,6 +20,15 @@ body {
   padding: 0;
 }
 
+.img-thumbnail {
+  padding: 1rem;
+  background-color: transparent !important;
+  border: 2px solid transparent !important;
+  border-radius: 1rem;
+  max-width: 100%;
+  height: auto;
+}
+
 input {
   border: none;
   background-color: #fff !important;
@@ -70,7 +79,6 @@ button {
   position: relative;
   display: inline-block;
   margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
 }
 
 .img-thumbnail-container .delete-img-btn {

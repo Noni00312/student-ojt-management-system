@@ -34,7 +34,7 @@
     <!-- Student Report-->
     <section class="d-flex flex-row student-report-section gap-2 p-2" style="height: 90vh; min-height: 90vh">
       <div class="report-date-container p-2" style="
-          min-width: 560px;
+          min-width: 60px;
           width: 25%;
           height: calc(100vh - 80px);
           background-color: #3c3d42;
@@ -117,7 +117,7 @@
           <div class="name-time-left-container">
             <p id="user-name">Edgardo C. Balan Jr.</p>
             <div class="time-life-container">
-              <p>OJT hours left</p>
+              <p>Accumulated Time</p>
               <span>182:53:04</span>
             </div>
             <div class="attendance-status-container">
@@ -565,7 +565,7 @@
 
 
 
-    <script>
+    <!-- <script>
       document.addEventListener('DOMContentLoaded', function () {
         // Current date
         let currentDate = new Date();
@@ -652,6 +652,264 @@
         renderCalendar();
       });
     </script>
+
+ -->
+
+
+ <!-- <script>
+  document.addEventListener('DOMContentLoaded', async function () {
+      // Current date
+      let currentDate = new Date();
+      let attendanceData = {}; // Store attendance data by date
+  
+      // DOM elements
+      const monthYearElement = document.getElementById('month-year');
+      const daysElement = document.getElementById('days');
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+  
+      // Fetch attendance data
+      async function fetchAttendanceData(userId) {
+          try {
+              const { firebaseCRUD } = await import("./firebase-crud.js");
+              const records = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+              
+              // Organize data by date for easy lookup
+              records.forEach(record => {
+                  if (record.date) {
+                      attendanceData[record.date] = {
+                          isPresent: String(record.isPresent).toLowerCase() === "true",
+                          isLate: String(record.isLate).toLowerCase() === "true"
+                      };
+                  }
+              });
+          } catch (error) {
+              console.error("Error fetching attendance data:", error);
+          }
+      }
+  
+      // Get user ID and fetch data
+      const userId = getUserIdFromUrl() || localStorage.getItem('userId');
+      if (userId) {
+          await fetchAttendanceData(userId);
+      }
+  
+      // Render calendar with attendance colors
+      async function renderCalendar() {
+          // Get current month and year
+          const currentMonth = currentDate.getMonth();
+          const currentYear = currentDate.getFullYear();
+  
+          // Set month and year in header
+          const monthNames = ["January", "February", "March", "April", "May", "June",
+              "July", "August", "September", "October", "November", "December"
+          ];
+          monthYearElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+  
+          // Get first day of month and total days in month
+          const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+          const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+          const daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
+  
+          // Clear days container
+          daysElement.innerHTML = '';
+  
+          // Add days from previous month (grayed out)
+          for (let i = firstDay - 1; i >= 0; i--) {
+              const dayElement = document.createElement('div');
+              dayElement.classList.add('day', 'other-month');
+              dayElement.textContent = daysInLastMonth - i;
+              daysElement.appendChild(dayElement);
+          }
+  
+          // Add days from current month with attendance colors
+          for (let i = 1; i <= daysInMonth; i++) {
+              const dayElement = document.createElement('div');
+              dayElement.classList.add('day');
+              dayElement.textContent = i;
+  
+              // Format date as YYYY-MM-DD
+              const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+              
+              // Check attendance data for this date
+              if (attendanceData[formattedDate]) {
+                  const record = attendanceData[formattedDate];
+                  
+                  if (record.isPresent && !record.isLate) {
+                      dayElement.style.backgroundColor = '#367c38'; // Green - Present on time
+                      dayElement.style.color = 'white';
+                  } else if (record.isPresent && record.isLate) {
+                      dayElement.style.backgroundColor = '#cabf60'; // Yellow - Present but late
+                      dayElement.style.color = '#333';
+                  } else if (!record.isPresent) {
+                      dayElement.style.backgroundColor = '#F44336'; // Red - Absent
+                      dayElement.style.color = 'white';
+                  }
+              }
+  
+              // Highlight today's date
+              const today = new Date();
+              if (currentYear === today.getFullYear() && 
+                  currentMonth === today.getMonth() && 
+                  i === today.getDate()) {
+                  dayElement.style.border = '2px solid #6e1423';
+              }
+  
+              daysElement.appendChild(dayElement);
+          }
+  
+          // Add days from next month (grayed out)
+          const totalCells = firstDay + daysInMonth;
+          const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+          for (let i = 1; i <= remainingCells; i++) {
+              const dayElement = document.createElement('div');
+              dayElement.classList.add('day', 'other-month');
+              dayElement.textContent = i;
+              daysElement.appendChild(dayElement);
+          }
+      }
+  
+      // Event listeners for navigation
+      prevBtn.addEventListener('click', function () {
+          currentDate.setMonth(currentDate.getMonth() - 1);
+          renderCalendar();
+      });
+  
+      nextBtn.addEventListener('click', function () {
+          currentDate.setMonth(currentDate.getMonth() + 1);
+          renderCalendar();
+      });
+  
+      // Initial render
+      renderCalendar();
+  });
+  </script> -->
+
+
+
+
+
+    <!-- <script>
+      document.addEventListener('DOMContentLoaded', async function () {
+          // Current date
+          let currentDate = new Date();
+          let attendanceData = {}; // Store attendance data by date
+
+          // DOM elements
+          const monthYearElement = document.getElementById('month-year');
+          const daysElement = document.getElementById('days');
+          const prevBtn = document.getElementById('prev');
+          const nextBtn = document.getElementById('next');
+
+          // Fetch attendance data
+          async function fetchAttendanceData(userId) {
+              try {
+                  const { firebaseCRUD } = await import("./firebase-crud.js");
+                  const records = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+                  
+                  // Organize data by date for easy lookup
+                  records.forEach(record => {
+                      if (record.date) {
+                          attendanceData[record.date] = {
+                              isPresent: String(record.isPresent).toLowerCase() === "true",
+                              isLate: String(record.isLate).toLowerCase() === "true"
+                          };
+                      }
+                  });
+              } catch (error) {
+                  console.error("Error fetching attendance data:", error);
+              }
+          }
+
+          // Get user ID and fetch data
+          const userId = getUserIdFromUrl() || localStorage.getItem('userId');
+          if (userId) {
+              await fetchAttendanceData(userId);
+          }
+
+          // Render calendar with attendance colors
+          async function renderCalendar() {
+              // Get current month and year
+              const currentMonth = currentDate.getMonth();
+              const currentYear = currentDate.getFullYear();
+
+              // Set month and year in header
+              const monthNames = ["January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"
+              ];
+              monthYearElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+              // Get first day of month and total days in month
+              const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+              const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+              const daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+              // Clear days container
+              daysElement.innerHTML = '';
+
+              // Add days from previous month (grayed out)
+              for (let i = firstDay - 1; i >= 0; i--) {
+                  const dayElement = document.createElement('div');
+                  dayElement.classList.add('day', 'other-month');
+                  dayElement.textContent = daysInLastMonth - i;
+                  daysElement.appendChild(dayElement);
+              }
+
+              // Add days from current month with attendance colors
+              for (let i = 1; i <= daysInMonth; i++) {
+                  const dayElement = document.createElement('div');
+                  dayElement.classList.add('day');
+                  dayElement.textContent = i;
+
+                  // Format date as YYYY-MM-DD
+                  const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+                  
+                  // Check attendance data for this date
+                  if (attendanceData[formattedDate]) {
+                      const record = attendanceData[formattedDate];
+                      
+                      if (record.isPresent && !record.isLate) {
+                          dayElement.style.backgroundColor = '#367c38'; // Green - Present on time
+                          dayElement.style.color = 'white';
+                      } else if (record.isPresent && record.isLate) {
+                          dayElement.style.backgroundColor = '#cabf60'; // Yellow - Present but late
+                          dayElement.style.color = '#333';
+                      } else if (!record.isPresent) {
+                          dayElement.style.backgroundColor = '#F44336'; // Red - Absent
+                          dayElement.style.color = 'white';
+                      }
+                  }
+
+                  daysElement.appendChild(dayElement);
+              }
+
+              // Add days from next month (grayed out)
+              const totalCells = firstDay + daysInMonth;
+              const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+              for (let i = 1; i <= remainingCells; i++) {
+                  const dayElement = document.createElement('div');
+                  dayElement.classList.add('day', 'other-month');
+                  dayElement.textContent = i;
+                  daysElement.appendChild(dayElement);
+              }
+          }
+
+          // Event listeners for navigation
+          prevBtn.addEventListener('click', function () {
+              currentDate.setMonth(currentDate.getMonth() - 1);
+              renderCalendar();
+          });
+
+          nextBtn.addEventListener('click', function () {
+              currentDate.setMonth(currentDate.getMonth() + 1);
+              renderCalendar();
+          });
+
+          // Initial render
+          renderCalendar();
+      });
+
+    </script> -->
 
 
 

@@ -25,7 +25,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       showLoading(true);
-      const dates = await getAllIncidentDates();
+      const companyName = await getAllByCompanyName();
     } catch (error) {
       console.error("Error loading history:", error);
       showError("Failed to load history. Please try again later.");
@@ -37,57 +37,14 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// async function getAllIncidentDates() {
-//   const container = document.querySelector(".card-container .row");
-//   container.innerHTML = "";
-
-//   try {
-//     const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//     const data = await firebaseCRUD.getAllData("completeAttendanceTbl");
-
-//     data.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-//     if (!Array.isArray(data) || data.length === 0) {
-//       container.innerHTML = `<p class="text-center text-muted">No attendance records found.</p>`;
-//       return;
-//     }
-
-//     allAttendanceDates = data.map((record) => {
-//       const date = new Date(record.date);
-//       const isoDate = date.toLocaleDateString("en-CA");
-//       const day = date
-//         .toLocaleDateString("en-US", { weekday: "short" })
-//         .toUpperCase();
-//       const readableDate = date.toLocaleDateString("en-US", {
-//         month: "long",
-//         day: "numeric",
-//         year: "numeric",
-//       });
-
-//       return {
-//         rawDate: isoDate,
-//         day,
-//         readableDate,
-//         original: record,
-//       };
-//     });
-
-//     populateDates(allAttendanceDates);
-//   } catch (error) {
-//     console.error("Error fetching history dates:", error);
-//     throw new Error(`Failed to fetch data: ${error.message}`);
-//   }
-// }
-
 let allAttendanceDates = [];
 
-document
-  .getElementById("admin-t-i-o-search-input")
-  .addEventListener("input", (e) => {
-    const selectedDate = e.target.value;
-    filterDatesBySearch(selectedDate, allAttendanceDates);
-  });
+// document
+//   .getElementById("admin-t-i-o-search-input")
+//   .addEventListener("input", (e) => {
+//     const selectedDate = e.target.value;
+//     filterDatesBySearch(selectedDate, allAttendanceDates);
+//   });
 
 function filterDatesBySearch(searchDate, allDates) {
   if (!searchDate) {
@@ -102,14 +59,23 @@ function filterDatesBySearch(searchDate, allDates) {
   populateDates(filteredDates);
 }
 
-async function getAllIncidentDates() {
+async function getAllByCompanyName() {
   const container = document.querySelector(".card-container .row");
   container.innerHTML = "";
 
   try {
     const { firebaseCRUD } = await import("./firebase-crud.js");
+    const urlParams = new URLSearchParams(window.location.search);
+    const date = urlParams.get("date");
 
-    const data = await firebaseCRUD.getAllData("completeAttendanceTbl");
+    console.log(date);
+
+    const data = await firebaseCRUD.queryData(
+      "completeAttendanceTbl",
+      "date",
+      "==",
+      date
+    );
 
     data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -120,7 +86,7 @@ async function getAllIncidentDates() {
 
     const seenDates = new Set();
     const distinctData = data.filter((record) => {
-      const dateStr = new Date(record.date).toLocaleDateString("en-CA"); // ISO format
+      const dateStr = new Date(record.date).toLocaleDateString("en-CA");
       if (seenDates.has(dateStr)) return false;
       seenDates.add(dateStr);
       return true;
@@ -128,7 +94,7 @@ async function getAllIncidentDates() {
 
     allAttendanceDates = distinctData.map((record) => {
       const date = new Date(record.date);
-      const isoDate = date.toLocaleDateString("en-CA"); // ISO format for search
+      const isoDate = date.toLocaleDateString("en-CA");
       const day = date
         .toLocaleDateString("en-US", { weekday: "short" })
         .toUpperCase();
@@ -139,7 +105,7 @@ async function getAllIncidentDates() {
       });
 
       return {
-        rawDate: isoDate, // Now matches <input type="date"> value
+        rawDate: isoDate,
         day,
         readableDate,
         original: record,
@@ -185,7 +151,7 @@ function populateDates(dateList) {
     card.className = "col-12 col-md-6 col-lg-4 mb-2 px-2";
 
     card.innerHTML = `
-      <a href="../pages/admin-tio-company.html?date=${rawDate}" class="history-card mb-2" data-date="${rawDate}">
+      <a href="#" class="history-card mb-2" data-date="${rawDate}">
         <span>${day}</span>
         <span class="separator"></span>
         <span class="date">${readableDate}</span>
@@ -194,12 +160,12 @@ function populateDates(dateList) {
 
     container.appendChild(card);
 
-    // card.querySelector("a").addEventListener("click", (e) => {
-    //   e.preventDefault();
-    //   // const selectedDate = e.currentTarget.getAttribute("data-date");
-    //   // populateHistoryModal(selectedDate);
+    card.querySelector("a").addEventListener("click", (e) => {
+      e.preventDefault();
+      // const selectedDate = e.currentTarget.getAttribute("data-date");
+      // populateHistoryModal(selectedDate);
 
-    //   console.log(e.currentTarget.getAttribute("data-date"));
-    // });
+      console.log(e.currentTarget.getAttribute("data-date"));
+    });
   });
 }

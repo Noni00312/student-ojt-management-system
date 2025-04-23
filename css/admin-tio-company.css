@@ -1,0 +1,109 @@
+.company-card {
+  overflow: hidden;
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
+  text-decoration: none;
+  display: block;
+}
+
+.company-img-name-container {
+  position: relative;
+  width: 100%;
+  height: 90px;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+}
+
+.company-img-name-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: blur(3px);
+  border-radius: 10px 10px 0 0;
+}
+.company-img-name-container::before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #004e4e7a;
+  z-index: 1;
+}
+
+.company-img-name-container .text {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  z-index: 2;
+}
+
+.company-img-name-container .text h3 {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.company-img-name-container .text small {
+  font-size: 0.7rem;
+}
+
+.bottom-container {
+  padding: 5px;
+  background-color: #004e4e;
+}
+.bottom-container,
+.indicators {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bottom-container p {
+  margin: 0;
+}
+
+.box {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px; /* optional, for rounded corners */
+  margin: 5px; /* optional spacing */
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.indicators p {
+  color: white !important;
+}
+
+#present {
+  background-color: #4caf50;
+}
+
+#late {
+  background-color: #ff9800;
+}
+
+#absent {
+  background-color: #f44336;
+}
+
+#view-button {
+  padding: 5px 25px;
+  background-color: #9ccd62;
+}
+
+#view-button:hover {
+  background-color: #769b4a;
+}

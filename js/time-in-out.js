@@ -967,6 +967,8 @@ document
           totalMinutes: workHours.totalMinutes,
           isLate,
           isPresent: true,
+          companyName: userInfo.companyName,
+          companyAddress: userInfo.companyAddress,
         };
 
         const dateDocPath = `attendancelogs/${userId}/${date}`;

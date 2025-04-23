@@ -261,10 +261,6 @@ button {
 
 #assistant-report-content {
   height: 100px;
-  background-color: var(--forecolor) !important;
-  color: var(--primary);
-  border: none;
-  resize: none;
 }
 
 #assistant-report-content::placeholder {
@@ -320,7 +316,6 @@ button {
   background-color: #ffffff !important;
 }
 
-/* Delete button styles */
 .delete-btn {
   background: transparent !important;
   border: none !important;
@@ -331,23 +326,19 @@ button {
   color: var(--accent-darken) !important;
 }
 
-/* Modal content styles */
 .modal-content {
   border: none !important;
 }
 
-/* Form control focus styles */
 .form-control:focus {
   box-shadow: none !important;
   border-color: var(--accent) !important;
 }
 
-/* Button focus styles */
 .btn:focus {
   box-shadow: none !important;
 }
 
-/* Responsive adjustments */
 @media (max-width: 576px) {
   .assistant-card-container {
     height: calc(100vh - 180px);

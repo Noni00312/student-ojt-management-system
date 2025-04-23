@@ -1,6 +1,5 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
-
 document.addEventListener("DOMContentLoaded", async function () {
   let db;
   const request = indexedDB.open("SOJTMSDB", 1);
@@ -100,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         };
 
                         await firebaseCRUD.setDataWithId(
-                            "assistantReports",
+                            "assistantreports",
                             reportId,
                             firebaseReport
                         );
@@ -119,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                                     );
 
                                     await firebaseCRUD.createData(
-                                        `assistantReports/${reportId}/images`,
+                                        `assistantreports/${reportId}/images`,
                                         {
                                             imageData: base64String,
                                             uploadedAt: new Date().toISOString(),

@@ -28,14 +28,27 @@ login.addEventListener("click", (e) => {
       localStorage.setItem("userId", user.uid);
 
       try {
-        await fetchAndCacheUserData();
-        window.location.href = "/pages/dashboard.html";
+        const userData = await fetchAndCacheUserData();
+        
+        // Check user type and redirect accordingly
+        if (userData.userType === "admin") {
+          window.location.href = "/pages/admin-dashboard.html";
+        } else if (userData.userType === "student" || userData.userType === "studentAssistant") {
+          window.location.href = "/pages/dashboard.html";
+        } else {
+          errorLabel.textContent = "Unauthorized user type.";
+          errorLabel.classList.add("text-danger");
+          login.disabled = false;
+          login.textContent = "LOGIN";
+          return;
+        }
       } catch (error) {
         console.error("Failed to fetch and cache user data:", error);
+        errorLabel.textContent = "Failed to load user data. Please try again.";
+        errorLabel.classList.add("text-danger");
+        login.disabled = false;
+        login.textContent = "LOGIN";
       }
-
-      login.disabled = false;
-      login.textContent = "LOGIN";
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -79,11 +92,14 @@ login.addEventListener("click", (e) => {
     });
 });
 
+
+
+
 async function fetchAndCacheUserData() {
   const uid = localStorage.getItem("userId");
   if (!uid) {
     console.error("User UID not found in localStorage");
-    return;
+    throw new Error("User UID not found");
   }
 
   try {
@@ -96,7 +112,7 @@ async function fetchAndCacheUserData() {
 
     if (!userDocs || userDocs.length === 0) {
       console.warn("No matching user data found in Firestore.");
-      return;
+      throw new Error("User data not found");
     }
 
     const userData = userDocs[0];
@@ -105,7 +121,9 @@ async function fetchAndCacheUserData() {
     await crudOperations.upsert("studentInfoTbl", userData);
 
     console.log("User data cached to IndexedDB:", userData);
+    return userData; // Return the user data for role checking
   } catch (err) {
     console.error("Failed to fetch and cache user data:", err);
+    throw err;
   }
 }

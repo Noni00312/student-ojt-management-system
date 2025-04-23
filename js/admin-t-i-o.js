@@ -37,10 +37,53 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+// async function getAllIncidentDates() {
+//   const container = document.querySelector(".card-container .row");
+//   container.innerHTML = "";
+
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+
+//     const data = await firebaseCRUD.getAllData("completeAttendanceTbl");
+
+//     data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+//     if (!Array.isArray(data) || data.length === 0) {
+//       container.innerHTML = `<p class="text-center text-muted">No attendance records found.</p>`;
+//       return;
+//     }
+
+//     allAttendanceDates = data.map((record) => {
+//       const date = new Date(record.date);
+//       const isoDate = date.toLocaleDateString("en-CA");
+//       const day = date
+//         .toLocaleDateString("en-US", { weekday: "short" })
+//         .toUpperCase();
+//       const readableDate = date.toLocaleDateString("en-US", {
+//         month: "long",
+//         day: "numeric",
+//         year: "numeric",
+//       });
+
+//       return {
+//         rawDate: isoDate,
+//         day,
+//         readableDate,
+//         original: record,
+//       };
+//     });
+
+//     populateDates(allAttendanceDates);
+//   } catch (error) {
+//     console.error("Error fetching history dates:", error);
+//     throw new Error(`Failed to fetch data: ${error.message}`);
+//   }
+// }
+
 let allAttendanceDates = [];
 
 document
-  .getElementById("history-search-input")
+  .getElementById("admin-t-i-o-search-input")
   .addEventListener("input", (e) => {
     const selectedDate = e.target.value;
     filterDatesBySearch(selectedDate, allAttendanceDates);
@@ -124,96 +167,6 @@ function createLoader() {
   document.querySelector(".card-container").prepend(loader);
   return loader;
 }
-
-function showError(message) {
-  const container = document.querySelector(".card-container .row");
-  container.innerHTML = `
-          <div class="col-12 text-center py-4">
-              <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
-              <p class="mt-2">${message}</p>
-              <button class="btn btn-primary mt-2" onclick="location.reload()">Retry</button>
-          </div>
-      `;
-}
-
-function formatTime(timestampStr) {
-  if (!timestampStr) return "";
-  const date = new Date(timestampStr);
-  return date.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-}
-
-async function getAttendanceByDate(userId, dateStr) {
-  try {
-    const basePath = ["attendancelogs", userId, dateStr];
-
-    const getLog = async (logType) => {
-      const logRef = doc(db, ...basePath, logType);
-      const snap = await getDoc(logRef);
-      return snap.exists() ? snap.data() : null;
-    };
-
-    const [morningIn, morningOut, afternoonIn, afternoonOut] =
-      await Promise.all([
-        getLog("morningTimeIn"),
-        getLog("morningTimeOut"),
-        getLog("afternoonTimeIn"),
-        getLog("afternoonTimeOut"),
-      ]);
-
-    return {
-      morningTimeIn: morningIn,
-      morningTimeOut: morningOut,
-      afternoonTimeIn: afternoonIn,
-      afternoonTimeOut: afternoonOut,
-    };
-  } catch (error) {
-    console.error("Error fetching logs by date:", error);
-    return null;
-  }
-}
-
-async function populateHistoryModal(dateStr) {
-  const userId = localStorage.getItem("userId");
-  if (!userId) return;
-
-  const data = await getAttendanceByDate(userId, dateStr);
-  if (!data) return;
-
-  updateSlot(0, data.morningTimeIn);
-  updateSlot(1, data.morningTimeOut);
-  updateSlot(2, data.afternoonTimeIn);
-  updateSlot(3, data.afternoonTimeOut);
-}
-
-function updateSlot(slotIndex, log) {
-  const containers = document.querySelectorAll(".history-images > div");
-  const container = containers[slotIndex];
-  if (!container) return;
-
-  const anchor = container.querySelector("a");
-  const img = container.querySelector("img");
-  const time = container.querySelector("h6");
-
-  if (log && log.image) {
-    anchor.href = log.image;
-
-    img.classList.remove("scale-in");
-    void img.offsetWidth;
-    img.src = log.image;
-    img.classList.add("scale-in");
-
-    time.textContent = formatTime(log.timestamp);
-  } else {
-    anchor.href = "#";
-    img.src = "../assets/img/icons8_no_image_500px.png";
-    time.textContent = "--:--:--";
-  }
-}
-
 function populateDates(dateList) {
   const container = document.querySelector(".card-container .row");
   container.innerHTML = "";
@@ -232,7 +185,7 @@ function populateDates(dateList) {
     card.className = "col-12 col-md-6 col-lg-4 mb-2 px-2";
 
     card.innerHTML = `
-      <a href="#" class="history-card mb-2" data-bs-toggle="modal" data-bs-target="#viewHistoryModal" data-date="${rawDate}">
+      <a href="../pages/admin-tio-company.html?date=${rawDate}" class="history-card mb-2" data-date="${rawDate}">
         <span>${day}</span>
         <span class="separator"></span>
         <span class="date">${readableDate}</span>
@@ -241,10 +194,12 @@ function populateDates(dateList) {
 
     container.appendChild(card);
 
-    card.querySelector("a").addEventListener("click", (e) => {
-      e.preventDefault();
-      const selectedDate = e.currentTarget.getAttribute("data-date");
-      populateHistoryModal(selectedDate);
-    });
+    // card.querySelector("a").addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   // const selectedDate = e.currentTarget.getAttribute("data-date");
+    //   // populateHistoryModal(selectedDate);
+
+    //   console.log(e.currentTarget.getAttribute("data-date"));
+    // });
   });
 }

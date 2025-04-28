@@ -196,6 +196,7 @@ function populateDates(companyDataList) {
       late,
       absent,
     });
+    
     const card = document.createElement("div");
     card.className = "col-12 col-md-6 col-lg-4 mb-2 p-2";
 

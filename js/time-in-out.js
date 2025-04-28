@@ -31,6 +31,14 @@ document
       document.getElementById("absentModal")
     );
 
+    const userInfoArr = await crudOperations.getByIndex(
+      "studentInfoTbl",
+      "userId",
+      userId
+    );
+
+    const userInfo = userInfoArr[0];
+
     try {
       const { firebaseCRUD } = await import("./firebase-crud.js");
 
@@ -43,6 +51,8 @@ document
         totalMinutes: 0,
         isLate: false,
         isPresent: false,
+        companyName: userInfo.companyName,
+        companyAddress: userInfo.companyAddress,
       };
 
       await crudOperations.upsert("completeAttendanceTbl", attendanceStatus);
@@ -956,7 +966,13 @@ document
           toMinutes(logsByType["afternoonTimeIn"].time) >
             toMinutes(schedule.afternoonTimeIn);
 
-        const isLate = lateMorning || lateAfternoon;
+        const isLate =
+          !logsByType["morningTimeIn"] ||
+          !logsByType["afternoonTimeIn"] ||
+          toMinutes(logsByType["morningTimeIn"].time) >
+            toMinutes(schedule.morningTimeIn) ||
+          toMinutes(logsByType["afternoonTimeIn"].time) >
+            toMinutes(schedule.afternoonTimeIn);
 
         const attendanceStatus = {
           userId,
@@ -969,6 +985,7 @@ document
           isPresent: true,
           companyName: userInfo.companyName,
           companyAddress: userInfo.companyAddress,
+          // add incident report check
         };
 
         const dateDocPath = `attendancelogs/${userId}/${date}`;
@@ -978,6 +995,7 @@ document
           );
           await firebaseCRUD.setDataWithId(dateDocPath, type, cleanData);
         }
+        console.log("Uploading attendanceStatus:", attendanceStatus);
 
         await crudOperations.upsert("completeAttendanceTbl", attendanceStatus);
         await firebaseCRUD.createData(

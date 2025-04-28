@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="/css/profile.css" />
+    <link rel="stylesheet" href="/css/admin-profile.css" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
     <link
@@ -23,13 +24,13 @@
   <body>
 
     <div class="row cards-box">
-      <div class="card-container col-lg-5">
+      <div class="card-container col-lg-9">
         <div class="upper-container">
           <div id="user-info-header" class="form-floating col-md-12 w-100 position-absolute p-4 d-flex justify-content-between">
             <a
               id="return-button"
               class="text-decoration-none"
-              href="/pages/dashboard.html"
+              href="/pages/admin-dashboard.html"
             >
               <i class="bi bi-arrow-return-left fs-3"></i>
             </a>
@@ -56,55 +57,25 @@
             <h4 id="admin-id"></h4>
           </div>
           <div class="profile-details">
-            <div class="detail-row">
-              <div class="detail-item">
-                <p class="detail-label">Email</p>
-                <h5 id="email" class="detail-value"></h5>
-              </div>
-              <div class="detail-item">
-                <p class="detail-label">Phone</p>
-                <h5 id="phone-number" class="detail-value"></h5>
-              </div>
-            </div>
-            <div class="detail-row">
-              <div class="detail-item">
-                <p class="detail-label">Position</p>
-                <h5 id="position" class="detail-value"></h5>
-              </div>
-              <div class="detail-item">
-                <p class="detail-label">Address</p>
-                <h5 id="address" class="detail-value"></h5>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="department-card-container col-lg-5">
-        <div class="department-overlay-container"></div>
-        <div class="department-container">
-          <div class="department-header">
-            <h3>Administrator</h3>
-            <h6>System Management</h6>
-          </div>
           <div class="schedule-section">
             <div class="schedule-header">
-              <p class="schedule-label">Access Level</p>
-              <h5 id="access-level" class="schedule-value">Full System Access</h5>
+              <p class="schedule-label  text-dark">Access Level</p>
+              <h5 id="access-level" class="schedule-value  text-dark">Full System Access</h5>
             </div>
+
             <div class="time-grid">
               <div class="time-slot">
-                <p class="time-label">Account Created</p>
-                <h5 id="account-created" class="time-value"></h5>
+                <p class="time-label text-dark">Account Created</p>
+                <h5 id="account-created" class="time-value text-dark"></h5>
               </div>
-              <div class="time-slot">
-                <p class="time-label">Last Login</p>
-                <h5 id="last-login" class="time-value"></h5>
-              </div>
+              
             </div>
           </div>
+          </div>
         </div>
+        
       </div>
+      
     </div>
 
     <div class="logout-button-container d-flex justify-content-center align-items-center flex-column">
@@ -136,7 +107,7 @@
           <form id="adminForm">
             <div class="modal-body">
               <div class="row d-flex align-items-center justify-content-center">
-                <div class="col-md-3 d-flex justify-content-center position-relative">
+                <div class="col-md-12 d-flex justify-content-center position-relative">
                   <button id="img-button" class="position-relative">
                     <img
                       class="pt-1 modal-profile-icon"
@@ -147,110 +118,23 @@
                 </div>
 
                 <div class="col-md-9 row">
-                  <div class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative">
+                  
+                  <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
                     <i class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
                     <input
                       type="text"
                       class="form-control ps-3 pe-1"
                       id="modal-first-name"
                       name="first-name"
-                      placeholder="Enter your first name"
+                      placeholder="Enter your full name"
                       required
                     />
-                    <label for="first-name">First Name</label>
+                    <label for="first-name">Full Name</label>
                   </div>
-
-                  <div class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative">
-                    <i class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                    <input
-                      type="text"
-                      class="form-control ps-3 pe-1"
-                      id="modal-middle-name"
-                      name="middle-name"
-                      placeholder="Enter your middle name"
-                    />
-                    <label for="middle-name">Middle Name</label>
-                  </div>
-
-                  <div class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative">
-                    <i class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                    <input
-                      type="text"
-                      class="form-control ps-3 pe-1"
-                      id="modal-last-name"
-                      name="last-name"
-                      placeholder="Enter your last name"
-                      required
-                    />
-                    <label for="last-name">Last Name</label>
-                  </div>
-
-                  <div class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative">
-                    <i class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                    <input
-                      type="text"
-                      class="form-control ps-3 pe-1"
-                      id="modal-suffix"
-                      name="suffix"
-                      placeholder="Enter your suffix"
-                    />
-                    <label for="suffix">Suffix</label>
-                  </div>
+                
                 </div>
 
-                <div class="separator-line"></div>
 
-                <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative">
-                  <i class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                  <input
-                    type="text"
-                    class="form-control ps-3 pe-1"
-                    id="modal-admin-id"
-                    name="admin-id"
-                    placeholder="Enter your admin ID"
-                    required
-                  />
-                  <label for="admin-id">Admin ID</label>
-                </div>
-
-                <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative">
-                  <i class="bi bi-telephone-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                  <input
-                    type="tel"
-                    class="form-control ps-3 pe-1"
-                    id="modal-phone-number"
-                    name="phone-number"
-                    placeholder="Enter your phone number"
-                    required
-                  />
-                  <label for="phone-number">Phone Number</label>
-                </div>
-
-                <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative">
-                  <i class="bi bi-briefcase-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                  <input
-                    type="text"
-                    class="form-control ps-3 pe-1"
-                    id="modal-position"
-                    name="position"
-                    placeholder="Enter your position"
-                    required
-                  />
-                  <label for="position">Position</label>
-                </div>
-
-                <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative">
-                  <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                  <input
-                    type="text"
-                    class="form-control ps-3 pe-1"
-                    id="modal-address"
-                    name="address"
-                    placeholder="Enter your address"
-                    required
-                  />
-                  <label for="address">Address</label>
-                </div>
               </div>
             </div>
 

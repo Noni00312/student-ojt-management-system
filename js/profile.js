@@ -691,7 +691,6 @@ if (logoutButton) {
   
   if (confirmed) {
     try {
-      // Show loading state (optional)
       logoutButton.disabled = true;
       logoutButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
       
@@ -715,7 +714,6 @@ if (logoutButton) {
 
 async function showLogoutConfirmation() {
   return new Promise((resolve) => {
-    // Create modal HTML
     const modalHtml = `
       <div class="modal fade" id="logoutConfirmationModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -735,17 +733,13 @@ async function showLogoutConfirmation() {
         </div>
       </div>
     `;
-    
-    // Create and append modal container
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHtml;
     document.body.appendChild(modalContainer);
     
-    // Initialize and show modal
     const modal = new bootstrap.Modal(document.getElementById('logoutConfirmationModal'));
     modal.show();
     
-    // Handle confirm button click
     document.getElementById('confirmLogout').addEventListener('click', () => {
       modal.hide();
       resolve(true);
@@ -754,7 +748,6 @@ async function showLogoutConfirmation() {
       }, 500);
     });
     
-    // Handle modal close
     modalContainer.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
       resolve(false);
       setTimeout(() => {

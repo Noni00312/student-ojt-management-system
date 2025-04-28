@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Check if current page is history.html or report-online.html
   const currentPage = window.location.pathname.split("/").pop();
   const onlinePages = [
     "history.html",
@@ -24,30 +23,61 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
 
   if (onlinePages.includes(currentPage)) {
-    // Check internet connection
     if (!navigator.onLine) {
-      // Redirect to no-internet page
-      window.location.href = "/pages/no-internet.html";
+      checkUserTypeAndRedirect();
     }
 
-    // Also listen for online/offline changes
     window.addEventListener("offline", function () {
-      window.location.href = "/pages/no-internet.html";
+      checkUserTypeAndRedirect();
     });
   }
 
-  // Optional: For links to these pages, check before navigating
   document
     .querySelectorAll('a[href*="history.html"], a[href*="report-online.html"]')
     .forEach((link) => {
       link.addEventListener("click", function (e) {
         if (!navigator.onLine) {
           e.preventDefault();
-          window.location.href = "/pages/no-internet.html";
+          checkUserTypeAndRedirect();
         }
       });
     });
 });
+
+function checkUserTypeAndRedirect() {
+  const request = indexedDB.open("SOJTMSDB", 1);
+
+  request.onsuccess = function(event) {
+    const db = event.target.result;
+    const transaction = db.transaction(["studentInfoTbl"], "readonly");
+    const store = transaction.objectStore("studentInfoTbl");
+    const index = store.index("userId");
+    const userId = localStorage.getItem("userId"); 
+    
+    if (userId) {
+      const getUser = index.get(userId);
+      
+      getUser.onsuccess = function() {
+        const userData = getUser.result;
+        if (userData && userData.userType === "admin") {
+          window.location.href = "/pages/no-internet-admin.html";
+        } else {
+          window.location.href = "/pages/no-internet.html";
+        }
+      };
+      
+      getUser.onerror = function() {
+        window.location.href = "index.html";
+      };
+    } else {
+      window.location.href = "index.html";
+    }
+  };
+
+  request.onerror = function() {
+    window.location.href = "index.html";
+  };
+}
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker

@@ -88,7 +88,11 @@ async function getAllIncidentDates() {
     data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (!Array.isArray(data) || data.length === 0) {
-      container.innerHTML = `<p class="text-center text-muted">No attendance records found.</p>`;
+       container.innerHTML = `<div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No History Found</h6>
+                <p class="mt-1">No attendance records found.</p>
+            </div>`;
       return;
     }
 

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="/css/profile.css" />
+    <link rel="stylesheet" href="/css/admin-profile.css" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
     <link
@@ -18,41 +19,22 @@
     <link rel="app-mobile-web-app-status-bar" href="#6e1423" />
     <meta name="theme-color" content="#748E54" />
 
-    <title>SOJTMS - Admin Profile</title>
+    <title>Admin Profile | SOJTMS</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg fixed-top accent-bg-color">
-      <div
-        id="nav-container"
-        class="container d-flex align-items-center justify-content-between w-100"
-      >
-        <div class="text-white">
-          <a
-            id="return-button"
-            class="text-decoration-none"
-            href="/pages/dashboard.html"
-          >
-            <i class="bi bi-arrow-left fs-3"></i>
-          </a>
 
-          <div class="d-flex align-items-center">
-            <img class="profile-icon"
-            src="/assets/img/icons8_male_user_480px_1.png" icon" loading="lazy"
+    <div class="row cards-box">
+      <div class="card-container col-lg-9">
+        <div class="upper-container">
+          <div id="user-info-header" class="form-floating col-md-12 w-100 position-absolute p-4 d-flex justify-content-between">
+            <a
+              id="return-button"
+              class="text-decoration-none"
+              href="/pages/admin-dashboard.html"
             >
-            <h3 class="fw-bold">Last Name, First Name I.</h3>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <section class="container px-4 px-md-4">
-      <div id="profile-card" class="px-5 py-sm-3 d-flex flex-column">
-        <div class="row">
-          <div
-            id="admin-info-header"
-            class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative d-flex justify-content-between"
-          >
-            <h2 id="admin-info-title" class="admin-info-title">Admin Info</h2>
+              <i class="bi bi-arrow-return-left fs-3"></i>
+            </a>
+          
             <a
               id="edit-button"
               class="text-decoration-none edit-button"
@@ -63,192 +45,124 @@
               <i class="bi bi-pencil fs-3"></i>
             </a>
           </div>
-
-          <div
-            id="number-id-container"
-            class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="number-id-label" class="number-id-label">ID Number</p>
-            <h5 id="number-id" class="number-id">2112889</h5>
-          </div>
-
-          <div
-            id="position-container"
-            class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
-          >
-            <p id="position-label" class="position-label">Position</p>
-            <h5 id="position" class="position">Sample Pos</h5>
+          
+          <div class="image-container">
+            <img class="profile-icon" src="/assets/img/icons8_male_user_480px_1.png" />
           </div>
         </div>
-      </div>
-
-      <div class="logout-button-container">
-        <button id="logout-button" class="logout-button mt-4">
-          <span>Logout</span>
-          <span><i class="bi bi-box-arrow-right"></i></span>
-        </button>
-      </div>
-
-      <!-- Edit Profile Modal -->
-      <div
-        class="modal fade"
-        id="editProfileModal"
-        data-bs-backdrop="static"
-        tabindex="-1"
-        aria-labelledby="editProfileModal"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content pe-3 ps-3 edit-profile-modal">
-            <div class="d-flex justify-content-between pt-4 pe-4 ps-4">
-              <h4 class="modal-title" id="exampleModalLabel">Edit Profile</h4>
-              <i
-                class="bi bi-x-lg fs-6 text-white"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></i>
+    
+        <div class="lower-container">
+          <div class="profile-header">
+            <h3 id="profile-name"></h3>
+            <h4 id="admin-id"></h4>
+          </div>
+          <div class="profile-details">
+          <div class="schedule-section">
+            <div class="schedule-header">
+              <p class="schedule-label  text-dark">Access Level</p>
+              <h5 id="access-level" class="schedule-value  text-dark">Full System Access</h5>
             </div>
 
-            <form id="ojtForm">
-              <div class="modal-body">
-                <div
-                  class="row d-flex align-items-center justify-content-center"
-                >
-                  <div
-                    class="col-md-3 d-flex justify-content-center position-relative"
-                  >
-                    <button id="img-button" class="position-relative">
-                      <img
-                        class="pt-1 modal-profile-icon"
-                        src="/assets/img/icons8_male_user_480px_1.png"
-                        loading="lazy"
-                      />
-                    </button>
-                  </div>
+            <div class="time-grid">
+              <div class="time-slot">
+                <p class="time-label text-dark">Account Created</p>
+                <h5 id="account-created" class="time-value text-dark"></h5>
+              </div>
+              
+            </div>
+          </div>
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
 
-                  <div class="col-md-9 row">
-                    <div
-                      class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
-                    >
-                      <i
-                        class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                      ></i>
-                      <input
-                        type="text"
-                        class="form-control ps-3 pe-1"
-                        id="first-name"
-                        name="first-name"
-                        placeholder="Enter your first name"
-                        required
-                      />
-                      <label for="first-name">First Name</label>
-                    </div>
+    <div class="logout-button-container d-flex justify-content-center align-items-center flex-column">
+      <button id="logout-button" class="logout-button mt-4">
+        <span><i class="bi bi-box-arrow-right"></i></span>
+      </button>
+    </div>
 
-                    <div
-                      class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
-                    >
-                      <i
-                        class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                      ></i>
-                      <input
-                        type="text"
-                        class="form-control ps-3 pe-1"
-                        id="middle-name"
-                        name="middle-name"
-                        placeholder="Enter your middle name"
-                      />
-                      <label for="middle-name">Middle Name</label>
-                    </div>
+    <!-- Edit Profile Modal -->
+    <div
+      class="modal fade"
+      id="editProfileModal"
+      data-bs-backdrop="static"
+      tabindex="-1"
+      aria-labelledby="editProfileModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content pe-3 ps-3 edit-profile-modal">
+          <div class="d-flex justify-content-between pt-4 pe-4 ps-4">
+            <h4 class="modal-title text-light" id="exampleModalLabel">Edit Profile</h4>
+            <i
+              class="bi bi-x-lg fs-6 text-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></i>
+          </div>
 
-                    <div
-                      class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
-                    >
-                      <i
-                        class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                      ></i>
-                      <input
-                        type="text"
-                        class="form-control ps-3 pe-1"
-                        id="last-name"
-                        name="last-name"
-                        placeholder="Enter your last name"
-                        required
-                      />
-                      <label for="last-name">Last Name</label>
-                    </div>
+          <form id="adminForm">
+            <div class="modal-body">
+              <div class="row d-flex align-items-center justify-content-center">
+                <div class="col-md-12 d-flex justify-content-center position-relative">
+                  <button id="img-button" class="position-relative">
+                    <img
+                      class="pt-1 modal-profile-icon"
+                      src="/assets/img/icons8_male_user_480px_1.png"
+                      loading="lazy"
+                    />
+                  </button>
+                </div>
 
-                    <div
-                      class="form-floating col-lg-6 mb-3 ps-1 pe-1 position-relative"
-                    >
-                      <i
-                        class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                      ></i>
-                      <input
-                        type="text"
-                        class="form-control ps-3 pe-1"
-                        id="suffix"
-                        name="suffix"
-                        placeholder="Enter your suffix"
-                      />
-                      <label for="suffix">Suffix</label>
-                    </div>
-                  </div>
-
-                  <div class="separator-line"></div>
-
-                  <div
-                    class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
+                <div class="col-md-9 row">
+                  
+                  <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative">
+                    <i class="bi bi-person-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
                     <input
                       type="text"
                       class="form-control ps-3 pe-1"
-                      id="id-number"
-                      name="id-number"
-                      placeholder="Enter your id number"
+                      id="modal-first-name"
+                      name="first-name"
+                      placeholder="Enter your full name"
                       required
                     />
-                    <label for="id-number">ID Number</label>
+                    <label for="first-name">Full Name</label>
                   </div>
-
-                  <div
-                    class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-telephone-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"
-                    ></i>
-                    <input
-                      type="tel"
-                      class="form-control ps-3 pe-1"
-                      id="position"
-                      name="position"
-                      placeholder="Enter your position"
-                      required
-                    />
-                    <label for="position">Position</label>
-                  </div>
+                
                 </div>
-              </div>
 
-              <div class="d-flex justify-content-center">
-                <button type="submit" class="mt-2 mb-3 d-block update-profile">
-                  <span>Update Profile</span>
-                </button>
+
               </div>
-            </form>
-          </div>
+            </div>
+
+            <div class="d-flex justify-content-center">
+              <button
+                id="update-profile"
+                type="submit"
+                class="mt-2 mb-3 d-block update-profile"
+              >
+                <span>Update Profile</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    </section>
+    </div>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
+
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/firebase-crud.js"></script>
+    <script src="/js/index-db-crud.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/ui.js"></script>
+    <script type="module" src="/js/admin-profile.js"></script>
   </body>
 </html>

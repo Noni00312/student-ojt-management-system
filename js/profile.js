@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const userId = localStorage.getItem("userId");
     if (!userId) {
       console.error("No userId found in localStorage");
+      window.location.href = "/pages/login.html";
       return;
     }
 
@@ -26,48 +27,58 @@ document.addEventListener("DOMContentLoaded", async function () {
     const afternoonTimeOut = document.getElementById("afternoon-time-out");
     const editButton = document.getElementById("edit-button");
     const editProfileModal = document.getElementById("editProfileModal");
+    const imgButton = document.getElementById("img-button");
+    const logoutButton = document.getElementById("logout-button");
 
     setupEditButton(editButton);
 
-    let data;
+    let userData;
     try {
       const dataArray = await crudOperations.getByIndex(
         "studentInfoTbl",
         "userId",
         userId
       );
-      data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+      userData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
-      if (navigator.onLine) {
-        const firebaseData = await firebaseCRUD.queryData(
-          "students",
-          "userId",
-          "==",
-          userId
-        );
-
-        if (firebaseData && firebaseData.length > 0) {
-          data = { ...data, ...firebaseData[0] };
-          data.id = firebaseData[0].id;
-          await crudOperations.updateData(
-            "studentInfoTbl",
-            data.id || userId,
-            data
+      if (navigator.onLine && userData) {
+        try {
+          const firebaseData = await firebaseCRUD.queryData(
+            "students",
+            "userId",
+            "==",
+            userId
           );
+
+          if (firebaseData && firebaseData.length > 0) {
+            const mergedData = { 
+              ...userData, 
+              ...firebaseData[0],
+              id: firebaseData[0].id || userData.id
+            };
+            
+            await crudOperations.updateData(
+              "studentInfoTbl",
+              mergedData.id || userId,
+              mergedData
+            );
+            
+            userData = mergedData;
+          }
+        } catch (error) {
+          console.error("Firebase sync error:", error);
         }
       }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Error loading user data:", error);
     }
 
-    if (data) {
-      updateProfileUI(data);
-
+    if (userData) {
+      updateProfileUI(userData);
       await loadCompanyData();
-
-      populateEditForm(data);
+      populateEditForm(userData);
     } else {
-      console.warn("No user data found for this user.");
+      console.warn("No user data found");
     }
 
     const editForm = document.getElementById("ojtForm");
@@ -106,40 +117,49 @@ document.addEventListener("DOMContentLoaded", async function () {
             SAT: formData.getAll("work-schedule").includes("Sat"),
           },
           updatedAt: new Date().toISOString(),
-          userId: userId, 
+          userId: userId,
         };
 
-        const docId = data?.id;
-        await firebaseCRUD.updateData("students", docId, updatedData);
-        const success = await updateUserData(docId, updatedData);
-
-        if (success) {
-          const updatedDataArray = await crudOperations.getByIndex(
-            "studentInfoTbl",
-            "userId",
-            userId
-          );
-          const updatedUserData = Array.isArray(updatedDataArray)
-            ? updatedDataArray[0]
-            : updatedDataArray;
-          updateProfileUI(updatedUserData);
-
-          const modal = bootstrap.Modal.getInstance(editProfileModal);
-          modal.hide();
-
-          alert("Profile updated successfully!");
-        } else {
-          alert("Failed to update profile. Please try again.");
+        const docId = userData?.id || userId;
+        await crudOperations.updateData("studentInfoTbl", docId, updatedData);
+        
+        if (navigator.onLine) {
+          await firebaseCRUD.updateData("students", docId, updatedData);
         }
+
+        const updatedDataArray = await crudOperations.getByIndex(
+          "studentInfoTbl",
+          "userId",
+          userId
+        );
+        const updatedUserData = Array.isArray(updatedDataArray)
+          ? updatedDataArray[0]
+          : updatedDataArray;
+        updateProfileUI(updatedUserData);
+
+        const modal = bootstrap.Modal.getInstance(editProfileModal);
+        modal.hide();
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Profile Updated',
+          text: 'Your profile has been updated successfully!',
+          timer: 2000,
+          showConfirmButton: false
+        });
       } catch (error) {
-        console.error("Error updating profile:", error);
-        alert("An error occurred while updating your profile.");
+        console.error("Update error:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Update Failed',
+          text: 'An error occurred while updating your profile'
+        });
       } finally {
         submitButton.disabled = false;
         submitButton.innerHTML = "<span>Update Profile</span>";
       }
     });
-    const imgButton = document.getElementById("img-button");
+
     const imgInput = document.createElement("input");
     imgInput.type = "file";
     imgInput.accept = "image/*";
@@ -160,43 +180,126 @@ document.addEventListener("DOMContentLoaded", async function () {
       editProfileImg.src = previewUrl;
 
       try {
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-          throw new Error("User not authenticated");
+        const base64Image = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        const docId = userData?.id || userId;
+        await crudOperations.updateData("studentInfoTbl", docId, {
+          userImg: base64Image
+        });
+
+        if (navigator.onLine) {
+          await firebaseCRUD.updateData("students", docId, {
+            userImg: base64Image
+          });
         }
 
-        const newImageData = await handleImageUpload(userId, file);
-
-        editProfileImg.src = newImageData;
-        document.querySelector(".profile-icon").src = newImageData;
-
+        userImg.src = base64Image;
+        editProfileImg.src = base64Image;
         URL.revokeObjectURL(previewUrl);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Image Updated',
+          text: 'Your profile image has been updated!',
+          timer: 1500,
+          showConfirmButton: false
+        });
       } catch (error) {
-        console.error("Error handling image upload:", error);
-        const previousImage = document.querySelector(".profile-icon").src;
-        editProfileImg.src = previousImage;
-        alert("Failed to update profile image. Please try again.");
+        console.error("Image upload error:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Upload Failed',
+          text: 'Failed to update profile image'
+        });
+        editProfileImg.src = userImg.src;
       }
     });
 
-    imgButton.addEventListener("mouseenter", () => {
-      const pencilIcon = document.createElement("i");
-      pencilIcon.className =
-        "bi bi-pencil-fill position-absolute top-50 start-50 translate-middle text-white fs-4";
-      pencilIcon.style.zIndex = "10";
-      imgButton.appendChild(pencilIcon);
+    logoutButton.addEventListener("click", async function (e) {
+      e.preventDefault();
 
-      imgButton.querySelector("img").style.opacity = "0.7";
+      if (!navigator.onLine) {
+        await Swal.fire({
+          icon: 'error',
+          title: 'No Internet',
+          text: 'You need internet connection to logout'
+        });
+        return;
+      }
+
+      const result = await Swal.fire({
+        title: 'Logout?',
+        text: "Are you sure you want to logout?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, logout!'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          Swal.fire({
+            title: 'Logging out...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+
+          await crudOperations.clearTable("studentInfoTbl");
+          localStorage.removeItem("userId");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userToken");
+
+          window.location.href = "/pages/login.html";
+        } catch (error) {
+          console.error("Logout error:", error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Logout Failed',
+            text: 'An error occurred during logout'
+          });
+        }
+      }
     });
 
-    imgButton.addEventListener("mouseleave", () => {
-      const pencilIcon = imgButton.querySelector("i");
-      if (pencilIcon) pencilIcon.remove();
+    async function loadCompanyData() {
+      try {
+        let companies = await crudOperations.getAllData("companyTbl");
+        
+        if ((!companies || companies.length === 0) && navigator.onLine) {
+          companies = await firebaseCRUD.getAllData("company");
+          
+          if (companies && companies.length > 0) {
+            await crudOperations.clearTable("companyTbl");
+            for (const company of companies) {
+              await crudOperations.createData("companyTbl", company);
+            }
+          }
+        }
+        
+        await populateCompanyDropdown();
+        setupCompanySelectListener();
+      } catch (error) {
+        console.error("Company data load error:", error);
+      }
+    }
 
-      imgButton.querySelector("img").style.opacity = "1";
+  } catch (error) {
+    console.error("Initialization error:", error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Initialization Error',
+      text: 'Failed to initialize profile page'
+    }).then(() => {
+      window.location.href = "/pages/login.html";
     });
-  } catch (err) {
-    console.error("Failed to initialize profile page:", err);
   }
 });
 
@@ -577,40 +680,20 @@ window.addEventListener('offline', updateLogoutButtonState);
 
 if (logoutButton) {
   logoutButton.addEventListener("click", async function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!navigator.onLine) {
-      await Swal.fire({
-        icon: 'error',
-        title: 'No Internet Connection',
-        text: 'You need an internet connection to logout properly',
-      });
-      return;
-    }
+  if (!navigator.onLine) {
+    alert('You need internet connection to logout');
+    return;
+  }
 
-    const result = await Swal.fire({
-      title: 'Logout?',
-      text: "Are you sure you want to logout?",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, logout!'
-    });
-
-    if (!result.isConfirmed) {
-      return;
-    }
-
+  const confirmed = await showLogoutConfirmation();
+  
+  if (confirmed) {
     try {
-      Swal.fire({
-        title: 'Logging out...',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        }
-      });
-
+      logoutButton.disabled = true;
+      logoutButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
+      
       await crudOperations.clearTable("studentInfoTbl");
       localStorage.removeItem("userId");
       localStorage.removeItem("userEmail");
@@ -618,23 +701,38 @@ if (logoutButton) {
 
       window.location.href = "/pages/login.html";
     } catch (error) {
-      console.error("Error during logout:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Logout Error',
-        text: 'An error occurred while logging out'
-      });
+      console.error("Logout error:", error);
+      alert('An error occurred during logout');
+      logoutButton.disabled = false;
+      logoutButton.innerHTML = 'Logout';
     }
-  });
+  }
+});
 }
 
 });
 
 async function showLogoutConfirmation() {
   return new Promise((resolve) => {
-    const confirmed = confirm("Are you sure you want to logout?");
-    resolve(confirmed);
-    
+    const modalHtml = `
+      <div class="modal fade" id="logoutConfirmationModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to logout?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" id="confirmLogout">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHtml;
     document.body.appendChild(modalContainer);
@@ -658,3 +756,4 @@ async function showLogoutConfirmation() {
     });
   });
 }
+

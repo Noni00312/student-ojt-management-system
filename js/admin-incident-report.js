@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /**
- * Fetch all incident report documents, extract unique dates from the 'date' field.
  * @returns {Array} Array of unique date objects sorted by date descending.
  */
 async function getAllIncidentDates() {
@@ -116,7 +115,7 @@ function populateDates(dates) {
 
   dates.forEach((dateInfo) => {
     const col = document.createElement("div");
-    col.className = "col-12 col-md-6 col-lg-4 mb-2 px-2 text-light";
+    col.className = "col-md-6 col-lg-3 mb-2 px-2 text-light";
 
     const card = document.createElement("a");
     card.href = `admin-incident-report-student.html?date=${dateInfo.rawDate}`;

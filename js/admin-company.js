@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       userId
     );
 
-
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
     if (data != null) {

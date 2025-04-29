@@ -126,7 +126,7 @@ body {
 .modal-content {
   background-color: #004e4e !important;
   border-radius: 1rem !important;
-  /* padding: 1rem !important; */
+ 
   overflow: hidden !important;
 }
 
@@ -135,7 +135,7 @@ body {
   display: fixed;
   width: 100%;
   top: 0;
-  /* padding: 1rem;  */
+
   position: relative;
   overflow: hidden;
 }
@@ -205,8 +205,7 @@ body {
   width: 110px;
   height: 110px;
   border-radius: 50%;
-  /* border: 2px solid #f6f8e2;
-  background-color: #004e4e; */
+ 
   position: absolute;
   top: -50px;
 }
@@ -231,7 +230,7 @@ body {
 }
 
 #user-name {
-  color: #6e1423;
+  color: #fff;
   font-size: 1.5rem;
   font-weight: 600;
   margin-top: -20px;
@@ -283,7 +282,7 @@ body {
 
 .attendance-status-container p small {
   font-size: 0.8rem;
-  color: #6e1423;
+  color: #f6f8e2;
 }
 
 .attendance-status-container p span {
@@ -294,7 +293,7 @@ body {
 .attendance-status-container i {
   font-size: 2rem;
   color: #f6f8e2;
-  /* align-self: end; */
+
   margin-left: 20px;
 }
 
@@ -329,7 +328,7 @@ body {
   margin-bottom: 16px;
 }
 
-/* calendar */
+
 
 .calendar {
   width: 100% !important;
@@ -401,7 +400,7 @@ body {
   color: white;
 }
 
-/* calendar */
+
 #edit-info-form i {
   color: #3c3d42 !important;
 }
@@ -411,21 +410,15 @@ body {
 }
 
 
-/* .student-report-container {
-  max-height: 80vh;
-  
-  overflow-y: auto;
-  padding-right: 8px;
- 
-} */
+
 
 .student-report-container {
   max-height: 80vh;
-  /* You can adjust this */
+ 
   overflow-y: auto;
   scroll-behavior: smooth;
   padding-right: 8px;
-  /* Optional: gives space for the scrollbar */
+ 
 }
 
 .report p-3 mb-4 rounded {
@@ -433,13 +426,10 @@ body {
 }
 
 
-/* .student-report-container {
-  scroll-behavior: smooth;
-} */
 
 
 
-/* Add these styles for the color highlights */
+
 .day {
   position: relative;
   width: 30px;
@@ -479,6 +469,55 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.phone-email-container {
+  gap: 1rem;
+  padding: 0 0.5rem;
+}
+
+.phone-container, .email-container {
+  flex: 1;
+  min-width: 0; 
+}
+
+
+@media (max-width: 767.98px) {
+  .phone-email-container {
+    justify-content: space-between;
+  }
+  
+  .phone-container {
+    text-align: left !important;
+  }
+  
+  .email-container {
+    text-align: right !important;
+  }
+}
+
+
+@media (min-width: 768px) {
+  .phone-container {
+    margin-right: 1rem;
+  }
+  
+  .email-container {
+    margin-left: 1rem;
+  }
+}
 
 
 

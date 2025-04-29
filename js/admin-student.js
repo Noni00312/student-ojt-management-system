@@ -1,242 +1,4 @@
-// // Add this utility function at the top of your admin-company.js
-// function debounce(func, wait) {
-//     let timeout;
-//     return function executedFunction(...args) {
-//         const later = () => {
-//             clearTimeout(timeout);
-//             func(...args);
-//         };
-//         clearTimeout(timeout);
-//         timeout = setTimeout(later, wait);
-//     };
-// }
 
-
-// function loadStudents() {
-//     import("./firebase-crud.js")
-//         .then(({ firebaseCRUD }) => {
-//             firebaseCRUD.getAllData("students")
-//                 .then((students) => {
-//                     displayStudents(students);
-//                 })
-//                 .catch((error) => {
-//                     console.error("Error loading students:", error);
-//                     alert("Failed to load students: " + error.message);
-//                 });
-//         })
-//         .catch((err) => {
-//             console.error("Failed to load firebase-crud:", err);
-//         });
-// }
-
-// // Function to display companies
-// function displayStudents(students) {
-//     const cardContainer = document.querySelector('.card-container');
-//     cardContainer.innerHTML = ''; // Clear existing content
-
-//     if (!students || students.length === 0) {
-//         cardContainer.innerHTML = '<p class="text-center">No students found</p>';
-//         return;
-//     }
-
-//     companies.forEach((students) => {
-//         const colDiv = document.createElement('div');
-//         colDiv.className = 'col-lg-4 col-md-6';
-
-//         colDiv.innerHTML = `
-//       <div class="company-card">
-//         <div class="company-image-container">
-//           ${company.image ?
-//                 `<img src="${company.image}" alt="${company.companyName}" class="company-image">` :
-//                 `<div class="no-image-placeholder"><i class="bi bi-building"></i></div>`
-//             }
-//         </div>
-//         <div class="company-overlay"></div>
-//         <div class="company-content">
-//           <div class="company-info">
-//             <p class="d-none">${company.id || ''}</p>
-//             <h5>${company.companyName || 'No name'}</h5>
-//             <p>${company.companyAddress || 'No address'}</p>
-//           </div>
-//           <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#updateCompanyModal" data-id="${company.id}">
-//             <i class="bi bi-pencil"></i>
-//           </button>
-//         </div>
-//       </div>
-//     `;
-
-//         cardContainer.appendChild(colDiv);
-//     });
-
-//     // Add event listeners to all edit buttons
-//     document.querySelectorAll('.edit-btn').forEach(button => {
-//         button.addEventListener('click', function () {
-//             const companyId = this.getAttribute('data-id');
-//             loadCompanyDataForUpdate(companyId);
-//         });
-//     });
-// }
-
-
-
-// function searchCompanies(searchTerm) {
-//     console.log("Searching for:", searchTerm); // Debug log
-
-//     import("./firebase-crud.js")
-//         .then(({ firebaseCRUD }) => {
-//             console.log("Firebase CRUD loaded"); // Debug log
-
-//             firebaseCRUD.getDataById("company", "companyName", "==", searchTerm)
-//                 .then((companies) => {
-//                     console.log("Initial results:", companies); // Debug log
-
-//                     // For more flexible matching, filter client-side
-//                     const filtered = companies.filter(company =>
-//                         company.companyName &&
-//                         company.companyName.toLowerCase().includes(searchTerm.toLowerCase())
-//                     );
-
-//                     console.log("Filtered results:", filtered); // Debug log
-//                     displayCompanies(filtered);
-//                 })
-//                 .catch((error) => {
-//                     console.error("Error with search, falling back to client-side filtering:", error);
-
-//                     // Fallback to client-side filtering if search fails
-//                     firebaseCRUD.getAllData("company")
-//                         .then((allCompanies) => {
-//                             const filtered = allCompanies.filter(company =>
-//                                 company.companyName &&
-//                                 company.companyName.toLowerCase().includes(searchTerm.toLowerCase())
-//                             );
-//                             displayCompanies(filtered);
-//                         })
-//                         .catch(fallbackError => {
-//                             console.error("Fallback also failed:", fallbackError);
-//                         });
-//                 });
-//         })
-//         .catch((err) => {
-//             console.error("Failed to load firebase-crud:", err);
-//         });
-// }
-
-
-
-
-// $(document).ready(function () {
-//     loadCompanies();
-
-//     // Debounce the search function to wait 300ms after typing stops
-//     const debouncedSearch = debounce(function () {
-//         const searchTerm = $("#companySearch").val().trim();
-//         if (searchTerm.length > 0) {
-//             searchCompanies(searchTerm);
-//         } else {
-//             loadCompanies();
-//         }
-//     }, 300);
-
-//     $("#companySearch").on("input", debouncedSearch);
-
-//     // Add this function to check for duplicate company names
-//     async function checkCompanyNameExists(companyName) {
-//         try {
-//             const { firebaseCRUD } = await import("./firebase-crud.js");
-//             const companies = await firebaseCRUD.getAllData("company");
-
-//             // Check if any company has the same name (case-insensitive)
-//             return companies.some(company =>
-//                 company.companyName &&
-//                 company.companyName.toLowerCase() === companyName.toLowerCase()
-//             );
-//         } catch (error) {
-//             console.error("Error checking company name:", error);
-//             // If there's an error checking, assume name exists to prevent duplicates
-//             return true;
-//         }
-//     }
-
-//     $("#ojtForm").validate({
-//         rules: {
-//             companyName: {
-//                 required: true,
-//                 minlength: 2,
-//             },
-//             companyAddress: {
-//                 required: true,
-//                 minlength: 2,
-//             },
-//         },
-//         errorPlacement: function (error, element) {
-//             error.appendTo($("#" + element.attr("name") + "-error"));
-//         },
-//         submitHandler: function (form) {
-//             const submitButton = $(form).find('button[type="submit"]');
-//             const companyName = form.companyName.value.trim();
-
-//             submitButton.prop("disabled", true);
-//             submitButton.html(`
-//                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-//                 Checking...
-//             `);
-
-//             // First check if company name exists
-//             checkCompanyNameExists(companyName)
-//                 .then(nameExists => {
-//                     if (nameExists) {
-//                         alert("A company with this name already exists!");
-//                         submitButton.prop("disabled", false).text("Add Company");
-//                         return Promise.reject("Duplicate company name"); // Reject to skip success flow
-//                     }
-
-//                     // If name is unique, proceed with creation
-//                     submitButton.html(`
-//                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-//                         Adding Company...
-//                     `);
-
-//                     const companyData = {
-//                         companyName: companyName,
-//                         companyAddress: form.companyAddress.value,
-//                         image: uploadedImageBase64 || "",
-//                         createdAt: new Date().toISOString()
-//                     };
-
-//                     return import("./firebase-crud.js")
-//                         .then(({ firebaseCRUD }) => {
-//                             return firebaseCRUD.createData("company", companyData);
-//                         });
-//                 })
-//                 .then(() => {
-//                     alert("Successfully Inserted!");
-//                     form.reset();
-//                     document.getElementById("company-name").value = "";
-//                     document.getElementById("company-address").value = "";
-//                     document.getElementById("preview-image").src = "";
-//                     document.getElementById("preview-image").style.display = "none";
-//                     document.getElementById("camera-input").value = "";
-//                     uploadedImageBase64 = "";
-
-//                     // Refresh the companies list
-//                     loadCompanies();
-//                 })
-//                 .catch((error) => {
-//                     if (error !== "Duplicate company name") { // Skip logging for expected duplicates
-//                         console.error("Error:", error);
-//                         alert(`Operation failed: ${error.message}`);
-//                     }
-//                 })
-//                 .finally(() => {
-//                     submitButton.prop("disabled", false).text("Add Company");
-//                 });
-//         },
-//     });
-// });
-
-
-
-// admin-student.js
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -249,26 +11,71 @@ function debounce(func, wait) {
     };
 }
 
+function showLoading(show) {
+  const loader = document.getElementById("loading-indicator") || createLoader();
+  loader.style.display = show ? "block" : "none";
+}
+
+function createLoader() {
+  const loader = document.createElement("div");
+  loader.id = "loading-indicator";
+  loader.className = "text-center py-4";
+  loader.innerHTML =
+    '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
+  document.querySelector(".card-container").prepend(loader);
+  return loader;
+}
+
+function showError(message) {
+  const container = document.querySelector(".card-container .row");
+  container.innerHTML = `
+        <div class="col-12 text-center py-4">
+            <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
+            <p class="mt-2">${message}</p>
+            <button class="btn btn-primary mt-2" onclick="location.reload()">Retry</button>
+        </div>
+    `;
+}
+
+
 function loadStudents() {
+    showLoading(true);
     import("./firebase-crud.js")
         .then(({ firebaseCRUD }) => {
-            firebaseCRUD.getAllData("students")
+           
+            firebaseCRUD.queryData("students", "userType", "==", "student")
                 .then((students) => {
-                    displayStudents(students);
+                  
+                    firebaseCRUD.queryData("students", "userType", "==", "studentAssistant")
+                        .then((assistants) => {
+                            showLoading(false);
+                           
+                            const allUsers = [...students, ...assistants];
+                            displayStudents(allUsers);
+                        })
+                        .catch((error) => {
+                            showLoading(false);
+                            console.error("Error loading assistants:", error);
+                            showError("Failed to load student assistants: " + error.message);
+                        });
                 })
                 .catch((error) => {
+                    showLoading(false);
                     console.error("Error loading students:", error);
-                    alert("Failed to load students: " + error.message);
+                    showError("Failed to load students: " + error.message);
                 });
         })
         .catch((err) => {
+            showLoading(false);
             console.error("Failed to load firebase-crud:", err);
+            showError("Failed to load required modules. Please try again.");
         });
 }
 
+
 function displayStudents(students) {
     const cardContainer = document.querySelector('.card-container .row');
-    cardContainer.innerHTML = ''; // Clear existing content
+    cardContainer.innerHTML = ''; 
 
     if (!students || students.length === 0) {
         cardContainer.innerHTML = '<p class="text-center text-white">No students found</p>';
@@ -290,7 +97,7 @@ function displayStudents(students) {
                     </div>
                     <div class="main-container w-100 overflow-hidden">
                         <div class="name-id-container d-flex justify-content-between">
-                            <p class="m-0 text-truncate fw-bold">${student.firstName + " " + student.middleName + " " + student.lastName + " " + student.suffix || 'No name'}</p>
+                            <p class="m-0 text-truncate fw-bold">${student.firstName + " " + (student.middleName ? student.middleName + " " : "") + student.lastName + (student.suffix ? " " + student.suffix : "") || 'No name'}</p>
                             <p class="m-0 ms-2 text-nowrap">${student.studentId || 'No ID'}</p>
                             <p class="d-none">${student.userId || ''}</p>
                         </div>
@@ -308,38 +115,52 @@ function displayStudents(students) {
 }
 
 
-
 function searchStudents(searchTerm) {
+    showLoading(true);
     import("./firebase-crud.js")
         .then(({ firebaseCRUD }) => {
-            // Always fall back to client-side filtering for better search experience
-            firebaseCRUD.getAllData("students")
-                .then((allStudents) => {
-                    const filtered = allStudents.filter(student =>
-                    (student.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        student.studentId?.includes(searchTerm) ||
-                        student.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        student.middleName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        student.lastName?.toLowerCase().includes(searchTerm.toLowerCase()))
-                    );
-                    displayStudents(filtered);
+            
+            firebaseCRUD.queryData("students", "userType", "==", "student")
+                .then((students) => {
+                    
+                    firebaseCRUD.queryData("students", "userType", "==", "studentAssistant")
+                        .then((assistants) => {
+                            showLoading(false);
+                            
+                            const allUsers = [...students, ...assistants];
+                           
+                            const filtered = allUsers.filter(user =>
+                                (user.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                user.studentId?.includes(searchTerm) ||
+                                user.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                user.middleName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()))
+                            );
+                            displayStudents(filtered);
+                        })
+                        .catch((error) => {
+                            showLoading(false);
+                            console.error("Error fetching assistants:", error);
+                            showError("Error searching assistants: " + error.message);
+                        });
                 })
                 .catch((error) => {
+                    showLoading(false);
                     console.error("Error fetching students:", error);
+                    showError("Error searching students: " + error.message);
                 });
         })
         .catch((err) => {
+            showLoading(false);
             console.error("Failed to load firebase-crud:", err);
+            showError("Failed to load required modules. Please try again.");
         });
 }
-
-
-
 
 $(document).ready(function () {
     loadStudents();
 
-    // Search functionality with debounce
+    
     const debouncedSearch = debounce(function () {
         const searchTerm = $(".search-input input").val().trim();
         if (searchTerm.length > 0) {

@@ -1,305 +1,70 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//   const monthYear = document.getElementById("month-year");
-//   const daysContainer = document.getElementById("days");
-//   const prevButton = document.getElementById("prev");
-//   const nextButton = document.getElementById("next");
-//   const months = [
-//     "January",
-//     "February",
-//     "March",
-//     "April",
-//     "May",
-//     "June",
-//     "July",
-//     "August",
-//     "September",
-//     "October",
-//     "November",
-//     "December",
-//   ];
-//   let currentDate = new Date();
-//   let today = new Date();
-//   function renderCalendar(date) {
-//     const year = date.getFullYear();
-//     const month = date.getMonth();
-//     const firstDay = new Date(year, month, 1).getDay();
-//     const lastDay = new Date(year, month + 1, 0).getDate();
-//     monthYear.textContent = `${months[month]} ${year}`;
-//     daysContainer.innerHTML = "";
-//     // Previous month's dates
-//     const prevMonthLastDay = new Date(year, month, 0).getDate();
-//     for (let i = firstDay; i > 0; i--) {
-//       const dayDiv = document.createElement("div");
-//       dayDiv.textContent = prevMonthLastDay - i + 1;
-//       dayDiv.classList.add("fade-date");
-//       daysContainer.appendChild(dayDiv);
-//     }
-//     // Current month's dates
-//     for (let i = 1; i <= lastDay; i++) {
-//       const dayDiv = document.createElement("div");
-//       dayDiv.textContent = i;
-//       if (
-//         i === today.getDate() &&
-//         month === today.getMonth() &&
-//         year === today.getFullYear()
-//       ) {
-//         dayDiv.classList.add("today");
-//       }
-//       daysContainer.appendChild(dayDiv);
-//     }
-//     // Next month's dates
-//     const nextMonthStartDay = 7 - new Date(year, month + 1, 0).getDay() - 1;
-//     for (let i = 1; i <= nextMonthStartDay; i++) {
-//       const dayDiv = document.createElement("div");
-//       dayDiv.textContent = i;
-//       dayDiv.classList.add("fade-date");
-//       daysContainer.appendChild(dayDiv);
-//     }
-//   }
-//   prevButton.addEventListener("click", function () {
-//     currentDate.setMonth(currentDate.getMonth() - 1);
-//     renderCalendar(currentDate);
-//   });
-//   nextButton.addEventListener("click", function () {
-//     currentDate.setMonth(currentDate.getMonth() + 1);
-//     renderCalendar(currentDate);
-//   });
-//   renderCalendar(currentDate);
-// });
+
+
+
 
 import { firebaseCRUD } from "./firebase-crud.js";
 
+function showLoading(show) {
+  const loader = document.getElementById("loading-indicator") || createLoader();
+  if (loader) {
+    loader.style.display = show ? "block" : "none";
+  }
+}
 
+function createLoader() {
+  try {
+    const loader = document.createElement("div");
+    loader.id = "loading-indicator";
+    loader.className = "text-center py-4";
+    loader.innerHTML =
+      '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
+    
+    
+    const container = document.querySelector(".card-container") || 
+                     document.querySelector(".student-report-container") ||
+                     document.body;
+    
+    if (container) {
+      container.prepend(loader);
+      return loader;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error creating loader:", error);
+    return null;
+  }
+}
 
-// document.addEventListener('DOMContentLoaded', function () {
-//   // Get userId from URL or localStorage
-//   const userId = getUserIdFromUrl() || localStorage.getItem('userId');
-
-//   if (userId) {
-//     loadStudentReports(userId);
-//   } else {
-//     console.error("No user ID found");
-//     // Redirect back to students list
-//     // window.location.href = 'admin-student.html';
-//   }
-// });
-
-// function getUserIdFromUrl() {
-//   const urlParams = new URLSearchParams(window.location.search);
-//   return urlParams.get('userId');
-// }
-
-// function loadStudentReports(userId) {
-//   import("./firebase-crud.js")
-//     .then(({ firebaseCRUD }) => {
-//       // First get student info to display name
-//       firebaseCRUD.getDocument("students", userId)
-//         .then((student) => {
-//           if (student) {
-//             displayStudentInfo(student);
-
-//             // Then get all reports for this student
-//             return firebaseCRUD.getDocumentsByField(
-//               "reports",
-//               "userId", // Field to filter by
-//               userId,   // The user's ID
-//               "createdAt", // Field to order by
-//               "desc"    // Sort direction
-//             );
-//           } else {
-//             throw new Error("Student not found");
-//           }
-//         })
-//         .then((reports) => {
-//           if (reports && reports.length > 0) {
-//             displayReports(reports);
-//             setupDateNavigation(reports);
-//           } else {
-//             displayNoReportsMessage();
-//           }
-//         })
-//         .catch((error) => {
-//           console.error("Error loading reports:", error);
-//           showErrorToast("Failed to load reports: " + error.message);
-//         });
-//     })
-//     .catch((err) => {
-//       console.error("Failed to load firebase-crud:", err);
-//     });
-// }
-
-// function displayStudentInfo(student) {
-//   // Update the student name in the navbar
-//   const studentNameElement = document.querySelector('.student-name');
-//   if (studentNameElement) {
-//     studentNameElement.textContent = `${student.firstName} ${student.middleName || ''} ${student.lastName} ${student.suffix || ''}`.trim();
-//   }
-// }
-
-// function formatDateTime(dateString) {
-//   const date = new Date(dateString);
-
-//   // Format time (12:30:40 AM)
-//   const timeOptions = {
-//     hour: '2-digit',
-//     minute: '2-digit',
-//     second: '2-digit',
-//     hour12: true
-//   };
-//   const formattedTime = date.toLocaleTimeString('en-US', timeOptions);
-
-//   // Format date (April 17, 2025)
-//   const dateOptions = {
-//     year: 'numeric',
-//     month: 'long',
-//     day: 'numeric'
-//   };
-//   const formattedDate = date.toLocaleDateString('en-US', dateOptions);
-
-//   return {
-//     time: formattedTime,
-//     date: formattedDate,
-//     monthName: date.toLocaleString('default', { month: 'long' }),
-//     monthDay: date.getDate(),
-//     fullDate: dateString // Keep original for sorting
-//   };
-// }
-
-// function displayReports(reports) {
-//   const reportsContainer = document.querySelector('.student-report-container');
-//   reportsContainer.innerHTML = ''; // Clear existing content
-
-//   reports.forEach(report => {
-//     const formattedDateTime = formatDateTime(report.createdAt);
-
-//     const reportElement = document.createElement('div');
-//     reportElement.className = 'report p-2';
-//     reportElement.innerHTML = `
-//             <p class="text-end text-light">
-//                 <small class="font-darker-light-color">${formattedDateTime.time}</small>
-//             </p>
-//             <h2 class="border-bottom border-light text-truncate pb-2 fw-bold font-darker-light-color">
-//                 ${report.title || 'Daily Report'}
-//             </h2>
-//             ${report.hasImages ?
-//         `<div class="image-container d-flex align-items-center me-3">
-//                     <!-- Images would be loaded here if you implement image storage -->
-//                     <img src="../assets/img/icons8_full_image_480px_1.png" alt="Report image">
-//                 </div>` :
-//         ''
-//       }
-//             <div class="content-container">
-//                 <p class="text-light fs-6 fw-normal mb-0">
-//                     ${report.content || 'No content provided'}
-//                 </p>
-//             </div>
-//         `;
-
-//     reportsContainer.appendChild(reportElement);
-//   });
-// }
-
-// function setupDateNavigation(reports) {
-//   const dateContainer = document.querySelector('.date-container');
-//   dateContainer.innerHTML = ''; // Clear existing dates
-
-//   // Get unique dates from reports
-//   const uniqueDates = [...new Set(
-//     reports.map(report => {
-//       const date = new Date(report.createdAt);
-//       return new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
-//     })
-//   )];
-
-//   uniqueDates.forEach(dateString => {
-//     const date = new Date(dateString);
-//     const formattedDate = formatDateTime(dateString);
-//     const reportsForDate = reports.filter(report => {
-//       const reportDate = new Date(report.createdAt);
-//       return reportDate.getFullYear() === date.getFullYear() &&
-//         reportDate.getMonth() === date.getMonth() &&
-//         reportDate.getDate() === date.getDate();
-//     });
-
-//     const dateButton = document.createElement('button');
-//     dateButton.className = 'w-100 border-0 px-0 py-2 bg-transparent d-flex align-items-center justify-content-between border-bottom border-light rounded-0';
-//     dateButton.innerHTML = `
-//             <span class="report-date-sm mt-1 d-flex flex-column align-items-center justify-content-between d-md-none text-center w-100">
-//                 <span id="month-name-sm" class="fw-normal text-truncate" style="font-size: 12px; width: calc(100% - 5px)">
-//                     ${formattedDate.monthName}
-//                 </span>
-//                 <span id="month-date-sm" class="fs-3 fw-bold">${formattedDate.monthDay}</span>
-//             </span>
-//             <span class="d-none d-md-block d-flex text-center w-100 fw-normal">${formattedDate.date}</span>
-//         `;
-
-//     dateButton.addEventListener('click', () => {
-//       filterReportsByDate(date, reports);
-//     });
-
-//     dateContainer.appendChild(dateButton);
-//   });
-// }
-
-// function filterReportsByDate(selectedDate, allReports) {
-//   const filteredReports = allReports.filter(report => {
-//     const reportDate = new Date(report.createdAt);
-//     return reportDate.getFullYear() === selectedDate.getFullYear() &&
-//       reportDate.getMonth() === selectedDate.getMonth() &&
-//       reportDate.getDate() === selectedDate.getDate();
-//   });
-
-//   displayReports(filteredReports);
-// }
-
-// function displayNoReportsMessage() {
-//   const reportsContainer = document.querySelector('.student-report-container');
-//   reportsContainer.innerHTML = `
-//         <div class="text-center text-light py-5">
-//             <i class="bi bi-file-earmark-text fs-1"></i>
-//             <p class="mt-3">No reports found for this student</p>
-//         </div>
-//     `;
-// }
-
-// function showErrorToast(message) {
-//   const toast = document.createElement('div');
-//   toast.className = 'toast align-items-center text-white bg-danger position-fixed bottom-0 end-0 m-3';
-//   toast.innerHTML = `
-//         <div class="d-flex">
-//             <div class="toast-body">${message}</div>
-//             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-//         </div>
-//     `;
-//   document.body.appendChild(toast);
-//   new bootstrap.Toast(toast).show();
-//   setTimeout(() => toast.remove(), 5000);
-// }
-
-
-
-// admin-student-report.js
-// import { firebaseCRUD } from './firebase-crud.js';
+function showError(message) {
+  const container = document.querySelector(".card-container .row");
+  container.innerHTML = `
+    <div class="col-12 text-center py-4">
+      <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
+      <p class="mt-2">${message}</p>
+      <button class="btn btn-primary mt-2" onclick="location.reload()">Retry</button>
+    </div>
+  `;
+}
 
 document.addEventListener('DOMContentLoaded', async function () {
-
-
+  showLoading(true);
   try {
-    // Get userId from URL or localStorage
+    
     const userId = getUserIdFromUrl() || localStorage.getItem('userId');
     console.log(userId);
 
     if (userId) {
-      await loadStudentReports(userId);
-      await loadStudentData(userId); // Add this line to load student data
-      await loadAttendanceData(userId); // Add this line to load attendance data
+      await Promise.all([
+        loadStudentReports(userId),
+        loadStudentData(userId),
+        loadAttendanceData(userId)
+      ]);
 
-      // Initialize calendar
+      
       const attendanceCalendar = initializeAttendanceCalendar();
       await attendanceCalendar.init(userId);
 
-
-      // Added: Check if already assistant when page loads
+      
       try {
         const { firebaseCRUD } = await import("./firebase-crud.js");
         const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
@@ -313,23 +78,22 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
       } catch (error) {
         console.error("Error checking assistant status:", error);
+        showErrorToast("Failed to check assistant status: " , true + error.message);
       }
-      // End of added code
-
     } else {
       console.error("No user ID found");
-      // window.location.href = 'admin-student.html';
+      showError("No user ID found. Please return to the student list.");
     }
   } catch (error) {
     console.error("Initialization error:", error);
-    showErrorToast("Failed to initialize: " + error.message);
+    showError("Failed to initialize: " + error.message);
+  } finally {
+    showLoading(false);
   }
 });
 
-
-
-// Updated loadStudentData function with company image fetching
 async function loadStudentData(userId) {
+  showLoading(true);
   try {
     const { firebaseCRUD } = await import("./firebase-crud.js");
     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
@@ -341,44 +105,82 @@ async function loadStudentData(userId) {
 
     const studentData = students[0];
 
-    // Update the modal with student data
+    
     const companyNameEl = document.getElementById('company-name');
     const companyImageEl = document.querySelector('.company-container img');
     const userNameEl = document.getElementById('user-name');
-    const phoneEl = document.querySelector('.phone-email-container p span');
-    const emailEl = document.querySelector('.email-add');
-    const phoneTooltip = document.querySelector('.phone-email-container .tt[data-bs-title]');
-    const emailTooltip = document.querySelector('.phone-email-container .tt[data-bs-title="edagardobalan24@gmail.com"]');
+    const phoneTextEl = document.getElementById('phone-number-text');
+    const emailTextEl = document.getElementById('email-text');
+    const phoneTooltip = document.querySelector('.phone-email-container .tt:first-child');
+    const emailTooltip = document.querySelector('.phone-email-container .tt:last-child');
 
-    // Construct full name
+
+    
+    const profileImgEl = document.getElementById('user-profile-img');
+    if (profileImgEl) {
+      if (studentData.userImg) {
+        
+        profileImgEl.src = studentData.userImg;
+      } else {
+        
+        const defaultMaleImg = "../assets/img/icons8_male_user_480px_1.png";
+        const defaultFemaleImg = "../assets/img/icons8_female_user_480px.png";
+        
+        if (studentData.gender === "Female") {
+          profileImgEl.src = defaultFemaleImg;
+        } else {
+          profileImgEl.src = defaultMaleImg;
+        }
+      }
+    }
+
+    
     let fullName = studentData.firstName || '';
     if (studentData.middleName) fullName += ' ' + studentData.middleName;
     if (studentData.lastName) fullName += ' ' + studentData.lastName;
     if (studentData.suffix) fullName += ' ' + studentData.suffix;
 
-    // Update elements
+    
+    const truncatedName = fullName.length > 20 
+      ? fullName.substring(0, 20) + '...' 
+      : fullName;
+
+    
     if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
-    if (userNameEl) userNameEl.textContent = fullName;
+    if (userNameEl) {
+      userNameEl.textContent = truncatedName;
+      userNameEl.setAttribute('title', fullName);
+      userNameEl.classList.add('text-truncate');
+    }
 
-    if (phoneEl) phoneEl.textContent = studentData.phoneNumber || 'N/A';
-    if (emailEl) emailEl.textContent = studentData.emailAddress || 'N/A';
+    
+    const phoneNumber = studentData.phoneNumber || 'N/A';
+    if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
+    if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', phoneNumber);
 
-    if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', studentData.phoneNumber || '');
-    if (emailTooltip) emailTooltip.setAttribute('data-bs-title', studentData.emailAddress || '');
+    
+    const emailAddress = studentData.emailAddress || 'N/A';
+    if (emailTextEl) emailTextEl.textContent = emailAddress;
+    if (emailTooltip) emailTooltip.setAttribute('data-bs-title', emailAddress);
 
-    // Fetch and display company image if company name exists
+    
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    
     if (studentData.companyName) {
       await loadCompanyImage(studentData.companyName, companyImageEl);
     }
 
   } catch (error) {
     console.error("Error loading student data:", error);
-    showErrorToast("Failed to load student data: " + error.message);
+    showErrorToast("Failed to load student data: " , true + error.message);
+  } finally {
+    showLoading(false);
   }
 }
-
-
-
 
 async function loadCompanyImage(companyName) {
   try {
@@ -393,21 +195,9 @@ async function loadCompanyImage(companyName) {
 
     if (companies && companies.length > 0 && companies[0].image) {
       const base64Image = companies[0].image;
-      console.log("Full Base64 image length:", base64Image.length);
-
-      // Verify the Base64 string is complete
-      if (base64Image.endsWith('==') || base64Image.endsWith('=') ||
-        (base64Image.length % 4 === 0)) {
+      if (base64Image.endsWith('==') || base64Image.endsWith('=') || (base64Image.length % 4 === 0)) {
         imageElement.src = base64Image;
         imageElement.alt = `${companyName} logo`;
-        console.log("Image source set successfully");
-
-        // Add onload and onerror handlers for debugging
-        imageElement.onload = () => console.log("Image loaded successfully");
-        imageElement.onerror = () => {
-          console.error("Error loading image");
-          setDefaultImage(imageElement);
-        };
       } else {
         console.error("Incomplete Base64 string");
         setDefaultImage(imageElement);
@@ -429,204 +219,61 @@ function setDefaultImage(imgElement) {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-// // New function to load attendance data
-// async function loadAttendanceData(userId) {
-//   try {
-//     const { firebaseCRUD } = await import("./firebase-crud.js");
-//     const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
-
-//     if (!attendanceRecords || attendanceRecords.length === 0) {
-//       console.log("No attendance records found");
-//       return;
-//     }
-
-//     // Initialize counters
-//     let presentCount = 0;
-//     let lateCount = 0;
-//     let absentCount = 0;
-//     let totalWorkHours = 0;
-//     let totalMinutes = 0;
-
-//     // Calculate statistics
-//     attendanceRecords.forEach(record => {
-//       if (record.isPresent === "True") {
-//         presentCount++;
-//         if (record.isLate === "True") {
-//           lateCount++;
-//         }
-//       } else {
-//         absentCount++;
-//       }
-
-//       // Sum up work hours and minutes
-//       if (record.workHours) {
-//         totalWorkHours += parseFloat(record.workHours) || 0;
-//       }
-//       if (record.totalMinutes) {
-//         totalMinutes += parseInt(record.totalMinutes) || 0;
-//       }
-//     });
-
-//     // Convert total minutes to hours and remaining minutes
-//     const additionalHours = Math.floor(totalMinutes / 60);
-//     const remainingMinutes = totalMinutes % 60;
-//     totalWorkHours += additionalHours;
-
-//     // Format accumulated time
-//     const accumulatedTime = `${totalWorkHours}:${remainingMinutes.toString().padStart(2, '0')}:00`;
-
-//     // Update the DOM
-//     updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
-
-//   } catch (error) {
-//     console.error("Error loading attendance data:", error);
-//   }
-// }
-
-// // Helper function to update the attendance display
-// function updateAttendanceDisplay(present, late, absent, accumulatedTime) {
-//   // Update attendance numbers
-//   const presentElement = document.querySelector('.attendance-status-container p:nth-child(1) .number');
-//   const lateElement = document.querySelector('.attendance-status-container p:nth-child(2) .number');
-//   const absentElement = document.querySelector('.attendance-status-container p:nth-child(3) .number');
-//   const timeElement = document.querySelector('.time-life-container span');
-
-//   if (presentElement) presentElement.textContent = present;
-//   if (lateElement) lateElement.textContent = late;
-//   if (absentElement) absentElement.textContent = absent;
-//   if (timeElement) timeElement.textContent = accumulatedTime;
-// }
-
-
-// Updated function with proper time formatting
-// async function loadAttendanceData(userId) {
-//   try {
-//     const { firebaseCRUD } = await import("./firebase-crud.js");
-//     const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
-
-//     if (!attendanceRecords || attendanceRecords.length === 0) {
-//       console.log("No attendance records found");
-//       return;
-//     }
-
-//     // Initialize counters
-//     let presentCount = 0;
-//     let lateCount = 0;
-//     let absentCount = 0;
-//     let totalWorkHours = 0;
-//     let totalMinutes = 0;
-
-//     // Calculate statistics
-//     attendanceRecords.forEach(record => {
-//       if (record.isPresent === "True") {
-//         presentCount++;
-//         if (record.isLate === "True") {
-//           lateCount++;
-//         }
-//       } else {
-//         absentCount++;
-//       }
-
-//       // Sum up work hours and minutes
-//       if (record.workHours) {
-//         totalWorkHours += parseFloat(record.workHours) || 0;
-//       }
-//       if (record.totalMinutes) {
-//         totalMinutes += parseInt(record.totalMinutes) || 0;
-//       }
-//     });
-
-//     // Convert all time to seconds first for accurate calculation
-//     const totalSeconds = (totalWorkHours * 3600) + (totalMinutes * 60);
-
-//     // Calculate hours, minutes, seconds
-//     const hours = Math.floor(totalSeconds / 3600);
-//     const remainingSeconds = totalSeconds % 3600;
-//     const minutes = Math.floor(remainingSeconds / 60);
-//     const seconds = remainingSeconds % 60;
-
-//     // Format as HH:MM:SS with leading zeros
-//     const accumulatedTime = [
-//       hours.toString().padStart(2, '0'),
-//       minutes.toString().padStart(2, '0'),
-//       seconds.toString().padStart(2, '0')
-//     ].join(':');
-
-//     // Update the DOM
-//     updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
-
-//   } catch (error) {
-//     console.error("Error loading attendance data:", error);
-//   }
-// }
-
 async function loadAttendanceData(userId) {
+  showLoading(true);
   try {
-      const { firebaseCRUD } = await import("./firebase-crud.js");
-      const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const attendanceRecords = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
 
-      if (!attendanceRecords || attendanceRecords.length === 0) {
-          console.log("No attendance records found");
-          return;
+    if (!attendanceRecords || attendanceRecords.length === 0) {
+      console.log("No attendance records found");
+      return;
+    }
+
+    
+    let presentCount = 0;
+    let lateCount = 0;
+    let absentCount = 0;
+    let totalHours = 0;
+    let totalMinutes = 0;
+
+    
+    attendanceRecords.forEach(record => {
+      const isPresent = String(record.isPresent).toLowerCase() === "true";
+      const isLate = String(record.isLate).toLowerCase() === "true";
+
+      if (isPresent) {
+        presentCount++;
+        if (isLate) {
+          lateCount++;
+        }
+      } else {
+        absentCount++;
       }
 
-      // Initialize counters
-      let presentCount = 0;
-      let lateCount = 0;
-      let absentCount = 0;
-      let totalHours = 0;
-      let totalMinutes = 0;
+      
+      totalHours += parseInt(record.workHours) || 0;
+      totalMinutes += parseInt(record.totalMinutes) || 0;
+    });
 
-      // Calculate statistics
-      attendanceRecords.forEach(record => {
-          // Convert to lowercase for case-insensitive comparison
-          const isPresent = String(record.isPresent).toLowerCase() === "true";
-          const isLate = String(record.isLate).toLowerCase() === "true";
+    
+    totalHours += Math.floor(totalMinutes / 60);
+    totalMinutes = totalMinutes % 60;
 
-          if (isPresent) {
-              presentCount++;
-              if (isLate) {
-                  lateCount++;
-              }
-          } else {
-              absentCount++;
-          }
+    
+    const accumulatedTime = `${totalHours.toString().padStart(2, '0')}:${totalMinutes.toString().padStart(2, '0')}:00`;
 
-          console.log(presentCount + " present");
-          console.log(lateCount + " late");
-          console.log(absentCount + " absent");
-
-          // Sum hours and minutes
-          totalHours += parseInt(record.workHours) || 0;
-          totalMinutes += parseInt(record.totalMinutes) || 0;
-      });
-
-      // Convert excess minutes to hours
-      totalHours += Math.floor(totalMinutes / 60);
-      totalMinutes = totalMinutes % 60;
-
-      // Format as HH:MM:00
-      const accumulatedTime = `${totalHours.toString().padStart(2, '0')}:${totalMinutes.toString().padStart(2, '0')}:00`;
-
-      // Update the DOM
-      updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
+    
+    updateAttendanceDisplay(presentCount, lateCount, absentCount, accumulatedTime);
 
   } catch (error) {
-      console.error("Error loading attendance data:", error);
+    console.error("Error loading attendance data:", error);
+    showErrorToast("Failed to load attendance data: " , true + error.message);
+  } finally {
+    showLoading(false);
   }
 }
-// Helper function to update the attendance display (unchanged)
+
 function updateAttendanceDisplay(present, late, absent, accumulatedTime) {
   const presentElement = document.querySelector('.attendance-status-container p:nth-child(1) .number');
   const lateElement = document.querySelector('.attendance-status-container p:nth-child(2) .number');
@@ -639,44 +286,35 @@ function updateAttendanceDisplay(present, late, absent, accumulatedTime) {
   if (timeElement) timeElement.textContent = accumulatedTime;
 }
 
-
-
-
-
-
-
-
-
-
-// Updated appoint assistant functionality
 document.getElementById('appoint-assistant-btn')?.addEventListener('click', async function () {
+  showLoading(true);
   try {
     const userId = getUserIdFromUrl() || localStorage.getItem('userId');
     if (!userId) throw new Error("No user ID found");
 
     const { firebaseCRUD } = await import("./firebase-crud.js");
 
-    // First query the student to get their document ID
+    
     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
     if (!students || students.length === 0) throw new Error("Student not found");
 
-    const studentDocId = students[0].id; // Assuming the document ID is stored in the 'id' field
+    const studentDocId = students[0].id;
 
-    // Update userType to studentAssistant using the document ID
+    
     await firebaseCRUD.updateData("students", studentDocId, { userType: "studentAssistant" });
 
-    // Show success message and disable button
+    
     showErrorToast("Student appointed as assistant successfully!");
     this.textContent = "Assistant Appointed";
     this.disabled = true;
 
   } catch (error) {
     console.error("Error appointing assistant:", error);
-    showErrorToast("Failed to appoint assistant: " + error.message);
+    showErrorToast("Failed to appoint assistant: " , true + error.message);
+  } finally {
+    showLoading(false);
   }
 });
-
-
 
 function getUserIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -684,20 +322,21 @@ function getUserIdFromUrl() {
 }
 
 async function loadStudentReports(userId) {
+  showLoading(true);
   try {
     const { firebaseCRUD } = await import("./firebase-crud.js");
 
-    // Query student by userId field
+   
     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
     if (!students || students.length === 0) throw new Error("Student not found");
 
     const student = students[0];
     displayStudentInfo(student);
 
-    // Then get all reports for this student
+    
     const reports = await firebaseCRUD.queryData("reports", "userId", "==", userId);
 
-    // Sort reports by createdAt in descending order
+    
     reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     if (reports && reports.length > 0) {
@@ -709,14 +348,19 @@ async function loadStudentReports(userId) {
 
   } catch (error) {
     console.error("Error loading reports:", error);
-    showErrorToast("Failed to load reports: " + error.message);
+    showError("Failed to load reports: " + error.message);
+  } finally {
+    showLoading(false);
   }
 }
 
 function displayStudentInfo(student) {
   const studentNameElement = document.querySelector('.student-name');
   if (studentNameElement) {
-    studentNameElement.textContent = `${student.firstName} ${student.middleName || ''} ${student.lastName} ${student.suffix || ''}`.trim();
+    const fullName = `${student.firstName} ${student.middleName || ''} ${student.lastName} ${student.suffix || ''}`.trim();
+    const truncatedName = fullName.length > 25 ? fullName.substring(0, 25) + '...' : fullName;
+    studentNameElement.textContent = truncatedName;
+    studentNameElement.title = fullName;
   }
 }
 
@@ -747,8 +391,6 @@ function formatDateTime(dateString) {
   };
 }
 
-
-
 async function displayReports(reports) {
   const reportsContainer = document.querySelector('.student-report-container');
   reportsContainer.innerHTML = '';
@@ -762,37 +404,31 @@ async function displayReports(reports) {
     const reportElement = document.createElement('div');
     reportElement.className = 'report p-3 mb-4 rounded';
 
-
     reportElement.innerHTML = `
-  <p class="text-end text-light">
-    <small class="font-darker-light-color">${formattedDateTime.time}</small>
-  </p>
-  <h2 class="border-bottom border-light text-truncate pb-2 fw-bold font-darker-light-color">
-    ${report.title || 'Daily Report'}
-  </h2>
-  ${images.length > 0 ? `
-    <div class="image-container mb-2 d-flex flex-row flex-nowrap gap-2 overflow-auto">
-      ${images.map(base64Img => `
-        <img src="${base64Img}" alt="Report image"
-          class="clickable-report-image"
-          style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer;">
-      `).join('')}
-    </div>` : ''
-      }
-  <div class="content-container mt-2">
-    <p class="text-light fs-6 fw-normal mb-0">
-      ${report.content || 'No content provided'}
-    </p>
-  </div>
-`;
-
-
-
+      <p class="text-end text-light">
+        <small class="font-darker-light-color">${formattedDateTime.time}</small>
+      </p>
+      <h2 class="border-bottom border-light text-truncate pb-2 fw-bold font-darker-light-color">
+        ${report.title || 'Daily Report'}
+      </h2>
+      ${images.length > 0 ? `
+        <div class="image-container mb-2 d-flex flex-row flex-nowrap gap-2 overflow-auto">
+          ${images.map(base64Img => `
+            <img src="${base64Img}" alt="Report image"
+              class="clickable-report-image"
+              style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer;">
+          `).join('')}
+        </div>` : ''}
+      <div class="content-container mt-2">
+        <p class="text-light fs-6 fw-normal mb-0">
+          ${report.content || 'No content provided'}
+        </p>
+      </div>
+    `;
 
     reportsContainer.appendChild(reportElement);
 
-
-    // Add click listeners to all newly added images
+    
     const imageElements = reportElement.querySelectorAll('.clickable-report-image');
     imageElements.forEach(img => {
       img.addEventListener('click', () => {
@@ -801,13 +437,8 @@ async function displayReports(reports) {
         viewImageModal.show();
       });
     });
-
   }
 }
-
-
-
-
 
 async function loadReportImages(reportId) {
   try {
@@ -816,7 +447,7 @@ async function loadReportImages(reportId) {
     const images = [];
     imageDocs.forEach(doc => {
       if (doc.imageData) {
-        images.push(doc.imageData); // already base64 with prefix
+        images.push(doc.imageData);
       }
     });
 
@@ -826,11 +457,6 @@ async function loadReportImages(reportId) {
     return [];
   }
 }
-
-
-
-
-
 
 function setupDateNavigation(reports) {
   const dateContainer = document.querySelector('.date-container');
@@ -856,14 +482,14 @@ function setupDateNavigation(reports) {
     const dateButton = document.createElement('button');
     dateButton.className = 'w-100 border-0 px-0 py-2 bg-transparent d-flex align-items-center justify-content-between border-bottom border-light rounded-0';
     dateButton.innerHTML = `
-            <span class="report-date-sm mt-1 d-flex flex-column align-items-center justify-content-between d-md-none text-center w-100">
-                <span id="month-name-sm" class="fw-normal text-truncate" style="font-size: 12px; width: calc(100% - 5px)">
-                    ${formattedDate.monthName}
-                </span>
-                <span id="month-date-sm" class="fs-3 fw-bold">${formattedDate.monthDay}</span>
-            </span>
-            <span class="d-none d-md-block d-flex text-center w-100 fw-normal">${formattedDate.date}</span>
-        `;
+      <span class="report-date-sm mt-1 d-flex flex-column align-items-center justify-content-between d-md-none text-center w-100">
+        <span id="month-name-sm" class="fw-normal text-truncate" style="font-size: 12px; width: calc(100% - 5px)">
+          ${formattedDate.monthName}
+        </span>
+        <span id="month-date-sm" class="fs-3 fw-bold">${formattedDate.monthDay}</span>
+      </span>
+      <span class="d-none d-md-block d-flex text-center w-100 fw-normal">${formattedDate.date}</span>
+    `;
 
     dateButton.addEventListener('click', () => {
       filterReportsByDate(date, reports);
@@ -887,130 +513,69 @@ function filterReportsByDate(selectedDate, allReports) {
 function displayNoReportsMessage() {
   const reportsContainer = document.querySelector('.student-report-container');
   reportsContainer.innerHTML = `
-        <div class="text-center text-light py-5">
-            <i class="bi bi-file-earmark-text fs-1"></i>
-            <p class="mt-3">No reports found for this student</p>
-        </div>
-    `;
+    <div class="text-center text-light py-5">
+      <i class="bi bi-file-earmark-text fs-1"></i>
+      <p class="mt-3">No reports found for this student</p>
+    </div>
+  `;
 }
 
-function showErrorToast(message) {
+
+function showErrorToast(message, isError = false) {
   const toast = document.createElement('div');
-  toast.className = 'toast align-items-center text-white bg-danger position-fixed bottom-0 end-0 m-3';
+  
+  const bgClass = isError ? 'bg-danger' : 'bg-success';
+  toast.className = `toast align-items-center text-white ${bgClass} position-fixed bottom-0 end-0 m-3`;
   toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${message}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
+    <div class="d-flex">
+      <div class="toast-body">${message}</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  `;
   document.body.appendChild(toast);
   new bootstrap.Toast(toast).show();
   setTimeout(() => toast.remove(), 5000);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Add this code to your existing JavaScript file, preferably near the top with other event listeners
-
-// // Edit button click handler
-// document.querySelector('[data-bs-target="#editDataModal"]')?.addEventListener('click', async function () {
-//   try {
-//     const userId = getUserIdFromUrl() || localStorage.getItem('userId');
-//     if (!userId) throw new Error("No user ID found");
-
-//     const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//     // Get student data
-//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
-//     if (!students || students.length === 0) throw new Error("Student not found");
-
-//     const student = students[0];
-
-//     // Populate form fields
-//     document.getElementById('user-id').value = userId;
-//     document.getElementById('student-id').value = student.studentId || '';
-//     document.getElementById('phone-number').value = student.phoneNumber || '';
-//     document.getElementById('first-name').value = student.firstName || '';
-//     document.getElementById('middle-name').value = student.middleName || '';
-//     document.getElementById('last-name').value = student.lastName || '';
-//     document.getElementById('sufix').value = student.suffix || '';
-//     document.getElementById('gender').value = student.gender || 'male';
-//     document.getElementById('address').value = student.address || '';
-//     document.getElementById('company-name').value = student.companyName || '';
-
-//     // Set time values
-//     document.getElementById('morning-time-in').value = student.morningTimeIn || '';
-//     document.getElementById('morning-time-out').value = student.morningTimeOut || '';
-//     document.getElementById('afternoon-time-in').value = student.afternoonTimeIn || '';
-//     document.getElementById('afternoon-time-out').value = student.afternoonTimeOut || '';
-
-//     // Set user type
-//     document.getElementById('user-type').value = student.userType || 'student';
-
-//     // Set profile image if available
-//     if (student.userImg) {
-//       document.getElementById('user-profile-img').src = student.userImg;
-//     }
-
-//   } catch (error) {
-//     console.error("Error loading student data:", error);
-//     showErrorToast("Failed to load student data: " + error.message);
-//   }
-// });
-
-
 document.querySelector('[data-bs-target="#editDataModal"]')?.addEventListener('click', async function () {
+  showLoading(true);
   try {
     const userId = getUserIdFromUrl() || localStorage.getItem('userId');
     if (!userId) throw new Error("No user ID found");
 
     const { firebaseCRUD } = await import("./firebase-crud.js");
 
-    // Initialize dropdowns first
+    
     await initializeDropdowns();
 
-    // Then load and set student data
+    
     await loadAndSetStudentData(userId);
 
   } catch (error) {
     console.error("Error loading student data:", error);
-    showErrorToast("Failed to load student data: " + error.message);
+    showErrorToast("Failed to load student data: " , true + error.message);
+  } finally {
+    showLoading(false);
   }
 });
 
 async function initializeDropdowns() {
-  // Initialize gender dropdown
+  
   const genderSelect = document.getElementById('gender');
-  // Clear and repopulate to ensure fresh state
   genderSelect.innerHTML = `
     <option value="Male">Male</option>
     <option value="Female">Female</option>
   `;
 
-  // Initialize company dropdown
+  
   const companySelect = document.getElementById('companyName');
-  // Clear existing options except the first empty one
   companySelect.innerHTML = '<option value="">Select a company</option>';
 
-  // Load companies from database
+  
   try {
     const companies = await firebaseCRUD.getAllData("company");
 
     if (companies) {
-      // Convert to array if it's an object
       const companiesArray = Array.isArray(companies) ? companies : Object.values(companies);
 
       if (companiesArray?.length) {
@@ -1026,7 +591,6 @@ async function initializeDropdowns() {
     }
   } catch (error) {
     console.warn("Could not load company list:", error);
-    // Add default companies if the fetch fails
     ['DAR', 'DOST'].forEach(company => {
       const option = document.createElement('option');
       option.value = company;
@@ -1036,69 +600,62 @@ async function initializeDropdowns() {
   }
 }
 
-
-
-
-
 async function loadAndSetStudentData(userId) {
-  // Get student data
-  const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
-  if (!students || students.length === 0) throw new Error("Student not found");
+  try {
+    
+    const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+    if (!students || students.length === 0) throw new Error("Student not found");
 
-  const student = students[0];
+    const student = students[0];
 
-  // Set basic form fields
-  document.getElementById('user-id').value = userId;
-  document.getElementById('student-id').value = student.studentId || '';
-  document.getElementById('phone-number').value = student.phoneNumber || '';
-  document.getElementById('first-name').value = student.firstName || '';
-  document.getElementById('middle-name').value = student.middleName || '';
-  document.getElementById('last-name').value = student.lastName || '';
-  document.getElementById('sufix').value = student.suffix || '';
-  document.getElementById('address').value = student.address || '';
+    
+    document.getElementById('user-id').value = userId;
+    document.getElementById('student-id').value = student.studentId || '';
+    document.getElementById('phone-number').value = student.phoneNumber || '';
+    document.getElementById('first-name').value = student.firstName || '';
+    document.getElementById('middle-name').value = student.middleName || '';
+    document.getElementById('last-name').value = student.lastName || '';
+    document.getElementById('sufix').value = student.suffix || '';
+    document.getElementById('address').value = student.address || '';
 
-  // Set gender selection (dropdown is already populated)
-  if (student.gender) {
-    document.getElementById('gender').value = student.gender;
-  }
+    
+    if (student.gender) {
+      document.getElementById('gender').value = student.gender;
+    }
 
-  // Set company selection (dropdown is already populated)
-  if (student.companyName) {
-    document.getElementById('companyName').value = student.companyName;
-  }
+    
+    if (student.companyName) {
+      document.getElementById('companyName').value = student.companyName;
+    }
 
-  // Set time values
-  document.getElementById('morning-time-in').value = student.morningTimeIn || '';
-  document.getElementById('morning-time-out').value = student.morningTimeOut || '';
-  document.getElementById('afternoon-time-in').value = student.afternoonTimeIn || '';
-  document.getElementById('afternoon-time-out').value = student.afternoonTimeOut || '';
+    
+    document.getElementById('morning-time-in').value = student.morningTimeIn || '';
+    document.getElementById('morning-time-out').value = student.morningTimeOut || '';
+    document.getElementById('afternoon-time-in').value = student.afternoonTimeIn || '';
+    document.getElementById('afternoon-time-out').value = student.afternoonTimeOut || '';
 
-  // Set user type
-  document.getElementById('user-type').value = student.userType || 'student';
+    
+    document.getElementById('user-type').value = student.userType || 'student';
 
-  // Set profile image if available
-  if (student.userImg) {
-    document.getElementById('user-profile-img').src = student.userImg;
+    
+    if (student.userImg) {
+      document.getElementById('user-profile-img').src = student.userImg;
+    }
+  } catch (error) {
+    throw error;
   }
 }
 
-
-
-
-
-
-
-// Form submission handler
 document.getElementById('edit-info-form')?.addEventListener('submit', async function (e) {
   e.preventDefault();
-
+  showLoading(true);
   try {
     const userId = getUserIdFromUrl() || localStorage.getItem('userId');
     if (!userId) throw new Error("No user ID found");
 
     const { firebaseCRUD } = await import("./firebase-crud.js");
 
-    // Get form data
+    
     const formData = {
       studentId: document.getElementById('student-id').value,
       phoneNumber: document.getElementById('phone-number').value,
@@ -1117,154 +674,156 @@ document.getElementById('edit-info-form')?.addEventListener('submit', async func
       updatedAt: new Date().toISOString()
     };
 
-    // First query the student to get their document ID
+    
     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
     if (!students || students.length === 0) throw new Error("Student not found");
 
     const studentDocId = students[0].id;
 
-    // Update student data
+    
     await firebaseCRUD.updateData("students", studentDocId, formData);
 
-    // Show success message
+    
     showErrorToast("Student information updated successfully!");
 
-    // Close the modal
+    
     const editModal = bootstrap.Modal.getInstance(document.getElementById('editDataModal'));
     editModal.hide();
 
-    // Refresh the displayed student info
+    
     displayStudentInfo({ ...students[0], ...formData });
 
   } catch (error) {
     console.error("Error updating student:", error);
     showErrorToast("Failed to update student: " + error.message);
+  } finally {
+    showLoading(false);
   }
 });
 
-
-
-
-
-
-// admin-student-report.js
-
-// Initialize Calendar Function
 function initializeAttendanceCalendar() {
-  // Current date
   let currentDate = new Date();
-  let attendanceData = {}; // Store attendance data by date
-
-  // DOM elements
+  let attendanceData = {};
   const monthYearElement = document.getElementById('month-year');
   const daysElement = document.getElementById('days');
   const prevBtn = document.getElementById('prev');
   const nextBtn = document.getElementById('next');
 
-  // Fetch attendance data
   async function fetchAttendanceData(userId) {
-      try {
-          const { firebaseCRUD } = await import("./firebase-crud.js");
-          const records = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
-          
-          // Organize data by date for easy lookup
-          records.forEach(record => {
-              if (record.date) {
-                  attendanceData[record.date] = {
-                      isPresent: String(record.isPresent).toLowerCase() === "true",
-                      isLate: String(record.isLate).toLowerCase() === "true"
-                  };
-              }
-          });
-      } catch (error) {
-          console.error("Error fetching attendance data:", error);
-      }
+    showLoading(true);
+    try {
+      const { firebaseCRUD } = await import("./firebase-crud.js");
+      const records = await firebaseCRUD.queryData("completeAttendanceTbl", "userId", "==", userId);
+      
+      records.forEach(record => {
+        if (record.date) {
+          attendanceData[record.date] = {
+            isPresent: String(record.isPresent).toLowerCase() === "true",
+            isLate: String(record.isLate).toLowerCase() === "true"
+          };
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching attendance data:", error);
+      showErrorToast("Failed to load attendance data: " , true + error.message);
+    } finally {
+      showLoading(false);
+    }
   }
 
-  // Render calendar with attendance colors
   async function renderCalendar() {
-      // Get current month and year
-      const currentMonth = currentDate.getMonth();
-      const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    monthYearElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
 
-      // Set month and year in header
-      const monthNames = ["January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
-      ];
-      monthYearElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
 
-      // Get first day of month and total days in month
-      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      const daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
+    daysElement.innerHTML = '';
 
-      // Clear days container
-      daysElement.innerHTML = '';
+    
+    for (let i = firstDay - 1; i >= 0; i--) {
+      const dayElement = document.createElement('div');
+      dayElement.classList.add('day', 'other-month');
+      dayElement.textContent = daysInLastMonth - i;
+      daysElement.appendChild(dayElement);
+    }
 
-      // Add days from previous month
-      for (let i = firstDay - 1; i >= 0; i--) {
-          const dayElement = document.createElement('div');
-          dayElement.classList.add('day', 'other-month');
-          dayElement.textContent = daysInLastMonth - i;
-          daysElement.appendChild(dayElement);
+    
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dayElement = document.createElement('div');
+      dayElement.classList.add('day');
+      dayElement.textContent = i;
+
+      const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+      
+      if (attendanceData[formattedDate]) {
+        const record = attendanceData[formattedDate];
+        
+        if (record.isPresent && !record.isLate) {
+          dayElement.classList.add('green');
+        } else if (record.isPresent && record.isLate) {
+          dayElement.classList.add('yellow');
+        } else if (!record.isPresent) {
+          dayElement.classList.add('red');
+        }
       }
 
-      // Add days from current month with attendance colors
-      for (let i = 1; i <= daysInMonth; i++) {
-          const dayElement = document.createElement('div');
-          dayElement.classList.add('day');
-          dayElement.textContent = i;
+      daysElement.appendChild(dayElement);
+    }
 
-          // Format date as YYYY-MM-DD
-          const formattedDate = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
-          
-          // Check attendance data for this date
-          if (attendanceData[formattedDate]) {
-              const record = attendanceData[formattedDate];
-              
-              if (record.isPresent && !record.isLate) {
-                  dayElement.classList.add('green'); // Present and on time
-              } else if (record.isPresent && record.isLate) {
-                  dayElement.classList.add('yellow'); // Present but late
-              } else if (!record.isPresent) {
-                  dayElement.classList.add('red'); // Absent
-              }
-          }
+    const totalCells = firstDay + daysInMonth;
+    const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
 
-          daysElement.appendChild(dayElement);
-      }
-
-      // Calculate total cells so far
-      const totalCells = firstDay + daysInMonth;
-      const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-
-      // Add days from next month if needed
-      for (let i = 1; i <= remainingCells; i++) {
-          const dayElement = document.createElement('div');
-          dayElement.classList.add('day', 'other-month');
-          dayElement.textContent = i;
-          daysElement.appendChild(dayElement);
-      }
+    for (let i = 1; i <= remainingCells; i++) {
+      const dayElement = document.createElement('div');
+      dayElement.classList.add('day', 'other-month');
+      dayElement.textContent = i;
+      daysElement.appendChild(dayElement);
+    }
   }
 
-  // Event listeners for navigation
   prevBtn.addEventListener('click', function () {
-      currentDate.setMonth(currentDate.getMonth() - 1);
-      renderCalendar();
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
   });
 
   nextBtn.addEventListener('click', function () {
-      currentDate.setMonth(currentDate.getMonth() + 1);
-      renderCalendar();
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
   });
 
-  // Public method to initialize the calendar
   return {
-      init: async function(userId) {
-          if (userId) {
-              await fetchAttendanceData(userId);
-          }
-          renderCalendar();
+    init: async function(userId) {
+      if (userId) {
+        await fetchAttendanceData(userId);
       }
+      renderCalendar();
+    }
   };
+}
+
+
+
+function editProfileImg() {
+  const fileInput = document.getElementById('user-img-profile');
+  fileInput.click();
+  
+  fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+              const imgElement = document.getElementById('user-profile-img');
+              imgElement.src = event.target.result;
+              
+              
+          };
+          reader.readAsDataURL(file);
+      }
+  });
 }

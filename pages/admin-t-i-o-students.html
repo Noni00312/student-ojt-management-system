@@ -109,9 +109,11 @@
 
     <!-- Companies -->
     <section class="container mt-2 d-flex flex-column .reports-section">
-      <h1 class="fw-bold" style="color: #3c3d42 !important">
-        Department of Agrarian Reform
-      </h1>
+      <h1
+        id="department-name"
+        class="fw-bold"
+        style="color: #3c3d42 !important"
+      ></h1>
 
       <div class="add-search-container">
         <form class="form-floating">
@@ -130,7 +132,7 @@
       </div>
 
       <div class="row card-container mt-2 w-100 align-self-center">
-        <div
+        <!-- <div
           class="col-lg-4 col-md-6"
           data-bs-toggle="modal"
           data-bs-target="#viewAttendanceModal"
@@ -153,23 +155,22 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </section>
     <!-- Companies -->
 
-    <!-- view attendance modal -->
     <div
       class="modal fade"
-      id="viewAttendanceModal"
+      id="viewHistoryModal"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
       tabindex="-1"
-      aria-labelledby="viewAttendanceModalLabel"
+      aria-labelledby="viewHistoryModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-3 view-attendance-modal">
+        <div class="modal-content p-3 view-history-modal">
           <div class="d-flex justify-content-end w-100">
             <i
               class="bi bi-x-lg fs-6 text-white"
@@ -178,82 +179,78 @@
             ></i>
           </div>
 
-          <div class="attendance-card-inside w-100 text-center py-3">
+          <div class="history-card-inside w-100 text-center">
             <span>MORNING</span>
           </div>
 
-          <div class="attendance-images">
-            <div>
+          <div class="history-images">
+            <div
+              class="d-flex justify-content-center flex-column align-items-center"
+            >
               <a
-                href="../assets/img/icons8_full_image_480px_1.png"
-                class="d-flex justify-content-center flex-column align-items-center"
+                href="#"
                 target="_blank"
+                class="mb-2 view-image-link"
+                data-bs-toggle="modal"
+                data-bs-target="#viewImageModal"
               >
-                <img
-                  src="../assets/img/icons8_full_image_480px_1.png"
-                  alt="Image 1"
-                  class="img-fluid rounded"
-                />
-                <h6 class="morning-in" style="color: #f6f8e2">07:23:11 AM</h6>
+                <img src="" alt="Image" class="img-fluid rounded" />
               </a>
+              <h6 class="morning-in" style="color: #f6f8e2"></h6>
             </div>
-            <div>
+            <div
+              class="d-flex justify-content-center flex-column align-items-center"
+            >
               <a
-                href="../assets/img/icons8_image_480px_1.png"
-                class="d-flex justify-content-center flex-column align-items-center"
+                href="#"
                 target="_blank"
+                class="mb-2 view-image-link"
+                data-bs-toggle="modal"
+                data-bs-target="#viewImageModal"
               >
-                <img
-                  src="../assets/img/icons8_image_480px_1.png"
-                  alt="Image 2"
-                  class="img-fluid rounded"
-                />
-                <h6 class="morning-in" style="color: #f6f8e2">11:30:21 AM</h6>
+                <img src="" alt="Image" class="img-fluid rounded" />
               </a>
-            </div>
-            <div class="incident-report">
-              <a href="">view incident report</a>
+              <h6 class="morning-in" style="color: #f6f8e2"></h6>
             </div>
           </div>
 
-          <div class="attendance-card-inside w-100 text-center py-3">
+          <div class="history-card-inside w-100 text-center">
             <span>AFTERNOON</span>
           </div>
 
-          <div class="attendance-images">
-            <div>
+          <div class="history-images">
+            <div
+              class="d-flex justify-content-center flex-column align-items-center"
+            >
               <a
-                href="../assets/img/icons8_picture_480px_2.png"
-                class="d-flex justify-content-center flex-column align-items-center"
+                href="#"
                 target="_blank"
+                class="mb-2 view-image-link"
+                data-bs-toggle="modal"
+                data-bs-target="#viewImageModal"
               >
-                <img
-                  src="../assets/img/icons8_picture_480px_2.png"
-                  alt="Image 3"
-                  class="img-fluid rounded"
-                />
-                <h6 class="morning-in" style="color: #f6f8e2">01:12:41 PM</h6>
+                <img src="" alt="Image" class="img-fluid rounded" />
               </a>
+              <h6 class="morning-in" style="color: #f6f8e2"></h6>
             </div>
-            <div>
+            <div
+              class="d-flex justify-content-center flex-column align-items-center"
+            >
               <a
-                href="../assets/img/icons8_no_image_480px.png"
-                class="d-flex justify-content-center flex-column align-items-center"
+                href="#"
                 target="_blank"
+                class="mb-2 view-image-link"
+                data-bs-toggle="modal"
+                data-bs-target="#viewImageModal"
               >
-                <img
-                  src="../assets/img/icons8_no_image_480px.png"
-                  alt="Image 4"
-                  class="img-fluid rounded"
-                />
-                <h6 class="morning-in" style="color: #f6f8e2">05:05:12 PM</h6>
+                <img src="" alt="Image" class="img-fluid rounded" />
               </a>
+              <h6 class="morning-in" style="color: #f6f8e2"></h6>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- view attendance modal -->
 
     <!-- Side bar -->
     <div

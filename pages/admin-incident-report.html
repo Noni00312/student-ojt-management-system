@@ -22,31 +22,38 @@
             <div class="d-flex align-items-center justify-content-between w-100">
               <div class="wrapper">
                 <div class="d-flex align-items-center">
-                  <a href="" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS</a>
+                  <a href="" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS - Admin</a>
                 </div>
                 <button class="btn 	d-lg-none d-sm-block" type="button " data-bs-toggle="offcanvas" data-bs-target="#sideBar" aria-controls="sideBar">
                   <i class="bi bi-list text-light fs-3 outline-none"></i>
                 </button>
               </div>
 
-              <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link text-light" aria-current="page" href="#">Home</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-light" aria-current="page" href="#">Time in/out</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-light" aria-current="page" href="#">History</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-light" aria-current="page" href="#">Reports</a>
-                  </li>
-                </ul>
-              </div>
-              <a href="#" id="user-profile" class=" text-decoration-none">
-                <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy">
+          <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link text-light" aria-current="page" href="admin-dashboard.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" aria-current="page" href="admin-t-i-o.html">Time in/out</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" aria-current="page" href="admin-company.html">Companies</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" aria-current="page" href="admin-student.html">Students</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" aria-current="page" href="admin-assistant.html">Assistants</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" aria-current="page" href="admin-incident-report.html">Incident Report</a>
+              </li>
+            </ul>
+          </div>
+
+              <a href="/pages/admin-profile.html" id="user-profile" class=" text-decoration-none">
+                <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" id="user-img" loading="lazy" style="border-radius: 50%;">
               </a>
         </div>
     </nav>
@@ -56,47 +63,18 @@
         <h1 class="fw-bold" style="color: #3C3D42 !important;">INCIDENT REPORTS</h1>
         <form class="form-floating" method="post" action="">
             <div class="mb-2">
-                <input type="date" class="form-control" id="incident-search-input" name="history-search-input">
+                <input type="date" class="form-control" id="incident-search-input" name="history-search-input" style="background-color: #fff !important;">
             </div>
         </form>
         
 
-        <div class="card-container flex-grow-1 overflow-y-auto"> <!-- Changed to overflow-y-auto -->
-          <div class="row mx-0"> <!-- Added mx-0 to remove row margins -->
-            <div class="col-12 col-md-6 col-lg-4 mb-2 px-2"> <!-- Added px-2 for consistent padding -->
-              <a href="admin-incident-report-student.html" class="history-card mb-2">
-                <span>MON</span>
-                <span class="separator"></span>
-                <span class="date">March 30, 2024</span>
-              </a>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 mb-2 px-2"> <!-- Added px-2 for consistent padding -->
-              <a href="admin-incident-report-student.html" class="history-card mb-2">
-                <span>MON</span>
-                <span class="separator"></span>
-                <span class="date">March 30, 2024</span>
-              </a>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 mb-2 px-2"> <!-- Added px-2 for consistent padding -->
-              <a href="admin-incident-report-student.html" class="history-card mb-2">
-                <span>MON</span>
-                <span class="separator"></span>
-                <span class="date">March 30, 2024</span>
-              </a>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4 mb-2 px-2"> <!-- Added px-2 for consistent padding -->
-              <a href="admin-incident-report-student.html" class="history-card mb-2">
-                <span>MON</span>
-                <span class="separator"></span>
-                <span class="date">March 30, 2024</span>
-              </a>
-            </div>
+        <div class="card-container flex-grow-1 overflow-y-auto"> 
+          <div class="row mx-0">
             <!-- Repeat for other columns -->
           </div>
         </div>
 
      </section>
-     <!-- History -->
 
 
     <!-- Side bar -->
@@ -105,37 +83,55 @@
           <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">MENU</h5>
           <button type="button" class="btn-close " data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body p-0 ">
-            <ul class="nav d-flex flex-column">
-              <li class="nav-item">
-                <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="#">
-                  <span class="fs-5">Dashboard</span> 
-                  <i class="bi bi-microsoft fs-5"></i>
-                </a>
-              </li>
-              
-              <li class="nav-item">
-                <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="#">
-                  <span class="fs-5">Time in/out</span> 
-                  <i class="bi bi-clock-fill fs-4"></i>
-                </a>
-              </li>
+    <div class="offcanvas-body p-0 ">
+        <ul class="nav d-flex flex-column">
 
-              <li class="nav-item">
-                <a class="nav-link py-3     d-flex align-items-center justify-content-between" aria-current="page" href="#">
-                  <span class="fs-5">History</span> 
-                  <i class="bi bi-arrow-clockwise fs-3"></i>
-                </a>
-              </li>
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-dashboard.html">
+              <span class="fs-5">Dashboard</span> 
+              <i class="bi bi-microsoft fs-5"></i>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-t-i-o.html">
+              <span class="fs-5">Time in/out</span> 
+              <i class="bi bi-clock-fill fs-4"></i>
+            </a>
+          </li>
 
-              <li class="nav-item">
-                <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="#">
-                  <span class="fs-5">Report</span> 
-                  <i class="bi bi-printer-fill fs-4"></i>
-                </a>
-              </li>
-            </ul>
-        </div>
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-company.html">
+              <span class="fs-5">Companies</span> 
+              <i class="bi bi-buildings-fill fs-3"></i>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-student.html">
+              <span class="fs-5">Students</span> 
+              <i class="bi bi-mortarboard-fill fs-3"></i>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-assistant.html">
+              <span class="fs-5">Assistants</span> 
+              <i class="bi bi-person-badge fs-3"></i>
+            </a>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="#">
+              <span class="fs-5">Incident Report</span> 
+              <i class="bi bi-printer-fill fs-4"></i>
+            </a>
+          </li>
+
+
+        </ul>
+    </div>
     </div>
    <!-- Side bar -->
 
@@ -143,10 +139,11 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <script src="/js/app.js"></script>
-    <script src="/js/ui.js"></script>
     <script type="module" src="/js/firebase-config.js"></script>
     <script type="module" src="/js/firebase-crud.js"></script>
+    <script src="/js/index-db-crud.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/ui.js"></script>
     <script type="module"  src="/js/admin-incident-report.js"></script>
 </body>
 </html>

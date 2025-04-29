@@ -1,3 +1,4 @@
+
 import { firebaseCRUD } from "./firebase-crud.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -17,37 +18,65 @@ document.addEventListener("DOMContentLoaded", async () => {
   } finally {
     showLoading(false);
   }
+
+  
+  try {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("No userId found in localStorage");
+      return;
+    }
+
+    await window.dbReady;
+
+    const img = document.getElementById("user-img");
+
+    const dataArray = await crudOperations.getByIndex(
+      "studentInfoTbl",
+      "userId",
+      userId
+    );
+
+    const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+    if (data != null) {
+     
+
+      img.src = data.userImg
+        ? data.userImg
+        : "../assets/img/icons8_male_user_480px_1";
+
+
+    } else {
+      console.warn("No user data found for this user.");
+    }
+  } catch (err) {
+    console.error("Failed to get user data from IndexedDB", err);
+  }
+
+
 });
 
+/**
+ * Fetch all incident report documents, extract unique dates from the 'date' field.
+ * @returns {Array} Array of unique date objects sorted by date descending.
+ */
 async function getAllIncidentDates() {
   try {
     const uniqueDates = new Map();
 
-    // First get all user documents from the root incidentreports collection
-    const usersSnapshot = await firebaseCRUD.getAllData("incidentreports");
+    const reports = await firebaseCRUD.getAllData("incidentreports");
 
-    // For each user, get their date subcollections
-    for (const userDoc of usersSnapshot) {
-      try {
-        // Get all date documents under this user
-        const datesSnapshot = await firebaseCRUD.getAllData(
-          `incidentreports/${userDoc.id}`
-        );
-
-        // Each date document's ID is the date string
-        datesSnapshot.forEach((dateDoc) => {
-          const dateStr = dateDoc.id;
-          if (!uniqueDates.has(dateStr)) {
-            uniqueDates.set(dateStr, {
-              rawDate: dateStr,
-              date: formatDate(new Date(dateStr)),
-              day: getDayOfWeek(new Date(dateStr)),
-            });
-          }
+    for (const report of reports) {
+      const dateStr = report.date; 
+      if (!dateStr) continue;
+      if (!uniqueDates.has(dateStr)) {
+        uniqueDates.set(dateStr, {
+          rawDate: dateStr,
+          date: formatDate(new Date(dateStr)),
+          day: getDayOfWeek(new Date(dateStr)),
         });
-      } catch (error) {
-        console.error(`Error fetching dates for user ${userDoc.id}:`, error);
-        continue; // Skip to next user if there's an error
       }
     }
 
@@ -72,33 +101,32 @@ function getDayOfWeek(date) {
 
 function populateDates(dates) {
   const container = document.querySelector(".card-container .row");
-  container.innerHTML = ""; // Clear existing content
+  container.innerHTML = "";
 
   if (dates.length === 0) {
     container.innerHTML = `
-            <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
-                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
-                <h6 class="mt-2">No Incident Reports Available</h6>
-                <p class="mt-1">No incident reports have been sent on any of the dates.</p>
-            </div>
-        `;
+      <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
+        <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+        <h6 class="mt-2">No Incident Reports Available</h6>
+        <p class="mt-1">No incident reports have been sent on any of the dates.</p>
+      </div>
+    `;
     return;
   }
 
   dates.forEach((dateInfo) => {
     const col = document.createElement("div");
-    col.className = "col-12 col-md-6 col-lg-4 mb-2 px-2";
+    col.className = "col-12 col-md-6 col-lg-4 mb-2 px-2 text-light";
 
     const card = document.createElement("a");
-    // Link to the date-specific page (no user ID needed)
     card.href = `admin-incident-report-student.html?date=${dateInfo.rawDate}`;
     card.className = "history-card mb-2";
 
     card.innerHTML = `
-            <span>${dateInfo.day}</span>
-            <span class="separator"></span>
-            <span class="date">${dateInfo.date}</span>
-        `;
+      <span class="text-light">${dateInfo.day}</span>
+      <span class="separator text-light"></span>
+      <span class="date text-light">${dateInfo.date}</span>
+    `;
 
     col.appendChild(card);
     container.appendChild(col);
@@ -136,10 +164,10 @@ function createLoader() {
 function showError(message) {
   const container = document.querySelector(".card-container .row");
   container.innerHTML = `
-        <div class="col-12 text-center py-4">
-            <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
-            <p class="mt-2">${message}</p>
-            <button class="btn btn-primary mt-2" onclick="location.reload()">Retry</button>
-        </div>
-    `;
+    <div class="col-12 text-center py-4">
+      <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
+      <p class="mt-2">${message}</p>
+      <button class="btn btn-primary mt-2" onclick="location.reload()">Retry</button>
+    </div>
+  `;
 }

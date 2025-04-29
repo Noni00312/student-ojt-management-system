@@ -1,3 +1,12 @@
 .form-control {
   background-color: #ffffff !important;
 }
+
+.col-12{
+  color: #ffffff !important;
+}
+
+.name-id-container p {
+    color: #fff !important;
+    font-size: 0.9rem;
+}

@@ -46,7 +46,7 @@ tbody tr:last-child td:last-child {
 
 #table-head {
   background-color: #3c3d42;
-  color: #f6f8e2;
+  color: #fff;
   border-radius: 20px !important;
 }
 
@@ -60,7 +60,7 @@ tbody tr:last-child td:last-child {
 .capture-modal {
   background-color: #004e4e !important;
   border-radius: 20px !important;
-  color: #f6f8e2 !important;
+  color: #fff !important;
   padding: 20px !important;
 }
 .header {
@@ -83,7 +83,7 @@ tbody tr:last-child td:last-child {
   width: 100%;
   height: 300px;
   border-radius: 10px;
-  background-color: #f6f8e2;
+  background-color: #fff;
   overflow: hidden;
   display: flex;
   align-items: center;

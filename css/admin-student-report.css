@@ -7,11 +7,11 @@ body {
 }
 
 .font-light-color {
-  color: #f6f8e2 !important;
+  color: #fff !important;
 }
 
 .font-darker-light-color {
-  color: #e0ddca !important;
+  color: #fff !important;
 }
 
 .student-report-section {
@@ -144,7 +144,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #f6f8e2;
+  color: #fff;
   position: absolute;
   top: 1rem;
   left: 1rem;
@@ -186,7 +186,7 @@ body {
   position: absolute;
   bottom: 0;
   right: 10px;
-  background-color: #f6f8e2;
+  background-color: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -216,7 +216,7 @@ body {
   object-fit: cover;
   object-position: center;
   border-radius: 50%;
-  border: 3px solid #f6f8e2;
+  border: 3px solid #fff;
 
   background-color: #004e4e;
   position: absolute;
@@ -244,7 +244,7 @@ body {
   flex-direction: column;
   padding: 10px;
   border-radius: 10px;
-  background-color: #f6f8e2;
+  background-color: #fff;
   height: auto;
   width: 250px;
 }
@@ -268,7 +268,7 @@ body {
   justify-content: space-between;
   flex-direction: row;
   gap: 20px;
-  color: #f6f8e2;
+  color: #fff;
   margin-top: 16px;
 }
 
@@ -282,7 +282,7 @@ body {
 
 .attendance-status-container p small {
   font-size: 0.8rem;
-  color: #f6f8e2;
+  color: #fff;
 }
 
 .attendance-status-container p span {
@@ -292,7 +292,7 @@ body {
 
 .attendance-status-container i {
   font-size: 2rem;
-  color: #f6f8e2;
+  color: #fff;
 
   margin-left: 20px;
 }
@@ -310,7 +310,7 @@ body {
 
 .phone-email-container i {
   font-size: 1.5rem;
-  color: #f6f8e2;
+  color: #fff;
   margin: 10px;
   color: #6e1423;
 }
@@ -321,7 +321,7 @@ body {
 }
 
 .phone-email-container p span {
-  color: #f6f8e2;
+  color: #fff;
 }
 
 #appoint-assistant-btn {

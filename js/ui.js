@@ -29,6 +29,7 @@ confirm_password_icon.addEventListener("click", function () {
 });
 
 //Hide and Show Password END
+
 document.addEventListener('DOMContentLoaded', function() {
     const fullScreenModal = new bootstrap.Modal(document.getElementById('fullScreenImageModal'));
     const fullScreenImage = document.getElementById('fullScreenImage');

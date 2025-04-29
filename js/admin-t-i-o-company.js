@@ -37,7 +37,6 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-let allAttendanceDates = [];
 let allCompanyDataList = [];
 
 document.getElementById("company-search").addEventListener("input", (e) => {
@@ -139,6 +138,7 @@ async function getAllByCompanyName() {
         users: group.users,
       });
     }
+
     allCompanyDataList = companyDataList;
     populateDates(companyDataList);
   } catch (error) {
@@ -185,7 +185,8 @@ function populateDates(companyDataList) {
       date,
       users,
     } = company;
-    crudOperations.clearTable("companyUsersTbl");
+
+    // crudOperations.clearTable("companyUsersTbl");
     crudOperations.upsert("companyUsersTbl", {
       id: `${companyName}_${date}`,
       companyName,
@@ -196,7 +197,7 @@ function populateDates(companyDataList) {
       late,
       absent,
     });
-    
+
     const card = document.createElement("div");
     card.className = "col-12 col-md-6 col-lg-4 mb-2 p-2";
 

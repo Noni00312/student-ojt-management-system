@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../css/styles.css" />
-    <link rel="stylesheet" href="../css/admin-t-i-o-students.css" />
     <link rel="stylesheet" href="../css/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../css/admin-t-i-o-students.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -18,7 +18,7 @@
     <meta name="theme-color" content="#6e1423" />
 
     <title>Time in/out - Students | SOJTMS</title>
-    <link rel="icon" type="image/png" href="/assets/img/logo trans.png">
+    <link rel="icon" type="image/png" href="/assets/img/logo trans.png" />
   </head>
   <body class="main-container">
     <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
@@ -26,7 +26,11 @@
         <div class="d-flex align-items-center justify-content-between w-100">
           <div class="wrapper">
             <div class="d-flex align-items-center">
-              <a href="./admin-dashboard.html" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS - Admin</a>
+              <a
+                href="./admin-dashboard.html"
+                class="navbar-brand fw-bold text-white d-none d-lg-block"
+                >SOJTMS - Admin</a
+              >
             </div>
             <button
               class="btn d-lg-none d-sm-block"
@@ -39,31 +43,74 @@
             </button>
           </div>
 
-          <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+          <div
+            class="collapse navbar-collapse me-2"
+            id="navbarSupportedContent"
+          >
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-dashboard.html">Home</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-dashboard.html"
+                  >Home</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-t-i-o.html">Time in/out</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-t-i-o.html"
+                  >Time in/out</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-company.html">Companies</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-company.html"
+                  >Companies</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-student.html">Students</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-student.html"
+                  >Students</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-assistant.html">Assistants</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-assistant.html"
+                  >Assistants</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-incident-report.html">Incident Report</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-incident-report.html"
+                  >Incident Report</a
+                >
               </li>
             </ul>
           </div>
-          
-          <a href="/pages/admin-profile.html" id="user-profile" class=" text-decoration-none">
-            <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-img" style="border-radius: 50%;">
+
+          <a
+            href="/pages/admin-profile.html"
+            id="user-profile"
+            class="text-decoration-none"
+          >
+            <img
+              src="/assets/img/icons8_male_user_480px_1.png"
+              alt="User profile icon"
+              loading="lazy"
+              id="user-img"
+              style="border-radius: 50%"
+            />
           </a>
         </div>
       </div>
@@ -96,7 +143,6 @@
       </div>
     </div> -->
 
-    <!-- Companies -->
     <section class="container mt-2 d-flex flex-column .reports-section">
       <h1
         id="department-name"
@@ -111,6 +157,7 @@
               class="bi bi-search position-absolute top-50 end-0 translate-middle me-2"
             ></i>
             <input
+              id="search-input"
               type="text"
               class="form-control py-2"
               style="height: 58px"
@@ -120,7 +167,7 @@
         </form>
       </div>
 
-      <div class="row card-container mt-2 w-100 align-self-center">
+      <div class="row card-container mt-2 w-100 align-self-center student-list">
         <!-- <div
           class="col-lg-4 col-md-6"
           data-bs-toggle="modal"
@@ -147,95 +194,90 @@
         </div> -->
       </div>
     </section>
-    <!-- Companies -->
 
     <div
       class="modal fade"
-      id="viewHistoryModal"
+      id="viewAttendanceModal"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
       tabindex="-1"
-      aria-labelledby="viewHistoryModalLabel"
+      aria-labelledby="viewAttendanceModal"
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-3 view-history-modal">
-          <div class="d-flex justify-content-end w-100">
+        <div class="modal-content view-attendance-modal">
+          <div class="d-flex justify-content-between w-100 p-3">
+            <h5>Attendance record</h5>
             <i
-              class="bi bi-x-lg fs-6 text-white"
+              class="bi bi-x-lg fs-6 text-white fw-bold"
               data-bs-dismiss="modal"
               aria-label="Close"
             ></i>
           </div>
 
-          <div class="history-card-inside w-100 text-center">
-            <span>MORNING</span>
-          </div>
+          <div class="container p-3">
+            <div class="row g-3 justify-content-center">
+              <div class="col-12 col-md-6 d-flex justify-content-center hover">
+                <div class="square text-center">
+                  <img id="morning-time-in-img" src="" alt="" />
+                  <h3 class="m-0 p-0">Morning Time-in</h3>
+                  <p class="m-0 p-0" id="morning-in-time"></p>
+                </div>
+              </div>
 
-          <div class="history-images">
-            <div
-              class="d-flex justify-content-center flex-column align-items-center"
-            >
-              <a
-                href="#"
-                target="_blank"
-                class="mb-2 view-image-link"
-                data-bs-toggle="modal"
-                data-bs-target="#viewImageModal"
-              >
-                <img src="" alt="Image" class="img-fluid rounded" />
-              </a>
-              <h6 class="morning-in" style="color: #fff"></h6>
-            </div>
-            <div
-              class="d-flex justify-content-center flex-column align-items-center"
-            >
-              <a
-                href="#"
-                target="_blank"
-                class="mb-2 view-image-link"
-                data-bs-toggle="modal"
-                data-bs-target="#viewImageModal"
-              >
-                <img src="" alt="Image" class="img-fluid rounded" />
-              </a>
-              <h6 class="morning-in" style="color: #fff"></h6>
+              <div class="col-12 col-md-6 d-flex justify-content-center">
+                <div class="square text-center">
+                  <img id="morning-time-out-img" src="" alt="" />
+                  <h3 class="m-0 p-0">Morning Time-out</h3>
+                  <p class="m-0 p-0" id="morning-out-time"></p>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 d-flex justify-content-center">
+                <div class="square text-center">
+                  <img id="afternoon-time-in-img" src="" alt="" />
+                  <h3 class="m-0 p-0">Afternoon Time-in</h3>
+                  <p class="m-0 p-0" id="afternoon-in-time"></p>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 d-flex justify-content-center">
+                <div class="square text-center">
+                  <img id="afternoon-time-out-img" src="" alt="" />
+                  <h3 class="m-0 p-0">Afternoon Time-out</h3>
+                  <p class="m-0 p-0" id="afternoon-out-time"></p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 d-flex justify-content-center w-100">
+                <a
+                  href=""
+                  id="has-incident-report"
+                  class="w-100 d-flex justify-content-center align-items-center d-none"
+                  >View incident report</a
+                >
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
 
-          <div class="history-card-inside w-100 text-center">
-            <span>AFTERNOON</span>
-          </div>
-
-          <div class="history-images">
-            <div
-              class="d-flex justify-content-center flex-column align-items-center"
-            >
-              <a
-                href="#"
-                target="_blank"
-                class="mb-2 view-image-link"
-                data-bs-toggle="modal"
-                data-bs-target="#viewImageModal"
-              >
-                <img src="" alt="Image" class="img-fluid rounded" />
-              </a>
-              <h6 class="morning-in" style="color: #fff"></h6>
-            </div>
-            <div
-              class="d-flex justify-content-center flex-column align-items-center"
-            >
-              <a
-                href="#"
-                target="_blank"
-                class="mb-2 view-image-link"
-                data-bs-toggle="modal"
-                data-bs-target="#viewImageModal"
-              >
-                <img src="" alt="Image" class="img-fluid rounded" />
-              </a>
-              <h6 class="morning-in" style="color: #fff"></h6>
-            </div>
+    <div
+      class="modal fade"
+      id="imageModal"
+      tabindex="-1"
+      aria-labelledby="imageModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+          <div class="modal-body p-0 d-flex justify-content-center">
+            <img
+              id="modalImage"
+              src=""
+              class="img-fluid rounded-4 shadow"
+              alt="Enlarged Note Image"
+            />
           </div>
         </div>
       </div>
@@ -261,51 +303,71 @@
       </div>
       <div class="offcanvas-body p-0">
         <ul class="nav d-flex flex-column">
-
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-dashboard.html">
-              <span class="fs-5">Dashboard</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-dashboard.html"
+            >
+              <span class="fs-5">Dashboard</span>
               <i class="bi bi-microsoft fs-5"></i>
             </a>
           </li>
-          
+
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-t-i-o.html">
-              <span class="fs-5">Time in/out</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-t-i-o.html"
+            >
+              <span class="fs-5">Time in/out</span>
               <i class="bi bi-clock-fill fs-4"></i>
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-company.html">
-              <span class="fs-5">Companies</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-company.html"
+            >
+              <span class="fs-5">Companies</span>
               <i class="bi bi-buildings-fill fs-3"></i>
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-student.html">
-              <span class="fs-5">Students</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-student.html"
+            >
+              <span class="fs-5">Students</span>
               <i class="bi bi-mortarboard-fill fs-3"></i>
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-assistant.html">
-              <span class="fs-5">Assistants</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-assistant.html"
+            >
+              <span class="fs-5">Assistants</span>
               <i class="bi bi-person-badge fs-3"></i>
             </a>
           </li>
 
-
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-incident-report.html">
-              <span class="fs-5">Incident Report</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-incident-report.html"
+            >
+              <span class="fs-5">Incident Report</span>
               <i class="bi bi-printer-fill fs-4"></i>
             </a>
           </li>
-
-
         </ul>
       </div>
     </div>

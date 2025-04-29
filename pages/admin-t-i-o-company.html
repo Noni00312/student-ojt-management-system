@@ -18,7 +18,7 @@
     <meta name="theme-color" content="#6e1423" />
 
     <title>Time in/out - Companies | SOJTMS</title>
-    <link rel="icon" type="image/png" href="/assets/img/logo trans.png">
+    <link rel="icon" type="image/png" href="/assets/img/logo trans.png" />
   </head>
 
   <body class="main-container">
@@ -27,7 +27,11 @@
         <div class="d-flex align-items-center justify-content-between w-100">
           <div class="wrapper">
             <div class="d-flex align-items-center">
-              <a href="./admin-dashboard.html" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS - Admin</a>
+              <a
+                href="./admin-dashboard.html"
+                class="navbar-brand fw-bold text-white d-none d-lg-block"
+                >SOJTMS - Admin</a
+              >
             </div>
             <button
               class="btn d-lg-none d-sm-block"
@@ -40,33 +44,75 @@
             </button>
           </div>
 
-          <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+          <div
+            class="collapse navbar-collapse me-2"
+            id="navbarSupportedContent"
+          >
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-dashboard.html">Home</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-dashboard.html"
+                  >Home</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-t-i-o.html">Time in/out</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-t-i-o.html"
+                  >Time in/out</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-company.html">Companies</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-company.html"
+                  >Companies</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-student.html">Students</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-student.html"
+                  >Students</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-assistant.html">Assistants</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-assistant.html"
+                  >Assistants</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-incident-report.html">Incident Report</a>
+                <a
+                  class="nav-link text-light"
+                  aria-current="page"
+                  href="./admin-incident-report.html"
+                  >Incident Report</a
+                >
               </li>
             </ul>
           </div>
-          
-          <a href="/pages/admin-profile.html" id="user-profile" class=" text-decoration-none">
-            <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-img" style="border-radius: 50%;">
-          </a>
 
+          <a
+            href="/pages/admin-profile.html"
+            id="user-profile"
+            class="text-decoration-none"
+          >
+            <img
+              src="/assets/img/icons8_male_user_480px_1.png"
+              alt="User profile icon"
+              loading="lazy"
+              id="user-img"
+              style="border-radius: 50%"
+            />
+          </a>
         </div>
       </div>
     </nav>
@@ -93,48 +139,7 @@
       </div>
 
       <div class="card-container h-100">
-        <div class="row mx-0">
-          <!-- <div class="col-12 col-md-6 col-lg-4 mb-2 p-2">
-            <a
-              href="#"
-              class="company-card mb-2"
-              data-bs-toggle="modal"
-              data-bs-target="#viewHCompanyModal"
-              data-date=""
-            >
-              <div class="company-img-name-container">
-                <img
-                  src="../assets/img/Department-of-Agrarian-Reform.jpeg"
-                  alt=""
-                />
-                <div class="text">
-                  <h3>Department of Agrarian Reform</h3>
-                  <small>Nursery Masbate</small>
-                </div>
-
-                <div class="bottom-container">
-                  <div class="indicators">
-                    <span class="flex">
-                      <span id="present" class="box"></span>
-                      <p>5</p>
-                    </span>
-                    <span class="flex">
-                      <span id="late" class="box"></span>
-                      <p>0</p>
-                    </span>
-                    <span class="flex">
-                      <span id="absent" class="box"></span>
-                      <p>0</p>
-                    </span>
-                  </div>
-                  <button id="view-button">
-                    <i class="bi bi-eye-fill fs-4"></i>
-                  </button>
-                </div>
-              </div>
-            </a>
-          </div> -->
-        </div>
+        <div class="row mx-0"></div>
       </div>
     </section>
     <!-- Companies -->
@@ -159,51 +164,71 @@
       </div>
       <div class="offcanvas-body p-0">
         <ul class="nav d-flex flex-column">
-
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-dashboard.html">
-              <span class="fs-5">Dashboard</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-dashboard.html"
+            >
+              <span class="fs-5">Dashboard</span>
               <i class="bi bi-microsoft fs-5"></i>
             </a>
           </li>
-          
+
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-t-i-o.html">
-              <span class="fs-5">Time in/out</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-t-i-o.html"
+            >
+              <span class="fs-5">Time in/out</span>
               <i class="bi bi-clock-fill fs-4"></i>
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-company.html">
-              <span class="fs-5">Companies</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-company.html"
+            >
+              <span class="fs-5">Companies</span>
               <i class="bi bi-buildings-fill fs-3"></i>
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-student.html">
-              <span class="fs-5">Students</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-student.html"
+            >
+              <span class="fs-5">Students</span>
               <i class="bi bi-mortarboard-fill fs-3"></i>
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-assistant.html">
-              <span class="fs-5">Assistants</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-assistant.html"
+            >
+              <span class="fs-5">Assistants</span>
               <i class="bi bi-person-badge fs-3"></i>
             </a>
           </li>
 
-
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-incident-report.html">
-              <span class="fs-5">Incident Report</span> 
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              aria-current="page"
+              href="./admin-incident-report.html"
+            >
+              <span class="fs-5">Incident Report</span>
               <i class="bi bi-printer-fill fs-4"></i>
             </a>
           </li>
-
-
         </ul>
       </div>
     </div>

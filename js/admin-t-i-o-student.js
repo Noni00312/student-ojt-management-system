@@ -1,54 +1,83 @@
 import { firebaseCRUD } from "./firebase-crud.js";
+import { getDoc, doc } from "./firebase-config.js";
+import { db } from "./firebase-config.js";
+
+document.addEventListener("click", function (event) {
+  const clickedImg = event.target;
+
+  if (
+    clickedImg.tagName === "IMG" &&
+    (clickedImg.id === "morning-time-in-img" ||
+      clickedImg.id === "morning-time-out-img" ||
+      clickedImg.id === "afternoon-time-in-img" ||
+      clickedImg.id === "afternoon-time-out-img")
+  ) {
+    const modalImage = document.getElementById("modalImage");
+    modalImage.src = clickedImg.src;
+
+    const imageModal = new bootstrap.Modal(
+      document.getElementById("imageModal")
+    );
+    imageModal.show();
+  }
+});
 
 window.document.addEventListener("DOMContentLoaded", async () => {
-
-
+  showLoading(true);
   try {
-    const userId = localStorage.getItem("userId");
-
-    if (!userId) {
-      console.error("No userId found in localStorage");
-      return;
-    }
-
-    await window.dbReady;
-
-    const img = document.getElementById("user-img");
-
-    const dataArray = await crudOperations.getByIndex(
-      "studentInfoTbl",
-      "userId",
-      userId
+    await initializeUserImage();
+    const { date, companyName } = getUrlParams();
+    await loadDepartmentHeader(companyName);
+    const companyData = await getCompanyData(companyName);
+    const students = await loadStudent(`${companyName}_${date}`);
+    const finalResult = await buildStudentAttendanceData(
+      students,
+      date,
+      companyData
     );
-
-
-    const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
-
-    if (data != null) {
-      img.src = data.userImg
-        ? data.userImg
-        : "../assets/img/icons8_male_user_480px_1";
-
-    } else {
-      console.warn("No user data found for this user.");
-    }
+    renderStudentCards(finalResult);
   } catch (err) {
-    console.error("Failed to get user data from IndexedDB", err);
+    console.error("Failed to load student data:", err);
+    showError("Something went wrong while loading attendance data.");
+  } finally {
+    showLoading(false);
+  }
+});
+
+async function initializeUserImage() {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    console.error("No userId found in localStorage");
+    return;
   }
 
   await window.dbReady;
+  const dataArray = await crudOperations.getByIndex(
+    "studentInfoTbl",
+    "userId",
+    userId
+  );
+  const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+  const img = document.getElementById("user-img");
+  img.src = data?.userImg || "../assets/img/icons8_male_user_480px_1";
+}
+
+function getUrlParams() {
   const urlParams = new URLSearchParams(window.location.search);
-  const date = urlParams.get("date");
-  const companyName = urlParams.get("company-name");
+  return {
+    date: urlParams.get("date"),
+    companyName: urlParams.get("company-name"),
+  };
+}
+
+async function loadDepartmentHeader(companyName) {
   const departmentName = document.getElementById("department-name");
-
   departmentName.textContent = companyName;
+}
 
-  const companyData = await getCompanyData(companyName);
-
-  const students = await loadStudent(`${companyName}_${date}`);
-
-  const finalResult = await Promise.all(
+async function buildStudentAttendanceData(students, date, companyData) {
+  return await Promise.all(
     students.map(async (student) => {
       const attendance = await getStudentAttendanceRecord(student.userId, date);
       const hasIncident = await checkHasIncidentReport(student.userId, date);
@@ -68,27 +97,28 @@ window.document.addEventListener("DOMContentLoaded", async () => {
       };
     })
   );
+}
 
-  console.log(finalResult);
-
+function renderStudentCards(studentsData) {
   const cardContainer = document.querySelector(".card-container");
-
-  finalResult.forEach((student) => {
+  cardContainer.innerHTML = "";
+  studentsData.forEach((student) => {
     const studentCard = document.createElement("div");
     studentCard.classList.add("col-lg-4", "col-md-6");
     studentCard.setAttribute("data-bs-toggle", "modal");
     studentCard.setAttribute("data-bs-target", "#viewAttendanceModal");
-    studentCard.setAttribute("data-student-id", `${student.userId}`);
-    studentCard.setAttribute("data-date", `${student.date}`);
+    studentCard.setAttribute("data-student-id", student.userId);
+    studentCard.setAttribute("data-date", student.date);
+    studentCard.setAttribute("data-has-incident", student.hasIncidentReport);
+    studentCard.setAttribute("data-name", formatName(student));
 
     studentCard.innerHTML = `
       <div class="mb-3 curved-border-container">
         <div class="overlay" style="background: url('${
           student.companyImage || "../assets/img/OC.jpg"
         }') no-repeat center center/cover;">
-            <div class="overlay-dark"></div>
+          <div class="overlay-dark"></div>
         </div>
-
         <div class="content d-flex justify-content-start align-items-center">
           <img
             id="user_profile"
@@ -121,205 +151,108 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     `;
 
     studentCard.addEventListener("click", () => {
-      populateAttendanceModal(student);
+      const userId = studentCard.getAttribute("data-student-id");
+      const date = studentCard.getAttribute("data-date");
+      const hasIncident = studentCard.getAttribute("data-has-incident");
+
+      populateAttendanceModal(userId, date, hasIncident);
     });
 
     cardContainer.appendChild(studentCard);
   });
-});
+}
 
-async function populateAttendanceModal(student) {
+async function populateAttendanceModal(userId, date, hasIncident) {
+  const logData = await getAttendanceByDate(userId, date);
+
+  const setLogData = (log, timeId, imgId) => {
+    const timeEl = document.getElementById(timeId);
+    const imgEl = document.getElementById(imgId);
+
+    if (log) {
+      const logTime = log.timestamp
+        ? new Date(log.timestamp).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "—";
+      timeEl.textContent = logTime;
+      imgEl.src = log.image || "../assets/img/icons8_no_image_500px.png";
+    } else {
+      timeEl.textContent = "No log";
+      imgEl.src = "../assets/img/icons8_no_image_500px.png";
+    }
+  };
+
+  setLogData(logData.morningTimeIn, "morning-in-time", "morning-time-in-img");
+  setLogData(
+    logData.morningTimeOut,
+    "morning-out-time",
+    "morning-time-out-img"
+  );
+  setLogData(
+    logData.afternoonTimeIn,
+    "afternoon-in-time",
+    "afternoon-time-in-img"
+  );
+  setLogData(
+    logData.afternoonTimeOut,
+    "afternoon-out-time",
+    "afternoon-time-out-img"
+  );
+
+  const incidentLink = document.getElementById("has-incident-report");
+  if (hasIncident === "true") {
+    incidentLink.classList.remove("d-none");
+    incidentLink.href = `../pages/admin-incident-report-student.html?userId=${userId}&date=${date}`;
+  } else {
+    incidentLink.classList.add("d-none");
+  }
+}
+
+async function getAttendanceByDate(userId, dateStr) {
   try {
-    // Check if student object has userId
-    if (!student || !student.userId) {
-      console.error("No student or userId provided");
-      return;
-    }
+    const basePath = ["attendancelogs", userId, dateStr];
 
-    const userId = student.userId;
+    const getLog = async (logType) => {
+      const logRef = doc(db, ...basePath, logType);
+      const snap = await getDoc(logRef);
+      return snap.exists() ? snap.data() : null;
+    };
 
-    // Get all date subcollections for this user
-    const dateSubcollections = await firebaseCRUD.listSubcollections(
-      "attendancelogs",
-      userId
-    );
+    const [morningIn, morningOut, afternoonIn, afternoonOut] =
+      await Promise.all([
+        getLog("morningTimeIn"),
+        getLog("morningTimeOut"),
+        getLog("afternoonTimeIn"),
+        getLog("afternoonTimeOut"),
+      ]);
 
-    // We'll store all attendance data here
-    const attendanceData = [];
-
-    // Loop through each date subcollection
-    for (const dateCol of dateSubcollections) {
-      const date = dateCol.id;
-
-      // Get all attendance records for this date
-      const snapshot = await firebaseCRUD.queryData(
-        `attendancelogs/${userId}/${date}`,
-        null,
-        null,
-        null
-      );
-
-      // Prepare date attendance object
-      const dateAttendance = {
-        date: date,
-        morningTimeIn: null,
-        morningTimeOut: null,
-        afternoonTimeIn: null,
-        afternoonTimeOut: null,
-      };
-
-      // Process each document
-      snapshot.forEach((doc) => {
-        const data = doc;
-        const type = data.type;
-
-        if (type === "morningTimeIn") {
-          dateAttendance.morningTimeIn = {
-            time: data.time,
-            image: data.image,
-            timestamp: data.timestamp.toDate().toLocaleString(),
-          };
-        } else if (type === "morningTimeOut") {
-          dateAttendance.morningTimeOut = {
-            time: data.time,
-            image: data.image,
-            timestamp: data.timestamp.toDate().toLocaleString(),
-          };
-        } else if (type === "afternoonTimeIn") {
-          dateAttendance.afternoonTimeIn = {
-            time: data.time,
-            image: data.image,
-            timestamp: data.timestamp.toDate().toLocaleString(),
-          };
-        } else if (type === "afternoonTimeOut") {
-          dateAttendance.afternoonTimeOut = {
-            time: data.time,
-            image: data.image,
-            timestamp: data.timestamp.toDate().toLocaleString(),
-          };
-        }
-      });
-
-      attendanceData.push(dateAttendance);
-    }
-
-    // Sort by date (newest first)
-    attendanceData.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    // Now populate the modal with this data
-    populateHistoryModal(attendanceData, student);
+    return {
+      morningTimeIn: morningIn,
+      morningTimeOut: morningOut,
+      afternoonTimeIn: afternoonIn,
+      afternoonTimeOut: afternoonOut,
+    };
   } catch (error) {
-    console.error("Error fetching attendance data:", error);
-    // Show error to user
-    alert("Failed to load attendance data. Please try again.");
+    console.error("Error fetching logs by date:", error);
+    return null;
   }
 }
 
-function populateHistoryModal(attendanceData, student) {
-  const modal = new bootstrap.Modal(
-    document.getElementById("viewHistoryModal")
-  );
-  const modalTitle = document.querySelector("#viewHistoryModal .modal-title");
-  const historyImages = document.querySelectorAll(".history-images");
-
-  // Clear previous data
-  historyImages.forEach((container) => {
-    container.innerHTML = "";
-  });
-
-  if (attendanceData.length === 0) {
-    // Show empty state
-    historyImages[0].innerHTML = "<p>No attendance records found</p>";
-    return;
-  }
-
-  // Get the most recent record (first item after sorting)
-  const latestRecord = attendanceData[0];
-
-  // Populate morning section
-  const morningContainer = historyImages[0];
-  if (latestRecord.morningTimeIn) {
-    morningContainer.innerHTML += createTimeRecordElement(
-      latestRecord.morningTimeIn,
-      "Time In"
-    );
-  }
-  if (latestRecord.morningTimeOut) {
-    morningContainer.innerHTML += createTimeRecordElement(
-      latestRecord.morningTimeOut,
-      "Time Out"
-    );
-  }
-
-  // Populate afternoon section
-  const afternoonContainer = historyImages[1];
-  if (latestRecord.afternoonTimeIn) {
-    afternoonContainer.innerHTML += createTimeRecordElement(
-      latestRecord.afternoonTimeIn,
-      "Time In"
-    );
-  }
-  if (latestRecord.afternoonTimeOut) {
-    afternoonContainer.innerHTML += createTimeRecordElement(
-      latestRecord.afternoonTimeOut,
-      "Time Out"
-    );
-  }
-
-  // Set modal title with student name and date
-  const formattedDate = new Date(latestRecord.date).toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  );
-  modalTitle.textContent = `${student.name}'s Attendance - ${formattedDate}`;
-
-  // Show the modal
-  modal.show();
+function showLoading(show) {
+  const loader = document.getElementById("loading-indicator") || createLoader();
+  loader.style.display = show ? "block" : "none";
 }
 
-function createTimeRecordElement(record, label) {
-  return `
-    <div class="d-flex justify-content-center flex-column align-items-center mb-3">
-      <h6 class="text-white mb-2">${label}</h6>
-      <div class="time-badge mb-2">${record.time}</div>
-      ${
-        record.image
-          ? `
-        <a href="#" class="view-image-link" data-image="${record.image}">
-          <img src="${record.image}" alt="Attendance image" class="img-fluid rounded attendance-image">
-        </a>
-      `
-          : '<p class="text-white">No image available</p>'
-      }
-    </div>
-  `;
-}
-
-// Add event listener for image clicks (to show in larger view)
-document.addEventListener("click", function (e) {
-  if (e.target.closest(".view-image-link")) {
-    e.preventDefault();
-    const imageSrc = e.target
-      .closest(".view-image-link")
-      .getAttribute("data-image");
-    showImageModal(imageSrc);
-  }
-});
-
-function showImageModal(imageSrc) {
-  const imageModal = new bootstrap.Modal(
-    document.getElementById("viewImageModal")
-  );
-  const modalImage = document.querySelector("#viewImageModal .modal-body img");
-
-  if (modalImage) {
-    modalImage.src = imageSrc;
-    imageModal.show();
-  }
+function createLoader() {
+  const loader = document.createElement("div");
+  loader.id = "loading-indicator";
+  loader.className = "text-center py-4";
+  loader.innerHTML =
+    '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
+  document.querySelector(".card-container").prepend(loader);
+  return loader;
 }
 
 async function getCompanyData(companyName) {

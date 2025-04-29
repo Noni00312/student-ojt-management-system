@@ -14,7 +14,7 @@ body {
 
 input {
   border: none;
-  background-color: #f6f8e2 !important;
+  background-color: #fff !important;
   border-radius: 30px !important;
   padding: 16px 32px !important;
 }
@@ -43,7 +43,7 @@ input {
 }
 .report-card span,
 .report-content-container p {
-  color: #f6f8e2;
+  color: #fff;
 }
 
 #separator {
@@ -100,7 +100,7 @@ input {
   border-radius: 0 !important;
   padding: 8px 16px !important;
   outline: none;
-  color: #f6f8e2;
+  color: #fff;
 }
 
 .report-title::placeholder {
@@ -158,7 +158,7 @@ input {
 #search-input {
   width: 100%;
   border-radius: 30px !important;
-  background-color: #f6f8e2 !important;
+  background-color: #fff !important;
 }
 
 #search-input label {
@@ -230,7 +230,7 @@ input {
 }
 
 .text-container p {
-  color: #f6f8e2;
+  color: #fff;
   font-size: 0.8rem;
   margin: 0;
   padding: 2px 8px;
@@ -251,7 +251,7 @@ input {
 
 .incident-report a {
   background-color: #db2c14;
-  color: #f6f8e2 !important;
+  color: #fff !important;
   font-size: 0.8rem;
   margin: 0;
   padding: 2px 8px;
@@ -287,7 +287,7 @@ input {
   background-color: #6e1423;
   border-radius: 10px;
   padding: 5px 10px;
-  color: #f6f8e2;
+  color: #fff;
   transition: all 168ms ease-in-out;
   cursor: pointer;
   font-style: normal !important;
@@ -295,7 +295,7 @@ input {
 }
 
 .students-container {
-  border: #f6f8e2 1px solid;
+  border: #fff 1px solid;
   border-radius: 8px;
   padding: 10px;
 }
@@ -330,7 +330,7 @@ input {
   align-items: center;
 }
 .attendance-card-inside span {
-  color: #f6f8e2;
+  color: #fff;
 }
 
 .attendance-images {

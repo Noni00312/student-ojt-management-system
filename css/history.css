@@ -1,6 +1,6 @@
 input {
   border: none;
-  background-color: #f6f8e2 !important;
+  background-color: #fff !important;
   border-radius: 30px !important;
   padding: 16px 32px !important;
 }
@@ -18,7 +18,7 @@ input {
 }
 
 .history-card span {
-  color: #f6f8e2;
+  color: #fff;
 }
 .separator {
   width: 1px;
@@ -59,7 +59,7 @@ input {
   align-items: center;
 }
 .history-card-inside span {
-  color: #f6f8e2;
+  color: #fff;
 }
 
 .history-images {

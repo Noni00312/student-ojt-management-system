@@ -70,7 +70,7 @@
 }
 
 .modal-input input:focus {
-    border-color: #9CCD62 !important;
+    border-color: #6e1423 !important;
     color: var(--primary) !important;
 }
 
@@ -99,7 +99,7 @@
 }
 
 .modal-input:focus-within label {
-    color: #9CCD62 !important;
+    color: #6e1423 !important;
 }
 
 
@@ -117,7 +117,7 @@
 }
 
 .modal-input select:focus {
-    border-color: #9CCD62 !important;
+    border-color: #6e1423 !important;
     color: var(--primary) !important;
 }
 
@@ -148,7 +148,7 @@ i {
 }
 
 .modal-input:focus-within i {
-    color: #9CCD62 !important;
+    color: #6e1423 !important;
 }
 
 @media (max-width: 768px) {
@@ -216,7 +216,7 @@ i {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #748E54 0%, #9CCD62 100%);
+    background: linear-gradient(135deg, #6e1423 0%, #6e1423 100%);
     color: white;
     font-size: 3rem;
 }
@@ -285,7 +285,7 @@ i {
 }
 
 #camera-button:hover {
-    border-color: #748E54;
+    border-color: #6e1423;
 }
 
 #preview-image {

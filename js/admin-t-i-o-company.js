@@ -9,7 +9,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
     await window.dbReady;
 
-    const img = document.getElementById("user-profile");
+    const img = document.getElementById("user-img");
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",

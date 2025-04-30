@@ -1,4 +1,3 @@
-
 import { firebaseCRUD } from "./firebase-crud.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -14,20 +13,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelector("h1").textContent = formattedDate;
 
     showLoading(true);
-    const studentsWithReports = await getStudentsWithIncidentReportsByDate(date);
+    const studentsWithReports = await getStudentsWithIncidentReportsByDate(
+      date
+    );
     populateStudentCards(studentsWithReports);
 
     document.getElementById("studentSearch").addEventListener("input", (e) => {
       filterStudents(e.target.value.toLowerCase(), studentsWithReports);
     });
-
   } catch (error) {
     console.error("Error loading incident reports:", error);
     showError("Failed to load incident reports. Please try again later.");
   } finally {
     showLoading(false);
   }
-
 
   try {
     const userId = localStorage.getItem("userId");
@@ -50,27 +49,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
     if (data != null) {
-     
-
       img.src = data.userImg
         ? data.userImg
         : "../assets/img/icons8_male_user_480px_1";
-
-
     } else {
       console.warn("No user data found for this user.");
     }
   } catch (err) {
     console.error("Failed to get user data from IndexedDB", err);
   }
-
-
 });
 
 function formatDateForDisplay(dateStr) {
   const date = new Date(dateStr);
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  return date.toLocaleDateString('en-US', options).toUpperCase();
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return date.toLocaleDateString("en-US", options).toUpperCase();
 }
 
 async function getStudentsWithIncidentReportsByDate(date) {
@@ -107,14 +105,15 @@ async function getStudentsWithIncidentReportsByDate(date) {
         );
 
         return {
-          userImg: student?.userImg || "../assets/img/icons8_male_user_480px_1.png",
+          userImg:
+            student?.userImg || "../assets/img/icons8_male_user_480px_1.png",
           studentName: fullName || "Unknown Student",
           studentId: student?.studentId || "N/A",
           companyName: student?.companyName || "Unknown Company",
           reportId: report.id,
           reason: report.reason,
           createdAt: report.createdAt,
-          reportDetails: report.report
+          reportDetails: report.report,
         };
       })
     );
@@ -127,12 +126,10 @@ async function getStudentsWithIncidentReportsByDate(date) {
 }
 
 function formatStudentName(firstName, middleName, lastName) {
-  const nameParts = [
-    firstName,
-    middleName,
-    lastName
-  ].filter(part => part && part.trim());
-  return nameParts.join(' ') || "Unknown Student";
+  const nameParts = [firstName, middleName, lastName].filter(
+    (part) => part && part.trim()
+  );
+  return nameParts.join(" ") || "Unknown Student";
 }
 
 function populateStudentCards(students) {
@@ -143,8 +140,8 @@ function populateStudentCards(students) {
     container.innerHTML = `
       <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
         <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
-        <h6 class="mt-2">No Incident Reports Found</h6>
-        <p class="mt-1">There are no incident reports for this date.</p>
+        <h6 class="mt-2 text-secondary">No Student Found</h6>
+        <p class="mt-1 text-muted">Oops! No matching results found. Try searching with a different keyword.</p>
       </div>
     `;
     return;
@@ -179,7 +176,9 @@ function populateStudentCards(students) {
     card.addEventListener("click", (e) => {
       e.preventDefault();
       populateReportModal(student);
-      const modal = new bootstrap.Modal(document.getElementById('viewReportModal'));
+      const modal = new bootstrap.Modal(
+        document.getElementById("viewReportModal")
+      );
       modal.show();
     });
 
@@ -190,30 +189,44 @@ function populateStudentCards(students) {
 function populateReportModal(report) {
   // Set student info
   document.getElementById("modal-student-img").src = report.userImg;
-  document.getElementById("modal-student-name").textContent = report.studentName;
+  document.getElementById("modal-student-name").textContent =
+    report.studentName;
   document.getElementById("modal-student-id").textContent = report.studentId;
-  
+
   // Set report info
-  document.getElementById("report-title").value = report.reason || "No title provided";
-  document.getElementById("report-content").value = report.reportDetails || "No details provided";
-  
+  document.getElementById("report-title").value =
+    report.reason || "No title provided";
+  document.getElementById("report-content").value =
+    report.reportDetails || "No details provided";
+
   // Set status badge
   const statusBadge = document.getElementById("modal-report-status");
   statusBadge.textContent = report.reason || "Unknown";
   statusBadge.setAttribute("data-status", report.reason || "Unknown");
-  
+
   // Format dates
   const reportDate = new Date(report.createdAt);
   const lastUpdated = new Date(report.lastUpdated);
-  
-  document.getElementById("modal-report-date").textContent = reportDate.toLocaleDateString('en-US', {
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric'
-  });
-  
-  document.getElementById("modal-report-time").textContent = `Reported at: ${reportDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-  document.getElementById("modal-last-updated").textContent = `Last updated: ${lastUpdated.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+
+  document.getElementById("modal-report-date").textContent =
+    reportDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+  document.getElementById(
+    "modal-report-time"
+  ).textContent = `Reported at: ${reportDate.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  })}`;
+  document.getElementById(
+    "modal-last-updated"
+  ).textContent = `Last updated: ${lastUpdated.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  })}`;
 }
 
 function filterStudents(searchTerm, allStudents) {
@@ -223,10 +236,11 @@ function filterStudents(searchTerm, allStudents) {
     return;
   }
 
-  const filtered = allStudents.filter(student =>
-    student.studentName.toLowerCase().includes(searchTerm) ||
-    student.studentId.toLowerCase().includes(searchTerm) ||
-    student.companyName.toLowerCase().includes(searchTerm)
+  const filtered = allStudents.filter(
+    (student) =>
+      student.studentName.toLowerCase().includes(searchTerm) ||
+      student.studentId.toLowerCase().includes(searchTerm) ||
+      student.companyName.toLowerCase().includes(searchTerm)
   );
 
   populateStudentCards(filtered);

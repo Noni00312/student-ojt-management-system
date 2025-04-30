@@ -2,6 +2,8 @@ import { firebaseCRUD } from "./firebase-crud.js";
 import { getDoc, doc } from "./firebase-config.js";
 import { db } from "./firebase-config.js";
 
+let allStudentData = [];
+
 document.addEventListener("click", function (event) {
   const clickedImg = event.target;
 
@@ -22,6 +24,17 @@ document.addEventListener("click", function (event) {
   }
 });
 
+document.getElementById("search-input").addEventListener("input", (event) => {
+  const searchValue = event.target.value.toLowerCase();
+
+  const filteredStudents = allStudentData.filter((student) =>
+    formatName(student).toLowerCase().includes(searchValue)
+  );
+
+  renderStudentCards(filteredStudents);
+});
+let { date, companyName } = getUrlParams();
+
 window.document.addEventListener("DOMContentLoaded", async () => {
   showLoading(true);
   try {
@@ -36,6 +49,22 @@ window.document.addEventListener("DOMContentLoaded", async () => {
       companyData
     );
     renderStudentCards(finalResult);
+
+    allStudentData = finalResult;
+
+    document.getElementById(
+      "back-button"
+    ).href = `./admin-t-i-o-company.html?date=${date}`;
+
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      const query = e.target.value.toLowerCase();
+
+      const filtered = allStudentData.filter((student) =>
+        formatName(student).toLowerCase().includes(query)
+      );
+
+      renderStudentCards(filtered);
+    });
   } catch (err) {
     console.error("Failed to load student data:", err);
     showError("Something went wrong while loading attendance data.");
@@ -73,7 +102,7 @@ function getUrlParams() {
 
 async function loadDepartmentHeader(companyName) {
   const departmentName = document.getElementById("department-name");
-  departmentName.textContent = companyName;
+  departmentName.textContent = companyName.toUpperCase();
 }
 
 async function buildStudentAttendanceData(students, date, companyData) {
@@ -102,6 +131,16 @@ async function buildStudentAttendanceData(students, date, companyData) {
 function renderStudentCards(studentsData) {
   const cardContainer = document.querySelector(".card-container");
   cardContainer.innerHTML = "";
+
+  if (studentsData.length === 0) {
+    cardContainer.innerHTML = `<div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No Student Found For This Company</h6>
+                <p class="mt-1">Oops! No matching results found. Try searching with a different keyword.</p>
+            </div>`;
+    return;
+  }
+
   studentsData.forEach((student) => {
     const studentCard = document.createElement("div");
     studentCard.classList.add("col-lg-4", "col-md-6");
@@ -119,7 +158,7 @@ function renderStudentCards(studentsData) {
         }') no-repeat center center/cover;">
           <div class="overlay-dark"></div>
         </div>
-        <div class="content d-flex justify-content-start align-items-center">
+        <div class="content d-flex justify-content-start align-items-center p-2">
           <img
             id="user_profile"
             src="${
@@ -129,7 +168,7 @@ function renderStudentCards(studentsData) {
             class="img-fluid rounded-circle me-3"
           />
           <div class="text-container">
-            <h6>${formatName(student)}</h6>
+            <h6 class="mb-2">${formatName(student)}</h6>
             <p id="attendance-status" class="${
               student.isPresent
                 ? student.isLate

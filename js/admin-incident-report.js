@@ -1,4 +1,3 @@
-
 import { firebaseCRUD } from "./firebase-crud.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -19,7 +18,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     showLoading(false);
   }
 
-  
   try {
     const userId = localStorage.getItem("userId");
 
@@ -41,21 +39,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
     if (data != null) {
-     
-
       img.src = data.userImg
         ? data.userImg
         : "../assets/img/icons8_male_user_480px_1";
-
-
     } else {
       console.warn("No user data found for this user.");
     }
   } catch (err) {
     console.error("Failed to get user data from IndexedDB", err);
   }
-
-
 });
 
 /**
@@ -68,7 +60,7 @@ async function getAllIncidentDates() {
     const reports = await firebaseCRUD.getAllData("incidentreports");
 
     for (const report of reports) {
-      const dateStr = report.date; 
+      const dateStr = report.date;
       if (!dateStr) continue;
       if (!uniqueDates.has(dateStr)) {
         uniqueDates.set(dateStr, {
@@ -106,8 +98,8 @@ function populateDates(dates) {
     container.innerHTML = `
       <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
         <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
-        <h6 class="mt-2">No Incident Reports Available</h6>
-        <p class="mt-1">No incident reports have been sent on any of the dates.</p>
+        <h6 class="mt-2 text-secondary">No Incident Reports Available</h6>
+        <p class="mt-1 text-muted">No incident reports have been sent on any of the dates.</p>
       </div>
     `;
     return;

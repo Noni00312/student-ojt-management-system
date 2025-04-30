@@ -169,7 +169,7 @@ function populateDates(companyDataList) {
     container.innerHTML = `<div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
                 <h6 class="mt-2">No Company Found For This Date</h6>
-                <p class="mt-1">Oops! There’s no data for this date. Try picking another day from the calendar.</p>
+                <p class="mt-1 text-muted">Oops! No matching results found. Try searching with a different company name.</p>
             </div>`;
     return;
   }

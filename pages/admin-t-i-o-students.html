@@ -116,45 +116,27 @@
       </div>
     </nav>
 
-    <!-- <div
-      id="page-loading-overlay"
-      style="
-        position: fixed;
-        z-index: 9999;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.85);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        transition: opacity 0.3s;
-      "
-    >
-      <div
-        class="spinner-border text-primary"
-        style="width: 3rem; height: 3rem"
-        role="status"
-      ></div>
-      <div style="margin-top: 1rem; font-size: 1.2rem">
-        Loading, please wait...
-      </div>
-    </div> -->
-
     <section class="container mt-2 d-flex flex-column .reports-section">
-      <h1
-        id="department-name"
-        class="fw-bold"
-        style="color: #3c3d42 !important"
-      ></h1>
+      <div class="d-flex flex-row align-items-center justify-content-start">
+        <a
+          id="back-button"
+          href=""
+          class="text-decoration-none text-white me-4"
+        >
+          <i class="bi bi-arrow-left text-danger fs-2"></i>
+        </a>
+        <h1
+          id="department-name"
+          class="fw-bold my-2 text-truncate"
+          style="color: #3c3d42 !important"
+        ></h1>
+      </div>
 
       <div class="add-search-container">
         <form class="form-floating">
           <div class="search-input position-relative w-100">
             <i
-              class="bi bi-search position-absolute top-50 end-0 translate-middle me-2"
+              class="bi bi-search position-absolute top-50 end-0 translate-middle me-3"
             ></i>
             <input
               id="search-input"

@@ -92,6 +92,96 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 });
 
+// async function loadStudentData(userId) {
+//   showLoading(true);
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+
+//     if (!students || students.length === 0) {
+//       console.log("No student data found");
+//       return;
+//     }
+
+//     const studentData = students[0];
+
+    
+//     const companyNameEl = document.getElementById('company-name');
+//     const companyImageEl = document.querySelector('.company-container img');
+//     const userNameEl = document.getElementById('user-name');
+//     const phoneTextEl = document.getElementById('phone-number-text');
+//     const emailTextEl = document.getElementById('email-text');
+//     const phoneTooltip = document.querySelector('.phone-email-container .tt:first-child');
+//     const emailTooltip = document.querySelector('.phone-email-container .tt:last-child');
+
+
+    
+//     const profileImgEl = document.getElementById('user-profile-img');
+//     if (profileImgEl) {
+//       if (studentData.userImg) {
+        
+//         profileImgEl.src = studentData.userImg;
+//       } else {
+        
+//         const defaultMaleImg = "../assets/img/icons8_male_user_480px_1.png";
+//         const defaultFemaleImg = "../assets/img/icons8_female_user_480px.png";
+        
+//         if (studentData.gender === "Female") {
+//           profileImgEl.src = defaultFemaleImg;
+//         } else {
+//           profileImgEl.src = defaultMaleImg;
+//         }
+//       }
+//     }
+
+    
+//     let fullName = studentData.firstName || '';
+//     if (studentData.middleName) fullName += ' ' + studentData.middleName;
+//     if (studentData.lastName) fullName += ' ' + studentData.lastName;
+//     if (studentData.suffix) fullName += ' ' + studentData.suffix;
+
+    
+//     const truncatedName = fullName.length > 20 
+//       ? fullName.substring(0, 20) + '...' 
+//       : fullName;
+
+    
+//     if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
+//     if (userNameEl) {
+//       userNameEl.textContent = truncatedName;
+//       userNameEl.setAttribute('title', fullName);
+//       userNameEl.classList.add('text-truncate');
+//     }
+
+    
+//     const phoneNumber = studentData.phoneNumber || 'N/A';
+//     if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
+//     if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', phoneNumber);
+
+    
+//     const emailAddress = studentData.emailAddress || 'N/A';
+//     if (emailTextEl) emailTextEl.textContent = emailAddress;
+//     if (emailTooltip) emailTooltip.setAttribute('data-bs-title', emailAddress);
+
+    
+//     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+//     tooltipTriggerList.map(function (tooltipTriggerEl) {
+//       return new bootstrap.Tooltip(tooltipTriggerEl);
+//     });
+
+    
+//     if (studentData.companyName) {
+//       await loadCompanyImage(studentData.companyName, companyImageEl);
+//     }
+
+//   } catch (error) {
+//     console.error("Error loading student data:", error);
+//     showErrorToast("Failed to load student data: " , true + error.message);
+//   } finally {
+//     showLoading(false);
+//   }
+// }
+
 async function loadStudentData(userId) {
   showLoading(true);
   try {
@@ -105,47 +195,33 @@ async function loadStudentData(userId) {
 
     const studentData = students[0];
 
-    
+    // Get DOM elements
     const companyNameEl = document.getElementById('company-name');
     const companyImageEl = document.querySelector('.company-container img');
     const userNameEl = document.getElementById('user-name');
     const phoneTextEl = document.getElementById('phone-number-text');
     const emailTextEl = document.getElementById('email-text');
-    const phoneTooltip = document.querySelector('.phone-email-container .tt:first-child');
-    const emailTooltip = document.querySelector('.phone-email-container .tt:last-child');
-
-
-    
+    const phoneTooltipMobile = document.querySelector('.phone-container .tt');
+    const emailTooltipMobile = document.querySelector('.email-container .tt');
     const profileImgEl = document.getElementById('user-profile-img');
+
+    // Process profile image
     if (profileImgEl) {
-      if (studentData.userImg) {
-        
-        profileImgEl.src = studentData.userImg;
-      } else {
-        
-        const defaultMaleImg = "../assets/img/icons8_male_user_480px_1.png";
-        const defaultFemaleImg = "../assets/img/icons8_female_user_480px.png";
-        
-        if (studentData.gender === "Female") {
-          profileImgEl.src = defaultFemaleImg;
-        } else {
-          profileImgEl.src = defaultMaleImg;
-        }
-      }
+      profileImgEl.src = studentData.userImg || 
+        (studentData.gender === "Female" 
+          ? "../assets/img/icons8_female_user_480px.png" 
+          : "../assets/img/icons8_male_user_480px_1.png");
     }
 
-    
-    let fullName = studentData.firstName || '';
-    if (studentData.middleName) fullName += ' ' + studentData.middleName;
-    if (studentData.lastName) fullName += ' ' + studentData.lastName;
-    if (studentData.suffix) fullName += ' ' + studentData.suffix;
-
+    // Process name
+    let fullName = [studentData.firstName, studentData.middleName, studentData.lastName, studentData.suffix]
+      .filter(Boolean).join(' ');
     
     const truncatedName = fullName.length > 20 
       ? fullName.substring(0, 20) + '...' 
       : fullName;
 
-    
+    // Update basic info
     if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
     if (userNameEl) {
       userNameEl.textContent = truncatedName;
@@ -153,33 +229,45 @@ async function loadStudentData(userId) {
       userNameEl.classList.add('text-truncate');
     }
 
-    
+    // Phone and email data
     const phoneNumber = studentData.phoneNumber || 'N/A';
-    if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
-    if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', phoneNumber);
-
-    
     const emailAddress = studentData.emailAddress || 'N/A';
+
+    // Update phone elements
+    if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
+    if (phoneTooltipMobile) {
+      phoneTooltipMobile.setAttribute('data-bs-title', phoneNumber);
+      initTooltip(phoneTooltipMobile);
+    }
+
+    // Update email elements
     if (emailTextEl) emailTextEl.textContent = emailAddress;
-    if (emailTooltip) emailTooltip.setAttribute('data-bs-title', emailAddress);
+    if (emailTooltipMobile) {
+      emailTooltipMobile.setAttribute('data-bs-title', emailAddress);
+      initTooltip(emailTooltipMobile);
+    }
 
-    
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    
+    // Load company image if available
     if (studentData.companyName) {
       await loadCompanyImage(studentData.companyName, companyImageEl);
     }
 
   } catch (error) {
     console.error("Error loading student data:", error);
-    showErrorToast("Failed to load student data: " , true + error.message);
+    showErrorToast("Failed to load student data: " + error.message);
   } finally {
     showLoading(false);
   }
+}
+
+// Helper function to initialize tooltips
+function initTooltip(element) {
+  if (element._tooltip) {
+    bootstrap.Tooltip.getInstance(element).dispose();
+  }
+  new bootstrap.Tooltip(element, {
+    trigger: 'hover focus'
+  });
 }
 
 async function loadCompanyImage(companyName) {

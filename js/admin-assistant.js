@@ -66,7 +66,13 @@ function displayStudents(students) {
     cardContainer.innerHTML = ''; 
 
     if (!students || students.length === 0) {
-        cardContainer.innerHTML = '<p class="text-center text-white">No students found</p>';
+        cardContainer.innerHTML = `
+            <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No Assistants Available</h6>
+                <p class="mt-1">No assistants have been registered yet.</p>
+            </div>
+        `;
         return;
     }
 

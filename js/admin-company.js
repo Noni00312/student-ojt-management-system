@@ -91,7 +91,13 @@ function showError(message) {
       cardContainer.innerHTML = ''; 
   
       if (!companies || companies.length === 0) {
-          cardContainer.innerHTML = '<p class="text-center">No companies found</p>';
+          cardContainer.innerHTML = `
+            <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No Companies Available</h6>
+                <p class="mt-1">No companies have been registered yet.</p>
+            </div>
+        `;
           return;
       }
   

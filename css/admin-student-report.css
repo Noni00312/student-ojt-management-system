@@ -526,3 +526,59 @@ body {
 
 
 
+
+
+
+
+/* Main container layout */
+.student-report-section {
+  display: flex;
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+/* Date container - fixed width */
+.report-date-container {
+  flex: 0 0 25%; /* Don't grow or shrink, base width 25% */
+  min-width: 250px; /* Minimum width to prevent squeezing */
+  max-width: 300px; /* Maximum width */
+  height: calc(100vh - 80px);
+  background-color: #3c3d42;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Reports container - flexible but constrained */
+.reports-container {
+  flex: 1; /* Take remaining space */
+  min-width: 0; /* Allow it to shrink below content width */
+  background-color: #3c3d42;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Report content container */
+.student-report-container {
+  max-height: 80vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding-right: 8px;
+}
+
+/* Individual report items */
+.report {
+  background-color: #abacb038;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  word-wrap: break-word; /* Ensure long words break */
+  overflow-wrap: break-word; /* Alternative for modern browsers */
+}
+
+/* Content text styling */
+.content-container p {
+  white-space: pre-wrap; /* Preserve line breaks but wrap text */
+  word-break: break-word; /* Break long words if needed */
+  overflow: hidden; /* Hide any overflow */
+}
+

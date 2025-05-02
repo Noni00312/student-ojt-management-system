@@ -90,6 +90,97 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
   
   
+  // async function loadStudentData(userId) {
+  //   showLoading(true);
+  //   try {
+  //     const { firebaseCRUD } = await import("./firebase-crud.js");
+  //     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+  
+  //     if (!students || students.length === 0) {
+  //       console.log("No student data found");
+  //       return;
+  //     }
+  
+  //     const studentData = students[0];
+  
+      
+  //     const companyNameEl = document.getElementById('company-name');
+  //     const companyImageEl = document.querySelector('.company-container img');
+  //     const userNameEl = document.getElementById('user-name');
+  //     const phoneTextEl = document.getElementById('phone-number-text');
+  //     const emailTextEl = document.getElementById('email-text');
+  //     const phoneTooltip = document.querySelector('.phone-email-container .tt:first-child');
+  //     const emailTooltip = document.querySelector('.phone-email-container .tt:last-child');
+
+
+      
+  //     const profileImgEl = document.getElementById('user-profile-img');
+  //     if (profileImgEl) {
+  //       if (studentData.userImg) {
+          
+  //         profileImgEl.src = studentData.userImg;
+  //       } else {
+          
+  //         const defaultMaleImg = "../assets/img/icons8_male_user_480px_1.png";
+  //         const defaultFemaleImg = "../assets/img/icons8_female_user_480px.png";
+          
+  //         if (studentData.gender === "Female") {
+  //           profileImgEl.src = defaultFemaleImg;
+  //         } else {
+  //           profileImgEl.src = defaultMaleImg;
+  //         }
+  //       }
+  //     }
+  
+      
+  //     let fullName = studentData.firstName || '';
+  //     if (studentData.middleName) fullName += ' ' + studentData.middleName;
+  //     if (studentData.lastName) fullName += ' ' + studentData.lastName;
+  //     if (studentData.suffix) fullName += ' ' + studentData.suffix;
+  
+     
+  //     const truncatedName = fullName.length > 20 
+  //       ? fullName.substring(0, 20) + '...' 
+  //       : fullName;
+  
+      
+  //     if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
+  //     if (userNameEl) {
+  //       userNameEl.textContent = truncatedName;
+  //       userNameEl.setAttribute('title', fullName);
+  //       userNameEl.classList.add('text-truncate');
+  //     }
+  
+     
+  //     const phoneNumber = studentData.phoneNumber || 'N/A';
+  //     if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
+  //     if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', phoneNumber);
+  
+      
+  //     const emailAddress = studentData.emailAddress || 'N/A';
+  //     if (emailTextEl) emailTextEl.textContent = emailAddress;
+  //     if (emailTooltip) emailTooltip.setAttribute('data-bs-title', emailAddress);
+  
+      
+  //     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  //     tooltipTriggerList.map(function (tooltipTriggerEl) {
+  //       return new bootstrap.Tooltip(tooltipTriggerEl);
+  //     });
+  
+      
+  //     if (studentData.companyName) {
+  //       await loadCompanyImage(studentData.companyName, companyImageEl);
+  //     }
+  
+  //   } catch (error) {
+  //     console.error("Error loading student data:", error);
+  //     showErrorToast("Failed to load student data: " , true + error.message);
+  //   } finally {
+  //     showLoading(false);
+  //   }
+  // }
+
+
   async function loadStudentData(userId) {
     showLoading(true);
     try {
@@ -103,47 +194,33 @@ document.addEventListener('DOMContentLoaded', async function () {
   
       const studentData = students[0];
   
-      
+      // Get DOM elements
       const companyNameEl = document.getElementById('company-name');
       const companyImageEl = document.querySelector('.company-container img');
       const userNameEl = document.getElementById('user-name');
       const phoneTextEl = document.getElementById('phone-number-text');
       const emailTextEl = document.getElementById('email-text');
-      const phoneTooltip = document.querySelector('.phone-email-container .tt:first-child');
-      const emailTooltip = document.querySelector('.phone-email-container .tt:last-child');
-
-
-      
+      const phoneTooltipMobile = document.querySelector('.phone-container .tt');
+      const emailTooltipMobile = document.querySelector('.email-container .tt');
       const profileImgEl = document.getElementById('user-profile-img');
+  
+      // Process profile image
       if (profileImgEl) {
-        if (studentData.userImg) {
-          
-          profileImgEl.src = studentData.userImg;
-        } else {
-          
-          const defaultMaleImg = "../assets/img/icons8_male_user_480px_1.png";
-          const defaultFemaleImg = "../assets/img/icons8_female_user_480px.png";
-          
-          if (studentData.gender === "Female") {
-            profileImgEl.src = defaultFemaleImg;
-          } else {
-            profileImgEl.src = defaultMaleImg;
-          }
-        }
+        profileImgEl.src = studentData.userImg || 
+          (studentData.gender === "Female" 
+            ? "../assets/img/icons8_female_user_480px.png" 
+            : "../assets/img/icons8_male_user_480px_1.png");
       }
   
+      // Process name
+      let fullName = [studentData.firstName, studentData.middleName, studentData.lastName, studentData.suffix]
+        .filter(Boolean).join(' ');
       
-      let fullName = studentData.firstName || '';
-      if (studentData.middleName) fullName += ' ' + studentData.middleName;
-      if (studentData.lastName) fullName += ' ' + studentData.lastName;
-      if (studentData.suffix) fullName += ' ' + studentData.suffix;
-  
-     
       const truncatedName = fullName.length > 20 
         ? fullName.substring(0, 20) + '...' 
         : fullName;
   
-      
+      // Update basic info
       if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
       if (userNameEl) {
         userNameEl.textContent = truncatedName;
@@ -151,34 +228,59 @@ document.addEventListener('DOMContentLoaded', async function () {
         userNameEl.classList.add('text-truncate');
       }
   
-     
+      // Phone and email data
       const phoneNumber = studentData.phoneNumber || 'N/A';
-      if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
-      if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', phoneNumber);
-  
-      
       const emailAddress = studentData.emailAddress || 'N/A';
+  
+      // Update phone elements
+      if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
+      if (phoneTooltipMobile) {
+        phoneTooltipMobile.setAttribute('data-bs-title', phoneNumber);
+        initTooltip(phoneTooltipMobile);
+      }
+  
+      // Update email elements - THIS IS THE CRITICAL FIX
       if (emailTextEl) emailTextEl.textContent = emailAddress;
-      if (emailTooltip) emailTooltip.setAttribute('data-bs-title', emailAddress);
+      if (emailTooltipMobile) {
+        emailTooltipMobile.setAttribute('data-bs-title', emailAddress);
+        initTooltip(emailTooltipMobile, 'top'); // Explicitly set placement for email
+      }
   
-      
-      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-      tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-      });
-  
-      
+      // Load company image if available
       if (studentData.companyName) {
         await loadCompanyImage(studentData.companyName, companyImageEl);
       }
   
     } catch (error) {
       console.error("Error loading student data:", error);
-      showErrorToast("Failed to load student data: " , true + error.message);
+      showErrorToast("Failed to load student data: " + error.message);
     } finally {
       showLoading(false);
     }
   }
+  
+  // Enhanced tooltip initialization helper
+  function initTooltip(element, placement = 'top') {
+    if (!element) return;
+    
+    // Dispose existing tooltip if any
+    if (element._tooltip) {
+      bootstrap.Tooltip.getInstance(element).dispose();
+    }
+    
+    // Initialize new tooltip with enhanced options
+    new bootstrap.Tooltip(element, {
+      placement: placement,
+      trigger: 'hover focus',
+      boundary: 'viewport', // Ensure tooltips stay within viewport
+      customClass: 'assistant-tooltip' // Add custom class for styling
+    });
+  }
+
+
+
+
+
   
   async function loadCompanyImage(companyName) {
     try {
@@ -326,38 +428,87 @@ document.addEventListener('DOMContentLoaded', async function () {
     return urlParams.get('userId');
   }
   
-  async function loadAssistantReports(userId) {
-    showLoading(true);
-    try {
-      const { firebaseCRUD } = await import("./firebase-crud.js");
+  // async function loadAssistantReports(userId) {
+  //   showLoading(true);
+  //   try {
+  //     const { firebaseCRUD } = await import("./firebase-crud.js");
   
       
-      const assistants = await firebaseCRUD.queryData("students", "userId", "==", userId);
-      if (!assistants || assistants.length === 0) throw new Error("Assistant not found");
+  //     const assistants = await firebaseCRUD.queryData("students", "userId", "==", userId);
+  //     if (!assistants || assistants.length === 0) throw new Error("Assistant not found");
       
-      const assistant = assistants[0];
-      displayStudentInfo(assistant);
+  //     const assistant = assistants[0];
+  //     displayStudentInfo(assistant);
   
       
-      const reports = await firebaseCRUD.queryData("assistantreports", "userId", "==", userId);
+  //     const reports = await firebaseCRUD.queryData("assistantreports", "userId", "==", userId);
   
      
-      reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  //     reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   
-      if (reports && reports.length > 0) {
-        displayReports(reports);
-        setupDateNavigation(reports);
+  //     if (reports && reports.length > 0) {
+  //       displayReports(reports);
+  //       setupDateNavigation(reports);
+  //     } else {
+  //       displayNoReportsMessage();
+  //     }
+  
+  //   } catch (error) {
+  //     console.error("Error loading reports:", error);
+  //     showError("Failed to load reports: " + error.message);
+  //   } finally {
+  //     showLoading(false);
+  //   }
+  // }
+  
+  async function loadAssistantReports(userId) {
+  showLoading(true);
+  try {
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+
+    // Get assistant data
+    const assistants = await firebaseCRUD.queryData("students", "userId", "==", userId);
+    if (!assistants || assistants.length === 0) throw new Error("Assistant not found");
+    
+    const assistant = assistants[0];
+    displayStudentInfo(assistant);
+
+    // Get all reports
+    const reports = await firebaseCRUD.queryData("assistantreports", "userId", "==", userId);
+    reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if (reports && reports.length > 0) {
+      // Get current date (without time)
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0);
+      
+      // Filter reports for current date
+      const todaysReports = reports.filter(report => {
+        const reportDate = new Date(report.createdAt);
+        reportDate.setHours(0, 0, 0, 0);
+        return reportDate.getTime() === currentDate.getTime();
+      });
+
+      if (todaysReports.length > 0) {
+        displayReports(todaysReports);
       } else {
-        displayNoReportsMessage();
+        // If no reports for today, show a message
+        displayNoReportsMessage("No reports found for today");
       }
-  
-    } catch (error) {
-      console.error("Error loading reports:", error);
-      showError("Failed to load reports: " + error.message);
-    } finally {
-      showLoading(false);
+      
+      // Still setup date navigation with all reports
+      setupDateNavigation(reports);
+    } else {
+      displayNoReportsMessage("No reports found for this assistant");
     }
+
+  } catch (error) {
+    console.error("Error loading reports:", error);
+    showError("Failed to load reports: " + error.message);
+  } finally {
+    showLoading(false);
   }
+}
   
   function displayStudentInfo(student) {
     const studentNameElement = document.querySelector('.student-name');
@@ -497,8 +648,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         </span>
         <span class="d-none d-md-block d-flex text-center w-100 fw-normal">${formattedDate.date}</span>
       `;
+
+      // Highlight today's date
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (date.getTime() === today.getTime()) {
+        dateButton.classList.add('active-date');
+      }
   
       dateButton.addEventListener('click', () => {
+        // Remove active class from all buttons
+        document.querySelectorAll('.date-container button').forEach(btn => {
+          btn.classList.remove('active-date');
+        });
+        // Add active class to clicked button
+        dateButton.classList.add('active-date');
+
+
+
         filterReportsByDate(date, reports);
       });
   
@@ -517,15 +684,35 @@ document.addEventListener('DOMContentLoaded', async function () {
     displayReports(filteredReports);
   }
   
-  function displayNoReportsMessage() {
+  // function displayNoReportsMessage() {
+  //   const reportsContainer = document.querySelector('.student-report-container');
+  //   reportsContainer.innerHTML = `
+  //     <div class="text-center text-light py-5">
+  //       <i class="bi bi-file-earmark-text fs-1"></i>
+  //       <p class="mt-3">No reports found for this assistant</p>
+  //     </div>
+  //   `;
+  // }
+
+  function displayNoReportsMessage(message = "No reports found for this student") {
     const reportsContainer = document.querySelector('.student-report-container');
     reportsContainer.innerHTML = `
       <div class="text-center text-light py-5">
         <i class="bi bi-file-earmark-text fs-1"></i>
-        <p class="mt-3">No reports found for this assistant</p>
+        <p class="mt-3">${message}</p>
       </div>
     `;
   }
+
+  // function displayNoReportsMessage(message = "No reports found for this student") {
+  //   const reportsContainer = document.querySelector('.student-report-container');
+  //   reportsContainer.innerHTML = `
+  //     <div class="text-center text-light py-5">
+  //       <i class="bi bi-file-earmark-text fs-1"></i>
+  //       <p class="mt-3">${message}</p>
+  //     </div>
+  //   `;
+  // }
   
 
 

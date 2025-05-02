@@ -1,4 +1,38 @@
 
+document.addEventListener("DOMContentLoaded", async function () {
+  try {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("No userId found in localStorage");
+      return;
+    }
+
+    await window.dbReady;
+
+    const img = document.getElementById("user-img");
+
+    const dataArray = await crudOperations.getByIndex(
+      "studentInfoTbl",
+      "userId",
+      userId
+    );
+
+    const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+    if (data != null) {
+      img.src = data.userImg
+        ? data.userImg
+        : "../assets/img/icons8_male_user_480px_1";
+
+    } else {
+      console.warn("No user data found for this user.");
+    }
+  } catch (err) {
+    console.error("Failed to get user data from IndexedDB", err);
+  }
+});
+
 function showLoading(show) {
     const loader = document.getElementById("loading-indicator") || createLoader();
     if (loader) {
@@ -113,14 +147,14 @@ function showError(message) {
                   `<div class="no-image-placeholder"><i class="bi bi-building"></i></div>`
               }
           </div>
-          <div class="company-overlay"></div>
+          <div class="company-overlay" style="background: rgba(75, 71, 71, 0.5);"></div>
           <div class="company-content">
             <div class="company-info">
               <p class="d-none">${company.id || ''}</p>
               <h5>${company.companyName || 'No name'}</h5>
               <p>${company.companyAddress || 'No address'}</p>
             </div>
-            <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#updateCompanyModal" data-id="${company.id}">
+            <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#updateCompanyModal" data-id="${company.id}" style="background: #6e1423;">
               <i class="bi bi-pencil"></i>
             </button>
           </div>
@@ -335,6 +369,9 @@ function showError(message) {
   
   
   document.addEventListener('DOMContentLoaded', function () {
+
+
+    
       const updateCameraInput = document.getElementById('update-camera-input');
       if (updateCameraInput) {
           updateCameraInput.addEventListener('change', function (event) {

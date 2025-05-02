@@ -428,38 +428,87 @@ document.addEventListener('DOMContentLoaded', async function () {
     return urlParams.get('userId');
   }
   
-  async function loadAssistantReports(userId) {
-    showLoading(true);
-    try {
-      const { firebaseCRUD } = await import("./firebase-crud.js");
+  // async function loadAssistantReports(userId) {
+  //   showLoading(true);
+  //   try {
+  //     const { firebaseCRUD } = await import("./firebase-crud.js");
   
       
-      const assistants = await firebaseCRUD.queryData("students", "userId", "==", userId);
-      if (!assistants || assistants.length === 0) throw new Error("Assistant not found");
+  //     const assistants = await firebaseCRUD.queryData("students", "userId", "==", userId);
+  //     if (!assistants || assistants.length === 0) throw new Error("Assistant not found");
       
-      const assistant = assistants[0];
-      displayStudentInfo(assistant);
+  //     const assistant = assistants[0];
+  //     displayStudentInfo(assistant);
   
       
-      const reports = await firebaseCRUD.queryData("assistantreports", "userId", "==", userId);
+  //     const reports = await firebaseCRUD.queryData("assistantreports", "userId", "==", userId);
   
      
-      reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  //     reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   
-      if (reports && reports.length > 0) {
-        displayReports(reports);
-        setupDateNavigation(reports);
+  //     if (reports && reports.length > 0) {
+  //       displayReports(reports);
+  //       setupDateNavigation(reports);
+  //     } else {
+  //       displayNoReportsMessage();
+  //     }
+  
+  //   } catch (error) {
+  //     console.error("Error loading reports:", error);
+  //     showError("Failed to load reports: " + error.message);
+  //   } finally {
+  //     showLoading(false);
+  //   }
+  // }
+  
+  async function loadAssistantReports(userId) {
+  showLoading(true);
+  try {
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+
+    // Get assistant data
+    const assistants = await firebaseCRUD.queryData("students", "userId", "==", userId);
+    if (!assistants || assistants.length === 0) throw new Error("Assistant not found");
+    
+    const assistant = assistants[0];
+    displayStudentInfo(assistant);
+
+    // Get all reports
+    const reports = await firebaseCRUD.queryData("assistantreports", "userId", "==", userId);
+    reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if (reports && reports.length > 0) {
+      // Get current date (without time)
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0);
+      
+      // Filter reports for current date
+      const todaysReports = reports.filter(report => {
+        const reportDate = new Date(report.createdAt);
+        reportDate.setHours(0, 0, 0, 0);
+        return reportDate.getTime() === currentDate.getTime();
+      });
+
+      if (todaysReports.length > 0) {
+        displayReports(todaysReports);
       } else {
-        displayNoReportsMessage();
+        // If no reports for today, show a message
+        displayNoReportsMessage("No reports found for today");
       }
-  
-    } catch (error) {
-      console.error("Error loading reports:", error);
-      showError("Failed to load reports: " + error.message);
-    } finally {
-      showLoading(false);
+      
+      // Still setup date navigation with all reports
+      setupDateNavigation(reports);
+    } else {
+      displayNoReportsMessage("No reports found for this assistant");
     }
+
+  } catch (error) {
+    console.error("Error loading reports:", error);
+    showError("Failed to load reports: " + error.message);
+  } finally {
+    showLoading(false);
   }
+}
   
   function displayStudentInfo(student) {
     const studentNameElement = document.querySelector('.student-name');
@@ -599,8 +648,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         </span>
         <span class="d-none d-md-block d-flex text-center w-100 fw-normal">${formattedDate.date}</span>
       `;
+
+      // Highlight today's date
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (date.getTime() === today.getTime()) {
+        dateButton.classList.add('active-date');
+      }
   
       dateButton.addEventListener('click', () => {
+        // Remove active class from all buttons
+        document.querySelectorAll('.date-container button').forEach(btn => {
+          btn.classList.remove('active-date');
+        });
+        // Add active class to clicked button
+        dateButton.classList.add('active-date');
+
+
+
         filterReportsByDate(date, reports);
       });
   
@@ -619,15 +684,35 @@ document.addEventListener('DOMContentLoaded', async function () {
     displayReports(filteredReports);
   }
   
-  function displayNoReportsMessage() {
+  // function displayNoReportsMessage() {
+  //   const reportsContainer = document.querySelector('.student-report-container');
+  //   reportsContainer.innerHTML = `
+  //     <div class="text-center text-light py-5">
+  //       <i class="bi bi-file-earmark-text fs-1"></i>
+  //       <p class="mt-3">No reports found for this assistant</p>
+  //     </div>
+  //   `;
+  // }
+
+  function displayNoReportsMessage(message = "No reports found for this student") {
     const reportsContainer = document.querySelector('.student-report-container');
     reportsContainer.innerHTML = `
       <div class="text-center text-light py-5">
         <i class="bi bi-file-earmark-text fs-1"></i>
-        <p class="mt-3">No reports found for this assistant</p>
+        <p class="mt-3">${message}</p>
       </div>
     `;
   }
+
+  // function displayNoReportsMessage(message = "No reports found for this student") {
+  //   const reportsContainer = document.querySelector('.student-report-container');
+  //   reportsContainer.innerHTML = `
+  //     <div class="text-center text-light py-5">
+  //       <i class="bi bi-file-earmark-text fs-1"></i>
+  //       <p class="mt-3">${message}</p>
+  //     </div>
+  //   `;
+  // }
   
 
 

@@ -1,9 +1,9 @@
 :root {
   --accent: #6e1423;
   --accent-darken: #590f1c;
-  --primary: #f6f8e2;
+  --primary: #fff;
   --forecolor: #3c3d42;
-  --secondary: #e0ddca;
+  --secondary: #fff;
   --maroon: #801414;
   --cyan-dark: #004e4e;
   --card-shadow: 0 10px 20px rgba(0,0,0,0.1);

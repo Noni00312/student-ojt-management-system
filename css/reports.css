@@ -271,7 +271,7 @@ button {
 }
 
 .view-image-modal {
-  background-color: #748e54;
+  background-color: #6e1423;
   color: white;
   border-radius: 10px;
 }
@@ -296,7 +296,7 @@ button {
 
 .view-image-container::-webkit-scrollbar-thumb,
 .image-container::-webkit-scrollbar-thumb {
-  background-color: #748e54;
+  background-color: #6e1423;
   border-radius: 10px;
 }
 

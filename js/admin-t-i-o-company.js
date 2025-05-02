@@ -9,7 +9,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
     await window.dbReady;
 
-    const img = document.getElementById("user-profile");
+    const img = document.getElementById("user-img");
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",
@@ -37,7 +37,6 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-let allAttendanceDates = [];
 let allCompanyDataList = [];
 
 document.getElementById("company-search").addEventListener("input", (e) => {
@@ -139,6 +138,7 @@ async function getAllByCompanyName() {
         users: group.users,
       });
     }
+
     allCompanyDataList = companyDataList;
     populateDates(companyDataList);
   } catch (error) {
@@ -169,7 +169,7 @@ function populateDates(companyDataList) {
     container.innerHTML = `<div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
                 <h6 class="mt-2">No Company Found For This Date</h6>
-                <p class="mt-1">Oops! There’s no data for this date. Try picking another day from the calendar.</p>
+                <p class="mt-1 text-muted">Oops! No matching results found. Try searching with a different company name.</p>
             </div>`;
     return;
   }
@@ -185,7 +185,8 @@ function populateDates(companyDataList) {
       date,
       users,
     } = company;
-    crudOperations.clearTable("companyUsersTbl");
+
+    // crudOperations.clearTable("companyUsersTbl");
     crudOperations.upsert("companyUsersTbl", {
       id: `${companyName}_${date}`,
       companyName,
@@ -196,7 +197,7 @@ function populateDates(companyDataList) {
       late,
       absent,
     });
-    
+
     const card = document.createElement("div");
     card.className = "col-12 col-md-6 col-lg-4 mb-2 p-2";
 

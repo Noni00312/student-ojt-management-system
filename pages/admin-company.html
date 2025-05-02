@@ -13,10 +13,11 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/assets/img/icons/LOGO 96.png">
-    <link rel="app-mobile-web-app-status-bar" href="#9CCD62">
-    <meta name="theme-color" content="#748E54">
+    <link rel="app-mobile-web-app-status-bar" href="#6e1423">
+    <meta name="theme-color" content="#6e1423">
 
-    <title>Student OJT Management Student</title>
+    <title>Companies | SOJTMS</title>
+    <link rel="icon" type="image/png" href="/assets/img/logo trans.png">
   </head>
 
   <body class="main-container">
@@ -37,27 +38,27 @@
             <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link text-light" aria-current="page" href="admin-dashboard.html">Home</a>
+                  <a class="nav-link text-light" aria-current="page" href="./admin-dashboard.html">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link text-light" aria-current="page" href="admin-t-i-o.html">Time in/out</a>
+                  <a class="nav-link text-light" aria-current="page" href="./admin-t-i-o.html">Time in/out</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link text-light" aria-current="page" href="admin-company.html">Companies</a>
+                  <a class="nav-link text-light" aria-current="page" href="./admin-company.html">Companies</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link text-light" aria-current="page" href="admin-student.html">Students</a>
+                  <a class="nav-link text-light" aria-current="page" href="./admin-student.html">Students</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link text-light" aria-current="page" href="admin-assistant.html">Assistants</a>
+                  <a class="nav-link text-light" aria-current="page" href="./admin-assistant.html">Assistants</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link text-light" aria-current="page" href="admin-incident-report.html">Incident Report</a>
+                  <a class="nav-link text-light" aria-current="page" href="./admin-incident-report.html">Incident Report</a>
                 </li>
               </ul>
             </div>
             <a href="/pages/admin-profile.html" id="user-profile" class=" text-decoration-none">
-              <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy">
+              <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-img" style="border-radius: 50%;">
             </a>
       </div>
   </nav>
@@ -71,7 +72,7 @@
 
           <div class="search-input position-relative w-100">
             <i class="bi bi-search position-absolute top-50 end-0 translate-middle me-2"></i>
-            <input type="text" id="companySearch" class="form-control py-2" style="height: 58px;"
+            <input type="text" id="companySearch" class="form-control py-2" style="height: 58px; border-radius: 30px !important;"
               placeholder="Search companies...">
           </div>
         </form>
@@ -129,7 +130,7 @@
 
                 <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative modal-input">
                   <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                  <input type="tel" class="form-control ps-3 pe-1" id="company-address" name="companyAddress"
+                  <input type="text" class="form-control ps-3 pe-1" id="company-address" name="companyAddress"
                     placeholder="Enter company address" required>
                   <label for="company-address">Company Address</label>
                   <span id="companyAddress-error" class="text-danger" style="font-size: 12px"></span>
@@ -186,7 +187,7 @@
 
                 <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative modal-input">
                   <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                  <input type="tel" class="form-control ps-3 pe-1" id="update-company-address" name="companyAddressU"
+                  <input type="text" class="form-control ps-3 pe-1" id="update-company-address" name="companyAddressU"
                     placeholder="Enter company address">
                   <label for="update-company-address">Company Address</label>
                   <span id="companyAddressU-error" class="text-danger" style="font-size: 12px"></span>
@@ -220,53 +221,53 @@
         <button type="button" class="btn-close " data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body p-0 ">
-          <ul class="nav d-flex flex-column">
-  
-            <li class="nav-item">
-              <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-dashboard.html">
-                <span class="fs-5">Dashboard</span> 
-                <i class="bi bi-microsoft fs-5"></i>
-              </a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-t-i-o.html">
-                <span class="fs-5">Time in/out</span> 
-                <i class="bi bi-clock-fill fs-4"></i>
-              </a>
-            </li>
-  
-            <li class="nav-item">
-              <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-company.html">
-                <span class="fs-5">Companies</span> 
-                <i class="bi bi-buildings-fill fs-3"></i>
-              </a>
-            </li>
-  
-            <li class="nav-item">
-              <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-student.html">
-                <span class="fs-5">Students</span> 
-                <i class="bi bi-mortarboard-fill fs-3"></i>
-              </a>
-            </li>
-  
-            <li class="nav-item">
-              <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="admin-assistant.html">
-                <span class="fs-5">Assistants</span> 
-                <i class="bi bi-person-badge fs-3"></i>
-              </a>
-            </li>
-  
-  
-            <li class="nav-item">
-              <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="#">
-                <span class="fs-5">Incident Report</span> 
-                <i class="bi bi-printer-fill fs-4"></i>
-              </a>
-            </li>
-  
-  
-          </ul>
+        <ul class="nav d-flex flex-column">
+
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-dashboard.html">
+              <span class="fs-5">Dashboard</span> 
+              <i class="bi bi-microsoft fs-5"></i>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-t-i-o.html">
+              <span class="fs-5">Time in/out</span> 
+              <i class="bi bi-clock-fill fs-4"></i>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-company.html">
+              <span class="fs-5">Companies</span> 
+              <i class="bi bi-buildings-fill fs-3"></i>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-student.html">
+              <span class="fs-5">Students</span> 
+              <i class="bi bi-mortarboard-fill fs-3"></i>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-assistant.html">
+              <span class="fs-5">Assistants</span> 
+              <i class="bi bi-person-badge fs-3"></i>
+            </a>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-incident-report.html">
+              <span class="fs-5">Incident Report</span> 
+              <i class="bi bi-printer-fill fs-4"></i>
+            </a>
+          </li>
+
+
+        </ul>
       </div>
     </div>
     
@@ -276,10 +277,9 @@
       crossorigin="anonymous"></script>
     <script src="/js/jQuery.js"></script>
     <script src="/js/jquery.validate.min.js"></script>
-    <script type="module" src="/js/firebase-config.js"></script>    
+    <script type="module" src="/js/firebase-config.js"></script> 
+    <script src="/js/index-db-crud.js"></script> 
     <script src="/js/app.js"></script>
-    <script src="/js/ui.js"></script>
-    
     <script src="/js/admin-company.js"></script>
 
 

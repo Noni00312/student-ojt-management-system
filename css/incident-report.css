@@ -1,6 +1,6 @@
 input {
     border: none;
-    background-color: #F6F8E2 !important;
+    background-color: #fff !important;
     border-radius: 30px !important;
     padding:16px 32px !important;
     /* box-shadow: 5px 4px 21px -5px rgba(0,0,0,0.2);
@@ -24,7 +24,7 @@ input {
     align-items: center;
 }
 .history-card span {
-    color: #F6F8E2;
+    color: #fff;
 }
 .separator {
     width: 1px;
@@ -67,7 +67,7 @@ input {
     align-items: center;
 }
 .history-card-inside span {
-    color: #F6F8E2;
+    color: #fff;
 }
 
 .history-images {

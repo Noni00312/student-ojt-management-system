@@ -409,29 +409,75 @@ function getUserIdFromUrl() {
   return urlParams.get('userId');
 }
 
+// async function loadStudentReports(userId) {
+//   showLoading(true);
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+
+   
+//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+//     if (!students || students.length === 0) throw new Error("Student not found");
+
+//     const student = students[0];
+//     displayStudentInfo(student);
+
+    
+//     const reports = await firebaseCRUD.queryData("reports", "userId", "==", userId);
+
+    
+//     reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+//     if (reports && reports.length > 0) {
+//       displayReports(reports);
+//       setupDateNavigation(reports);
+//     } else {
+//       displayNoReportsMessage();
+//     }
+
+//   } catch (error) {
+//     console.error("Error loading reports:", error);
+//     showError("Failed to load reports: " + error.message);
+//   } finally {
+//     showLoading(false);
+//   }
+// }
 async function loadStudentReports(userId) {
   showLoading(true);
   try {
     const { firebaseCRUD } = await import("./firebase-crud.js");
 
-   
     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
     if (!students || students.length === 0) throw new Error("Student not found");
 
     const student = students[0];
     displayStudentInfo(student);
 
-    
     const reports = await firebaseCRUD.queryData("reports", "userId", "==", userId);
-
-    
     reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     if (reports && reports.length > 0) {
-      displayReports(reports);
+      // Get current date (without time)
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0);
+      
+      // Filter reports for current date
+      const todaysReports = reports.filter(report => {
+        const reportDate = new Date(report.createdAt);
+        reportDate.setHours(0, 0, 0, 0);
+        return reportDate.getTime() === currentDate.getTime();
+      });
+
+      if (todaysReports.length > 0) {
+        displayReports(todaysReports);
+      } else {
+        // If no reports for today, show a message
+        displayNoReportsMessage("No reports found for today");
+      }
+      
+      // Still setup date navigation with all reports
       setupDateNavigation(reports);
     } else {
-      displayNoReportsMessage();
+      displayNoReportsMessage("No reports found for this student");
     }
 
   } catch (error) {
@@ -546,6 +592,46 @@ async function loadReportImages(reportId) {
   }
 }
 
+// function setupDateNavigation(reports) {
+//   const dateContainer = document.querySelector('.date-container');
+//   dateContainer.innerHTML = '';
+
+//   const uniqueDates = [...new Set(
+//     reports.map(report => {
+//       const date = new Date(report.createdAt);
+//       return new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+//     })
+//   )];
+
+//   uniqueDates.forEach(dateString => {
+//     const date = new Date(dateString);
+//     const formattedDate = formatDateTime(dateString);
+//     const reportsForDate = reports.filter(report => {
+//       const reportDate = new Date(report.createdAt);
+//       return reportDate.getFullYear() === date.getFullYear() &&
+//         reportDate.getMonth() === date.getMonth() &&
+//         reportDate.getDate() === date.getDate();
+//     });
+
+//     const dateButton = document.createElement('button');
+//     dateButton.className = 'w-100 border-0 px-0 py-2 bg-transparent d-flex align-items-center justify-content-between border-bottom border-light rounded-0';
+//     dateButton.innerHTML = `
+//       <span class="report-date-sm mt-1 d-flex flex-column align-items-center justify-content-between d-md-none text-center w-100">
+//         <span id="month-name-sm" class="fw-normal text-truncate" style="font-size: 12px; width: calc(100% - 5px)">
+//           ${formattedDate.monthName}
+//         </span>
+//         <span id="month-date-sm" class="fs-3 fw-bold">${formattedDate.monthDay}</span>
+//       </span>
+//       <span class="d-none d-md-block d-flex text-center w-100 fw-normal">${formattedDate.date}</span>
+//     `;
+
+//     dateButton.addEventListener('click', () => {
+//       filterReportsByDate(date, reports);
+//     });
+
+//     dateContainer.appendChild(dateButton);
+//   });
+// }
 function setupDateNavigation(reports) {
   const dateContainer = document.querySelector('.date-container');
   dateContainer.innerHTML = '';
@@ -579,7 +665,21 @@ function setupDateNavigation(reports) {
       <span class="d-none d-md-block d-flex text-center w-100 fw-normal">${formattedDate.date}</span>
     `;
 
+    // Highlight today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date.getTime() === today.getTime()) {
+      dateButton.classList.add('active-date');
+    }
+
     dateButton.addEventListener('click', () => {
+      // Remove active class from all buttons
+      document.querySelectorAll('.date-container button').forEach(btn => {
+        btn.classList.remove('active-date');
+      });
+      // Add active class to clicked button
+      dateButton.classList.add('active-date');
+      
       filterReportsByDate(date, reports);
     });
 
@@ -598,12 +698,21 @@ function filterReportsByDate(selectedDate, allReports) {
   displayReports(filteredReports);
 }
 
-function displayNoReportsMessage() {
+// function displayNoReportsMessage() {
+//   const reportsContainer = document.querySelector('.student-report-container');
+//   reportsContainer.innerHTML = `
+//     <div class="text-center text-light py-5">
+//       <i class="bi bi-file-earmark-text fs-1"></i>
+//       <p class="mt-3">No reports found for this student</p>
+//     </div>
+//   `;
+// }
+function displayNoReportsMessage(message = "No reports found for this student") {
   const reportsContainer = document.querySelector('.student-report-container');
   reportsContainer.innerHTML = `
     <div class="text-center text-light py-5">
       <i class="bi bi-file-earmark-text fs-1"></i>
-      <p class="mt-3">No reports found for this student</p>
+      <p class="mt-3">${message}</p>
     </div>
   `;
 }

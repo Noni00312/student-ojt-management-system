@@ -30,12 +30,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     const imgButton = document.getElementById("img-button");
     const logoutButton = document.getElementById("logout-button");
 
-    // Add function to check for pending time entries
     async function hasPendingTimeEntries(userId) {
       try {
         const today = new Date().toLocaleDateString("en-CA");
         
-        // First check completeAttendanceTbl for completed status
         const completeAttendance = await crudOperations.getByIndex(
           "completeAttendanceTbl",
           "userId",
@@ -44,14 +42,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         
         const todayComplete = completeAttendance.find(entry => entry.date === today);
         if (todayComplete && todayComplete.status === "complete") {
-          return false; // Attendance is already marked complete
+          return false; 
         }
     
-        // If not complete, check timeInOut table for pending entries
         const logs = await crudOperations.getByIndex("timeInOut", "userId", userId);
         const todayLogs = logs.filter(log => log.date === today);
         
-        // Get user schedule to know what logs we expect
         const userDataArray = await crudOperations.getByIndex(
           "studentInfoTbl",
           "userId",
@@ -61,16 +57,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         
         if (!userData || !userData.weeklySchedule) return false;
         
-        // Check if today is a scheduled day
         const dayNames = ["SUN", "MON", "TUE", "WED", "THURS", "FRI", "SAT"];
         const todayDay = new Date().getDay();
         const todaySchedule = dayNames[todayDay];
         
         if (!userData.weeklySchedule[todaySchedule]) {
-          return false; // No schedule today, so no pending entries
+          return false; 
         }
         
-        // Check which logs we expect based on schedule
         const expectedLogs = [];
         if (userData.morningTimeIn && userData.morningTimeOut) {
           expectedLogs.push("morningTimeIn", "morningTimeOut");
@@ -79,7 +73,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           expectedLogs.push("afternoonTimeIn", "afternoonTimeOut");
         }
         
-        // Check if all expected logs are present
         const loggedTypes = todayLogs.map(log => log.type);
         return expectedLogs.some(type => !loggedTypes.includes(type));
       } catch (error) {
@@ -88,7 +81,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     }
 
-    // Modified setupEditButton function
     function setupEditButton(editButton) {
       const updateButtonState = async () => {
         const userId = localStorage.getItem("userId");
@@ -229,7 +221,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       submitButton.innerHTML =
         '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
 
-      // Check for pending time entries before allowing update
       const hasPending = await hasPendingTimeEntries(userId);
       if (hasPending) {
         alert("Cannot update profile while having pending time entries for today.");
@@ -405,10 +396,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "/pages/login.html";
   }
 });
-
-// Rest of the existing functions (convertTo12HourFormat, formatWeeklySchedule, etc.)
-// ... keep all the remaining functions exactly as they were in your original file ...
-// Make sure to include all the other functions from your original file here
 
 function convertTo12HourFormat(time24) {
   if (!time24) return ["", ""];

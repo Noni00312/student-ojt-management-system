@@ -30,6 +30,145 @@ document.addEventListener("DOMContentLoaded", async function () {
     const imgButton = document.getElementById("img-button");
     const logoutButton = document.getElementById("logout-button");
 
+    // Add function to check for pending time entries
+    async function hasPendingTimeEntries(userId) {
+      try {
+        const today = new Date().toLocaleDateString("en-CA");
+        
+        // First check completeAttendanceTbl for completed status
+        const completeAttendance = await crudOperations.getByIndex(
+          "completeAttendanceTbl",
+          "userId",
+          userId
+        );
+        
+        const todayComplete = completeAttendance.find(entry => entry.date === today);
+        if (todayComplete && todayComplete.status === "complete") {
+          return false; // Attendance is already marked complete
+        }
+    
+        // If not complete, check timeInOut table for pending entries
+        const logs = await crudOperations.getByIndex("timeInOut", "userId", userId);
+        const todayLogs = logs.filter(log => log.date === today);
+        
+        // Get user schedule to know what logs we expect
+        const userDataArray = await crudOperations.getByIndex(
+          "studentInfoTbl",
+          "userId",
+          userId
+        );
+        const userData = Array.isArray(userDataArray) ? userDataArray[0] : userDataArray;
+        
+        if (!userData || !userData.weeklySchedule) return false;
+        
+        // Check if today is a scheduled day
+        const dayNames = ["SUN", "MON", "TUE", "WED", "THURS", "FRI", "SAT"];
+        const todayDay = new Date().getDay();
+        const todaySchedule = dayNames[todayDay];
+        
+        if (!userData.weeklySchedule[todaySchedule]) {
+          return false; // No schedule today, so no pending entries
+        }
+        
+        // Check which logs we expect based on schedule
+        const expectedLogs = [];
+        if (userData.morningTimeIn && userData.morningTimeOut) {
+          expectedLogs.push("morningTimeIn", "morningTimeOut");
+        }
+        if (userData.afternoonTimeIn && userData.afternoonTimeOut) {
+          expectedLogs.push("afternoonTimeIn", "afternoonTimeOut");
+        }
+        
+        // Check if all expected logs are present
+        const loggedTypes = todayLogs.map(log => log.type);
+        return expectedLogs.some(type => !loggedTypes.includes(type));
+      } catch (error) {
+        console.error("Error checking pending time entries:", error);
+        return false;
+      }
+    }
+
+    // Modified setupEditButton function
+    function setupEditButton(editButton) {
+      const updateButtonState = async () => {
+        const userId = localStorage.getItem("userId");
+        const hasPending = userId ? await hasPendingTimeEntries(userId) : false;
+        
+        if (!navigator.onLine) {
+          editButton.classList.add("disabled", "btn-disabled");
+          editButton.setAttribute("title", "Edit requires internet connection");
+          editButton.setAttribute("data-bs-toggle", "offline");
+          editButton.removeAttribute("data-bs-target");
+          editButton.style.cursor = "not-allowed";
+          editButton.style.opacity = "0.5";
+        } else if (hasPending) {
+          editButton.classList.add("disabled", "btn-disabled");
+          editButton.setAttribute("title", "Complete your time entries for today before editing");
+          editButton.setAttribute("data-bs-toggle", "offline");
+          editButton.removeAttribute("data-bs-target");
+          editButton.style.cursor = "not-allowed";
+          editButton.style.opacity = "0.5";
+        } else {
+          editButton.classList.remove("disabled", "btn-disabled");
+          editButton.setAttribute("title", "Edit Profile");
+          editButton.setAttribute("data-bs-toggle", "modal");
+          editButton.setAttribute("data-bs-target", "#editProfileModal");
+          editButton.style.cursor = "pointer";
+          editButton.style.opacity = "1";
+        }
+      };
+
+      updateButtonState();
+
+      editButton.addEventListener("click", async (e) => {
+        if (!navigator.onLine) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = "no-internet.html";
+          return false;
+        }
+        
+        const userId = localStorage.getItem("userId");
+        const hasPending = userId ? await hasPendingTimeEntries(userId) : false;
+        
+        if (hasPending) {
+          e.preventDefault();
+          e.stopPropagation();
+          alert("Please complete all your time entries for today before editing your profile.");
+          return false;
+        }
+      });
+
+      window.addEventListener("online", updateButtonState);
+      window.addEventListener("offline", updateButtonState);
+
+      const modal = new bootstrap.Modal(
+        document.getElementById("editProfileModal")
+      );
+      
+      document
+        .getElementById("editProfileModal")
+        .addEventListener("show.bs.modal", async (e) => {
+          if (!navigator.onLine) {
+            e.preventDefault();
+            alert(
+              "Editing profile requires an internet connection. Please check your network and try again."
+            );
+            modal.hide();
+            return;
+          }
+          
+          const userId = localStorage.getItem("userId");
+          const hasPending = userId ? await hasPendingTimeEntries(userId) : false;
+          
+          if (hasPending) {
+            e.preventDefault();
+            alert("Please complete all your time entries for today before editing your profile.");
+            modal.hide();
+          }
+        });
+    }
+
     setupEditButton(editButton);
 
     let userData;
@@ -90,6 +229,15 @@ document.addEventListener("DOMContentLoaded", async function () {
       submitButton.innerHTML =
         '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
 
+      // Check for pending time entries before allowing update
+      const hasPending = await hasPendingTimeEntries(userId);
+      if (hasPending) {
+        alert("Cannot update profile while having pending time entries for today.");
+        submitButton.disabled = false;
+        submitButton.innerHTML = "<span>Update Profile</span>";
+        return;
+      }
+
       try {
         const formData = new FormData(editForm);
         const updatedData = {
@@ -140,20 +288,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         const modal = bootstrap.Modal.getInstance(editProfileModal);
         modal.hide();
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Profile Updated',
-          text: 'Your profile has been updated successfully!',
-          timer: 2000,
-          showConfirmButton: false
-        });
+        alert('Profile updated successfully!');
       } catch (error) {
         console.error("Update error:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Update Failed',
-          text: 'An error occurred while updating your profile'
-        });
+        alert('Failed to update profile. Please try again.');
       } finally {
         submitButton.disabled = false;
         submitButton.innerHTML = "<span>Update Profile</span>";
@@ -202,20 +340,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         editProfileImg.src = base64Image;
         URL.revokeObjectURL(previewUrl);
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Image Updated',
-          text: 'Your profile image has been updated!',
-          timer: 1500,
-          showConfirmButton: false
-        });
+        alert('Profile image updated successfully!');
       } catch (error) {
         console.error("Image upload error:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Upload Failed',
-          text: 'Failed to update profile image'
-        });
+        alert('Failed to update profile image');
         editProfileImg.src = userImg.src;
       }
     });
@@ -224,48 +352,28 @@ document.addEventListener("DOMContentLoaded", async function () {
       e.preventDefault();
 
       if (!navigator.onLine) {
-        await Swal.fire({
-          icon: 'error',
-          title: 'No Internet',
-          text: 'You need internet connection to logout'
-        });
+        alert('You need internet connection to logout');
         return;
       }
 
-      const result = await Swal.fire({
-        title: 'Logout?',
-        text: "Are you sure you want to logout?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, logout!'
-      });
+      const result = confirm("Are you sure you want to logout?");
+      if (!result) return;
 
-      if (result.isConfirmed) {
-        try {
-          Swal.fire({
-            title: 'Logging out...',
-            allowOutsideClick: false,
-            didOpen: () => {
-              Swal.showLoading();
-            }
-          });
+      try {
+        logoutButton.disabled = true;
+        logoutButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
+        
+        await crudOperations.clearTable("studentInfoTbl");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userToken");
 
-          await crudOperations.clearTable("studentInfoTbl");
-          localStorage.removeItem("userId");
-          localStorage.removeItem("userEmail");
-          localStorage.removeItem("userToken");
-
-          window.location.href = "/pages/login.html";
-        } catch (error) {
-          console.error("Logout error:", error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Logout Failed',
-            text: 'An error occurred during logout'
-          });
-        }
+        window.location.href = "/pages/login.html";
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert('An error occurred during logout');
+        logoutButton.disabled = false;
+        logoutButton.innerHTML = 'Logout';
       }
     });
 
@@ -293,15 +401,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   } catch (error) {
     console.error("Initialization error:", error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Initialization Error',
-      text: 'Failed to initialize profile page'
-    }).then(() => {
-      window.location.href = "/pages/login.html";
-    });
+    alert('Failed to initialize profile page');
+    window.location.href = "/pages/login.html";
   }
 });
+
+// Rest of the existing functions (convertTo12HourFormat, formatWeeklySchedule, etc.)
+// ... keep all the remaining functions exactly as they were in your original file ...
+// Make sure to include all the other functions from your original file here
 
 function convertTo12HourFormat(time24) {
   if (!time24) return ["", ""];
@@ -385,55 +492,6 @@ async function handleImageUpload(userId, file) {
   }
 }
 
-function setupEditButton(editButton) {
-  const updateButtonState = () => {
-    if (!navigator.onLine) {
-      editButton.classList.add("disabled", "btn-disabled");
-      editButton.setAttribute("title", "Edit requires internet connection");
-      editButton.setAttribute("data-bs-toggle", "offline");
-      editButton.removeAttribute("data-bs-target");
-      editButton.style.cursor = "not-allowed";
-      editButton.style.opacity = "0.5";
-    } else {
-      editButton.classList.remove("disabled", "btn-disabled");
-      editButton.setAttribute("title", "Edit Profile");
-      editButton.setAttribute("data-bs-toggle", "modal");
-      editButton.setAttribute("data-bs-target", "#editProfileModal");
-      editButton.style.cursor = "pointer";
-      editButton.style.opacity = "1";
-    }
-  };
-
-  updateButtonState();
-
-  editButton.addEventListener("click", (e) => {
-    if (!navigator.onLine) {
-      e.preventDefault();
-      e.stopPropagation();
-      window.location.href = "no-internet.html";
-      return false;
-    }
-  });
-
-  window.addEventListener("online", updateButtonState);
-  window.addEventListener("offline", updateButtonState);
-
-  const modal = new bootstrap.Modal(
-    document.getElementById("editProfileModal")
-  );
-  document
-    .getElementById("editProfileModal")
-    .addEventListener("show.bs.modal", (e) => {
-      if (!navigator.onLine) {
-        e.preventDefault();
-        alert(
-          "Editing profile requires an internet connection. Please check your network and try again."
-        );
-        modal.hide();
-      }
-    });
-}
-
 function updateProfileUI(data) {
   const userImg = document.querySelector(".profile-icon");
   const userName = document.querySelector("#profile-name");
@@ -495,6 +553,7 @@ function updateProfileUI(data) {
     afternoonTimeOut.textContent = `${afternoonOutTime} ${afternoonOutPeriod}`;
   }
 }
+
 function populateEditForm(data) {
   const firstNameInput = document.getElementById("first-name");
   const middleNameInput = document.getElementById("middle-name");
@@ -659,101 +718,54 @@ function setupCompanySelectListener() {
 document.addEventListener("DOMContentLoaded", function () {
   const logoutButton = document.getElementById("logout-button");
 
- function updateLogoutButtonState() {
-  if (!navigator.onLine) {
-    logoutButton.disabled = true;
-    logoutButton.title = "Internet connection required to logout";
-    logoutButton.style.cursor = "not-allowed";
-    logoutButton.style.opacity = "0.6";
-  } else {
-    logoutButton.disabled = false;
-    logoutButton.title = "";
-    logoutButton.style.cursor = "pointer";
-    logoutButton.style.opacity = "1";
-  }
-}
-
-updateLogoutButtonState();
-
-window.addEventListener('online', updateLogoutButtonState);
-window.addEventListener('offline', updateLogoutButtonState);
-
-if (logoutButton) {
-  logoutButton.addEventListener("click", async function (e) {
-  e.preventDefault();
-
-  if (!navigator.onLine) {
-    alert('You need internet connection to logout');
-    return;
-  }
-
-  const confirmed = await showLogoutConfirmation();
-  
-  if (confirmed) {
-    try {
+  function updateLogoutButtonState() {
+    if (!navigator.onLine) {
       logoutButton.disabled = true;
-      logoutButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
-      
-      await crudOperations.clearTable("studentInfoTbl");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userToken");
-
-      window.location.href = "/pages/login.html";
-    } catch (error) {
-      console.error("Logout error:", error);
-      alert('An error occurred during logout');
+      logoutButton.title = "Internet connection required to logout";
+      logoutButton.style.cursor = "not-allowed";
+      logoutButton.style.opacity = "0.6";
+    } else {
       logoutButton.disabled = false;
-      logoutButton.innerHTML = 'Logout';
+      logoutButton.title = "";
+      logoutButton.style.cursor = "pointer";
+      logoutButton.style.opacity = "1";
     }
   }
-});
-}
 
-});
+  updateLogoutButtonState();
 
-async function showLogoutConfirmation() {
-  return new Promise((resolve) => {
-    const modalHtml = `
-      <div class="modal fade" id="logoutConfirmationModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              Are you sure you want to logout?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger" id="confirmLogout">Logout</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHtml;
-    document.body.appendChild(modalContainer);
-    
-    const modal = new bootstrap.Modal(document.getElementById('logoutConfirmationModal'));
-    modal.show();
-    
-    document.getElementById('confirmLogout').addEventListener('click', () => {
-      modal.hide();
-      resolve(true);
-      setTimeout(() => {
-        document.body.removeChild(modalContainer);
-      }, 500);
+  window.addEventListener('online', updateLogoutButtonState);
+  window.addEventListener('offline', updateLogoutButtonState);
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", async function (e) {
+      e.preventDefault();
+
+      if (!navigator.onLine) {
+        alert('You need internet connection to logout');
+        return;
+      }
+
+      const confirmed = confirm('Are you sure you want to logout?');
+      
+      if (confirmed) {
+        try {
+          logoutButton.disabled = true;
+          logoutButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
+          
+          await crudOperations.clearTable("studentInfoTbl");
+          localStorage.removeItem("userId");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userToken");
+
+          window.location.href = "/pages/login.html";
+        } catch (error) {
+          console.error("Logout error:", error);
+          alert('An error occurred during logout');
+          logoutButton.disabled = false;
+          logoutButton.innerHTML = 'Logout';
+        }
+      }
     });
-    
-    modalContainer.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
-      resolve(false);
-      setTimeout(() => {
-        document.body.removeChild(modalContainer);
-      }, 500);
-    });
-  });
-}
-
+  }
+});

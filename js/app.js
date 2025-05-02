@@ -47,17 +47,17 @@ document.addEventListener("DOMContentLoaded", function () {
 function checkUserTypeAndRedirect() {
   const request = indexedDB.open("SOJTMSDB", 1);
 
-  request.onsuccess = function(event) {
+  request.onsuccess = function (event) {
     const db = event.target.result;
     const transaction = db.transaction(["studentInfoTbl"], "readonly");
     const store = transaction.objectStore("studentInfoTbl");
     const index = store.index("userId");
-    const userId = localStorage.getItem("userId"); 
-    
+    const userId = localStorage.getItem("userId");
+
     if (userId) {
       const getUser = index.get(userId);
-      
-      getUser.onsuccess = function() {
+
+      getUser.onsuccess = function () {
         const userData = getUser.result;
         if (userData && userData.userType === "admin") {
           window.location.href = "/pages/no-internet-admin.html";
@@ -65,8 +65,8 @@ function checkUserTypeAndRedirect() {
           window.location.href = "/pages/no-internet.html";
         }
       };
-      
-      getUser.onerror = function() {
+
+      getUser.onerror = function () {
         window.location.href = "index.html";
       };
     } else {
@@ -74,7 +74,7 @@ function checkUserTypeAndRedirect() {
     }
   };
 
-  request.onerror = function() {
+  request.onerror = function () {
     window.location.href = "index.html";
   };
 }

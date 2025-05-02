@@ -431,46 +431,6 @@ function getTimeSlot(currentMinutes, schedule) {
 
 let currentSlot = "";
 
-// async function checkCompletionStatus() {
-//   const userId = localStorage.getItem("userId");
-//   await window.dbReady;
-
-//   const allStudentData = await crudOperations.getAllData("studentInfoTbl");
-//   const userData = allStudentData.find((item) => item.userId === userId);
-//   if (!userData) return null;
-
-//   const today = new Date().toLocaleDateString("en-CA");
-//   const completedAttendance = await crudOperations.getAllData(
-//     "completeAttendanceTbl"
-//   );
-
-//   const completionEntry = completedAttendance.find(
-//     (entry) => entry.userId === userId && entry.date === today
-//   );
-
-//   const status = completionEntry?.status;
-
-//   const button = document.getElementById("time-in-out-button");
-//   const cameraBtn = document.getElementById("camera-button");
-//   const uploadBtn = document.getElementById("upload-btn");
-//   const absentButton = document.getElementById("absent-button");
-
-//   if (completionEntry) {
-//     if (status === "complete") {
-//       button.textContent = "Attendance Already Completed Today";
-//     } else {
-//       button.textContent = "You Are Absent For Today.";
-//     }
-//     button.disabled = true;
-//     cameraBtn.disabled = true;
-//     absentButton.disabled = true;
-//     uploadBtn.classList.add("d-none");
-//     return status;
-//   }
-
-//   return null;
-// }
-
 async function checkCompletionStatus(userId, date) {
   await window.dbReady;
 
@@ -537,7 +497,6 @@ async function updateAttendanceButtonState() {
     return;
   }
 
-  //----------- check if there is any log today ----- -- ///
   const userLogs = await crudOperations.getByIndex(
     "timeInOut",
     "userId",
@@ -552,7 +511,6 @@ async function updateAttendanceButtonState() {
     absentButton.disabled = false;
   }
 
-  //-------------------------------------
   const todayLogs = allLogs.filter(
     (log) => log.date === today && log.userId === userId
   );
@@ -590,49 +548,6 @@ async function updateAttendanceButtonState() {
     cameraBtn.disabled = true;
   }
 }
-
-// window.addEventListener("DOMContentLoaded", async () => {
-//   await window.dbReady;
-//   const userId = localStorage.getItem("userId");
-//   if (!userId) {
-//     return;
-//   }
-
-//   const dataArray = await crudOperations.getByIndex(
-//     "studentInfoTbl",
-//     "userId",
-//     userId
-//   );
-//   const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
-
-//   const img = document.getElementById("user-profile");
-//   const timeInContainer = document.querySelector(".time-in-cotainer");
-//   const logImgContainer = document.querySelector(".log-img-container");
-//   const noSheduleContainer = document.querySelector(".no-schedule-container");
-//   const absentButton = document.querySelector("#absent-button");
-//   img.src = data.userImg
-//     ? data.userImg
-//     : "../assets/img/icons8_male_user_480px_1";
-
-//   (async () => {
-//     const hasScheduleToday = await CheckSchedule();
-//     if (hasScheduleToday) {
-//       noSheduleContainer.classList.add("d-none");
-//       timeInContainer.classList.remove("d-none");
-//       logImgContainer.classList.remove("d-none");
-//       absentButton.classList.remove("d-none");
-//     } else {
-//       timeInContainer.classList.add("d-none");
-//       logImgContainer.classList.add("d-none");
-//       absentButton.classList.add("d-none");
-//       noSheduleContainer.classList.remove("d-none");
-//     }
-//   })();
-
-//   await updateAttendanceButtonState();
-//   await populateAttendanceImages();
-//   setInterval(updateAttendanceButtonState, 30000);
-// });
 
 window.addEventListener("DOMContentLoaded", async () => {
   await window.dbReady;
@@ -679,7 +594,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   await populateAttendanceImages();
   setInterval(updateAttendanceButtonState, 8000);
 
-  // --- Hide the overlay when ready ---
   const overlay = document.getElementById("page-loading-overlay");
   if (overlay) {
     overlay.style.opacity = "0";
@@ -756,11 +670,12 @@ document
       alert("Attendance recorded successfully!");
 
       await populateAttendanceImages();
-      updateAttendanceButtonState();
+      await updateAttendanceButtonState();
 
       document.getElementById("attendance-time").textContent = "";
       document.getElementById("attendance-date").textContent = "";
       document.getElementById("attendance-img").textContent = "";
+      location.reload();
     } catch (error) {
       alert("Failed to record attendance.");
       console.error(error);
@@ -803,29 +718,6 @@ async function populateAttendanceImages() {
   });
 }
 
-// async function checkCompleteAttendance(userId, date) {
-//   const allLogs = await crudOperations.getAllData("timeInOut");
-
-//   const requiredTypes = [
-//     "morningTimeIn",
-//     "morningTimeOut",
-//     "afternoonTimeIn",
-//     "afternoonTimeOut",
-//   ];
-
-//   const todaysLogs = allLogs.filter(
-//     (log) => log.userId === userId && log.date === date
-//   );
-
-//   const types = todaysLogs.map((log) => log.type);
-
-//   return {
-//     isComplete: requiredTypes.every((type) => types.includes(type)),
-//     hasLogs: todaysLogs.length > 0,
-//     logs: todaysLogs,
-//   };
-// }
-
 function calculateWorkHours(logs, schedule) {
   function toMinutes(timeStr) {
     const [h, m] = timeStr.split(":").map(Number);
@@ -848,16 +740,25 @@ function calculateWorkHours(logs, schedule) {
   const actualAfternoonOut = getLogTime("afternoonTimeOut");
 
   let morningDuration = 0;
-  if (actualMorningIn !== null && actualMorningOut !== null) {
-    const morningStart = Math.max(actualMorningIn, scheduleMorningIn);
-    morningDuration = actualMorningOut - morningStart;
+  if (
+    actualMorningIn !== null &&
+    actualMorningOut !== null &&
+    actualMorningOut >= actualMorningIn
+  ) {
+    const start = Math.max(actualMorningIn, scheduleMorningIn);
+    const end = Math.min(actualMorningOut, scheduleMorningOut);
+    morningDuration = Math.max(0, end - start);
   }
 
   let afternoonDuration = 0;
-  if (actualAfternoonIn !== null && actualAfternoonOut !== null) {
-    const afternoonStart = Math.max(actualAfternoonIn, scheduleAfternoonIn);
-    const afternoonEnd = Math.min(actualAfternoonOut, scheduleAfternoonOut);
-    afternoonDuration = afternoonEnd - afternoonStart;
+  if (
+    actualAfternoonIn !== null &&
+    actualAfternoonOut !== null &&
+    actualAfternoonOut >= actualAfternoonIn
+  ) {
+    const start = Math.max(actualAfternoonIn, scheduleAfternoonIn);
+    const end = Math.min(actualAfternoonOut, scheduleAfternoonOut);
+    afternoonDuration = Math.max(0, end - start);
   }
 
   const totalMinutes = morningDuration + afternoonDuration;
@@ -956,16 +857,6 @@ document
 
         const workHours = calculateWorkHours(logsForDate, schedule);
 
-        const lateMorning =
-          logsByType["morningTimeIn"] &&
-          toMinutes(logsByType["morningTimeIn"].time) >
-            toMinutes(schedule.morningTimeIn);
-
-        const lateAfternoon =
-          logsByType["afternoonTimeIn"] &&
-          toMinutes(logsByType["afternoonTimeIn"].time) >
-            toMinutes(schedule.afternoonTimeIn);
-
         const isLate =
           !logsByType["morningTimeIn"] ||
           !logsByType["afternoonTimeIn"] ||
@@ -985,7 +876,6 @@ document
           isPresent: true,
           companyName: userInfo.companyName,
           companyAddress: userInfo.companyAddress,
-          // add incident report check
         };
 
         const dateDocPath = `attendancelogs/${userId}/${date}`;

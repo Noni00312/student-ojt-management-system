@@ -168,7 +168,9 @@ tbody tr:last-child td:last-child {
   padding: 0;
   z-index: 1000;
   background-color: #6e1423;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18), 0 1.5px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 0px 3px 1px rgba(122, 122, 122, 0.86);
+  -webkit-box-shadow: 0px 0px 3px 1px rgba(122, 122, 122, 0.86);
+  -moz-box-shadow: 0px 0px 3px 1px rgba(122, 122, 122, 0.86);
   display: flex;
   align-items: center;
   justify-content: center;

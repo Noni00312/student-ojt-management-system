@@ -1,5 +1,18 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
+async function fetchUserProfileFromFirebase(userId) {
+  try {
+    const firebaseData = await firebaseCRUD.queryData("students", "userId", "==", userId);
+    if (firebaseData && firebaseData.length > 0) {
+      return firebaseData[0];
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to fetch profile from Firebase:", error);
+    return null;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const userId = localStorage.getItem("userId");
@@ -157,6 +170,33 @@ document.addEventListener("DOMContentLoaded", async function () {
             e.preventDefault();
             alert("Please complete all your time entries for today before editing your profile.");
             modal.hide();
+            return;
+          }
+
+          let modalUserData = null;
+          try {
+            if (navigator.onLine) {
+              modalUserData = await fetchUserProfileFromFirebase(userId);
+            }
+            
+            if (!modalUserData) {
+              const dataArray = await crudOperations.getByIndex(
+                "studentInfoTbl",
+                "userId",
+                userId
+              );
+              modalUserData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+            }
+          } catch (error) {
+            console.error("Error loading profile for edit modal:", error);
+          }
+
+          if (modalUserData) {
+            populateEditForm(modalUserData);
+          } else {
+            e.preventDefault();
+            alert("Failed to load your profile data.");
+            modal.hide();
           }
         });
     }
@@ -165,39 +205,30 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     let userData;
     try {
-      const dataArray = await crudOperations.getByIndex(
-        "studentInfoTbl",
-        "userId",
-        userId
-      );
-      userData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
-
+      if (navigator.onLine) {
+        userData = await fetchUserProfileFromFirebase(userId);
+      }
+      
+      // If no Firebase data or offline, get from IndexedDB
+      if (!userData) {
+        const dataArray = await crudOperations.getByIndex(
+          "studentInfoTbl",
+          "userId",
+          userId
+        );
+        userData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+      }
+      
+      // If we got Firebase data, update IndexedDB to keep it in sync
       if (navigator.onLine && userData) {
         try {
-          const firebaseData = await firebaseCRUD.queryData(
-            "students",
-            "userId",
-            "==",
-            userId
+          await crudOperations.updateData(
+            "studentInfoTbl",
+            userData.id || userId,
+            userData
           );
-
-          if (firebaseData && firebaseData.length > 0) {
-            const mergedData = { 
-              ...userData, 
-              ...firebaseData[0],
-              id: firebaseData[0].id || userData.id
-            };
-            
-            await crudOperations.updateData(
-              "studentInfoTbl",
-              mergedData.id || userId,
-              mergedData
-            );
-            
-            userData = mergedData;
-          }
         } catch (error) {
-          console.error("Firebase sync error:", error);
+          console.error("IndexedDB sync error:", error);
         }
       }
     } catch (error) {
@@ -260,11 +291,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
 
         const docId = userData?.id || userId;
-        await crudOperations.updateData("studentInfoTbl", docId, updatedData);
         
         if (navigator.onLine) {
           await firebaseCRUD.updateData("students", docId, updatedData);
         }
+        
+        await crudOperations.updateData("studentInfoTbl", docId, updatedData);
 
         const updatedDataArray = await crudOperations.getByIndex(
           "studentInfoTbl",

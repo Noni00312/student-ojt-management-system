@@ -1,7 +1,6 @@
 
 import { firebaseCRUD } from "./firebase-crud.js";
 
-// Admin Profile Page Logic (First Name Only)
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const userId = localStorage.getItem("userId");
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     await window.dbReady;
 
-    // DOM Elements (admin-specific)
     const userImg = document.querySelector(".profile-icon");
     const userName = document.querySelector("#profile-name");
     const adminId = document.getElementById("admin-id");
@@ -29,7 +27,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     let userData;
     try {
-      // Use the same table as students, but filter for admin
       const dataArray = await crudOperations.getByIndex(
         "studentInfoTbl",
         "userId",
@@ -76,7 +73,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.warn("No user data found");
     }
 
-    // Edit Profile Modal
     const editForm = document.getElementById("adminForm");
     editForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -95,7 +91,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           userId: userId,
         };
 
-        // Optionally update image if changed
         const docId = userData?.id || userId;
         await crudOperations.updateData("studentInfoTbl", docId, updatedData);
 
@@ -103,7 +98,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           await firebaseCRUD.updateData("students", docId, updatedData);
         }
 
-        // Refresh UI
         const updatedDataArray = await crudOperations.getByIndex(
           "studentInfoTbl",
           "userId",
@@ -137,7 +131,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     });
 
-    // Image Upload
     const imgInput = document.createElement("input");
     imgInput.type = "file";
     imgInput.accept = "image/*";
@@ -198,7 +191,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     });
 
-    // Logout
     logoutButton.addEventListener("click", async function (e) {
       e.preventDefault();
 
@@ -259,7 +251,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-// --- Helper Functions ---
 
 function setupEditButton(editButton) {
   const updateButtonState = () => {
@@ -334,7 +325,6 @@ function populateEditForm(data) {
   if (editProfileImg && data.userImg) editProfileImg.src = data.userImg;
 }
 
-// Format date/time for display
 function formatDateTime(dateString) {
   if (!dateString) return "";
   const date = new Date(dateString);

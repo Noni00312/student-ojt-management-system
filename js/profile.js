@@ -1,5 +1,18 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
+async function fetchUserProfileFromFirebase(userId) {
+  try {
+    const firebaseData = await firebaseCRUD.queryData("students", "userId", "==", userId);
+    if (firebaseData && firebaseData.length > 0) {
+      return firebaseData[0];
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to fetch profile from Firebase:", error);
+    return null;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const userId = localStorage.getItem("userId");
@@ -30,12 +43,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     const imgButton = document.getElementById("img-button");
     const logoutButton = document.getElementById("logout-button");
 
-    // Add function to check for pending time entries
     async function hasPendingTimeEntries(userId) {
       try {
         const today = new Date().toLocaleDateString("en-CA");
         
-        // First check completeAttendanceTbl for completed status
         const completeAttendance = await crudOperations.getByIndex(
           "completeAttendanceTbl",
           "userId",
@@ -44,14 +55,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         
         const todayComplete = completeAttendance.find(entry => entry.date === today);
         if (todayComplete && todayComplete.status === "complete") {
-          return false; // Attendance is already marked complete
+          return false; 
         }
     
-        // If not complete, check timeInOut table for pending entries
         const logs = await crudOperations.getByIndex("timeInOut", "userId", userId);
         const todayLogs = logs.filter(log => log.date === today);
         
-        // Get user schedule to know what logs we expect
         const userDataArray = await crudOperations.getByIndex(
           "studentInfoTbl",
           "userId",
@@ -61,16 +70,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         
         if (!userData || !userData.weeklySchedule) return false;
         
-        // Check if today is a scheduled day
         const dayNames = ["SUN", "MON", "TUE", "WED", "THURS", "FRI", "SAT"];
         const todayDay = new Date().getDay();
         const todaySchedule = dayNames[todayDay];
         
         if (!userData.weeklySchedule[todaySchedule]) {
-          return false; // No schedule today, so no pending entries
+          return false; 
         }
         
-        // Check which logs we expect based on schedule
         const expectedLogs = [];
         if (userData.morningTimeIn && userData.morningTimeOut) {
           expectedLogs.push("morningTimeIn", "morningTimeOut");
@@ -79,7 +86,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           expectedLogs.push("afternoonTimeIn", "afternoonTimeOut");
         }
         
-        // Check if all expected logs are present
         const loggedTypes = todayLogs.map(log => log.type);
         return expectedLogs.some(type => !loggedTypes.includes(type));
       } catch (error) {
@@ -88,7 +94,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     }
 
-    // Modified setupEditButton function
     function setupEditButton(editButton) {
       const updateButtonState = async () => {
         const userId = localStorage.getItem("userId");
@@ -165,6 +170,33 @@ document.addEventListener("DOMContentLoaded", async function () {
             e.preventDefault();
             alert("Please complete all your time entries for today before editing your profile.");
             modal.hide();
+            return;
+          }
+
+          let modalUserData = null;
+          try {
+            if (navigator.onLine) {
+              modalUserData = await fetchUserProfileFromFirebase(userId);
+            }
+            
+            if (!modalUserData) {
+              const dataArray = await crudOperations.getByIndex(
+                "studentInfoTbl",
+                "userId",
+                userId
+              );
+              modalUserData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+            }
+          } catch (error) {
+            console.error("Error loading profile for edit modal:", error);
+          }
+
+          if (modalUserData) {
+            populateEditForm(modalUserData);
+          } else {
+            e.preventDefault();
+            alert("Failed to load your profile data.");
+            modal.hide();
           }
         });
     }
@@ -173,39 +205,30 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     let userData;
     try {
-      const dataArray = await crudOperations.getByIndex(
-        "studentInfoTbl",
-        "userId",
-        userId
-      );
-      userData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
-
+      if (navigator.onLine) {
+        userData = await fetchUserProfileFromFirebase(userId);
+      }
+      
+      // If no Firebase data or offline, get from IndexedDB
+      if (!userData) {
+        const dataArray = await crudOperations.getByIndex(
+          "studentInfoTbl",
+          "userId",
+          userId
+        );
+        userData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+      }
+      
+      // If we got Firebase data, update IndexedDB to keep it in sync
       if (navigator.onLine && userData) {
         try {
-          const firebaseData = await firebaseCRUD.queryData(
-            "students",
-            "userId",
-            "==",
-            userId
+          await crudOperations.updateData(
+            "studentInfoTbl",
+            userData.id || userId,
+            userData
           );
-
-          if (firebaseData && firebaseData.length > 0) {
-            const mergedData = { 
-              ...userData, 
-              ...firebaseData[0],
-              id: firebaseData[0].id || userData.id
-            };
-            
-            await crudOperations.updateData(
-              "studentInfoTbl",
-              mergedData.id || userId,
-              mergedData
-            );
-            
-            userData = mergedData;
-          }
         } catch (error) {
-          console.error("Firebase sync error:", error);
+          console.error("IndexedDB sync error:", error);
         }
       }
     } catch (error) {
@@ -229,7 +252,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       submitButton.innerHTML =
         '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
 
-      // Check for pending time entries before allowing update
       const hasPending = await hasPendingTimeEntries(userId);
       if (hasPending) {
         alert("Cannot update profile while having pending time entries for today.");
@@ -269,11 +291,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
 
         const docId = userData?.id || userId;
-        await crudOperations.updateData("studentInfoTbl", docId, updatedData);
         
         if (navigator.onLine) {
           await firebaseCRUD.updateData("students", docId, updatedData);
         }
+        
+        await crudOperations.updateData("studentInfoTbl", docId, updatedData);
 
         const updatedDataArray = await crudOperations.getByIndex(
           "studentInfoTbl",
@@ -405,10 +428,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "/pages/login.html";
   }
 });
-
-// Rest of the existing functions (convertTo12HourFormat, formatWeeklySchedule, etc.)
-// ... keep all the remaining functions exactly as they were in your original file ...
-// Make sure to include all the other functions from your original file here
 
 function convertTo12HourFormat(time24) {
   if (!time24) return ["", ""];

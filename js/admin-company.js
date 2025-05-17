@@ -1,4 +1,5 @@
 
+
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     const userId = localStorage.getItem("userId");
@@ -307,6 +308,10 @@ function showError(message) {
                   required: true,
                   minlength: 2,
               },
+              companyProvince: {  // Add this new rule
+                required: true,
+                minlength: 2,
+              },
           },
           errorPlacement: function (error, element) {
               error.appendTo($("#" + element.attr("name") + "-error"));
@@ -314,6 +319,7 @@ function showError(message) {
           submitHandler: function (form) {
               const submitButton = $(form).find('button[type="submit"]');
               const companyName = form.companyName.value.trim();
+              
   
               submitButton.prop("disabled", true);
               submitButton.html(`
@@ -336,6 +342,7 @@ function showError(message) {
                       const companyData = {
                           companyName: companyName,
                           companyAddress: form.companyAddress.value,
+                          companyProvince: form.companyProvince.value, // Add this line
                           image: uploadedImageBase64 || "",
                           createdAt: new Date().toISOString()
                       };

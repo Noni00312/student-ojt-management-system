@@ -366,32 +366,72 @@ function showError(message) {
           },
       });
   });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const updateCameraInput = document.getElementById('update-camera-input');
+        
+        if (updateCameraInput) {
+            updateCameraInput.addEventListener('change', async function (event) {
+                const file = event.target.files[0];
+                const previewImage = document.getElementById('update-preview-image');
+                const cameraIcon = document.getElementById('update-camera-icon');
+
+                if (file && previewImage && cameraIcon) {
+                    try {
+                        // Get the image (compressed if necessary)
+                        const imageData = await compressImageIfNeeded(file);
+                        
+                        // Display the image
+                        previewImage.src = imageData;
+                        previewImage.style.display = 'block';
+                        cameraIcon.style.display = 'none';
+                        
+                        // Store the Base64 string
+                        uploadedImageBase64 = imageData;
+                        
+                        // Optional: Show a message if image was compressed
+                        if (file.size > 1 * 1024 * 1024) {
+                            console.log("Image was compressed to fit size requirements");
+                            // You could show a toast notification here if you want
+                        }
+                    } catch (error) {
+                        console.error("Error processing image:", error);
+                        // Handle error (show message to user, etc.)
+                    }
+                }
+            });
+        }
+    });
   
   
-  document.addEventListener('DOMContentLoaded', function () {
+//   document.addEventListener('DOMContentLoaded', function () {
 
 
     
-      const updateCameraInput = document.getElementById('update-camera-input');
-      if (updateCameraInput) {
-          updateCameraInput.addEventListener('change', function (event) {
-              const file = event.target.files[0];
-              const previewImage = document.getElementById('update-preview-image');
-              const cameraIcon = document.getElementById('update-camera-icon');
+//       const updateCameraInput = document.getElementById('update-camera-input');
+//       if (updateCameraInput) {
+//           updateCameraInput.addEventListener('change', function (event) {
+//               const file = event.target.files[0];
+//               const previewImage = document.getElementById('update-preview-image');
+//               const cameraIcon = document.getElementById('update-camera-icon');
   
-              if (file && previewImage && cameraIcon) {
-                  const reader = new FileReader();
-                  reader.onload = function (e) {
-                      previewImage.src = e.target.result;
-                      previewImage.style.display = 'block';
-                      cameraIcon.style.display = 'none';
-                      uploadedImageBase64 = e.target.result;
-                  };
-                  reader.readAsDataURL(file);
-              }
-          });
-      }
-  });
+//               if (file && previewImage && cameraIcon) {
+//                   const reader = new FileReader();
+//                   reader.onload = function (e) {
+//                       previewImage.src = e.target.result;
+//                       previewImage.style.display = 'block';
+//                       cameraIcon.style.display = 'none';
+//                       uploadedImageBase64 = e.target.result;
+//                   };
+//                   reader.readAsDataURL(file);
+//               }
+//           });
+//       }
+//   });
+
+
+
   
   $("#ojtFormU").validate({
       rules: {
@@ -531,3 +571,60 @@ function showError(message) {
       if (cameraInput) cameraInput.value = '';
       uploadedImageBase64 = "";
   });
+
+
+
+  // Utility function to compress images
+    async function compressImage(file, maxSizeMB = 1, maxWidth = 1024, maxHeight = 1024) {
+        return new Promise((resolve) => {
+        const img = new Image();
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            img.src = e.target.result;
+            
+            img.onload = function() {
+            // Calculate new dimensions while maintaining aspect ratio
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+            }
+            
+            if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+            }
+            
+            // Create canvas and draw resized image
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Convert to Blob with quality adjustment
+            let quality = 0.9;
+            let resultBlob;
+            
+            const checkSize = () => {
+                canvas.toBlob((blob) => {
+                if (blob.size > maxSizeMB * 1024 * 1024 && quality > 0.1) {
+                    quality -= 0.1;
+                    checkSize();
+                } else {
+                    resultBlob = blob;
+                    resolve(resultBlob);
+                }
+                }, 'image/jpeg', quality);
+            };
+            
+            checkSize();
+            };
+        };
+        
+        reader.readAsDataURL(file);
+        });
+    }

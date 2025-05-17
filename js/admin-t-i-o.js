@@ -130,10 +130,10 @@ function populateDates(dateList) {
 
   if (dateList.length === 0) {
     container.innerHTML = `<div class="position-absolute top-50 start-50 translate-middle align-items-center col-12 text-center py-4">
-                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
-                 <h6 class="mt-2">No History Found For This Date</h6>
-                 <p class="mt-1">Oops! There’s no attendance record for this date. Try picking another day from the calendar.</p>
-             </div>`;
+                <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                <h6 class="mt-2">No History Found For This Date</h6>
+                <p class="mt-1">Oops! There’s no attendance record for this date. Try picking another day from the calendar.</p>
+            </div>`;
     return;
   }
 
@@ -142,12 +142,12 @@ function populateDates(dateList) {
     card.className = "col-12 col-md-6 col-lg-4 mb-2 px-2";
 
     card.innerHTML = `
-       <a href="../pages/admin-t-i-o-company.html?date=${rawDate}" class="history-card mb-2" data-date="${rawDate}">
-         <span>${day}</span>
-         <span class="separator"></span>
-         <span class="date">${readableDate}</span>
-       </a>
-     `;
+      <a href="../pages/admin-t-i-o-company.html?date=${rawDate}" class="history-card mb-2" data-date="${rawDate}">
+        <span>${day}</span>
+        <span class="separator"></span>
+        <span class="date">${readableDate}</span>
+      </a>
+    `;
 
     container.appendChild(card);
   });

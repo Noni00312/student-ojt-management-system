@@ -42,6 +42,7 @@ export const firebaseCRUD = {
       throw new Error(`Failed to set document: ${error.message}`);
     }
   },
+
   createData: async (tableName, tableData) => {
     if (!tableName || typeof tableName !== "string") {
       throw new Error("Invalid table name");
@@ -164,6 +165,49 @@ export const firebaseCRUD = {
     } catch (error) {
       console.error("Error querying data: ", error);
       throw new Error(`Failed to query data: ${error.message}`);
+    }
+  },
+
+  /**
+   * Fetches all documents from a specific user's attendance subcollection for a given date.
+   *
+   * @async
+   * @function getSubcollectionData
+   * @param {string} userId - The unique ID of the user whose attendance logs are being retrieved.
+   * @param {string} attendanceDate - The specific date (e.g., "2025-05-08") representing the subcollection under the user's logs.
+   * @returns {Promise<{ count: number, data: Array<Object> }>} An object containing:
+   *    - `count` (number): The number of documents (log entries) found.
+   *    - `data` (Array<Object>): An array of log documents. Each object contains:
+   *       - `id` (string): The Firestore document ID.
+   *       - Other dynamic fields such as `timestamp`, `type`, `time`, `image`, etc.
+   *
+   * @throws {Error} Throws an error if the subcollection cannot be accessed or the fetch fails.
+   *
+   * @example
+   * const { count, data } = await firebaseCRUD.getSubcollectionData("abc123", "2025-05-08");
+   * console.log(`Total logs: ${count}`);
+   * data.forEach(log => {
+   *   console.log(`${log.type}: ${log.time}`);
+   * });
+   */
+  getSubcollectionData: async (userId, attendanceDate) => {
+    try {
+      const path = `attendancelogs/${userId}/${attendanceDate}`;
+      const subcollectionRef = collection(db, path);
+      const snapshot = await getDocs(subcollectionRef);
+
+      const documents = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return {
+        count: snapshot.size,
+        data: documents,
+      };
+    } catch (error) {
+      console.error("Error fetching subcollection data:", error);
+      throw error;
     }
   },
 

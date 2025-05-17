@@ -57,7 +57,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       await Promise.all([
         loadStudentReports(userId),
         loadStudentData(userId),
-        loadAttendanceData(userId)
+        loadAttendanceData(userId),
+        // loadWeeklySchedule(userId),
       ]);
 
       
@@ -90,97 +91,21 @@ document.addEventListener('DOMContentLoaded', async function () {
   } finally {
     showLoading(false);
   }
+
+  // // Add event listener for when the modal is shown
+  // const viewDataModal = document.getElementById('viewDataModal');
+  // if (viewDataModal) {
+  //   viewDataModal.addEventListener('show.bs.modal', async function() {
+  //     const userId = getUserIdFromUrl() || localStorage.getItem('userId');
+  //     if (userId) {
+  //       await loadWeeklySchedule(userId);
+  //     }
+  //   });
+  // }
+
+
+  
 });
-
-// async function loadStudentData(userId) {
-//   showLoading(true);
-//   try {
-//     const { firebaseCRUD } = await import("./firebase-crud.js");
-//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
-
-//     if (!students || students.length === 0) {
-//       console.log("No student data found");
-//       return;
-//     }
-
-//     const studentData = students[0];
-
-    
-//     const companyNameEl = document.getElementById('company-name');
-//     const companyImageEl = document.querySelector('.company-container img');
-//     const userNameEl = document.getElementById('user-name');
-//     const phoneTextEl = document.getElementById('phone-number-text');
-//     const emailTextEl = document.getElementById('email-text');
-//     const phoneTooltip = document.querySelector('.phone-email-container .tt:first-child');
-//     const emailTooltip = document.querySelector('.phone-email-container .tt:last-child');
-
-
-    
-//     const profileImgEl = document.getElementById('user-profile-img');
-//     if (profileImgEl) {
-//       if (studentData.userImg) {
-        
-//         profileImgEl.src = studentData.userImg;
-//       } else {
-        
-//         const defaultMaleImg = "../assets/img/icons8_male_user_480px_1.png";
-//         const defaultFemaleImg = "../assets/img/icons8_female_user_480px.png";
-        
-//         if (studentData.gender === "Female") {
-//           profileImgEl.src = defaultFemaleImg;
-//         } else {
-//           profileImgEl.src = defaultMaleImg;
-//         }
-//       }
-//     }
-
-    
-//     let fullName = studentData.firstName || '';
-//     if (studentData.middleName) fullName += ' ' + studentData.middleName;
-//     if (studentData.lastName) fullName += ' ' + studentData.lastName;
-//     if (studentData.suffix) fullName += ' ' + studentData.suffix;
-
-    
-//     const truncatedName = fullName.length > 20 
-//       ? fullName.substring(0, 20) + '...' 
-//       : fullName;
-
-    
-//     if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
-//     if (userNameEl) {
-//       userNameEl.textContent = truncatedName;
-//       userNameEl.setAttribute('title', fullName);
-//       userNameEl.classList.add('text-truncate');
-//     }
-
-    
-//     const phoneNumber = studentData.phoneNumber || 'N/A';
-//     if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
-//     if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', phoneNumber);
-
-    
-//     const emailAddress = studentData.emailAddress || 'N/A';
-//     if (emailTextEl) emailTextEl.textContent = emailAddress;
-//     if (emailTooltip) emailTooltip.setAttribute('data-bs-title', emailAddress);
-
-    
-//     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-//     tooltipTriggerList.map(function (tooltipTriggerEl) {
-//       return new bootstrap.Tooltip(tooltipTriggerEl);
-//     });
-
-    
-//     if (studentData.companyName) {
-//       await loadCompanyImage(studentData.companyName, companyImageEl);
-//     }
-
-//   } catch (error) {
-//     console.error("Error loading student data:", error);
-//     showErrorToast("Failed to load student data: " , true + error.message);
-//   } finally {
-//     showLoading(false);
-//   }
-// }
 
 async function loadStudentData(userId) {
   showLoading(true);
@@ -195,33 +120,47 @@ async function loadStudentData(userId) {
 
     const studentData = students[0];
 
-    // Get DOM elements
+    
     const companyNameEl = document.getElementById('company-name');
     const companyImageEl = document.querySelector('.company-container img');
     const userNameEl = document.getElementById('user-name');
     const phoneTextEl = document.getElementById('phone-number-text');
     const emailTextEl = document.getElementById('email-text');
-    const phoneTooltipMobile = document.querySelector('.phone-container .tt');
-    const emailTooltipMobile = document.querySelector('.email-container .tt');
-    const profileImgEl = document.getElementById('user-profile-img');
+    const phoneTooltip = document.querySelector('.phone-email-container .tt:first-child');
+    const emailTooltip = document.querySelector('.phone-email-container .tt:last-child');
 
-    // Process profile image
+
+    
+    const profileImgEl = document.getElementById('user-profile-img');
     if (profileImgEl) {
-      profileImgEl.src = studentData.userImg || 
-        (studentData.gender === "Female" 
-          ? "../assets/img/icons8_female_user_480px.png" 
-          : "../assets/img/icons8_male_user_480px_1.png");
+      if (studentData.userImg) {
+        
+        profileImgEl.src = studentData.userImg;
+      } else {
+        
+        const defaultMaleImg = "../assets/img/icons8_male_user_480px_1.png";
+        const defaultFemaleImg = "../assets/img/icons8_female_user_480px.png";
+        
+        if (studentData.gender === "Female") {
+          profileImgEl.src = defaultFemaleImg;
+        } else {
+          profileImgEl.src = defaultMaleImg;
+        }
+      }
     }
 
-    // Process name
-    let fullName = [studentData.firstName, studentData.middleName, studentData.lastName, studentData.suffix]
-      .filter(Boolean).join(' ');
+    
+    let fullName = studentData.firstName || '';
+    if (studentData.middleName) fullName += ' ' + studentData.middleName;
+    if (studentData.lastName) fullName += ' ' + studentData.lastName;
+    if (studentData.suffix) fullName += ' ' + studentData.suffix;
+
     
     const truncatedName = fullName.length > 20 
       ? fullName.substring(0, 20) + '...' 
       : fullName;
 
-    // Update basic info
+    
     if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
     if (userNameEl) {
       userNameEl.textContent = truncatedName;
@@ -229,36 +168,117 @@ async function loadStudentData(userId) {
       userNameEl.classList.add('text-truncate');
     }
 
-    // Phone and email data
+    
     const phoneNumber = studentData.phoneNumber || 'N/A';
-    const emailAddress = studentData.emailAddress || 'N/A';
-
-    // Update phone elements
     if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
-    if (phoneTooltipMobile) {
-      phoneTooltipMobile.setAttribute('data-bs-title', phoneNumber);
-      initTooltip(phoneTooltipMobile);
-    }
+    if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', phoneNumber);
 
-    // Update email elements
+    
+    const emailAddress = studentData.emailAddress || 'N/A';
     if (emailTextEl) emailTextEl.textContent = emailAddress;
-    if (emailTooltipMobile) {
-      emailTooltipMobile.setAttribute('data-bs-title', emailAddress);
-      initTooltip(emailTooltipMobile);
-    }
+    if (emailTooltip) emailTooltip.setAttribute('data-bs-title', emailAddress);
 
-    // Load company image if available
+    
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    
     if (studentData.companyName) {
       await loadCompanyImage(studentData.companyName, companyImageEl);
     }
 
   } catch (error) {
     console.error("Error loading student data:", error);
-    showErrorToast("Failed to load student data: " + error.message);
+    showErrorToast("Failed to load student data: " , true + error.message);
   } finally {
     showLoading(false);
   }
 }
+
+// async function loadStudentData(userId) {
+//   showLoading(true);
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+
+//     if (!students || students.length === 0) {
+//       console.log("No student data found");
+//       return;
+//     }
+
+//     const studentData = students[0];
+//     // await loadWeeklySchedule(userId);
+
+    
+
+//     // Get DOM elements
+//     const companyNameEl = document.getElementById('company-name');
+//     const companyImageEl = document.querySelector('.company-container img');
+//     const userNameEl = document.getElementById('user-name');
+//     const phoneTextEl = document.getElementById('phone-number-text');
+//     const emailTextEl = document.getElementById('email-text');
+//     const phoneTooltipMobile = document.querySelector('.phone-container .tt');
+//     const emailTooltipMobile = document.querySelector('.email-container .tt');
+//     const profileImgEl = document.getElementById('user-profile-img');
+
+//     // Process profile image
+//     if (profileImgEl) {
+//       profileImgEl.src = studentData.userImg || 
+//         (studentData.gender === "Female" 
+//           ? "../assets/img/icons8_female_user_480px.png" 
+//           : "../assets/img/icons8_male_user_480px_1.png");
+//     }
+
+//     // Process name
+//     let fullName = [studentData.firstName, studentData.middleName, studentData.lastName, studentData.suffix]
+//       .filter(Boolean).join(' ');
+    
+//     const truncatedName = fullName.length > 20 
+//       ? fullName.substring(0, 20) + '...' 
+//       : fullName;
+
+//     // Update basic info
+//     if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
+//     if (userNameEl) {
+//       userNameEl.textContent = truncatedName;
+//       userNameEl.setAttribute('title', fullName);
+//       userNameEl.classList.add('text-truncate');
+//     }
+
+//     // Phone and email data
+//     const phoneNumber = studentData.phoneNumber || 'N/A';
+//     const emailAddress = studentData.emailAddress || 'N/A';
+
+//     // Update phone elements
+//     if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
+//     if (phoneTooltipMobile) {
+//       phoneTooltipMobile.setAttribute('data-bs-title', phoneNumber);
+//       initTooltip(phoneTooltipMobile);
+//     }
+
+//     // Update email elements
+//     if (emailTextEl) emailTextEl.textContent = emailAddress;
+//     if (emailTooltipMobile) {
+//       emailTooltipMobile.setAttribute('data-bs-title', emailAddress);
+//       initTooltip(emailTooltipMobile);
+//     }
+
+//     // Load company image if available
+//     if (studentData.companyName) {
+//       await loadCompanyImage(studentData.companyName, companyImageEl);
+      
+//     }
+//     // await loadWeeklySchedule(userId);
+
+//   } catch (error) {
+//     console.error("Error loading student data:", error);
+//     showErrorToast("Failed to load student data: " + error.message);
+//   } finally {
+//     showLoading(false);
+//   }
+// }
 
 // Helper function to initialize tooltips
 function initTooltip(element) {
@@ -451,6 +471,7 @@ async function loadStudentReports(userId) {
 
     const student = students[0];
     displayStudentInfo(student);
+    
 
     const reports = await firebaseCRUD.queryData("reports", "userId", "==", userId);
     reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -797,15 +818,61 @@ async function initializeDropdowns() {
   }
 }
 
+// async function loadAndSetStudentData(userId) {
+//   try {
+    
+//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+//     if (!students || students.length === 0) throw new Error("Student not found");
+
+//     const student = students[0];
+
+    
+//     document.getElementById('user-id').value = userId;
+//     document.getElementById('student-id').value = student.studentId || '';
+//     document.getElementById('phone-number').value = student.phoneNumber || '';
+//     document.getElementById('first-name').value = student.firstName || '';
+//     document.getElementById('middle-name').value = student.middleName || '';
+//     document.getElementById('last-name').value = student.lastName || '';
+//     document.getElementById('sufix').value = student.suffix || '';
+//     document.getElementById('address').value = student.address || '';
+
+    
+//     if (student.gender) {
+//       document.getElementById('gender').value = student.gender;
+//     }
+
+    
+//     if (student.companyName) {
+//       document.getElementById('companyName').value = student.companyName;
+//     }
+
+    
+//     document.getElementById('morning-time-in').value = student.morningTimeIn || '';
+//     document.getElementById('morning-time-out').value = student.morningTimeOut || '';
+//     document.getElementById('afternoon-time-in').value = student.afternoonTimeIn || '';
+//     document.getElementById('afternoon-time-out').value = student.afternoonTimeOut || '';
+
+    
+//     document.getElementById('user-type').value = student.userType || 'student';
+
+    
+//     if (student.userImg) {
+//       document.getElementById('user-profile-img').src = student.userImg;
+//     }
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
 async function loadAndSetStudentData(userId) {
   try {
-    
+    const { firebaseCRUD } = await import("./firebase-crud.js");
     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
     if (!students || students.length === 0) throw new Error("Student not found");
 
     const student = students[0];
 
-    
+    // Set basic fields
     document.getElementById('user-id').value = userId;
     document.getElementById('student-id').value = student.studentId || '';
     document.getElementById('phone-number').value = student.phoneNumber || '';
@@ -815,33 +882,191 @@ async function loadAndSetStudentData(userId) {
     document.getElementById('sufix').value = student.suffix || '';
     document.getElementById('address').value = student.address || '';
 
-    
+    // Set gender
     if (student.gender) {
       document.getElementById('gender').value = student.gender;
     }
 
-    
+    // Set company
     if (student.companyName) {
       document.getElementById('companyName').value = student.companyName;
     }
 
-    
+    // Set time fields
     document.getElementById('morning-time-in').value = student.morningTimeIn || '';
     document.getElementById('morning-time-out').value = student.morningTimeOut || '';
     document.getElementById('afternoon-time-in').value = student.afternoonTimeIn || '';
     document.getElementById('afternoon-time-out').value = student.afternoonTimeOut || '';
 
-    
+    // Set user type
     document.getElementById('user-type').value = student.userType || 'student';
 
-    
+    // Set profile image
     if (student.userImg) {
       document.getElementById('user-profile-img').src = student.userImg;
     }
+
+    // Set weekly schedule checkboxes
+    if (student.weeklySchedule) {
+      const days = ['MON', 'TUE', 'WED', 'THURS', 'FRI', 'SAT', 'SUN'];
+      days.forEach(day => {
+        const checkbox = document.querySelector(`input[name="weeklySchedule[]"][value="${day}"]`);
+        if (checkbox) {
+          checkbox.checked = !!student.weeklySchedule[day];
+        }
+      });
+    }
+
   } catch (error) {
     throw error;
   }
 }
+
+
+// async function loadStudentData(userId) {
+//   showLoading(true);
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+
+//     if (!students || students.length === 0) {
+//       console.log("No student data found");
+//       return;
+//     }
+
+//     const studentData = students[0];
+
+//     // Existing DOM elements
+//     const companyNameEl = document.getElementById('company-name');
+//     const companyImageEl = document.querySelector('.company-container img');
+//     const userNameEl = document.getElementById('user-name');
+//     const phoneTextEl = document.getElementById('phone-number-text');
+//     const emailTextEl = document.getElementById('email-text');
+//     const phoneTooltip = document.querySelector('.phone-email-container .tt:first-child');
+//     const emailTooltip = document.querySelector('.phone-email-container .tt:last-child');
+//     const profileImgEl = document.getElementById('user-profile-img');
+
+//     // Profile image handling (existing logic)
+//     if (profileImgEl) {
+//       if (studentData.userImg) {
+//         profileImgEl.src = studentData.userImg;
+//       } else {
+//         const defaultMaleImg = "../assets/img/icons8_male_user_480px_1.png";
+//         const defaultFemaleImg = "../assets/img/icons8_female_user_480px.png";
+//         profileImgEl.src = studentData.gender === "Female" ? defaultFemaleImg : defaultMaleImg;
+//       }
+//     }
+
+//     // Name handling (existing logic)
+//     let fullName = studentData.firstName || '';
+//     if (studentData.middleName) fullName += ' ' + studentData.middleName;
+//     if (studentData.lastName) fullName += ' ' + studentData.lastName;
+//     if (studentData.suffix) fullName += ' ' + studentData.suffix;
+
+//     const truncatedName = fullName.length > 20 
+//       ? fullName.substring(0, 20) + '...' 
+//       : fullName;
+
+//     // Basic info display (existing logic)
+//     if (companyNameEl) companyNameEl.textContent = studentData.companyName || 'Department of Agrarian Reform';
+//     if (userNameEl) {
+//       userNameEl.textContent = truncatedName;
+//       userNameEl.setAttribute('title', fullName);
+//       userNameEl.classList.add('text-truncate');
+//     }
+
+//     // Contact info (existing logic)
+//     const phoneNumber = studentData.phoneNumber || 'N/A';
+//     if (phoneTextEl) phoneTextEl.textContent = phoneNumber;
+//     if (phoneTooltip) phoneTooltip.setAttribute('data-bs-title', phoneNumber);
+
+//     const emailAddress = studentData.emailAddress || 'N/A';
+//     if (emailTextEl) emailTextEl.textContent = emailAddress;
+//     if (emailTooltip) emailTooltip.setAttribute('data-bs-title', emailAddress);
+
+//     // Tooltip initialization (existing logic)
+//     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+//     tooltipTriggerList.map(function (tooltipTriggerEl) {
+//       return new bootstrap.Tooltip(tooltipTriggerEl);
+//     });
+
+//     // Company image (existing logic)
+//     if (studentData.companyName) {
+//       await loadCompanyImage(studentData.companyName, companyImageEl);
+//     }
+
+//     // NEW: Display weekly schedule in the view modal
+//     if (studentData.weeklySchedule) {
+//       displayWeeklyScheduleInModal(studentData.weeklySchedule);
+//     }
+
+//   } catch (error) {
+//     console.error("Error loading student data:", error);
+//     showErrorToast("Failed to load student data: " + error.message);
+//   } finally {
+//     showLoading(false);
+//   }
+// }
+
+// // NEW: Function to display weekly schedule in the view modal
+// function displayWeeklyScheduleInModal(schedule) {
+//   // Remove existing schedule display if it exists
+//   const existingSchedule = document.querySelector('.weekly-schedule-display');
+//   if (existingSchedule) {
+//     existingSchedule.remove();
+//   }
+
+//   const scheduleContainer = document.createElement('div');
+//   scheduleContainer.className = 'weekly-schedule-display mt-3 p-3';
+//   scheduleContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+//   scheduleContainer.style.borderRadius = '8px';
+
+//   const title = document.createElement('h6');
+//   title.className = 'text-light mb-3 text-center';
+//   title.textContent = 'Weekly Schedule';
+
+//   const daysContainer = document.createElement('div');
+//   daysContainer.className = 'd-flex flex-wrap gap-2 justify-content-center';
+
+//   const days = [
+//     { id: 'mon', label: 'MON', value: 'MON' },
+//     { id: 'tue', label: 'TUES', value: 'TUES' },
+//     { id: 'wed', label: 'WED', value: 'WED' },
+//     { id: 'thurs', label: 'THURS', value: 'THURS' },
+//     { id: 'fri', label: 'FRI', value: 'FRI' },
+//     { id: 'sat', label: 'SAT', value: 'SAT' },
+//     { id: 'sun', label: 'SUN', value: 'SUN' }
+//   ];
+
+//   days.forEach(day => {
+//     const dayElement = document.createElement('span');
+//     dayElement.className = 'badge';
+//     dayElement.style.fontSize = '0.9rem';
+//     dayElement.style.padding = '0.5rem 0.75rem';
+    
+//     if (schedule[day.value]) {
+//       dayElement.className += ' bg-success';
+//       dayElement.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i> ${day.label}`;
+//     } else {
+//       dayElement.className += ' bg-secondary';
+//       dayElement.innerHTML = `<i class="bi bi-x-circle-fill me-1"></i> ${day.label}`;
+//     }
+    
+//     daysContainer.appendChild(dayElement);
+//   });
+
+//   scheduleContainer.appendChild(title);
+//   scheduleContainer.appendChild(daysContainer);
+
+//   // Insert the schedule display after the attendance status container
+//   const attendanceContainer = document.querySelector('.attendance-status-container');
+//   if (attendanceContainer) {
+//     attendanceContainer.insertAdjacentElement('afterend', scheduleContainer);
+//   }
+// }
+
+
+
 
 document.getElementById('edit-info-form')?.addEventListener('submit', async function (e) {
   e.preventDefault();
@@ -851,7 +1076,22 @@ document.getElementById('edit-info-form')?.addEventListener('submit', async func
     if (!userId) throw new Error("No user ID found");
 
     const { firebaseCRUD } = await import("./firebase-crud.js");
+    
 
+    // Get all checked days
+    const checkedDays = Array.from(document.querySelectorAll('input[name="weeklySchedule[]"]:checked'))
+      .map(checkbox => checkbox.value);
+
+    // Create weekly schedule object
+    const weeklySchedule = {
+      MON: checkedDays.includes('MON'),
+      TUES: checkedDays.includes('TUES'),
+      WED: checkedDays.includes('WED'),
+      THURS: checkedDays.includes('THURS'),
+      FRI: checkedDays.includes('FRI'),
+      SAT: checkedDays.includes('SAT'),
+      SUN: checkedDays.includes('SUN')
+    };
     
     const formData = {
       studentId: document.getElementById('student-id').value,
@@ -1024,3 +1264,108 @@ function editProfileImg() {
       }
   });
 }
+
+
+
+
+
+// async function loadWeeklySchedule(userId) {
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+//     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+
+//     if (!students || students.length === 0) {
+//       console.log("No student data found");
+//       return;
+//     }
+
+//     const studentData = students[0];
+//     const weeklySchedule = studentData.weeklySchedule || {};
+
+//     // Update the checkboxes in the edit modal
+//     const days = ['MON', 'TUE', 'WED', 'THURS', 'FRI', 'SAT', 'SUN'];
+//     days.forEach(day => {
+//       const checkbox = document.getElementById(day.toLowerCase());
+//       if (checkbox) {
+//         checkbox.checked = !!weeklySchedule[day];
+//       }
+//     });
+
+//     // Also update the view in the info modal (non-editable)
+//     displayWeeklyScheduleInModal(weeklySchedule);
+
+//   } catch (error) {
+//     console.error("Error loading weekly schedule:", error);
+//     showErrorToast("Failed to load weekly schedule: " + error.message);
+//   }
+// }
+
+// function displayWeeklyScheduleInModal(schedule) {
+//   const scheduleContainer = document.createElement('div');
+//   scheduleContainer.className = 'weekly-schedule-container p-3 mt-3';
+//   scheduleContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+//   scheduleContainer.style.borderRadius = '8px';
+
+//   const title = document.createElement('h6');
+//   title.className = 'text-light mb-3';
+//   title.textContent = 'Weekly Schedule';
+
+//   const daysContainer = document.createElement('div');
+//   daysContainer.className = 'd-flex flex-wrap gap-2 justify-content-center';
+
+//   const days = [
+//     { id: 'mon', label: 'MON', value: 'MON' },
+//     { id: 'tue', label: 'TUE', value: 'TUE' },
+//     { id: 'wed', label: 'WED', value: 'WED' },
+//     { id: 'thurs', label: 'THURS', value: 'THURS' },
+//     { id: 'fri', label: 'FRI', value: 'FRI' },
+//     { id: 'sat', label: 'SAT', value: 'SAT' },
+//     { id: 'sun', label: 'SUN', value: 'SUN' }
+//   ];
+
+//   days.forEach(day => {
+//     const dayElement = document.createElement('span');
+//     dayElement.className = 'badge';
+//     dayElement.style.fontSize = '0.9rem';
+//     dayElement.style.padding = '0.5rem 0.75rem';
+    
+//     if (schedule[day.value]) {
+//       dayElement.className += ' bg-success';
+//       dayElement.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i> ${day.label}`;
+//     } else {
+//       dayElement.className += ' bg-secondary';
+//       dayElement.innerHTML = `<i class="bi bi-x-circle-fill me-1"></i> ${day.label}`;
+//     }
+    
+//     daysContainer.appendChild(dayElement);
+//   });
+
+//   scheduleContainer.appendChild(title);
+//   scheduleContainer.appendChild(daysContainer);
+
+//   // Find where to insert the schedule in the modal
+//   const modalContent = document.querySelector('#viewDataModal .modal-content');
+//   const timeLifeContainer = document.querySelector('.time-life-container');
+  
+//   // Insert after the timeLifeContainer
+//   if (timeLifeContainer && modalContent) {
+//     timeLifeContainer.insertAdjacentElement('afterend', scheduleContainer);
+//   }
+// }
+
+
+
+// document.querySelectorAll('.view-only-checkbox').forEach(checkbox => {
+//   checkbox.addEventListener('click', function(e) {
+//     if (this.disabled) {
+//       // Show the notice message
+//       const notice = this.closest('.col-md-12').querySelector('.view-only-notice');
+//       notice.style.display = 'block';
+//       setTimeout(() => notice.style.display = 'none', 20000);
+      
+//       // Prevent default (just in case)
+//       e.preventDefault();
+//     }
+//   });
+// });
+

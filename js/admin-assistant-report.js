@@ -800,14 +800,66 @@ function showErrorToast(message, isError = false) {
   }
   
   
-  async function loadAndSetStudentData(userId, firebaseCRUD) {
+  // async function loadAndSetStudentData(userId, firebaseCRUD) {
     
+  //   const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
+  //   if (!students || students.length === 0) throw new Error("Student not found");
+  
+  //   const student = students[0];
+  
+    
+  //   document.getElementById('user-id').value = userId;
+  //   document.getElementById('student-id').value = student.studentId || '';
+  //   document.getElementById('phone-number').value = student.phoneNumber || '';
+  //   document.getElementById('first-name').value = student.firstName || '';
+  //   document.getElementById('middle-name').value = student.middleName || '';
+  //   document.getElementById('last-name').value = student.lastName || '';
+  //   document.getElementById('sufix').value = student.suffix || '';
+  //   document.getElementById('address').value = student.address || '';
+  
+    
+  //   if (student.gender) {
+  //     document.getElementById('gender').value = student.gender;
+  //   }
+  
+    
+  //   if (student.companyName) {
+  //     const companySelect = document.getElementById('companyName');
+  //     companySelect.value = student.companyName;
+  
+      
+  //     if (companySelect.value !== student.companyName) {
+  //       const option = document.createElement('option');
+  //       option.value = student.companyName;
+  //       option.textContent = student.companyName;
+  //       option.selected = true;
+  //       companySelect.appendChild(option);
+  //     }
+  //   }
+  
+    
+  //   document.getElementById('morning-time-in').value = student.morningTimeIn || '';
+  //   document.getElementById('morning-time-out').value = student.morningTimeOut || '';
+  //   document.getElementById('afternoon-time-in').value = student.afternoonTimeIn || '';
+  //   document.getElementById('afternoon-time-out').value = student.afternoonTimeOut || '';
+  
+    
+  //   document.getElementById('user-type').value = student.userType || 'student';
+  
+    
+  //   if (student.userImg) {
+  //     document.getElementById('user-profile-img').src = student.userImg;
+  //   }
+  // }
+
+
+  async function loadAndSetStudentData(userId, firebaseCRUD) {
     const students = await firebaseCRUD.queryData("students", "userId", "==", userId);
     if (!students || students.length === 0) throw new Error("Student not found");
   
     const student = students[0];
   
-    
+    // Set basic fields
     document.getElementById('user-id').value = userId;
     document.getElementById('student-id').value = student.studentId || '';
     document.getElementById('phone-number').value = student.phoneNumber || '';
@@ -817,17 +869,17 @@ function showErrorToast(message, isError = false) {
     document.getElementById('sufix').value = student.suffix || '';
     document.getElementById('address').value = student.address || '';
   
-    
+    // Set gender
     if (student.gender) {
       document.getElementById('gender').value = student.gender;
     }
   
-    
+    // Set company
     if (student.companyName) {
       const companySelect = document.getElementById('companyName');
       companySelect.value = student.companyName;
   
-      
+      // Add company to dropdown if not present
       if (companySelect.value !== student.companyName) {
         const option = document.createElement('option');
         option.value = student.companyName;
@@ -837,18 +889,29 @@ function showErrorToast(message, isError = false) {
       }
     }
   
-    
+    // Set time fields
     document.getElementById('morning-time-in').value = student.morningTimeIn || '';
     document.getElementById('morning-time-out').value = student.morningTimeOut || '';
     document.getElementById('afternoon-time-in').value = student.afternoonTimeIn || '';
     document.getElementById('afternoon-time-out').value = student.afternoonTimeOut || '';
   
-    
+    // Set user type
     document.getElementById('user-type').value = student.userType || 'student';
   
-    
+    // Set profile image
     if (student.userImg) {
       document.getElementById('user-profile-img').src = student.userImg;
+    }
+  
+    // NEW: Set weekly schedule checkboxes
+    if (student.weeklySchedule) {
+      const days = ['MON', 'TUE', 'WED', 'THURS', 'FRI', 'SAT', 'SUN'];
+      days.forEach(day => {
+        const checkbox = document.querySelector(`input[name="weeklySchedule[]"][value="${day}"]`);
+        if (checkbox) {
+          checkbox.checked = !!student.weeklySchedule[day];
+        }
+      });
     }
   }
   
@@ -861,6 +924,22 @@ function showErrorToast(message, isError = false) {
       if (!userId) throw new Error("No user ID found");
   
       const { firebaseCRUD } = await import("./firebase-crud.js");
+
+
+      // NEW: Get all checked days
+      const checkedDays = Array.from(document.querySelectorAll('input[name="weeklySchedule[]"]:checked'))
+      .map(checkbox => checkbox.value);
+
+      // NEW: Create weekly schedule object
+      const weeklySchedule = {
+        MON: checkedDays.includes('MON'),
+        TUES: checkedDays.includes('TUES'),
+        WED: checkedDays.includes('WED'),
+        THURS: checkedDays.includes('THURS'),
+        FRI: checkedDays.includes('FRI'),
+        SAT: checkedDays.includes('SAT'),
+        SUN: checkedDays.includes('SUN')
+      };
   
       
       const formData = {

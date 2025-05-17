@@ -621,3 +621,192 @@ body {
   color: #ffffff !important;
   font-weight: 600 !important;
 }
+
+
+
+
+/* 
+#weekday {
+  width: 80px;
+  height: 50px;
+  border: 1px solid #85ad53;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: bold;
+  position: relative;
+  background-color: white;
+}
+
+#weekday input {
+  opacity: 0;
+  position: absolute;
+ 
+}
+
+#weekday label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  color: #85ad53;
+  transition: all 0.2s ease;
+}
+
+#weekday input:checked + label {
+  background-color: #85ad53;
+  color: white;
+}
+
+
+
+
+
+
+
+.weekly-schedule-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+.weekly-schedule-container h6 {
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s;
+} */
+
+
+
+/* Style for weekday checkboxes */
+.weekdays-container {
+  gap: 0.5rem;
+}
+
+#weekday {
+  width: calc(14.28% - 0.5rem);
+  min-width: 80px;
+  height: 50px;
+  border: 1px solid #85ad53;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: bold;
+  position: relative;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#weekday input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+#weekday label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  color: #85ad53;
+  transition: all 0.2s ease;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+#weekday input:checked + label {
+  background-color: #85ad53;
+  color: white;
+}
+
+#weekday:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  #weekday {
+    width: calc(33.33% - 0.5rem);
+  }
+}
+
+@media (max-width: 576px) {
+  #weekday {
+    width: calc(50% - 0.5rem);
+  }
+}
+
+
+
+
+.weekly-schedule-display {
+  width: 100%;
+  max-width: 100%;
+}
+
+.weekly-schedule-display h6 {
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+
+
+
+
+
+.view-only-checkbox {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+
+.view-only-mode {
+  position: relative;
+}
+
+
+.view-only-mode:active::after {
+  content: "View mode only - not editable";
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.view-only-notice {
+  animation: fadeIn 0.3s ease-in-out;
+  white-space: nowrap;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+

@@ -503,11 +503,12 @@
                     ></span>
                   </div>
 
-                  <div
-                    class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      id="user-icon"
+
+                  
+
+                  <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative view-only-mode">
+                    <i id="user-icon"
+
                       class="bi bi-buildings-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
                       style="color: #3c3d42 !important"
                     ></i>
@@ -528,18 +529,10 @@
                     ></span>
                   </div>
 
-                  <div
-                    class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
-                    ></i>
-                    <input
-                      type="time"
-                      class="form-control ps-3 pe-1"
-                      id="morning-time-in"
-                      name="morningTimeIn"
-                    />
+                  <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode">
+                    <i class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"></i>
+                    <input type="time" class="form-control ps-3 pe-1" id="morning-time-in" name="morningTimeIn"  disabled title="View mode only - not editable" />
+
                     <label for="morning-time-in">Morning - Time in</label>
                     <span
                       id="morningTimeIn-error"
@@ -548,18 +541,10 @@
                     ></span>
                   </div>
 
-                  <div
-                    class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
-                    ></i>
-                    <input
-                      type="time"
-                      class="form-control ps-3 pe-1"
-                      id="morning-time-out"
-                      name="morningTimeOut"
-                    />
+                  <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode">
+                    <i class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"></i>
+                    <input type="time" class="form-control ps-3 pe-1" id="morning-time-out" name="morningTimeOut"  disabled title="View mode only - not editable"/>
+
                     <label for="morning-time-out">Morning - Time out</label>
                     <span
                       id="morningTimeOut-error"
@@ -568,18 +553,10 @@
                     ></span>
                   </div>
 
-                  <div
-                    class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
-                    ></i>
-                    <input
-                      type="time"
-                      class="form-control ps-3 pe-1"
-                      id="afternoon-time-in"
-                      name="afternoonTimeIn"
-                    />
+                  <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode">
+                    <i class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"></i>
+                    <input type="time" class="form-control ps-3 pe-1" id="afternoon-time-in" name="afternoonTimeIn"  disabled title="View mode only - not editable"/>
+
                     <label for="afternoon-time-in">Afternoon - Time in</label>
                     <span
                       id="afternoonTimeIn-error"
@@ -588,18 +565,9 @@
                     ></span>
                   </div>
 
-                  <div
-                    class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative"
-                  >
-                    <i
-                      class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
-                    ></i>
-                    <input
-                      type="time"
-                      class="form-control ps-3 pe-1"
-                      id="afternoon-time-out"
-                      name="afternoonTimeOut"
-                    />
+                  <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode">
+                    <i class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"></i>
+                    <input type="time" class="form-control ps-3 pe-1" id="afternoon-time-out" name="afternoonTimeOut"  disabled title="View mode only - not editable"/>
                     <label for="afternoon-time-out">Afternoon - Time out</label>
                     <span
                       id="afternoonTimeOut-error"
@@ -609,12 +577,116 @@
                   </div>
                 </div>
 
-                <button
-                  class="mt-4 mb-3 d-block w-100"
-                  id="personal-info-submit"
-                  type="submit"
-                  value="submit"
-                >
+
+
+
+                <div class="col-md-12 d-flex flex-column mb-3 p-0">
+                  <label for="weekday" style="color: white;">Weekly schedule</label>
+                  <div
+                    class="weekdays-container d-flex align-items-center flex-wrap gap-1 justify-content-between mt-2 view-only-mode" 
+                  >
+                    <span id="weekday">
+                      <input
+                        type="checkbox"
+                        name="weeklySchedule[]"
+                        id="monday"
+                        value="MON"
+                        class="view-only-checkbox"
+                        disabled
+                        title="View mode only - not editable"
+                      />
+                      <label for="monday">MON</label>
+                    </span>
+    
+                    <span id="weekday">
+                      <input
+                        type="checkbox"
+                        name="weeklySchedule[]"
+                        id="tuesday"
+                        value="TUE"
+                        class="view-only-checkbox"
+                        disabled
+                        title="View mode only - not editable"
+                      />
+                      <label for="tuesday">TUES</label>
+                    </span>
+    
+                    <span id="weekday">
+                      <input
+                        type="checkbox"
+                        name="weeklySchedule[]"
+                        id="wednesday"
+                        value="WED"
+                        class="view-only-checkbox"
+                        disabled
+                        title="View mode only - not editable"
+                      />
+                      <label for="wednesday">WED</label>
+                    </span>
+                    <span id="weekday">
+                      <input
+                        type="checkbox"
+                        name="weeklySchedule[]"
+                        id="thursday"
+                        value="THURS"
+                        class="view-only-checkbox"
+                        disabled
+                        title="View mode only - not editable"
+                      />
+                      <label for="thursday">THURS</label>
+                    </span>
+                    <span id="weekday">
+                      <input
+                        type="checkbox"
+                        name="weeklySchedule[]"
+                        id="friday"
+                        value="FRI"
+                        class="view-only-checkbox"
+                        disabled
+                        title="View mode only - not editable"
+                      />
+                      <label for="friday">FRI</label>
+                    </span>
+    
+                    <span id="weekday">
+                      <input
+                        type="checkbox"
+                        name="weeklySchedule[]"
+                        id="saturday"
+                        value="SAT"
+                        class="view-only-checkbox"
+                        disabled
+                        title="View mode only - not editable"
+                      />
+                      <label for="saturday">SAT</label>
+                    </span>
+    
+                    <span id="weekday">
+                      <input
+                        type="checkbox"
+                        name="weeklySchedule[]"
+                        id="sunday"
+                        value="SUN"
+                        class="view-only-checkbox"
+                        disabled
+                        title="View mode only - not editable"
+                      />
+                      <label for="sunday">SUN</label>
+                    </span>
+                  </div>
+                  <span
+                    id="weeklySchedule-error"
+                    class="text-danger"
+                    style="font-size: 12px"
+                  ></span>
+                  <div class="view-only-notice-container position-fixed top-50 start-50 translate-middle" style="z-index: 1060; pointer-events: none;">
+                    <div class="view-only-notice bg-dark text-white text-center px-3 py-2 rounded" style="font-size: 12px; display: none;">
+                      This is view mode only. Editing is disabled.
+                    </div>
+                  </div>
+                </div>
+
+                <button class="mt-4 mb-3 d-block w-100" id="personal-info-submit" type="submit" value="submit">
                   <span>Update Account</span>
                 </button>
               </form>

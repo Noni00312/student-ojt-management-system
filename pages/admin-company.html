@@ -287,22 +287,106 @@
 
 
     <script>
-      let uploadedImageBase64 = ""; 
+      // let uploadedImageBase64 = ""; 
 
-      document.getElementById('camera-input').addEventListener('change', function (event) {
+      // document.getElementById('camera-input').addEventListener('change', function (event) {
+      //   const file = event.target.files[0];
+      //   const previewImage = document.getElementById('preview-image');
+      //   const cameraIcon = document.getElementById('camera-icon');
+
+      //   if (file) {
+      //     const reader = new FileReader();
+      //     reader.onload = function (e) {
+      //       previewImage.src = e.target.result;
+      //       previewImage.style.display = 'block';
+      //       if (cameraIcon) cameraIcon.style.display = 'none';
+      //       uploadedImageBase64 = e.target.result; 
+      //     };
+      //     reader.readAsDataURL(file);
+      //   }
+      // });
+      let uploadedImageBase64 = "";
+
+      // Function to compress images that are too large
+      async function compressImageIfNeeded(file) {
+        return new Promise((resolve) => {
+          if (file.size <= 1 * 1024 * 1024) { // If under 1MB, use as-is
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsDataURL(file);
+            return;
+          }
+
+          // For images over 1MB, we'll compress them
+          const img = new Image();
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            img.src = e.target.result;
+            
+            img.onload = function() {
+              // Calculate new dimensions (reduce by 50% initially)
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              
+              // Reduce dimensions while maintaining aspect ratio
+              let width = img.width;
+              let height = img.height;
+              const maxDimension = 1024; // Maximum width or height
+              
+              if (width > height && width > maxDimension) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              } else if (height > maxDimension) {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
+              
+              canvas.width = width;
+              canvas.height = height;
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              // Reduce quality until under 1MB
+              let quality = 0.7; // Start with 70% quality
+              canvas.toBlob((blob) => {
+                const compressedReader = new FileReader();
+                compressedReader.onload = (e) => resolve(e.target.result);
+                compressedReader.readAsDataURL(blob);
+              }, 'image/jpeg', quality);
+            };
+          };
+          
+          reader.readAsDataURL(file);
+        });
+      }
+
+      document.getElementById('camera-input').addEventListener('change', async function (event) {
         const file = event.target.files[0];
         const previewImage = document.getElementById('preview-image');
         const cameraIcon = document.getElementById('camera-icon');
 
         if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            previewImage.src = e.target.result;
+          try {
+            // Get the image (compressed if necessary)
+            const imageData = await compressImageIfNeeded(file);
+            
+            // Display the image
+            previewImage.src = imageData;
             previewImage.style.display = 'block';
             if (cameraIcon) cameraIcon.style.display = 'none';
-            uploadedImageBase64 = e.target.result; 
-          };
-          reader.readAsDataURL(file);
+            
+            // Store the Base64 string
+            uploadedImageBase64 = imageData;
+            
+            // Optional: Show a message if image was compressed
+            if (file.size > 1 * 1024 * 1024) {
+              console.log("Image was compressed to fit size requirements");
+              // You could show a toast notification here if you want
+            }
+          } catch (error) {
+            console.error("Error processing image:", error);
+            // Handle error (show message to user, etc.)
+          }
         }
       });
     </script>

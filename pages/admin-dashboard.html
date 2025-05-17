@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,225 +7,138 @@
   <title>Admin Dashboard | SOJTMS</title>
   <link rel="icon" type="image/png" href="/assets/img/logo trans.png">
   <link rel="stylesheet" href="/css/styles.css" />
-  <link rel="stylesheet" href="/css/admin-dashboard.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
   <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <meta name="theme-color" content="#6e1423">
 </head>
 <body>
-
-
-
   <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
-    <div class="container ">
-        <div class="d-flex align-items-center justify-content-between w-100">
-          <div class="wrapper">
-            <div class="d-flex align-items-center">
-              <a href="./admin-dashboard.html" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS - Admin</a>
-            </div>
-            <button class="btn 	d-lg-none d-sm-block" type="button " data-bs-toggle="offcanvas" data-bs-target="#sideBar" aria-controls="sideBar">
-              <i class="bi bi-list text-light fs-3 outline-none"></i>
-            </button>
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="wrapper">
+          <div class="d-flex align-items-center">
+            <a href="./admin-dashboard.html" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS - Admin</a>
           </div>
-
-          <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-dashboard.html">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-t-i-o.html">Time in/out</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-company.html">Companies</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-student.html">Students</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-assistant.html">Assistants</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-incident-report.html">Incident Report</a>
-              </li>
-            </ul>
-          </div>
-          
-          <a href="/pages/admin-profile.html" id="user-profile" class=" text-decoration-none">
-            <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-img" style="border-radius: 50%;">
-          </a>
-
+          <button class="btn d-lg-none d-sm-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar" aria-controls="sideBar">
+            <i class="bi bi-list text-light fs-3 outline-none"></i>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link text-light" href="./admin-dashboard.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link text-light" href="./admin-announcements.html">Announcements</a></li>
+            <li class="nav-item"><a class="nav-link text-light" href="./admin-t-i-o.html">Time in/out</a></li>
+            <li class="nav-item"><a class="nav-link text-light" href="./admin-company.html">Companies</a></li>
+            <li class="nav-item"><a class="nav-link text-light" href="./admin-student.html">Students</a></li>
+            <li class="nav-item"><a class="nav-link text-light" href="./admin-assistant.html">Assistants</a></li>
+            <li class="nav-item"><a class="nav-link text-light" href="./admin-incident-report.html">Incident Report</a></li>
+          </ul>
+        </div>
+        <a href="/pages/admin-profile.html" id="user-profile" class="text-decoration-none">
+          <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-img" style="border-radius: 50%;">
+        </a>
+      </div>
     </div>
-</nav>
-
-  <!-- Dashboard Section -->
+  </nav>
   <section class="container mt-4">
-    <!-- Top Bar with Chart and Date -->
-    <div class="row g-3">
+    <div class="row g-4">
+      <div class="col-lg-6 position-relative">
+        <div class="dashboard-card h-100 position-relative">
+          <i class="bi bi-buildings-fill text-light fs-1 position-absolute opacity-25" id="overlay-icon"></i>
+          <div class="card-header position-relative" style="z-index: 1;">
+            <h2><i class="bi bi-buildings-fill me-2 py-3"></i>Number of Companies</h2>
+          </div>
+          <div class="card-body d-flex align-items-center" style="min-height: 110px;">
+            <h1 id="companies-count" class="display-3 m-0 fw-bold text-light">--</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 position-relative">
+        <div class="dashboard-card h-100 position-relative">
+          <i class="bi bi-people-fill text-light fs-1 position-absolute opacity-25" id="overlay-icon"></i>
+          <div class="card-header position-relative" style="z-index: 1;">
+            <h2><i class="bi bi-people-fill me-2 py-3"></i>Number of OJTs</h2>
+          </div>
+          <div class="card-body d-flex align-items-center" style="min-height: 110px;">
+            <h1 id="ojts-count" class="display-3 m-0 fw-bold text-light">--</h1>
+          </div>
+        </div>
+      </div>
       <div class="col-12">
-        <div class="card p-4 d-flex flex-md-row align-items-center justify-content-between">
-          <div class="chart-bar">
-            <!-- Replace with canvas or div for chart -->
-              <div>
-                <canvas id="myChart"></canvas>
+        <div class="dashboard-card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h2><i class="bi bi-megaphone me-2 py-3"></i>Announcements</h2>
+            <div class="d-flex gap-2">
+              <a href="/pages/admin-announcements.html" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="announcements-grid" id="dashboard-announcements-list">
+              <div class="text-center text-muted py-5" id="dashboard-announcements-loading">
+                <span class="spinner-border"></span>
               </div>
-            <!-- <div style="height: 100px; width: 200px; background: #ccc;">[Chart]</div> -->
+            </div>
           </div>
-          <div class="date-display text-end ">
-            <h5 class="m-0 text-dark">March 2025</h5>
-            <h1 class="display-3 fw-bold text-dark">26</h1>
-          </div>
-        </div>
-      </div>
-
-      <!-- Present / Late / Absent -->
-      <div class="col-md-4">
-        <div class="card item-1 bg-success text-white p-3 ">
-          <h3>Present</h3>
-          <!-- <h2>150</h2> -->
-          <div class="time-container ">
-            <span class="hours">150</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card item-1 bg-warning text-white p-3">
-          <h3>Late</h3>
-          <!-- <h2>30</h2> -->
-          <div class="time-container ">
-            <span class="hours">30</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card item-1 bg-danger text-white p-3">
-          <h3>Absent</h3>
-          <!-- <h2>10</h2> -->
-          <div class="time-container ">
-            <span class="hours">10</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- OJT Stats -->
-      <div class="col-md-4">
-        <div class="card bg-dark text-white p-3">
-          <h5>Completed OJTs</h5>
-          <h2>0</h2>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card bg-dark text-white p-3">
-          <h5>On-going OJTs</h5>
-          <h2>200</h2>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card bg-dark text-white p-3">
-          <h5>Number of OJTs</h5>
-          <h2>200</h2>
         </div>
       </div>
     </div>
   </section>
-
-
   <div class="offcanvas offcanvas-start primary-background-color" tabindex="-1" id="sideBar" aria-labelledby="sideBarLabel">
     <div class="offcanvas-header accent-darken-bg-color">
       <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">MENU</h5>
-      <button type="button" class="btn-close " data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body p-0 ">
-        <ul class="nav d-flex flex-column">
-
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-dashboard.html">
-              <span class="fs-5">Dashboard</span> 
-              <i class="bi bi-microsoft fs-5"></i>
-            </a>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-t-i-o.html">
-              <span class="fs-5">Time in/out</span> 
-              <i class="bi bi-clock-fill fs-4"></i>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-company.html">
-              <span class="fs-5">Companies</span> 
-              <i class="bi bi-buildings-fill fs-3"></i>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-student.html">
-              <span class="fs-5">Students</span> 
-              <i class="bi bi-mortarboard-fill fs-3"></i>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-assistant.html">
-              <span class="fs-5">Assistants</span> 
-              <i class="bi bi-person-badge fs-3"></i>
-            </a>
-          </li>
-
-
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-incident-report.html">
-              <span class="fs-5">Incident Report</span> 
-              <i class="bi bi-printer-fill fs-4"></i>
-            </a>
-          </li>
-
-
-        </ul>
+    <div class="offcanvas-body p-0">
+      <ul class="nav d-flex flex-column">
+        <li class="nav-item">
+          <a class="nav-link py-3 d-flex align-items-center justify-content-between" href="./admin-dashboard.html">
+            <span class="fs-5">Dashboard</span>
+            <i class="bi bi-microsoft fs-5"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 d-flex align-items-center justify-content-between" href="./admin-announcements.html">
+            <span class="fs-5">Announcements</span>
+            <i class="bi bi-megaphone fs-5"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 d-flex align-items-center justify-content-between" href="./admin-t-i-o.html">
+            <span class="fs-5">Time in/out</span>
+            <i class="bi bi-clock-fill fs-4"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 d-flex align-items-center justify-content-between" href="./admin-company.html">
+            <span class="fs-5">Companies</span>
+            <i class="bi bi-buildings-fill fs-3"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 d-flex align-items-center justify-content-between" href="./admin-student.html">
+            <span class="fs-5">Students</span>
+            <i class="bi bi-mortarboard-fill fs-3"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 d-flex align-items-center justify-content-between" href="./admin-assistant.html">
+            <span class="fs-5">Assistants</span>
+            <i class="bi bi-person-badge fs-3"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 d-flex align-items-center justify-content-between" href="./admin-incident-report.html">
+            <span class="fs-5">Incident Report</span>
+            <i class="bi bi-printer-fill fs-4"></i>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
-
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/index-db-crud.js"></script>
   <script src="/js/app.js"></script>
-    <script src="/js/dashboard.js "></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-
-  <script>
-    const ctx = document.getElementById('myChart');
-  
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Present', 'Late', 'Absent'],
-        datasets: [{
-          label: 'Today Attendance',
-          data: [12, 19, 3],
-          backgroundColor: [
-            'green',  // Present
-            'orange', // Late
-            'red'     // Absent
-          ],
-          borderColor: [
-            'darkgreen', 
-            'darkorange', 
-            'darkred'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  </script>
-
+  <script type="module" src="/js/admin-dashboard.js"></script>
 </body>
 </html>

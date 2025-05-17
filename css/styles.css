@@ -136,6 +136,7 @@ a {
 
 .offcanvas-body ul li a:hover {
   background-color: var(--accent);
+  color: var(--primary  ) !important;
 }
 
 #user-profile {
@@ -148,8 +149,11 @@ a {
 }
 
 #user-profile img {
+  height: 40px;
+  width: 40px; 
   width: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .card {
@@ -323,4 +327,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .bi-clock-fill {
   pointer-events: none;
   z-index: 1;
+}
+
+.dropdown-item:active{
+  background-color: #6e1423 !important;
+  color: #fff !important;
 }

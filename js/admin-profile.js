@@ -371,7 +371,7 @@ if (logoutButton) {
     return;
   }
 
-  const confirmed = await showLogoutConfirmation();
+  const confirmed = confirm('Are you sure you want to logout?');
   
   if (confirmed) {
     try {
@@ -395,49 +395,3 @@ if (logoutButton) {
 }
 
 });
-
-async function showLogoutConfirmation() {
-  return new Promise((resolve) => {
-    const modalHtml = `
-      <div class="modal fade" id="logoutConfirmationModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              Are you sure you want to logout?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger" id="confirmLogout">Logout</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-    
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHtml;
-    document.body.appendChild(modalContainer);
-    
-    const modal = new bootstrap.Modal(document.getElementById('logoutConfirmationModal'));
-    modal.show();
-    
-    document.getElementById('confirmLogout').addEventListener('click', () => {
-      modal.hide();
-      resolve(true);
-      setTimeout(() => {
-        document.body.removeChild(modalContainer);
-      }, 500);
-    });
-    
-    modalContainer.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
-      resolve(false);
-      setTimeout(() => {
-        document.body.removeChild(modalContainer);
-      }, 500);
-    });
-  });
-}

@@ -138,6 +138,15 @@
               </div>
             </div>
 
+            <!-- Add this after the company address field -->
+            <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative modal-input">
+              <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
+              <input type="text" class="form-control ps-3 pe-1" id="company-province" name="companyProvince"
+                placeholder="Enter company province" required>
+              <label for="company-province">Company Province</label>
+              <span id="companyProvince-error" class="text-danger" style="font-size: 12px"></span>
+            </div>
+
             <div class="d-flex justify-content-center">
               <button type="submit" class="mt-2 mb-3 d-block add-company-button" id="add-company-button">
                 <span>Add Company</span>

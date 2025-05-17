@@ -2,31 +2,38 @@ import { firebaseCRUD } from "./firebase-crud.js";
 
 const LIST_ID = "announcements-list";
 
+/**
+ * Format ISO date string as locale string.
+ * @param {string} isoStr 
+ * @returns {string}
+ */
+function formatLocaleDate(isoStr) {
+  if (!isoStr) return "";
+  try {
+    return new Date(isoStr).toLocaleString();
+  } catch (e) {
+    return isoStr;
+  }
+}
+
+/**
+ * Show modal for selected announcement
+ * @param {Object} announcement 
+ */
 function showAnnouncementModal(announcement) {
   document.getElementById('viewAnnouncementLabel').innerText = announcement.title || "(No title)";
-  document.getElementById('modal-announcement-title').value = announcement.title || "";
-  document.getElementById('modal-announcement-content').value = announcement.content || "";
-  document.getElementById('modal-announcement-date').innerText = announcement.updatedAt
-    ? `Date: ${announcement.updatedAt.substring(0,10)}`
-    : "";
-  document.getElementById('modal-announcement-author').style.display = "";  // Always visible, or adjust if you have per-announcer
+  document.getElementById('modal-announcement-content').value = announcement.content || ""
+  document.getElementById('modal-announcement-author').style.display = ""; 
+  const link = document.getElementById('modal-announcement-link');
   if (announcement.url) {
-    const link = document.getElementById('modal-announcement-link');
     link.style.display = "";
     link.href = announcement.url;
   } else {
-    document.getElementById('modal-announcement-link').style.display = "none";
+    link.style.display = "none";
+    link.href = "#";
   }
   document.getElementById('modal-announcement-updated').innerText =
-    announcement.updatedAt ? `Last updated: ${announcement.updatedAt}` : "";
-  const imgBox = document.getElementById('modal-announcement-image');
-  if (announcement.image) {
-    imgBox.src = announcement.image;
-    imgBox.style.display = "block";
-  } else {
-    imgBox.src = "";
-    imgBox.style.display = "none";
-  }
+    announcement.updatedAt ? `Last updated: ${formatLocaleDate(announcement.updatedAt)}` : "";
   new bootstrap.Modal(document.getElementById('viewAnnouncementModal')).show();
 }
 
@@ -60,6 +67,9 @@ function showError(message) {
   `;
 }
 
+/**
+ * Render list of announcement cards with new/updated first
+ */
 function renderAnnouncements(list) {
   const container = document.getElementById(LIST_ID);
   container.innerHTML = "";
@@ -74,7 +84,13 @@ function renderAnnouncements(list) {
     return;
   }
 
-  list.forEach((a) => {
+  const sorted = list.slice().sort((a, b) => {
+    const dateA = new Date(a.updatedAt || a.createdAt || 0);
+    const dateB = new Date(b.updatedAt || b.createdAt || 0);
+    return dateB - dateA;
+  });
+
+  sorted.forEach((a) => {
     const card = document.createElement("div");
     card.className = "col-12 col-md-6 col-lg-4 p-2";
     card.innerHTML = `
@@ -93,8 +109,9 @@ function renderAnnouncements(list) {
         <div class="announcement-content">
           <div class="announcement-info">
             <h5>${a.title ? a.title : "(No title)"}</h5>
-            <p class="mb-1">${a.content ? a.content.substring(0, 100) + (a.content.length > 50 ? "..." : "") : ""}</p>
+            <p class="mb-1">${a.content ? a.content.substring(0, 100) + (a.content.length > 100 ? "..." : "") : ""}</p>
             ${a.url ? `<a href="${a.url}" target="_blank" class="text-white announcement-link"><i class="bi bi-link"></i><small>Visit Link</small></a>` : ""}
+
             <button class="btn btn-outline-light btn-sm mt-2 w-100 view-announcement-btn" data-id="${a.id}"><i class="bi bi-eye"></i> View</button>
           </div>
         </div>
@@ -125,6 +142,9 @@ function renderAnnouncements(list) {
   });
 }
 
+/**
+ * Fetch announcements (optionally by search filter), sorted
+ */
 async function fetchAnnouncements(search = "") {
   showLoading(true);
   let announcements = [];
@@ -150,15 +170,17 @@ async function fetchAnnouncements(search = "") {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-  document.getElementById("announcementSearch").addEventListener("input", (e) => {
-    fetchAnnouncements(e.target.value);
-  });
+  const searchBox = document.getElementById("announcementSearch");
+  if (searchBox) {
+    searchBox.addEventListener("input", (e) => {
+      fetchAnnouncements(e.target.value);
+    });
+  }
 
   fetchAnnouncements();
 
   try {
     const userId = localStorage.getItem("userId");
-
     if (!userId) {
       console.error("No userId found in localStorage");
       return;
@@ -166,21 +188,19 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     await window.dbReady;
 
-    const img = document.getElementById("user-img");
+    const img = document.getElementById("user-profile");
+    if (!img) return;
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",
       "userId",
       userId
     );
-
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
-
     if (data != null) {
       img.src = data.userImg
         ? data.userImg
         : "../assets/img/icons8_male_user_480px_1";
-
     } else {
       console.warn("No user data found for this user.");
     }

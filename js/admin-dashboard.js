@@ -5,6 +5,7 @@ function announcementCard(announcement) {
   return `
     <div class="announcement-item mb-3">
       <div class="announcement-content">
+        <h5>${announcement.title}</h5>
         <p style="margin-bottom:10px">${announcement.content ? announcement.content.substring(0,120) : ""}${announcement.content && announcement.content.length > 120 ? "..." : ""}</p>
         <div class="announcement-meta d-flex gap-2 flex-wrap">
           <span class="badge bg-light text-dark"><i class="bi bi-calendar me-1"></i>
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     await window.dbReady;
 
-    const img = document.getElementById("user-img");
+    const img = document.getElementById("user-profile");
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",

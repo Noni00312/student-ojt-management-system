@@ -1,3 +1,4 @@
+
 import { firebaseCRUD } from "./firebase-crud.js";
 
 const LIST_ID = "announcements-list";
@@ -104,6 +105,11 @@ async function fetchAnnouncements(search = "") {
           (a.url && a.url.toLowerCase().includes(lower))
       );
     }
+    announcements.sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0);
+      const dateB = new Date(b.updatedAt || b.createdAt || 0);
+      return dateB - dateA;
+    });
     renderAnnouncements(announcements);
   } catch (error) {
     showError(error.message || "Failed to load announcements");
@@ -127,7 +133,7 @@ async function saveAnnouncement(e) {
   let image = document.getElementById("preview-image").src || "";
 
   if (fileInput && fileInput.files && fileInput.files[0]) {
-    image = await getBase64(fileInput.files[0]);
+    image = await convertImageTo500KB(fileInput.files[0]);
   } else if (!image || image === window.location.href) {
     image = "";
   }
@@ -225,6 +231,68 @@ function renderAnnouncements(list) {
   });
 }
 
+
+async function convertImageTo500KB(file, maxSizeKB = 500) {
+  if (!file || !file.type.startsWith("image/")) return "";
+
+  function dataURLtoBlob(dataurl) {
+    const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    for (let i = 0; i < n; i++) u8arr[i] = bstr.charCodeAt(i);
+    return new Blob([u8arr], { type: mime });
+  }
+
+  const base64 = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  let currentBase64 = base64;
+  let blob = dataURLtoBlob(currentBase64);
+  
+  if ((currentBase64.length * 3 / 4) / 1024 <= maxSizeKB) {
+    return currentBase64;
+  }
+
+  let quality = 0.92; 
+  const minQuality = 0.4;
+  const canvas = document.createElement("canvas");
+  const img = document.createElement("img");
+
+  return new Promise((resolve, reject) => {
+    img.onload = function () {
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      (function compressLoop() {
+        canvas.getContext("2d").drawImage(img, 0, 0);
+        let dataUrl = canvas.toDataURL("image/jpeg", quality);
+        if (file.type === "image/png" && quality === 1) {
+          dataUrl = canvas.toDataURL("image/png");
+        }
+        const newSizeKB = Math.ceil((dataUrl.length * 3 / 4) / 1024);
+
+        if (newSizeKB <= maxSizeKB || quality <= minQuality) {
+          resolve(dataUrl);
+        } else {
+          canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+          quality -= 0.07;  
+          compressLoop();
+        }
+      })();
+    };
+    img.onerror = function (e) { reject(e); };
+    img.src = currentBase64;
+  });
+}
+
+/**
+ * Simple function to get base64 from a file
+ * @param {File} file - The file to convert
+ * @returns {Promise<string>} - Base64 string
+ */
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     if (!file) return resolve("");
@@ -248,7 +316,7 @@ try {
 
     await window.dbReady;
 
-    const img = document.getElementById("user-img");
+    const img = document.getElementById("user-profile");
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",
@@ -281,7 +349,7 @@ try {
 
   document.getElementById("announcement-image").addEventListener("change", async function () {
     if (this.files && this.files[0]) {
-      const base64 = await getBase64(this.files[0]);
+      const base64 = await convertImageTo500KB(this.files[0]);
       if (base64) {
         document.getElementById("preview-image").src = base64;
         document.getElementById("preview-image").style.display = "block";

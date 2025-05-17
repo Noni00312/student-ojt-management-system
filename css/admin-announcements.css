@@ -213,3 +213,60 @@
     font-size: 0.9rem;
   }
 }
+
+
+
+/* Add these styles to your CSS file */
+.view-report-modal {
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-report-modal .modal-body {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.view-report-modal .card {
+  max-height: none;
+}
+
+.view-report-modal #modal-announcement-content {
+  min-height: 150px;
+  max-height: none;
+  height: auto;
+  overflow-y: auto;
+  resize: none;
+  width: 100%;
+  border: 1px solid #495057 !important;
+  background-color: #343a40 !important;
+  color: white !important;
+}
+
+.view-report-modal .modal-dialog {
+  max-width: 800px;
+  height: 90vh;
+}
+
+.view-report-modal .modal-content {
+  height: 100%;
+}
+
+/* Scrollbar styling for the textarea */
+#modal-announcement-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+#modal-announcement-content::-webkit-scrollbar-track {
+  background: #495057;
+}
+
+#modal-announcement-content::-webkit-scrollbar-thumb {
+  background: #6e1423;
+  border-radius: 4px;
+}
+
+#modal-announcement-content::-webkit-scrollbar-thumb:hover {
+  background: #590f1c;
+}

@@ -209,7 +209,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         userData = await fetchUserProfileFromFirebase(userId);
       }
       
-      // If no Firebase data or offline, get from IndexedDB
       if (!userData) {
         const dataArray = await crudOperations.getByIndex(
           "studentInfoTbl",
@@ -219,7 +218,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         userData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
       }
       
-      // If we got Firebase data, update IndexedDB to keep it in sync
       if (navigator.onLine && userData) {
         try {
           await crudOperations.updateData(

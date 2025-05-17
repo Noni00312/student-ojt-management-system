@@ -14,7 +14,8 @@
   background-color: #0000007e;
 }
 
-#time-in-out-button {
+#time-in-out-button,
+#upload-now-btn {
   background-color: #6e1423;
 }
 

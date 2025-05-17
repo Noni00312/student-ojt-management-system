@@ -44,8 +44,13 @@ body {
   border-radius: 16px;
   padding: 16px;
 }
+.btn-outline-primary{
+  background-color: var(--primary) !important;
+  color: var(--accent) !important;
+  border: 1px solid var(--accent) !important;
+}
 
-button {
+button, .btn-outline-primary {
   display: flex;
   align-items: center;
   border: none;

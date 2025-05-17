@@ -1,0 +1,215 @@
+/* Announcements Card Styling - Matching Company Style */
+.announcement-card {
+  position: relative;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.announcement-card:hover {
+  transform: translateY(-5px);
+}
+.announcement-link {
+  box-sizing: border-box;
+  text-decoration: none;
+  color: inherit;
+  background: #6e1423;
+  color: white;
+  border: none;
+  transition: all 0.3s ease;  
+  border-radius: 40px !important;
+  outline: none;
+  padding: 5px 20px;
+  width: 50%;
+  text-align: center;
+}
+
+.announcement-link:hover {
+  background: #590f1c;
+  transform: scale(1.1);
+}
+
+.announcement-image-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.announcement-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-announcement-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6e1423 0%, #6e1423 100%);
+  color: white;
+  font-size: 3rem;
+}
+
+.announcement-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+.announcement-content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  color: white;
+}
+
+.announcement-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.announcement-info h5 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.announcement-info p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+  opacity: 0.9;
+}
+
+.announcement-actions {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  gap: 8px;
+}
+
+.announcement-actions button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #6e1423;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.announcement-actions button:hover {
+  background: #590f1c;
+  transform: scale(1.1);
+}
+
+#addAnnouncementModal .modal-content,
+#deleteAnnouncementModal .modal-content {
+  background-color: #3C3D42 !important;
+  color: white;
+}
+
+#addAnnouncementModal .modal-header,
+#deleteAnnouncementModal .modal-header {
+  border-bottom: 1px solid #6e1423;
+}
+
+#addAnnouncementModal .modal-footer,
+#deleteAnnouncementModal .modal-footer {
+  border-top: 1px solid #6e1423;
+}
+
+#addAnnouncementModal .form-control,
+#addAnnouncementModal .form-select {
+  background-color: #3C3D42 !important;
+  border-color: #FFF;
+  color: white;
+  border-radius: 20px;
+  padding-left: 20px;
+}
+
+#addAnnouncementModal .form-control:focus,
+#addAnnouncementModal .form-select:focus {
+  border-color: #6e1423;
+  box-shadow: 0 0 0 0.25rem rgba(110, 20, 35, 0.25);
+}
+
+#addAnnouncementModal label {
+  color: white !important;
+}
+
+#addAnnouncementModal .btn-close {
+  filter: invert(1);
+}
+
+#preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  margin-top: 10px;
+  border-radius: 8px;
+  display: none;
+}
+
+/* Button Styling */
+#announcement-save-btn,
+#delete-announcement-confirm-btn {
+  border-radius: 10px !important;
+  padding: 10px 25px;
+}
+
+#announcement-save-btn {
+  background-color: #6e1423;
+  border: none;
+}
+
+#announcement-save-btn:hover {
+  background-color: #550f1b;
+}
+
+#delete-announcement-confirm-btn {
+  background-color: #dc3545;
+  border: none;
+}
+
+#delete-announcement-confirm-btn:hover {
+  background-color: #bb2d3b;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .announcement-card {
+    height: 180px;
+  }
+  
+  .announcement-info h5 {
+    font-size: 1.1rem;
+  }
+  
+  .announcement-info p {
+    font-size: 0.8rem;
+  }
+  
+  .announcement-actions button {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+}

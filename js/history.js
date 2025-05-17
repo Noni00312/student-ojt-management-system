@@ -221,8 +221,76 @@ function populateDates(dateList) {
   });
 }
 
+// async function populateAttendanceModal(userId, date) {
+//   const logData = await getAttendanceByDate(userId, date);
+//   console.log(logData);
+
+//   const setLogData = (log, timeId, imgId) => {
+//     const timeEl = document.getElementById(timeId);
+//     const imgEl = document.getElementById(imgId);
+
+//     if (log) {
+//       const logTime = log.timestamp
+//         ? new Date(log.timestamp).toLocaleTimeString([], {
+//             hour: "2-digit",
+//             minute: "2-digit",
+//           })
+//         : "—";
+//       timeEl.textContent = logTime;
+//       console.log(log.logTime);
+//       console.log(log.image);
+//       imgEl.src = log.image || "../assets/img/icons8_no_image_500px.png";
+//     } else {
+//       timeEl.textContent = "No log";
+//       imgEl.src = "../assets/img/icons8_no_image_500px.png";
+//     }
+//   };
+
+//   setLogData(logData.morningTimeIn, "morning-in-time", "morning-time-in-img");
+//   setLogData(
+//     logData.morningTimeOut,
+//     "morning-out-time",
+//     "morning-time-out-img"
+//   );
+//   setLogData(
+//     logData.afternoonTimeIn,
+//     "afternoon-in-time",
+//     "afternoon-time-in-img"
+//   );
+//   setLogData(
+//     logData.afternoonTimeOut,
+//     "afternoon-out-time",
+//     "afternoon-time-out-img"
+//   );
+// }
+
 async function populateAttendanceModal(userId, date) {
   const logData = await getAttendanceByDate(userId, date);
+  const onlineResults = await firebaseCRUD.queryData(
+    "completeAttendanceTbl",
+    "userId",
+    "==",
+    userId
+  );
+  const onlineEntry = onlineResults.find((entry) => entry.date === date);
+  const badgeContainer = document.getElementById("badge-container");
+
+  const checkStatus = () => {
+    if (onlineEntry.status === "absent") {
+      badgeContainer.innerHTML = `
+          <div
+            class="badge w-100 my-3 d-flex align-item-center justify-content-center bg-danger"
+            id="badge"
+          >
+            <p class="p-2 m-0">Absent</p>
+          </div>
+      `;
+    } else {
+      badgeContainer.innerHTML = ``;
+    }
+  };
+
+  checkStatus();
 
   const setLogData = (log, timeId, imgId) => {
     const timeEl = document.getElementById(timeId);
@@ -280,10 +348,10 @@ async function getAttendanceByDate(userId, dateStr) {
       ]);
 
     return {
-      morningTimeIn: morningIn,
-      morningTimeOut: morningOut,
-      afternoonTimeIn: afternoonIn,
-      afternoonTimeOut: afternoonOut,
+      morningTimeIn: morningIn?.morningTimeIn || null,
+      morningTimeOut: morningOut?.morningTimeOut || null,
+      afternoonTimeIn: afternoonIn?.afternoonTimeIn || null,
+      afternoonTimeOut: afternoonOut?.afternoonTimeOut || null,
     };
   } catch (error) {
     console.error("Error fetching logs by date:", error);

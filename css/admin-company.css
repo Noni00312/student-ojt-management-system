@@ -306,3 +306,306 @@ i {
 .search-input .bi-search {
     transition: all 0.3s ease;
 }
+
+
+
+
+
+
+
+/* #company-province, 
+#update-company-province {
+    background-color: #3C3D42 !important;
+    box-shadow: none !important;
+    border-color: #FFF;
+    border-radius: 20px !important;
+    color: var(--primary) !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+    height: calc(3.5rem + 2px); 
+    line-height: 1.25;
+}
+
+#company-province:focus, 
+#update-company-province:focus {
+    border-color: #6e1423 !important;
+    color: var(--primary) !important;
+    outline: none;
+}
+
+
+#company-province::-ms-expand,
+#update-company-province::-ms-expand {
+    display: none;
+}
+
+
+.form-floating > label {
+    color: #FFF !important;
+    font-size: small;
+    padding-left: 20px;
+}
+
+.form-floating:has(#company-province:focus) > label,
+.form-floating:has(#update-company-province:focus) > label {
+    color: #6e1423 !important;
+}
+
+@media (max-width: 368px) {
+    #company-province:focus,
+    #update-company-province:focus {
+        position: fixed;
+        left: 50% !important;
+        transform: translateX(-50%);
+        max-height: 50vh;  
+        width: 90% !important;
+        bottom: 20px; 
+        top: auto !important;
+    }
+
+    #company-province option,
+    #update-company-province option {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    body.modal-open:has(#company-province:focus),
+    body.modal-open:has(#update-company-province:focus) {
+        overflow: hidden;
+    }
+}
+
+ */
+
+
+/* Add Modal Province Field */
+/* #company-province {
+    background-color: #3C3D42 !important;
+    box-shadow: none !important;
+    border: 1px solid #FFF !important;
+    border-radius: 20px !important;
+    color: var(--primary) !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    width: 100% !important;
+    min-width: 100% !important;
+} */
+
+
+
+
+
+
+
+
+
+/* 
+
+
+#company-province{
+    background-color: #3C3D42 !important;
+    box-shadow: none !important;
+    border-color: #FFF;
+    border-radius: 20px !important;
+    color: var(--primary) !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+    height: calc(3.5rem + 2px); 
+    line-height: 1.25;
+    margin-left: 1px !important; 
+    width: calc(100%) !important;  
+    min-width: calc(100%) !important;
+}
+
+
+
+#update-company-province {
+    background-color: #3C3D42 !important;
+    box-shadow: none !important;
+    border: 1px solid #FFF !important;
+    border-radius: 20px !important;
+    color: var(--primary) !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    width: calc(100% + 10px) !important;  
+    min-width: calc(100% + 10px) !important;
+    margin-left: -8px !important; 
+}
+
+
+
+
+
+
+#company-province:focus, 
+#update-company-province:focus {
+    border-color: #6e1423 !important;
+    color: var(--primary) !important;
+    outline: none;
+}
+
+.form-floating > label {
+    color: #FFF !important;
+    font-size: small;
+    padding-left: 20px;
+}
+
+.form-floating:has(#company-province:focus) > label,
+.form-floating:has(#update-company-province:focus) > label {
+    color: #6e1423 !important;
+}
+
+@media (max-width: 368px) {
+    #company-province,
+    #update-company-province {
+        padding-left: 15px !important;
+        padding-right: 25px !important;
+    }
+    
+    #company-province:focus,
+    #update-company-province:focus {
+        position: fixed;
+        left: 50% !important;
+        transform: translateX(-50%);
+        max-height: 50vh;
+        width: 90% !important;
+        bottom: 20px;
+        top: auto !important;
+    }
+} */
+
+
+
+
+/* Add Modal Province Field */
+#company-province {
+    background-color: #3C3D42 !important;
+    box-shadow: none !important;
+    border: 1px solid #FFF !important;
+    border-radius: 20px !important;
+    color: var(--primary) !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    width: 100% !important;
+    min-width: 100% !important;
+    font-size: 0.9rem; /* Slightly smaller font */
+}
+
+/* Update Modal Province Field */
+#update-company-province {
+    background-color: #3C3D42 !important;
+    box-shadow: none !important;
+    border: 1px solid #FFF !important;
+    border-radius: 20px !important;
+    color: var(--primary) !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+    width: calc(100% + 10px) !important;
+    min-width: calc(100% + 10px) !important;
+    margin-left: -8px !important;
+    font-size: 0.9rem; /* Slightly smaller font */
+}
+
+/* Dropdown options styling */
+#company-province option,
+#update-company-province option {
+    font-size: 0.85rem; /* Even smaller for options */
+    padding: 6px 12px; /* Tighter padding */
+    white-space: normal; /* Allow text wrapping */
+    word-break: break-word; /* Break long words */
+}
+
+/* Group headers styling */
+#company-province optgroup,
+#update-company-province optgroup {
+    font-size: 0.88rem; /* Slightly larger than options */
+}
+
+/* Focus states */
+#company-province:focus, 
+#update-company-province:focus {
+    border-color: #6e1423 !important;
+    color: var(--primary) !important;
+    outline: none;
+}
+
+/* Floating labels */
+.form-floating > label {
+    color: #FFF !important;
+    font-size: small;
+    padding-left: 20px;
+}
+
+.form-floating:has(#company-province:focus) > label,
+.form-floating:has(#update-company-province:focus) > label {
+    color: #6e1423 !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    #company-province,
+    #update-company-province {
+        padding-left: 15px !important;
+        padding-right: 25px !important;
+        font-size: 0.85rem; /* Even smaller on mobile */
+    }
+    
+    #company-province option,
+    #update-company-province option {
+        font-size: 0.8rem; /* Smaller options on mobile */
+    }
+    
+    #company-province:focus,
+    #update-company-province:focus {
+        position: fixed;
+        left: 50% !important;
+        transform: translateX(-50%);
+        max-height: 50vh;
+        width: 90% !important;
+        bottom: 20px;
+        top: auto !important;
+    }
+}
+
+
+
+
+/* Style for province filter dropdown */
+#provinceFilter {
+    background-color: white !important;
+    box-shadow: none !important;
+    border-color: #8b8e9b !important;
+    border-radius: 20px !important;
+    color: #8b8e9b !important;
+    padding-left: 20px !important;
+    padding-right: 30px !important;
+}
+
+#provinceFilter:focus {
+    border-color: #6e1423 !important;
+    outline: none;
+}
+
+/* Adjust search container layout */
+.add-search-container {
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .add-search-container {
+        flex-wrap: wrap;
+    }
+    
+    #provinceFilter {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+}

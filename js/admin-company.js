@@ -1,6 +1,11 @@
 
 
 document.addEventListener("DOMContentLoaded", async function () {
+    const addProvinceSelect = document.getElementById('company-province');
+    const updateProvinceSelect = document.getElementById('update-company-province');
+    
+    if (addProvinceSelect) populateProvinceDropdown(addProvinceSelect);
+    if (updateProvinceSelect) populateProvinceDropdown(updateProvinceSelect);
   try {
     const userId = localStorage.getItem("userId");
 
@@ -33,6 +38,67 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Failed to get user data from IndexedDB", err);
   }
 });
+
+
+
+// Add this near your other DOMContentLoaded code
+document.addEventListener("DOMContentLoaded", function() {
+    // Initialize province filter dropdown
+    const provinceFilter = document.getElementById('provinceFilter');
+    if (provinceFilter) {
+        populateProvinceDropdown(provinceFilter);
+        
+        // Add event listener for province filtering
+        provinceFilter.addEventListener('change', function() {
+            const selectedProvince = this.value;
+            filterCompaniesByProvince(selectedProvince);
+        });
+    }
+});
+
+
+// New function to filter companies by province
+async function filterCompaniesByProvince(companyProvince) {
+    showLoading(true);
+    try {
+        const { firebaseCRUD } = await import("./firebase-crud.js");
+        let companies;
+        
+        if (companyProvince) {
+            // Use the queryData method to filter by province
+            companies = await firebaseCRUD.queryData(
+                "company", 
+                "companyProvince", 
+                "==", 
+                companyProvince
+            );
+        } else {
+            // Get all companies if "All Provinces" is selected
+            companies = await firebaseCRUD.getAllData("company");
+        }
+        
+        displayCompanies(companies);
+    } catch (error) {
+        console.error("Error filtering companies:", error);
+        // Handle "no documents found" as a special case
+        if (error.message.includes("not found") || error.message.includes("No documents")) {
+            displayCompanies([]); // Show empty state
+        } else {
+            showError("Failed to filter companies");
+        }
+    } finally {
+        showLoading(false);
+    }
+}
+
+
+
+
+
+
+
+
+
 
 function showLoading(show) {
     const loader = document.getElementById("loading-indicator") || createLoader();
@@ -116,7 +182,65 @@ function showError(message) {
           });
   }
   
-  function displayCompanies(companies) {
+//   function displayCompanies(companies) {
+//       const cardContainer = document.querySelector('.card-container');
+//       if (!cardContainer) {
+//           console.error("Card container not found");
+//           return;
+//       }
+      
+//       cardContainer.innerHTML = ''; 
+  
+//       if (!companies || companies.length === 0) {
+//           cardContainer.innerHTML = `
+//             <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
+//                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+//                 <h6 class="mt-2">No Companies Available</h6>
+//                 <p class="mt-1">No companies have been registered yet.</p>
+//             </div>
+//         `;
+//           return;
+//       }
+  
+//       companies.forEach((company) => {
+//           const colDiv = document.createElement('div');
+//           colDiv.className = 'col-lg-4 col-md-6';
+  
+//           colDiv.innerHTML = `
+//         <div class="company-card">
+//           <div class="company-image-container">
+//             ${company.image ?
+//                   `<img src="${company.image}" alt="${company.companyName}" class="company-image">` :
+//                   `<div class="no-image-placeholder"><i class="bi bi-building"></i></div>`
+//               }
+//           </div>
+//           <div class="company-overlay" style="background: rgba(75, 71, 71, 0.5);"></div>
+//           <div class="company-content">
+//             <div class="company-info">
+//               <p class="d-none">${company.id || ''}</p>
+//               <h5>${company.companyName || 'No name'}</h5>
+//               <p>${company.companyAddress || 'No address'}</p>
+//             </div>
+//             <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#updateCompanyModal" data-id="${company.id}" style="background: #6e1423;">
+//               <i class="bi bi-pencil"></i>
+//             </button>
+//           </div>
+//         </div>
+//       `;
+  
+//           cardContainer.appendChild(colDiv);
+//       });
+  
+      
+//       document.querySelectorAll('.edit-btn').forEach(button => {
+//           button.addEventListener('click', function () {
+//               const companyId = this.getAttribute('data-id');
+//               loadCompanyDataForUpdate(companyId);
+//           });
+//       });
+//   }
+
+function displayCompanies(companies) {
       const cardContainer = document.querySelector('.card-container');
       if (!cardContainer) {
           console.error("Card container not found");
@@ -154,6 +278,7 @@ function showError(message) {
               <p class="d-none">${company.id || ''}</p>
               <h5>${company.companyName || 'No name'}</h5>
               <p>${company.companyAddress || 'No address'}</p>
+              <small class="text-white">${company.companyProvince || ''}</small>
             </div>
             <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#updateCompanyModal" data-id="${company.id}" style="background: #6e1423;">
               <i class="bi bi-pencil"></i>
@@ -173,44 +298,95 @@ function showError(message) {
           });
       });
   }
+
+
+
+
+
+
+
+
   
-  function searchCompanies(searchTerm) {
-      showLoading(true);
-      import("./firebase-crud.js")
-          .then(({ firebaseCRUD }) => {
-              firebaseCRUD.getDataById("company", "companyName", "==", searchTerm)
-                  .then((companies) => {
-                      const filtered = companies.filter(company =>
-                          company.companyName &&
-                          company.companyName.toLowerCase().includes(searchTerm.toLowerCase())
-                      );
-                      displayCompanies(filtered);
-                      showLoading(false);
-                  })
-                  .catch((error) => {
-                      console.error("Error with search, falling back to client-side filtering:", error);
-                      firebaseCRUD.getAllData("company")
-                          .then((allCompanies) => {
-                              const filtered = allCompanies.filter(company =>
-                                  company.companyName &&
-                                  company.companyName.toLowerCase().includes(searchTerm.toLowerCase())
-                              );
-                              displayCompanies(filtered);
-                              showLoading(false);
-                          })
-                          .catch(fallbackError => {
-                              console.error("Fallback also failed:", fallbackError);
-                              showError("Failed to search companies");
-                              showLoading(false);
-                          });
-                  });
-          })
-          .catch((err) => {
-              console.error("Failed to load firebase-crud:", err);
-              showError("Failed to load required modules");
-              showLoading(false);
-          });
-  }
+//   function searchCompanies(searchTerm) {
+//       showLoading(true);
+//       import("./firebase-crud.js")
+//           .then(({ firebaseCRUD }) => {
+//               firebaseCRUD.getDataById("company", "companyName", "==", searchTerm)
+//                   .then((companies) => {
+//                       const filtered = companies.filter(company =>
+//                           company.companyName &&
+//                           company.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+//                       );
+//                       displayCompanies(filtered);
+//                       showLoading(false);
+//                   })
+//                   .catch((error) => {
+//                       console.error("Error with search, falling back to client-side filtering:", error);
+//                       firebaseCRUD.getAllData("company")
+//                           .then((allCompanies) => {
+//                               const filtered = allCompanies.filter(company =>
+//                                   company.companyName &&
+//                                   company.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+//                               );
+//                               displayCompanies(filtered);
+//                               showLoading(false);
+//                           })
+//                           .catch(fallbackError => {
+//                               console.error("Fallback also failed:", fallbackError);
+//                               showError("Failed to search companies");
+//                               showLoading(false);
+//                           });
+//                   });
+//           })
+//           .catch((err) => {
+//               console.error("Failed to load firebase-crud:", err);
+//               showError("Failed to load required modules");
+//               showLoading(false);
+//           });
+//   }
+
+    // Modify your search function to include province filter
+    function searchCompanies(searchTerm) {
+        const provinceFilter = document.getElementById('provinceFilter');
+        const selectedProvince = provinceFilter ? provinceFilter.value : '';
+        
+        showLoading(true);
+        import("./firebase-crud.js")
+            .then(({ firebaseCRUD }) => {
+                firebaseCRUD.getAllData("company")
+                    .then((allCompanies) => {
+                        let filtered = allCompanies;
+                        
+                        // Apply province filter if selected
+                        if (selectedProvince) {
+                            filtered = filtered.filter(company => 
+                                company.companyProvince === selectedProvince
+                            );
+                        }
+                        
+                        // Apply search term filter
+                        if (searchTerm.length > 0) {
+                            filtered = filtered.filter(company =>
+                                company.companyName &&
+                                company.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+                            );
+                        }
+                        
+                        displayCompanies(filtered);
+                        showLoading(false);
+                    })
+                    .catch(error => {
+                        console.error("Error searching companies:", error);
+                        showError("Failed to search companies");
+                        showLoading(false);
+                    });
+            })
+            .catch((err) => {
+                console.error("Failed to load firebase-crud:", err);
+                showError("Failed to load required modules");
+                showLoading(false);
+            });
+    }
   
   function loadCompanyDataForUpdate(companyId) {
       showLoading(true);
@@ -223,6 +399,7 @@ function showError(message) {
                       const addressInput = updateModal.querySelector('[name="companyAddressU"]');
                       const previewImage = updateModal.querySelector('#update-preview-image');
                       const cameraIcon = updateModal.querySelector('#update-camera-icon');
+                      const provinceSelect = updateModal.querySelector('[name="companyProvinceU"]'); // Add this line
   
                       if (!nameInput || !addressInput || !previewImage || !cameraIcon) {
                           throw new Error("Required form elements not found");
@@ -230,6 +407,20 @@ function showError(message) {
   
                       nameInput.value = company.companyName || '';
                       addressInput.value = company.companyAddress || '';
+
+                      // Set the province value
+                    //   if (company.companyProvince) {
+                    //        provinceSelect.value = company.companyProvince;
+                    //   } else {
+                    //        provinceSelect.value = ""; // Default to empty if no province set
+                    //   }
+                       // Set the province value
+                        if (company.companyProvince) {
+                            // Wait for dropdown to populate (if needed)
+                            setTimeout(() => {
+                                provinceSelect.value = company.companyProvince;
+                            }, 100);
+                        }
   
                       if (company.image) {
                           previewImage.src = company.image;
@@ -310,7 +501,7 @@ function showError(message) {
               },
               companyProvince: {  // Add this new rule
                 required: true,
-                minlength: 2,
+                // minlength: 2,
               },
           },
           errorPlacement: function (error, element) {
@@ -450,6 +641,9 @@ function showError(message) {
               required: true,
               minlength: 2,
           },
+          companyProvinceU: {  // Add this new rule
+              required: true
+          },
       },
       messages: {
           companyNameU: {
@@ -459,6 +653,9 @@ function showError(message) {
           companyAddressU: {
               required: "Please enter company address",
               minlength: "Company address must be at least 2 characters long",
+          },
+           companyProvinceU: {  // Add this new message
+              required: "Please select a province",
           },
       },
       errorPlacement: function (error, element) {
@@ -472,6 +669,7 @@ function showError(message) {
           const previewImage = document.querySelector('#updateCompanyModal #update-preview-image');
           const newCompanyName = form.companyNameU.value.trim();
           const newCompanyAddress = form.companyAddressU.value.trim();
+          const newCompanyProvince = form.companyProvinceU.value; // Add this line
   
           if (!companyId) {
               showErrorToast("Company ID not found");
@@ -499,6 +697,7 @@ function showError(message) {
                   const companyData = {
                       companyName: newCompanyName,
                       companyAddress: newCompanyAddress,
+                      companyProvince: newCompanyProvince, // Add this line
                       updatedAt: new Date().toISOString()
                   };
   
@@ -544,30 +743,50 @@ function showError(message) {
       }
   });
   
-  async function checkCompanyDuplicate(companyName, companyAddress, excludeId = null) {
-      try {
-          const { firebaseCRUD } = await import("./firebase-crud.js");
-          const companies = await firebaseCRUD.getAllData("company");
+//   async function checkCompanyDuplicate(companyName, companyAddress, excludeId = null) {
+//       try {
+//           const { firebaseCRUD } = await import("./firebase-crud.js");
+//           const companies = await firebaseCRUD.getAllData("company");
   
-          return companies.some(company => {
-              const nameMatches = company.companyName &&
-                  company.companyName.toLowerCase() === companyName.toLowerCase();
-              const addressMatches = company.companyAddress &&
-                  company.companyAddress.toLowerCase() === companyAddress.toLowerCase();
-              const isSameCompany = excludeId && company.id === excludeId;
-              return nameMatches && addressMatches && !isSameCompany;
-          });
-      } catch (error) {
-          console.error("Error checking company:", error);
-          return true;
-      }
-  }
+//           return companies.some(company => {
+//               const nameMatches = company.companyName &&
+//                   company.companyName.toLowerCase() === companyName.toLowerCase();
+//               const addressMatches = company.companyAddress &&
+//                   company.companyAddress.toLowerCase() === companyAddress.toLowerCase();
+//               const isSameCompany = excludeId && company.id === excludeId;
+//               return nameMatches && addressMatches && !isSameCompany;
+//           });
+//       } catch (error) {
+//           console.error("Error checking company:", error);
+//           return true;
+//       }
+//   }
+
+async function checkCompanyDuplicate(companyName, companyAddress, excludeId = null) {
+    try {
+        const { firebaseCRUD } = await import("./firebase-crud.js");
+        const companies = await firebaseCRUD.getAllData("company");
+
+        return companies.some(company => {
+            const nameMatches = company.companyName &&
+                company.companyName.toLowerCase() === companyName.toLowerCase();
+            const addressMatches = company.companyAddress &&
+                company.companyAddress.toLowerCase() === companyAddress.toLowerCase();
+            const isSameCompany = excludeId && company.id === excludeId;
+            return nameMatches && addressMatches && !isSameCompany;
+        });
+    } catch (error) {
+        console.error("Error checking company:", error);
+        return true;
+    }
+}
   
   document.getElementById('updateCompanyModal')?.addEventListener('hidden.bs.modal', function () {
       const form = document.getElementById('ojtFormU');
       const previewImage = document.querySelector('#updateCompanyModal #update-preview-image');
       const cameraIcon = document.querySelector('#updateCompanyModal #camera-icon');
       const cameraInput = document.getElementById('update-camera-input');
+      const provinceSelect = document.querySelector('#updateCompanyModal [name="companyProvinceU"]'); // Add this line
   
       if (form) form.reset();
       if (previewImage) {
@@ -576,6 +795,7 @@ function showError(message) {
       }
       if (cameraIcon) cameraIcon.style.display = 'block';
       if (cameraInput) cameraInput.value = '';
+      if (provinceSelect) provinceSelect.value = ""; // Add this line
       uploadedImageBase64 = "";
   });
 
@@ -635,3 +855,210 @@ function showError(message) {
         reader.readAsDataURL(file);
         });
     }
+
+
+
+
+
+
+
+
+
+
+//     function populateProvinceDropdown(selectElement) {
+//     const provinces = {
+//         "Cordillera Administrative Region": ["Benguet", "Ifugao", "Kalinga", "Mountain Province"],
+//         "I - Ilocos Region": ["Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan"],
+//         "II - Cagayan Valley": ["Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino"],
+//         "III - Central Luzon": ["Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales", "Aurora"],
+//         "IVA - CALABARZON": ["Batangas", "Cavite", "Laguna", "Quezon", "Rizal"],
+//         "IVB - MIMAROPA": ["Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon"],
+//         "V - Bicol Region": ["Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon"],
+//         "VI - Western Visayas": ["Aklan", "Antique", "Capiz", "Iloilo", "Negros Occidental", "Guimaras"],
+//         "VII - Central Visayas": ["Bohol", "Cebu", "Negros Oriental", "Siquijor"],
+//         "VIII - Eastern Visayas": ["Eastern Samar", "Leyte", "Northern Samar", "Samar (Western Samar)", "Southern Leyte", "Biliran"],
+//         "IX - Zamboanga Peninsula": ["Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay"],
+//         "X - Northern Mindanao": ["Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental"],
+//         "XI - Davao Region": ["Davao del Norte", "Davao del Sur", "Davao Oriental", "Davao de Oro", "Davao Occidental"],
+//         "XII - SOCCSKSARGEN": ["North Cotabato", "South Cotabato", "Sultan Kudarat", "Sarangani", "Cotabato City"],
+//         "Caraga": ["Agusan del Norte", "Agusan del Sur", "Surigao del Norte", "Surigao del Sur"],
+//         "Autonomous Region in Muslim Mindanao": ["Maguindanao", "Lanao del Sur", "Basilan", "Sulu", "Tawi-Tawi"]
+//     };
+
+//     // Clear existing options
+//     selectElement.innerHTML = '<option value="" selected disabled>Select Province</option>';
+
+//     // Add grouped options
+//     for (const [region, regionProvinces] of Object.entries(provinces)) {
+//         // Add region as an option group
+//         const optgroup = document.createElement('optgroup');
+//         optgroup.label = region;
+        
+//         // Add provinces to the group
+//         regionProvinces.forEach(province => {
+//             const option = document.createElement('option');
+//             option.value = province;
+//             option.textContent = province;
+//             optgroup.appendChild(option);
+//         });
+        
+//         selectElement.appendChild(optgroup);
+//     }
+// }
+
+
+function populateProvinceDropdown(selectElement) {
+    const provinces = {
+        "Cordillera Administrative Region": ["Benguet", "Ifugao", "Kalinga", "Mountain Province"],
+        "I - Ilocos Region": ["Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan"],
+        "II - Cagayan Valley": ["Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino"],
+        "III - Central Luzon": ["Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales", "Aurora"],
+        "IVA - CALABARZON": ["Batangas", "Cavite", "Laguna", "Quezon", "Rizal"],
+        "IVB - MIMAROPA": ["Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon"],
+        "V - Bicol Region": ["Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon"],
+        "VI - Western Visayas": ["Aklan", "Antique", "Capiz", "Iloilo", "Negros Occidental", "Guimaras"],
+        "VII - Central Visayas": ["Bohol", "Cebu", "Negros Oriental", "Siquijor"],
+        "VIII - Eastern Visayas": ["Eastern Samar", "Leyte", "Northern Samar", "Samar (Western Samar)", "Southern Leyte", "Biliran"],
+        "IX - Zamboanga Peninsula": ["Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay"],
+        "X - Northern Mindanao": ["Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental"],
+        "XI - Davao Region": ["Davao del Norte", "Davao del Sur", "Davao Oriental", "Davao de Oro", "Davao Occidental"],
+        "XII - SOCCSKSARGEN": ["North Cotabato", "South Cotabato", "Sultan Kudarat", "Sarangani", "Cotabato City"],
+        "Caraga": ["Agusan del Norte", "Agusan del Sur", "Surigao del Norte", "Surigao del Sur"],
+        "Autonomous Region in Muslim Mindanao": ["Maguindanao", "Lanao del Sur", "Basilan", "Sulu", "Tawi-Tawi"]
+    };
+
+    // Clear existing options
+    selectElement.innerHTML = '';
+
+    // Add "All Provinces" option as the first option
+    const allProvincesOption = document.createElement('option');
+    allProvincesOption.value = '';
+    allProvincesOption.textContent = 'All Provinces';
+    allProvincesOption.selected = true;
+    selectElement.appendChild(allProvincesOption);
+
+    // Add grouped options
+    for (const [region, regionProvinces] of Object.entries(provinces)) {
+        // Add region as an option group
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = region;
+        
+        // Add provinces to the group
+        regionProvinces.forEach(province => {
+            const option = document.createElement('option');
+            option.value = province;
+            option.textContent = province;
+            optgroup.appendChild(option);
+        });
+        
+        selectElement.appendChild(optgroup);
+    }
+}
+
+
+
+
+
+
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     // Initialize province dropdowns
+//     const addProvinceSelect = document.getElementById('company-province');
+//     const updateProvinceSelect = document.getElementById('update-company-province');
+    
+//     if (addProvinceSelect) populateProvinceDropdown(addProvinceSelect);
+//     if (updateProvinceSelect) populateProvinceDropdown(updateProvinceSelect);
+    
+//     // Handle dropdown positioning
+//     document.querySelectorAll('#company-province, #update-company-province').forEach(select => {
+//         select.addEventListener('focus', function() {
+//             // Calculate space below the select
+//             const rect = this.getBoundingClientRect();
+//             const spaceBelow = window.innerHeight - rect.bottom - 20;
+            
+//             // Set max height based on available space
+//             this.style.maxHeight = Math.min(250, spaceBelow) + 'px';
+            
+//             // Adjust width to account for parent padding
+//             const parentPadding = window.getComputedStyle(this.parentElement).paddingLeft;
+//             this.style.width = `calc(100% - ${parseInt(parentPadding)*2}px)`;
+//         });
+        
+//         select.addEventListener('blur', function() {
+//             this.style.maxHeight = '';
+//             this.style.width = '';
+//         });
+//     });
+// });
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Initialize province dropdowns
+    const addProvinceSelect = document.getElementById('company-province');
+    const updateProvinceSelect = document.getElementById('update-company-province');
+    
+    if (addProvinceSelect) populateProvinceDropdown(addProvinceSelect);
+    if (updateProvinceSelect) populateProvinceDropdown(updateProvinceSelect);
+    
+    // Handle dropdown positioning and selection
+    document.querySelectorAll('#company-province, #update-company-province').forEach(select => {
+        let isProgrammaticChange = false;
+        
+        // Save original styles to restore later
+        const originalStyles = {
+            maxHeight: select.style.maxHeight,
+            width: select.style.width,
+            position: select.style.position
+        };
+        
+        select.addEventListener('focus', function() {
+            if (isProgrammaticChange) {
+                isProgrammaticChange = false;
+                return;
+            }
+            
+            // Calculate space below the select
+            const rect = this.getBoundingClientRect();
+            const spaceBelow = window.innerHeight - rect.bottom - 20;
+            
+            // Set dropdown styles
+            this.style.position = 'absolute';
+            this.style.width = `calc(100% - ${parseInt(window.getComputedStyle(this.parentElement).paddingLeft)*2}px)`;
+            this.style.maxHeight = Math.min(250, spaceBelow) + 'px';
+            this.style.zIndex = '1060';
+        });
+        
+        select.addEventListener('change', function() {
+            // Immediately show the selected value
+            isProgrammaticChange = true;
+            
+            // Trigger the floating label update
+            const event = new Event('input', { bubbles: true });
+            this.dispatchEvent(event);
+            
+            // Close the dropdown
+            this.blur();
+            
+            // Restore original styles
+            this.style.maxHeight = originalStyles.maxHeight;
+            this.style.width = originalStyles.width;
+            this.style.position = originalStyles.position;
+            this.style.zIndex = '';
+        });
+        
+        select.addEventListener('blur', function() {
+            if (!isProgrammaticChange) {
+                this.style.maxHeight = originalStyles.maxHeight;
+                this.style.width = originalStyles.width;
+                this.style.position = originalStyles.position;
+                this.style.zIndex = '';
+            }
+        });
+    });
+});
+
+
+
+
+

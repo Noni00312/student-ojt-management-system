@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     await window.dbReady;
 
-    const img = document.getElementById("user-img");
+    const img = document.getElementById("user-profile");
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",
@@ -69,38 +69,110 @@ function showError(message) {
     `;
 }
 
-function loadStudents() {
-  showLoading(true);
-  import("./firebase-crud.js")
-    .then(({ firebaseCRUD }) => {
-      firebaseCRUD
-        .queryData("students", "userType", "==", "student")
-        .then((students) => {
-          firebaseCRUD
-            .queryData("students", "userType", "==", "studentAssistant")
-            .then((assistants) => {
-              showLoading(false);
+// function loadStudents() {
+//   showLoading(true);
+//   import("./firebase-crud.js")
+//     .then(({ firebaseCRUD }) => {
+//       firebaseCRUD
+//         .queryData("students", "userType", "==", "student")
+//         .then((students) => {
+//           firebaseCRUD
+//             .queryData("students", "userType", "==", "studentAssistant")
+//             .then((assistants) => {
+//               showLoading(false);
 
-              const allUsers = [...students, ...assistants];
-              displayStudents(allUsers);
-            })
-            .catch((error) => {
-              showLoading(false);
-              console.error("Error loading assistants:", error);
-              showError("Failed to load student assistants: " + error.message);
-            });
-        })
-        .catch((error) => {
-          showLoading(false);
-          console.error("Error loading students:", error);
-          showError("Failed to load students: " + error.message);
-        });
-    })
-    .catch((err) => {
-      showLoading(false);
-      console.error("Failed to load firebase-crud:", err);
-      showError("Failed to load required modules. Please try again.");
-    });
+//               const allUsers = [...students, ...assistants];
+//               displayStudents(allUsers);
+//             })
+//             .catch((error) => {
+//               showLoading(false);
+//               console.error("Error loading assistants:", error);
+//               showError("Failed to load student assistants: " + error.message);
+//             });
+//         })
+//         .catch((error) => {
+//           showLoading(false);
+//           console.error("Error loading students:", error);
+//           showError("Failed to load students: " + error.message);
+//         });
+//     })
+//     .catch((err) => {
+//       showLoading(false);
+//       console.error("Failed to load firebase-crud:", err);
+//       showError("Failed to load required modules. Please try again.");
+//     });
+// }
+let allUsersList = [];
+document
+  .getElementById("filter-all")
+  .addEventListener("click", () => filterUsers("All"));
+document
+  .getElementById("filter-present")
+  .addEventListener("click", () => filterUsers("Present"));
+document
+  .getElementById("filter-absent")
+  .addEventListener("click", () => filterUsers("Absent"));
+document
+  .getElementById("filter-nologs")
+  .addEventListener("click", () => filterUsers("No Logs"));
+
+function filterUsers(status) {
+  const searchInput = document.getElementById("companySearch");
+  if (searchInput.value) searchInput.value = "";
+  if (status === "All") {
+    displayStudents(allUsersList);
+  } else {
+    const filtered = allUsersList.filter((user) => user.badgeStatus === status);
+    displayStudents(filtered);
+  }
+}
+
+async function loadStudents() {
+  showLoading(true);
+
+  try {
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+
+    const [students, assistants] = await Promise.all([
+      firebaseCRUD.queryData("students", "userType", "==", "student"),
+      firebaseCRUD.queryData("students", "userType", "==", "studentAssistant"),
+    ]);
+
+    const allUsers = [...students, ...assistants];
+    const today = new Date().toISOString().split("T")[0];
+
+    const updatedUsers = await Promise.all(
+      allUsers.map(async (user) => {
+        try {
+          const statusResult = await firebaseCRUD.getDocsFromPath(
+            `attendancelogs/${user.userId}/${today}/status`
+          );
+          const statusDoc = statusResult?.data;
+
+          if (statusDoc?.attendanceStatus === "Present") {
+            user.badgeStatus = "Present";
+          } else if (statusDoc?.attendanceStatus === "Absent") {
+            user.badgeStatus = "Absent";
+          } else {
+            user.badgeStatus = "No Logs";
+          }
+        } catch (err) {
+          user.badgeStatus = "No Logs";
+        }
+
+        return user;
+      })
+    );
+
+    allUsersList = updatedUsers;
+
+    showLoading(false);
+    displayStudents(updatedUsers);
+  } catch (error) {
+    showLoading(false);
+    console.error("Failed to load students and attendance status:", error);
+    showError("Failed to load students. Please try again.");
+  }
 }
 
 function displayStudents(students) {
@@ -112,7 +184,7 @@ function displayStudents(students) {
             <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
                 <h6 class="mt-2">No Students Available</h6>
-                <p class="mt-1">No students have been registered yet.</p>
+                <p class="mt-1">No students found for this category.</p>
             </div>
         `;
     return;
@@ -124,9 +196,7 @@ function displayStudents(students) {
 
     colDiv.innerHTML = `
             <div class="student-card h-100">
-                <a href="./admin-student-report.html?userId=${
-                  student.userId
-                }" class="d-flex align-items-center text-decoration-none h-100">
+                <a href="" class="d-flex align-items-center text-decoration-none h-100">
                     <div class="img-container me-3 flex-shrink-0">
                         ${
                           student.userImg
@@ -153,9 +223,13 @@ function displayStudents(students) {
                         </div>
                         <div class="separator my-2"></div>
                         <div class="company">
-                            <p class="m-0 text-truncate">${
-                              student.companyName || "No company"
-                            }</p>
+                          <p class="m-0 badge bg-${(() => {
+                            if (student.badgeStatus === "Present")
+                              return "success";
+                            if (student.badgeStatus === "Absent")
+                              return "danger";
+                            return "warning";
+                          })()}">${student.badgeStatus || "No Logs"}</p>
                         </div>
                     </div>
                 </a>

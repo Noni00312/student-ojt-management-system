@@ -99,7 +99,16 @@ document
       await firebaseCRUD.createData("completeAttendanceTbl", attendanceStatus);
       descriptionField.value = "";
 
-      alert("Absent report successfully saved.");
+      const dateDocPath = `attendancelogs/${userId}/${today}`;
+
+      const statusData = {
+        attendanceStatus: "Absent",
+        uploadedAt: new Date().toISOString(),
+      };
+
+      await firebaseCRUD.setDataWithId(dateDocPath, "status", statusData);
+
+      alert("Absent report successfully submitted.");
       descriptionField.value = "";
       location.reload();
       updateAttendanceButtonState();
@@ -858,6 +867,8 @@ document
           );
         });
 
+        const hasStatus = attendanceData.some((doc) => doc.id === "status");
+
         if (alreadyLogged) {
           alert(
             `You've already logged ${currentSlot.replace(
@@ -903,11 +914,19 @@ document
           uploadedAt: new Date().toISOString(),
         };
 
+        const statusData = {
+          attendanceStatus: "Present",
+          uploadedAt: new Date().toISOString(),
+        };
+
         const cleanData = Object.fromEntries(
           Object.entries(logData).filter(([_, value]) => value !== undefined)
         );
 
         await firebaseCRUD.setDataWithId(dateDocPath, currentSlot, cleanData);
+        if (!hasStatus) {
+          await firebaseCRUD.setDataWithId(dateDocPath, "status", statusData);
+        }
         await populateAttendanceImages(attendanceData);
         const { data: updatedAttendanceData } =
           await firebaseCRUD.getSubcollectionData(userId, today);

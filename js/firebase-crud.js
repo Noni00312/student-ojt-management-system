@@ -211,6 +211,43 @@ export const firebaseCRUD = {
     }
   },
 
+  /**
+   * Fetches all documents from a Firestore collection or subcollection at the specified path.
+   *
+   * @async
+   * @function getDocsFromPath
+   * @param {string} path - The Firestore collection or subcollection path (e.g., "users", "attendancelogs/user123/2025-05-18").
+   * @returns {Promise<Array<Object>>} An array of document objects. Each object includes:
+   *    - `id` (string): The document ID.
+   *    - Other dynamic fields based on the document's data.
+   *
+   * @throws {Error} Throws an error if the path is invalid or if Firestore retrieval fails.
+   *
+   * @example
+   * const logs = await getDocsFromPath("attendancelogs/abc123/2025-05-18");
+   * logs.forEach(doc => {
+   *   console.log(`${doc.id}: ${doc.status}`);
+   * });
+   */
+  getDocsFromPath: async (path) => {
+    try {
+      const docRef = doc(db, ...path.split("/"));
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        return null;
+      }
+
+      return {
+        id: docSnap.id,
+        data: docSnap.data(),
+      };
+    } catch (error) {
+      console.error(`Error fetching document from path "${path}":`, error);
+      throw new Error(`Failed to fetch document: ${error.message}`);
+    }
+  },
+
   // // Add this to your firebaseCRUD object in firebase-crud.js
   // searchData: async (tableName, field, searchTerm) => {
   //   if (!tableName || typeof tableName !== "string") {

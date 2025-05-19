@@ -31,6 +31,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
+let currentFilters = {
+  province: "",
+  status: "All",
+  searchTerm: "",
+};
+
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -69,39 +75,6 @@ function showError(message) {
     `;
 }
 
-// function loadStudents() {
-//   showLoading(true);
-//   import("./firebase-crud.js")
-//     .then(({ firebaseCRUD }) => {
-//       firebaseCRUD
-//         .queryData("students", "userType", "==", "student")
-//         .then((students) => {
-//           firebaseCRUD
-//             .queryData("students", "userType", "==", "studentAssistant")
-//             .then((assistants) => {
-//               showLoading(false);
-
-//               const allUsers = [...students, ...assistants];
-//               displayStudents(allUsers);
-//             })
-//             .catch((error) => {
-//               showLoading(false);
-//               console.error("Error loading assistants:", error);
-//               showError("Failed to load student assistants: " + error.message);
-//             });
-//         })
-//         .catch((error) => {
-//           showLoading(false);
-//           console.error("Error loading students:", error);
-//           showError("Failed to load students: " + error.message);
-//         });
-//     })
-//     .catch((err) => {
-//       showLoading(false);
-//       console.error("Failed to load firebase-crud:", err);
-//       showError("Failed to load required modules. Please try again.");
-//     });
-// }
 let allUsersList = [];
 document
   .getElementById("filter-all")
@@ -116,15 +89,36 @@ document
   .getElementById("filter-nologs")
   .addEventListener("click", () => filterUsers("No Logs"));
 
-function filterUsers(status) {
-  const searchInput = document.getElementById("companySearch");
-  if (searchInput.value) searchInput.value = "";
-  if (status === "All") {
-    displayStudents(allUsersList);
-  } else {
-    const filtered = allUsersList.filter((user) => user.badgeStatus === status);
-    displayStudents(filtered);
+function applyAllFilters() {
+  let filtered = allUsersList;
+
+  if (currentFilters.province) {
+    filtered = filtered.filter(
+      (user) =>
+        user.companyProvince?.toLowerCase().trim() ===
+        currentFilters.province.toLowerCase().trim()
+    );
   }
+
+  if (currentFilters.status !== "All") {
+    filtered = filtered.filter(
+      (user) => user.badgeStatus === currentFilters.status
+    );
+  }
+
+  if (currentFilters.searchTerm) {
+    const term = currentFilters.searchTerm.toLowerCase();
+    filtered = filtered.filter(
+      (user) =>
+        user.firstName?.toLowerCase().includes(term) ||
+        user.studentId?.includes(term) ||
+        user.companyName?.toLowerCase().includes(term) ||
+        user.middleName?.toLowerCase().includes(term) ||
+        user.lastName?.toLowerCase().includes(term)
+    );
+  }
+
+  displayStudents(filtered);
 }
 
 async function loadStudents() {
@@ -165,9 +159,8 @@ async function loadStudents() {
     );
 
     allUsersList = updatedUsers;
-
     showLoading(false);
-    displayStudents(updatedUsers);
+    applyAllFilters();
   } catch (error) {
     showLoading(false);
     console.error("Failed to load students and attendance status:", error);
@@ -195,8 +188,8 @@ function displayStudents(students) {
     colDiv.className = "col-lg-4 col-md-6 px-2";
 
     colDiv.innerHTML = `
-            <div class="student-card h-100">
-                <a href="" class="d-flex align-items-center text-decoration-none h-100">
+            <div class="student-card h-100"> 
+                <div class="d-flex align-items-center text-decoration-none h-100">
                     <div class="img-container me-3 flex-shrink-0">
                         ${
                           student.userImg
@@ -232,7 +225,7 @@ function displayStudents(students) {
                           })()}">${student.badgeStatus || "No Logs"}</p>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         `;
 
@@ -240,68 +233,174 @@ function displayStudents(students) {
   });
 }
 
-function searchStudents(searchTerm) {
-  showLoading(true);
-  import("./firebase-crud.js")
-    .then(({ firebaseCRUD }) => {
-      firebaseCRUD
-        .queryData("students", "userType", "==", "student")
-        .then((students) => {
-          firebaseCRUD
-            .queryData("students", "userType", "==", "studentAssistant")
-            .then((assistants) => {
-              showLoading(false);
+document.addEventListener("DOMContentLoaded", function () {
+  currentFilters = {
+    province: "",
+    status: "All",
+    searchTerm: "",
+  };
 
-              const allUsers = [...students, ...assistants];
-
-              const filtered = allUsers.filter(
-                (user) =>
-                  user.firstName
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  user.studentId?.includes(searchTerm) ||
-                  user.companyName
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  user.middleName
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  user.lastName
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-              );
-              displayStudents(filtered);
-            })
-            .catch((error) => {
-              showLoading(false);
-              console.error("Error fetching assistants:", error);
-              showError("Error searching assistants: " + error.message);
-            });
-        })
-        .catch((error) => {
-          showLoading(false);
-          console.error("Error fetching students:", error);
-          showError("Error searching students: " + error.message);
-        });
-    })
-    .catch((err) => {
-      showLoading(false);
-      console.error("Failed to load firebase-crud:", err);
-      showError("Failed to load required modules. Please try again.");
+  const provinceFilter = document.getElementById("provinceFilter");
+  if (provinceFilter) {
+    populateProvinceDropdown(provinceFilter);
+    provinceFilter.addEventListener("change", function () {
+      filterStudentsByProvince(this.value);
     });
+  }
+
+  const searchInput = document.getElementById("companySearch");
+  if (searchInput) {
+    const debouncedSearch = debounce(function (e) {
+      filterStudents(e.target.value);
+    }, 300);
+    searchInput.addEventListener("input", debouncedSearch);
+  }
+
+  loadStudents();
+});
+
+function filterStudentsByProvince(province) {
+  currentFilters.province = province;
+  currentFilters.searchTerm = "";
+  document.getElementById("companySearch").value = "";
+  applyAllFilters();
 }
 
-$(document).ready(function () {
-  loadStudents();
+function filterUsers(status) {
+  currentFilters.status = status;
+  currentFilters.searchTerm = "";
+  document.getElementById("companySearch").value = "";
+  applyAllFilters();
+}
 
-  const debouncedSearch = debounce(function () {
-    const searchTerm = $(".search-input input").val().trim();
-    if (searchTerm.length > 0) {
-      searchStudents(searchTerm);
-    } else {
-      loadStudents();
-    }
-  }, 300);
+function filterStudents(searchTerm) {
+  currentFilters.searchTerm = searchTerm;
+  applyAllFilters();
+}
 
-  $(".search-input input").on("input", debouncedSearch);
-});
+function populateProvinceDropdown(selectElement) {
+  const provinces = {
+    "Cordillera Administrative Region": [
+      "Benguet",
+      "Ifugao",
+      "Kalinga",
+      "Mountain Province",
+    ],
+    "I - Ilocos Region": [
+      "Ilocos Norte",
+      "Ilocos Sur",
+      "La Union",
+      "Pangasinan",
+    ],
+    "II - Cagayan Valley": [
+      "Batanes",
+      "Cagayan",
+      "Isabela",
+      "Nueva Vizcaya",
+      "Quirino",
+    ],
+    "III - Central Luzon": [
+      "Bataan",
+      "Bulacan",
+      "Nueva Ecija",
+      "Pampanga",
+      "Tarlac",
+      "Zambales",
+      "Aurora",
+    ],
+    "IVA - CALABARZON": ["Batangas", "Cavite", "Laguna", "Quezon", "Rizal"],
+    "IVB - MIMAROPA": [
+      "Marinduque",
+      "Occidental Mindoro",
+      "Oriental Mindoro",
+      "Palawan",
+      "Romblon",
+    ],
+    "V - Bicol Region": [
+      "Albay",
+      "Camarines Norte",
+      "Camarines Sur",
+      "Catanduanes",
+      "Masbate",
+      "Sorsogon",
+    ],
+    "VI - Western Visayas": [
+      "Aklan",
+      "Antique",
+      "Capiz",
+      "Iloilo",
+      "Negros Occidental",
+      "Guimaras",
+    ],
+    "VII - Central Visayas": ["Bohol", "Cebu", "Negros Oriental", "Siquijor"],
+    "VIII - Eastern Visayas": [
+      "Eastern Samar",
+      "Leyte",
+      "Northern Samar",
+      "Samar (Western Samar)",
+      "Southern Leyte",
+      "Biliran",
+    ],
+    "IX - Zamboanga Peninsula": [
+      "Zamboanga del Norte",
+      "Zamboanga del Sur",
+      "Zamboanga Sibugay",
+    ],
+    "X - Northern Mindanao": [
+      "Bukidnon",
+      "Camiguin",
+      "Lanao del Norte",
+      "Misamis Occidental",
+      "Misamis Oriental",
+    ],
+    "XI - Davao Region": [
+      "Davao del Norte",
+      "Davao del Sur",
+      "Davao Oriental",
+      "Davao de Oro",
+      "Davao Occidental",
+    ],
+    "XII - SOCCSKSARGEN": [
+      "North Cotabato",
+      "South Cotabato",
+      "Sultan Kudarat",
+      "Sarangani",
+      "Cotabato City",
+    ],
+    Caraga: [
+      "Agusan del Norte",
+      "Agusan del Sur",
+      "Surigao del Norte",
+      "Surigao del Sur",
+    ],
+    "Autonomous Region in Muslim Mindanao": [
+      "Maguindanao",
+      "Lanao del Sur",
+      "Basilan",
+      "Sulu",
+      "Tawi-Tawi",
+    ],
+  };
+
+  selectElement.innerHTML = "";
+
+  const allProvincesOption = document.createElement("option");
+  allProvincesOption.value = "";
+  allProvincesOption.textContent = "All Provinces";
+  allProvincesOption.selected = true;
+  selectElement.appendChild(allProvincesOption);
+
+  for (const [region, regionProvinces] of Object.entries(provinces)) {
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = region;
+
+    regionProvinces.forEach((province) => {
+      const option = document.createElement("option");
+      option.value = province;
+      option.textContent = province;
+      optgroup.appendChild(option);
+    });
+
+    selectElement.appendChild(optgroup);
+  }
+}

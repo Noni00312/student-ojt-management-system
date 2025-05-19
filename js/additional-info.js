@@ -58,6 +58,7 @@ async function DisplayCompanies() {
 function setupCompanySelectListener() {
   const selectCompany = document.getElementById("company-name");
   const addressInput = document.getElementById("company-address");
+  const provinceInput = document.getElementById("company-province");
 
   selectCompany.addEventListener("change", async function () {
     const selectedName = this.value;
@@ -70,8 +71,10 @@ function setupCompanySelectListener() {
 
       if (selectedCompany) {
         addressInput.value = selectedCompany.companyAddress || "";
+        provinceInput.value = selectedCompany.companyProvince || "";
       } else {
         addressInput.value = "";
+        provinceInput.value = "";
         console.warn("Selected company not found in IndexedDB.");
       }
     } catch (err) {

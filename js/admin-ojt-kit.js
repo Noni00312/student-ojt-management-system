@@ -1,37 +1,87 @@
 
+// document.addEventListener("DOMContentLoaded", async function () {
+//     try {
+//       const userId = localStorage.getItem("userId");
+  
+//       if (!userId) {
+//         console.error("No userId found in localStorage");
+//         return;
+//       }
+  
+//       await window.dbReady;
+  
+//       const img = document.getElementById("user-img");
+  
+//       const dataArray = await crudOperations.getByIndex(
+//         "studentInfoTbl",
+//         "userId",
+//         userId
+//       );
+  
+//       const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+  
+//       if (data != null) {
+//         img.src = data.userImg
+//           ? data.userImg
+//           : "../assets/img/icons8_male_user_480px_1";
+  
+//       } else {
+//         console.warn("No user data found for this user.");
+//       }
+//     } catch (err) {
+//       console.error("Failed to get user data from IndexedDB", err);
+//     }
+//   });
+
 document.addEventListener("DOMContentLoaded", async function () {
     try {
-      const userId = localStorage.getItem("userId");
-  
-      if (!userId) {
-        console.error("No userId found in localStorage");
-        return;
-      }
-  
-      await window.dbReady;
-  
-      const img = document.getElementById("user-img");
-  
-      const dataArray = await crudOperations.getByIndex(
-        "studentInfoTbl",
-        "userId",
-        userId
-      );
-  
-      const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
-  
-      if (data != null) {
-        img.src = data.userImg
-          ? data.userImg
-          : "../assets/img/icons8_male_user_480px_1";
-  
-      } else {
-        console.warn("No user data found for this user.");
-      }
+        const userId = localStorage.getItem("userId");
+        
+        if (!userId) {
+            console.error("No userId found in localStorage");
+            return;
+        }
+
+        // Ensure IndexedDB is ready
+        await window.dbReady;
+
+        // Safely get the image element
+        const img = document.getElementById("user-profile");
+        if (!img) {
+            console.error("User image element not found in DOM");
+            return;
+        }
+
+        // Set default image first (in case the fetch fails)
+        img.src = "../assets/img/icons8_male_user_480px_1.png";
+        img.alt = "Default user profile";
+
+        // Try to get user data
+        const dataArray = await crudOperations.getByIndex(
+            "studentInfoTbl", 
+            "userId", 
+            userId
+        );
+
+        const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+        if (data && data.userImg) {
+            // Only update if we have a valid image URL
+            img.src = data.userImg;
+            img.alt = "User profile image";
+        } else {
+            console.warn("No user image found in data, using default");
+        }
     } catch (err) {
-      console.error("Failed to get user data from IndexedDB", err);
+        console.error("Failed to get user data from IndexedDB", err);
+        // Ensure we have at least the default image if something fails
+        const img = document.getElementById("user-profile");
+        if (img) {
+            img.src = "../assets/img/icons8_male_user_480px_1.png";
+            img.alt = "Default user profile (error)";
+        }
     }
-  });
+});
   
 function debounce(func, wait) {
     let timeout;

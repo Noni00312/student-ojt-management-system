@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         await window.dbReady;
 
-        const img = document.getElementById("user-img");
+        // const img = document.getElementById("user-img");
+        const img = document.getElementById("user-profile");
         const dataArray = await crudOperations.getByIndex("studentInfoTbl", "userId", userId);
         const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error("Failed to initialize page:", err);
     }
 });
+
 
 
 
@@ -78,25 +80,20 @@ async function loadOJTKits(kits = null) {
             
             card.innerHTML = `
                 <div class="ojt-kit-icon">
-                    <i class="bi bi-file-earmark-text"></i>
-                    ${isCompleted ? '<span class="completed-badge"><i class="bi bi-check-circle-fill"></i></span>' : ''}
+                    <i class="${getIconForKit(kit.title)}"></i>
                 </div>
-                <div class="ojt-kit-content">
-                    <h5>${kit.title || 'No title'}</h5>
-                    <p>${kit.content ? kit.content.substring(0, 60) + (kit.content.length > 60 ? '...' : '') : 'No content'}</p>
-                    <div class="ojt-kit-meta">
-                        <span class="date">${formatDate(kit.createdAt)}</span>
-                        <span class="department ${isCompleted ? 'completed-text' : ''}">
-                            ${isCompleted ? 'Completed' : (kit.department || 'Incomplete')}
-                        </span>
-                    </div>
-                </div>
-                <div class="ojt-kit-arrow">
-                    <i class="bi bi-chevron-right"></i>
-                </div>
+                <div class="ojt-kit-title">${kit.title || 'No title'}</div>
+                ${isCompleted ? '<div class="completed-badge"><i class="bi bi-check-circle-fill"></i></div>' : ''}
             `;
             
-            card.addEventListener('click', () => showKitDetails(kit));
+            // card.addEventListener('click', () => showKitDetails(kit));
+            // Only add click event if NOT completed
+            if (!isCompleted) {
+                card.addEventListener('click', () => showKitDetails(kit));
+            } else {
+                // Optional: Add visual feedback that completed cards can't be clicked
+                card.style.cursor = 'default';
+            }
             container.appendChild(card);
         });
         
@@ -114,6 +111,32 @@ async function loadOJTKits(kits = null) {
         `;
     }
 }
+
+// Helper function for icons remains the same
+function getIconForKit(title) {
+    if (!title) return 'bi bi-file-earmark-text';
+    
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes('medical')) return 'bi bi-file-medical';
+    if (lowerTitle.includes('waiver')) return 'bi bi-file-earmark-text';
+    if (lowerTitle.includes('payment')) return 'bi bi-cash-coin';
+    return 'bi bi-file-earmark-text';
+}
+
+
+
+
+// function getIconClassForKit(title) {
+//     if (!title) return '';
+    
+//     const lowerTitle = title.toLowerCase();
+//     if (lowerTitle.includes('medical')) return 'medical-cert-icon';
+//     if (lowerTitle.includes('waiver')) return 'parents-waiver-icon';
+//     if (lowerTitle.includes('payment')) return 'ojt-payment-icon';
+//     return '';
+// }
+
+
 
 async function getCompletedKits(userId) {
     try {
@@ -300,13 +323,11 @@ async function searchOJTKits(searchTerm) {
         
         const filtered = allKits.filter(kit => {
             const kitTitle = kit.title?.toLowerCase() || '';
-            const kitContent = kit.content?.toLowerCase() || '';
-            const kitDepartment = kit.department?.toLowerCase() || '';
+            // const kitContent = kit.content?.toLowerCase() || '';
+            // const kitDepartment = kit.department?.toLowerCase() || '';
             
             return searchTerms.every(term => 
-                kitTitle.includes(term) || 
-                kitContent.includes(term) ||
-                kitDepartment.includes(term)
+                kitTitle.includes(term)
             );
         });
         

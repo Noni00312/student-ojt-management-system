@@ -3,22 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/css/admin-assistant-report.css" />
-    <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/admin-assistant-report.css" />
+    <link rel="stylesheet" href="../css/bootstrap-icons.min.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/assets/img/icons/LOGO 96.png" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="apple-touch-icon" href="../assets/img/icons/LOGO 96.png" />
     <link rel="app-mobile-web-app-status-bar" href="#6e1423" />
     <meta name="theme-color" content="#6e1423" />
 
     <title>Assistant Reports | SOJTMS</title>
-    <link rel="icon" type="image/png" href="/assets/img/logo trans.png" />
+    <link rel="icon" type="image/png" href="../assets/img/logo trans.png" />
   </head>
 
   <body>
@@ -140,9 +140,6 @@
                   id="user-profile-img"
                   class="w-100 h-100 object-fit-cover"
                 />
-                <!-- <div class="edit-profile-img-container">
-                  <i class="bi bi-pencil-fill edit-profile-img" role="button" onclick="editProfileImg()"></i>
-                </div> -->
                 <button
                   type="submit"
                   formtarget="edit-profile-form"
@@ -503,12 +500,11 @@
                     ></span>
                   </div>
 
-
-                  
-
-                  <div class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative view-only-mode">
-                    <i id="user-icon"
-
+                  <div
+                    class="form-floating col-md-12 mb-3 ps-1 pe-1 position-relative view-only-mode"
+                  >
+                    <i
+                      id="user-icon"
                       class="bi bi-buildings-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
                       style="color: #3c3d42 !important"
                     ></i>
@@ -529,9 +525,20 @@
                     ></span>
                   </div>
 
-                  <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode">
-                    <i class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"></i>
-                    <input type="time" class="form-control ps-3 pe-1" id="morning-time-in" name="morningTimeIn"  disabled title="View mode only - not editable" />
+                  <div
+                    class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode"
+                  >
+                    <i
+                      class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
+                    ></i>
+                    <input
+                      type="time"
+                      class="form-control ps-3 pe-1"
+                      id="morning-time-in"
+                      name="morningTimeIn"
+                      disabled
+                      title="View mode only - not editable"
+                    />
 
                     <label for="morning-time-in">Morning - Time in</label>
                     <span
@@ -541,9 +548,20 @@
                     ></span>
                   </div>
 
-                  <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode">
-                    <i class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"></i>
-                    <input type="time" class="form-control ps-3 pe-1" id="morning-time-out" name="morningTimeOut"  disabled title="View mode only - not editable"/>
+                  <div
+                    class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode"
+                  >
+                    <i
+                      class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
+                    ></i>
+                    <input
+                      type="time"
+                      class="form-control ps-3 pe-1"
+                      id="morning-time-out"
+                      name="morningTimeOut"
+                      disabled
+                      title="View mode only - not editable"
+                    />
 
                     <label for="morning-time-out">Morning - Time out</label>
                     <span
@@ -553,9 +571,20 @@
                     ></span>
                   </div>
 
-                  <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode">
-                    <i class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"></i>
-                    <input type="time" class="form-control ps-3 pe-1" id="afternoon-time-in" name="afternoonTimeIn"  disabled title="View mode only - not editable"/>
+                  <div
+                    class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode"
+                  >
+                    <i
+                      class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
+                    ></i>
+                    <input
+                      type="time"
+                      class="form-control ps-3 pe-1"
+                      id="afternoon-time-in"
+                      name="afternoonTimeIn"
+                      disabled
+                      title="View mode only - not editable"
+                    />
 
                     <label for="afternoon-time-in">Afternoon - Time in</label>
                     <span
@@ -565,9 +594,20 @@
                     ></span>
                   </div>
 
-                  <div class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode">
-                    <i class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"></i>
-                    <input type="time" class="form-control ps-3 pe-1" id="afternoon-time-out" name="afternoonTimeOut"  disabled title="View mode only - not editable"/>
+                  <div
+                    class="form-floating col-md-3 mb-3 ps-1 pe-1 position-relative view-only-mode"
+                  >
+                    <i
+                      class="bi bi-clock-fill position-absolute top-50 m-0 end-0 me-3 translate-middle-y"
+                    ></i>
+                    <input
+                      type="time"
+                      class="form-control ps-3 pe-1"
+                      id="afternoon-time-out"
+                      name="afternoonTimeOut"
+                      disabled
+                      title="View mode only - not editable"
+                    />
                     <label for="afternoon-time-out">Afternoon - Time out</label>
                     <span
                       id="afternoonTimeOut-error"
@@ -577,13 +617,12 @@
                   </div>
                 </div>
 
-
-
-
                 <div class="col-md-12 d-flex flex-column mb-3 p-0">
-                  <label for="weekday" style="color: white;">Weekly schedule</label>
+                  <label for="weekday" style="color: white"
+                    >Weekly schedule</label
+                  >
                   <div
-                    class="weekdays-container d-flex align-items-center flex-wrap gap-1 justify-content-between mt-2 view-only-mode" 
+                    class="weekdays-container d-flex align-items-center flex-wrap gap-1 justify-content-between mt-2 view-only-mode"
                   >
                     <span id="weekday">
                       <input
@@ -597,7 +636,7 @@
                       />
                       <label for="monday">MON</label>
                     </span>
-    
+
                     <span id="weekday">
                       <input
                         type="checkbox"
@@ -610,7 +649,7 @@
                       />
                       <label for="tuesday">TUES</label>
                     </span>
-    
+
                     <span id="weekday">
                       <input
                         type="checkbox"
@@ -647,7 +686,7 @@
                       />
                       <label for="friday">FRI</label>
                     </span>
-    
+
                     <span id="weekday">
                       <input
                         type="checkbox"
@@ -660,7 +699,7 @@
                       />
                       <label for="saturday">SAT</label>
                     </span>
-    
+
                     <span id="weekday">
                       <input
                         type="checkbox"
@@ -679,14 +718,25 @@
                     class="text-danger"
                     style="font-size: 12px"
                   ></span>
-                  <div class="view-only-notice-container position-fixed top-50 start-50 translate-middle" style="z-index: 1060; pointer-events: none;">
-                    <div class="view-only-notice bg-dark text-white text-center px-3 py-2 rounded" style="font-size: 12px; display: none;">
+                  <div
+                    class="view-only-notice-container position-fixed top-50 start-50 translate-middle"
+                    style="z-index: 1060; pointer-events: none"
+                  >
+                    <div
+                      class="view-only-notice bg-dark text-white text-center px-3 py-2 rounded"
+                      style="font-size: 12px; display: none"
+                    >
                       This is view mode only. Editing is disabled.
                     </div>
                   </div>
                 </div>
 
-                <button class="mt-4 mb-3 d-block w-100" id="personal-info-submit" type="submit" value="submit">
+                <button
+                  class="mt-4 mb-3 d-block w-100"
+                  id="personal-info-submit"
+                  type="submit"
+                  value="submit"
+                >
                   <span>Update Account</span>
                 </button>
               </form>
@@ -793,80 +843,9 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/jQuery.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-
-    <!-- <script src="/js/admin-assistant-report.js"></script> -->
-
-    <!-- <script>
-      const tooltipTriggerList = document.querySelectorAll(
-        '[data-bs-toggle="tooltip"]'
-      );
-      const tooltipList = [...tooltipTriggerList].map(
-        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
-      );
-      let selectedFile = null;
-
-      function editProfileImg() {
-        document.getElementById("user-img-profile").click();
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const fileInput = document.getElementById("user-img-profile");
-        const profileForm = document.getElementById("edit-profile-form");
-        const confirmModal = new bootstrap.Modal("#confirmModal");
-        const uploadToast = new bootstrap.Toast("#uploadToast");
-
-        fileInput.addEventListener("change", function (e) {
-          if (this.files && this.files[0]) {
-            selectedFile = this.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-              document.getElementById("user-profile-img").src = e.target.result;
-              document.getElementById("modal-preview").src = e.target.result;
-
-              confirmModal.show();
-            };
-
-            reader.readAsDataURL(selectedFile);
-          }
-        });
-
-        document
-          .getElementById("confirm-upload")
-          .addEventListener("click", function () {
-            if (!selectedFile) return;
-
-            const formData = new FormData();
-            formData.append("profile-image", selectedFile);
-
-            fetch("/api/upload-profile", {
-              method: "POST",
-              body: formData,
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                confirmModal.hide();
-                document.getElementById("toast-message").textContent =
-                  data.message || "Profile picture updated successfully!";
-                uploadToast.show();
-              })
-              .catch((error) => {
-                console.error("Error:", error);
-                document.getElementById("toast-message").textContent =
-                  "Error updating profile picture";
-                uploadToast.show();
-              })
-              .finally(() => {
-                fileInput.value = "";
-                selectedFile = null;
-              });
-          });
-      });
-    </script> -->
-
-    <script type="module" src="/js/admin-assistant-report.js"></script>
+    <script src="../js/jQuery.js"></script>
+    <script src="../js/jquery.validate.min.js"></script>
+    <script type="module" src="../js/admin-assistant-report.js"></script>
     <script>
       const tooltipTriggerList = document.querySelectorAll(
         '[data-bs-toggle="tooltip"]'

@@ -197,6 +197,7 @@ $(document).ready(function () {
           address: form.address.value,
           companyName: form.companyName.value,
           companyAddress: form.companyAddress.value,
+          companyProvince: form.companyProvince.value,
           weeklySchedule: selectedDays,
           morningTimeIn: form.morningTimeIn.value,
           morningTimeOut: form.morningTimeOut.value,

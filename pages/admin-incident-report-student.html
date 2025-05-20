@@ -1,211 +1,416 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/admin-student.css">
-    <link rel="stylesheet" href="/css/reports.css">
-    <link rel="stylesheet" href="/css/admin-incident-report-student.css">
-    <link rel="stylesheet" href="/css/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/assets/img/icons/LOGO 96.png">
-    <link rel="app-mobile-web-app-status-bar" href="#6e1423">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/admin-student.css" />
+    <link rel="stylesheet" href="../css/reports.css" />
+    <link rel="stylesheet" href="../css/admin-incident-report-student.css" />
+    <link rel="stylesheet" href="../css/bootstrap-icons.min.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="apple-touch-icon" href="./assets/img/icons/LOGO 96.png" />
+    <link rel="app-mobile-web-app-status-bar" href="#6e1423" />
     <meta name="theme-color" content="#6e1423" />
 
     <title>Incident Reports - Students | SOJTMS</title>
-    <link rel="icon" type="image/png" href="/assets/img/logo trans.png">
-</head>
-<body>
-
-    <nav class="navbar navbar-expand-lg fixes-top accent-bg-color">
-        <div class="container ">
-            <div class="d-flex align-items-center justify-content-between w-100">
-              <div class="wrapper">
-                <div class="d-flex align-items-center">
-                  <a href="" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS - Admin</a>
-                </div>
-                <button class="btn 	d-lg-none d-sm-block" type="button " data-bs-toggle="offcanvas" data-bs-target="#sideBar" aria-controls="sideBar">
-                  <i class="bi bi-list text-light fs-3 outline-none"></i>
-                </button>
-              </div>
-
-          <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+    <link rel="icon" type="image/png" href="../assets/img/logo trans.png" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <div class="wrapper">
+            <div class="d-flex align-items-center">
+              <a
+                href=""
+                class="navbar-brand fw-bold text-white d-none d-lg-block"
+                >SOJTMS - Admin</a
+              >
+            </div>
+            <button
+              class="btn d-lg-none d-sm-block"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#sideBar"
+              aria-controls="sideBar"
+            >
+              <i class="bi bi-list text-light fs-3 outline-none"></i>
+            </button>
+          </div>
+          <div
+            class="collapse navbar-collapse me-2"
+            id="navbarSupportedContent"
+          >
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-dashboard.html">Home</a>
+                <a class="nav-link text-light" href="./admin-dashboard.html"
+                  >Home</a
+                >
               </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-t-i-o.html">Time in/out</a>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Content
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="./admin-announcements.html"
+                      ><i class="bi bi-megaphone"></i> Announcements</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-ojt-kit.html"
+                      ><i class="bi bi-journal-text"></i> OJT Kit</a
+                    >
+                  </li>
+                </ul>
               </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-company.html">Companies</a>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Attendance
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="./admin-daily-attendance-log.html"
+                      ><i class="bi bi-list-check"></i> Attendance</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-t-i-o.html"
+                      ><i class="bi bi-clock"></i> Time in/out</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-incident-report.html"
+                      ><i class="bi bi-exclamation-triangle"></i> Incident
+                      Report</a
+                    >
+                  </li>
+                </ul>
               </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-student.html">Students</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-assistant.html">Assistants</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="./admin-incident-report.html">Incident Report</a>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Management
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="./admin-company.html"
+                      ><i class="bi bi-buildings"></i> Companies</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-student.html"
+                      ><i class="bi bi-mortarboard"></i> Students</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-assistant.html"
+                      ><i class="bi bi-person-badge"></i> Assistants</a
+                    >
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
-
-              <a href="/pages/admin-profile.html" id="user-profile" class=" text-decoration-none">
-                <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-img" style="border-radius: 50%;">
-              </a>
+          <a href="../pages/admin-profile.html" class="text-decoration-none">
+            <img src="../assets/img/icons8_male_user_480px_1.png" alt="User
+            profile icon" loading="lazy" id="user-profile" style=" object-fit:
+            cover !important; object-position: center !important; " ">
+          </a>
         </div>
+      </div>
     </nav>
 
- 
     <!-- Student -->
-    <section class="container mt-2 d-flex flex-column  student-section">
-     <div class="d-flex flex-column align-items-center text-center">
-  <h6 style="color: #3C3D42 !important;">INCIDENT REPORTS</h6>
-  <h1 class="fw-bold" style="color: #3C3D42 !important;"></h1>
-</div>
+    <section class="container mt-2 d-flex flex-column student-section">
+      <div class="d-flex flex-column align-items-center text-center">
+        <h6 style="color: #3c3d42 !important">INCIDENT REPORTS</h6>
+        <h1 class="fw-bold" style="color: #3c3d42 !important"></h1>
+      </div>
 
       <div class="search-container">
         <form class="form-floating">
           <div class="search-input position-relative w-100">
-            <i class="bi bi-search position-absolute top-50 end-0 translate-middle me-2"></i>
-            <input type="text" class="form-control py-2" style="height: 58px;" placeholder="Search" id="studentSearch">
+            <i
+              class="bi bi-search position-absolute top-50 end-0 translate-middle me-2"
+            ></i>
+            <input
+              type="text"
+              class="form-control py-2"
+              style="height: 58px"
+              placeholder="Search"
+              id="studentSearch"
+            />
           </div>
         </form>
       </div>
 
       <div class="card-container flex-grow-1 overflow-auto mt-2">
-        <div class="row g-3 mx-0">
-
-
-        </div>
+        <div class="row g-3 mx-0"></div>
+      </div>
     </section>
     <!-- Student -->
 
-    
-
-   
-     
     <!-- view report modal -->
-    <div class="modal fade" id="viewReportModal" tabindex="-1" aria-labelledby="viewReportModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content p-4 view-report-modal">
-      <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title text-white fs-4 fw-bold" id="viewReportModalLabel"></h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body pt-0">
-        <div class="d-flex align-items-center mb-3">
-          <div class="me-3">
-            <div class="img-container" style="width: 60px; height: 60px;">
-              <img id="modal-student-img" src="../assets/img/icons8_male_user_480px_1" alt="Student" class="rounded-circle w-100 h-100 object-fit-cover border border-2 border-white">
+    <div
+      class="modal fade"
+      id="viewReportModal"
+      tabindex="-1"
+      aria-labelledby="viewReportModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-4 view-report-modal">
+          <div class="modal-header border-0 pb-0">
+            <h5
+              class="modal-title text-white fs-4 fw-bold"
+              id="viewReportModalLabel"
+            ></h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="d-flex align-items-center mb-3">
+              <div class="me-3">
+                <div class="img-container" style="width: 60px; height: 60px">
+                  <img
+                    id="modal-student-img"
+                    src="../assets/img/icons8_male_user_480px_1"
+                    alt="Student"
+                    class="rounded-circle w-100 h-100 object-fit-cover border border-2 border-white"
+                  />
+                </div>
+              </div>
+              <div>
+                <h6 class="text-white mb-0 fw-bold" id="modal-student-name">
+                  Student Name
+                </h6>
+                <small class="text-white-50" id="modal-student-id"
+                  >Student ID</small
+                >
+                <div class="d-flex align-items-center mt-1">
+                  <span class="badge me-2" id="modal-report-status"
+                    >Status</span
+                  >
+                  <small class="text-white-50" id="modal-report-date"
+                    >Date</small
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="card bg-dark bg-opacity-25 border-0 mb-3">
+              <div class="card-body p-3">
+                <h6 class="text-white mb-2 fw-bold">Incident Type</h6>
+                <input
+                  type="text"
+                  name="report-title"
+                  id="report-title"
+                  class="w-100 report-title bg-transparent text-white border-bottom border-white border-opacity-25 pb-2 mb-3"
+                  readonly
+                />
+
+                <h6 class="text-white mb-2 fw-bold">Report Details</h6>
+                <textarea
+                  class="form-control bg-transparent text-white border-0 p-0"
+                  id="report-content"
+                  rows="5"
+                  readonly
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <small class="text-white-50" id="modal-report-time"
+                >Time reported</small
+              >
+              <small class="text-white-50 d-none" id="modal-last-updated"
+                >Last updated</small
+              >
             </div>
           </div>
-          <div>
-            <h6 class="text-white mb-0 fw-bold" id="modal-student-name">Student Name</h6>
-            <small class="text-white-50" id="modal-student-id">Student ID</small>
-            <div class="d-flex align-items-center mt-1">
-              <span class="badge me-2" id="modal-report-status">Status</span>
-              <small class="text-white-50" id="modal-report-date">Date</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="card bg-dark bg-opacity-25 border-0 mb-3">
-          <div class="card-body p-3">
-            <h6 class="text-white mb-2 fw-bold">Incident Type</h6>
-            <input type="text" name="report-title" id="report-title" 
-                   class="w-100 report-title bg-transparent text-white border-bottom border-white border-opacity-25 pb-2 mb-3" 
-                   readonly>
-
-            <h6 class="text-white mb-2 fw-bold">Report Details</h6>
-            <textarea class="form-control bg-transparent text-white border-0 p-0" 
-                      id="report-content" rows="5" readonly></textarea>
-          </div>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mt-3">
-          <small class="text-white-50" id="modal-report-time">Time reported</small>
-          <small class="text-white-50 d-none" id="modal-last-updated">Last updated</small>
         </div>
       </div>
     </div>
-  </div>
-</div>
     <!-- view report modal -->
-
-    
 
     <!-- Side bar -->
-    <div class="offcanvas offcanvas-start primary-background-color" tabindex="-1" id="sideBar" aria-labelledby="sideBarLabel">
-        <div class="offcanvas-header accent-darken-bg-color">
-          <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">MENU</h5>
-          <button type="button" class="btn-close " data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-    <div class="offcanvas-body p-0 ">
+    <div
+      class="offcanvas offcanvas-start primary-background-color"
+      tabindex="-1"
+      id="sideBar"
+      aria-labelledby="sideBarLabel"
+    >
+      <div class="offcanvas-header accent-darken-bg-color">
+        <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">
+          MENU
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0">
         <ul class="nav d-flex flex-column">
-
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-dashboard.html">
-              <span class="fs-5">Dashboard</span> 
-              <i class="bi bi-microsoft fs-5"></i>
-            </a>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-t-i-o.html">
-              <span class="fs-5">Time in/out</span> 
-              <i class="bi bi-clock-fill fs-4"></i>
-            </a>
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              href="./admin-dashboard.html"
+              ><span class="fs-5">Dashboard</span>
+              <i class="bi bi-microsoft fs-5"></i
+            ></a>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-company.html">
-              <span class="fs-5">Companies</span> 
-              <i class="bi bi-buildings-fill fs-3"></i>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#contentCollapse"
+            >
+              <span class="fs-5">Content</span>
+              <i class="bi bi-chevron-down fs-5"></i>
             </a>
+            <div class="collapse" id="contentCollapse">
+              <ul class="nav flex-column ps-4">
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-announcements.html"
+                    ><span>Announcements</span> <i class="bi bi-megaphone"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-ojt-kit.html"
+                    ><span>OJT Kit</span> <i class="bi bi-journal-text"></i
+                  ></a>
+                </li>
+              </ul>
+            </div>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-student.html">
-              <span class="fs-5">Students</span> 
-              <i class="bi bi-mortarboard-fill fs-3"></i>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#attendanceCollapse"
+            >
+              <span class="fs-5">Attendance</span>
+              <i class="bi bi-chevron-down fs-5"></i>
             </a>
+            <div class="collapse" id="attendanceCollapse">
+              <ul class="nav flex-column ps-4">
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-daily-attendance-log.html"
+                    ><span>Attendance</span> <i class="bi bi-list-check"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-t-i-o.html"
+                    ><span>Time in/out</span> <i class="bi bi-clock"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-incident-report.html"
+                    ><span>Incident Report</span>
+                    <i class="bi bi-exclamation-triangle"></i
+                  ></a>
+                </li>
+              </ul>
+            </div>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-assistant.html">
-              <span class="fs-5">Assistants</span> 
-              <i class="bi bi-person-badge fs-3"></i>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#managementCollapse"
+            >
+              <span class="fs-5">Management</span>
+              <i class="bi bi-chevron-down fs-5"></i>
             </a>
+            <div class="collapse" id="managementCollapse">
+              <ul class="nav flex-column ps-4">
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-company.html"
+                    ><span>Companies</span> <i class="bi bi-buildings"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-student.html"
+                    ><span>Students</span> <i class="bi bi-mortarboard"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-assistant.html"
+                    ><span>Assistants</span> <i class="bi bi-person-badge"></i
+                  ></a>
+                </li>
+              </ul>
+            </div>
           </li>
-
-
-          <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" aria-current="page" href="./admin-incident-report.html">
-              <span class="fs-5">Incident Report</span> 
-              <i class="bi bi-printer-fill fs-4"></i>
-            </a>
-          </li>
-
-
         </ul>
+      </div>
     </div>
-    </div>
-   <!-- Side bar -->
+    <!-- Side bar -->
 
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <script type="module" src="/js/firebase-config.js"></script>
-    <script type="module" src="/js/firebase-crud.js"></script>
-    <script src="/js/index-db-crud.js"></script>
-    <script src="/js/app.js"></script>
-    <script src="/js/ui.js"></script>
-    <script type="module" src="/js/admin-incident-report-student.js"></script>
-</body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script type="module" src="../js/firebase-crud.js"></script>
+    <script src="../js/index-db-crud.js"></script>
+    <script src="../js/app.js"></script>
+    <script type="module" src="../js/admin-incident-report-student.js"></script>
+  </body>
 </html>

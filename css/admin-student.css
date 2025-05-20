@@ -64,24 +64,6 @@ body {
   transition: all 0.3s ease;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* FOR OJTKITS */
-
-
 .img-thumbnail {
   padding: 1rem;
   background-color: transparent !important;
@@ -366,10 +348,6 @@ button {
   background-color: #ffffff !important;
 }
 
-
-
-
-
 .document-option-btn {
   background-color: #4a4b50;
   border: none;
@@ -392,36 +370,28 @@ button {
   border: none;
 }
 
-
-
-/* Add this to your CSS */
 .modal {
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
-    border: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  border: none;
 }
 
-/* Remove any leftover backdrop styles */
 .modal-backdrop {
-    display: none !important;
+  display: none !important;
 }
 
 body.modal-open {
-    overflow: auto;
-    padding-right: 0 !important;
+  overflow: auto;
+  padding-right: 0 !important;
 }
 
 .modal.fade:not(.show) {
-    display: none;
+  display: none;
 }
 
-
-
-
-/* Floating Action Button Styles */
 .fab-container {
   position: fixed;
   bottom: 30px;
@@ -454,12 +424,6 @@ body.modal-open {
   transform: scale(0.95);
 }
 
-
-
-
-
-
-/* Floating Action Button */
 .floating-btn {
   position: fixed;
   bottom: 30px;
@@ -470,7 +434,7 @@ body.modal-open {
   background-color: #6e1423;
   color: white;
   border: none;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -489,40 +453,6 @@ body.modal-open {
   transform: scale(0.95);
 }
 
-
-/* 
-[title] {
-    position: relative;
-  }
-  [title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    z-index: 10;
-  }
-  .document-option-btn {
-    position: relative;
-    transition: all 0.2s;
-  }
-  .document-option-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  .bi-check-circle-fill {
-    font-size: 1.2rem;
-  } */
-
-
-
-
-  /* Image scroll container */
 .image-scroll-container {
   width: 100%;
   overflow-x: auto;
@@ -538,7 +468,6 @@ body.modal-open {
   gap: 8px;
 }
 
-/* Custom scrollbar for WebKit browsers */
 .image-scroll-container::-webkit-scrollbar {
   height: 6px;
 }
@@ -552,7 +481,6 @@ body.modal-open {
   border-radius: 3px;
 }
 
-/* Image thumbnail styling */
 .image-thumbnail {
   position: relative;
   display: inline-block;
@@ -586,13 +514,12 @@ body.modal-open {
   pointer-events: none;
 }
 
-/* Responsive adjustments */
 @media (max-width: 576px) {
   .image-thumbnail {
     width: 70px;
     height: 70px;
   }
-  
+
   .image-scroll-wrapper {
     gap: 6px;
   }
@@ -625,3 +552,4 @@ body.modal-open {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
 }
+

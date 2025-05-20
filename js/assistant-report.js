@@ -35,6 +35,35 @@ document.addEventListener("DOMContentLoaded", async function () {
     setupUploadButton();
   };
 
+  try {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      return;
+    }
+
+    await window.dbReady;
+
+    const img = document.getElementById("user-profile");
+
+    const dataArray = await crudOperations.getByIndex(
+      "studentInfoTbl",
+      "userId",
+      userId
+    );
+
+
+    const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+
+    if (data != null) {
+      img.src = data.userImg;
+    } else {
+      console.warn("No user data found for this user.");
+    }
+  } catch (err) {
+    console.error("Failed to get user data from IndexedDB", err);
+  }
+
   request.onerror = function (event) {
     console.error("IndexedDB error:", event.target.error);
   };
@@ -263,7 +292,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const title = document.getElementById("assistant-report-title").value.trim();
         const content = document
-          .getElementById("assistant-report-content")
+          .getElementById("view-assistant-report-content")
           .value.trim();
         const userId = localStorage.getItem("userId");
 
@@ -402,7 +431,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (!currentReportId) return;
 
         const title = document.getElementById("view-assistant-report-title").value.trim();
-        const content = document.getElementById("assistant-report-content").value.trim();
+        const content = document.getElementById("view-assistant-report-content").value.trim();
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
@@ -600,7 +629,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const viewModal = document.getElementById("viewAssistantReportModal");
         viewModal.querySelector("#view-assistant-report-title").value = report.title;
-        viewModal.querySelector("#assistant-report-content").value = report.content;
+        viewModal.querySelector("#view-assistant-report-content").value = report.content;
 
         viewModal.querySelector("#update-assistant-report-form").dataset.reportId =
           reportId;

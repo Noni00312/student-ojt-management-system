@@ -9,7 +9,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
     await window.dbReady;
 
-    const img = document.getElementById("user-img");
+    const img = document.getElementById("user-profile");
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",
@@ -186,7 +186,6 @@ function populateDates(companyDataList) {
       users,
     } = company;
 
-    // crudOperations.clearTable("companyUsersTbl");
     crudOperations.upsert("companyUsersTbl", {
       id: `${companyName}_${date}`,
       companyName,

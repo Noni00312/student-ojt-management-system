@@ -4,22 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/css/additional-info.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/additional-info.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/assets/img/icons/LOGO 96.png" />
+    <link rel="stylesheet" href="../css/bootstrap-icons.min.css" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="apple-touch-icon" href="../assets/img/icons/LOGO 96.png" />
     <link rel="app-mobile-web-app-status-bar" href="#6e1423" />
     <meta name="theme-color" content="#6e1423" />
     <script src="../js/prevent-back.js"></script>
     <title>Register | SOJTMS</title>
-    <link rel="icon" type="image/png" href="/assets/img/logo trans.png" />
+    <link rel="icon" type="image/png" href="../assets/img/logo trans.png" />
   </head>
   <body>
     <div
@@ -32,7 +32,7 @@
       >
         <img
           id="register-icon"
-          src="/assets/img/logo trans.png"
+          src="../assets/img/logo trans.png"
           alt="logo"
           width="120px"
           height="120px"
@@ -55,6 +55,14 @@
               type="text"
               id="company-address"
               name="companyAddress"
+              value=""
+              hidden
+            />
+
+            <input
+              type="text"
+              id="company-province"
+              name="companyProvince"
               value=""
               hidden
             />
@@ -472,15 +480,14 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/jQuery.js"></script>
-    <script src="/js/jquery.validate.min.js"></script>
-    <script type="module" src="/js/firebase-config.js"></script>
-    <script src="/js/image-handler.js"></script>
-    <script src="/js/register-validation.js"></script>
-    <script src="/js/index-db-crud.js"></script>
-    <script src="/js/app.js"></script>
-    <script type="module" src="/js/additional-info.js"></script>
-    <script src="/js/ui.js"></script>
+    <script src="../js/jQuery.js"></script>
+    <script src="../js/jquery.validate.min.js"></script>
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script src="../js/image-handler.js"></script>
+    <script src="../js/register-validation.js"></script>
+    <script src="../js/index-db-crud.js"></script>
+    <script src="../js/app.js"></script>
+    <script type="module" src="../js/additional-info.js"></script>
 
     <script type="module">
       import { getAuth, onAuthStateChanged } from "../js/firebase-config.js";
@@ -534,7 +541,6 @@
 
           reader.onload = function (e) {
             preview.src = e.target.result;
-            // preview.style.display = "block";
           };
 
           reader.readAsDataURL(selectedFile);

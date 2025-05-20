@@ -2,9 +2,7 @@ html,
 body {
   overflow: hidden;
   height: 100%;
-  
 }
-
 
 .card-container {
   height: calc(100vh - 210px);
@@ -52,8 +50,6 @@ body {
   color: #fff;
   font-size: 0.8rem;
 }
-
-
 
 .search-input .spinner-border {
   margin-right: 8px;

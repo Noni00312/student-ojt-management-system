@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   height: 100%;
   min-height: 100vh;
 }
@@ -11,13 +12,13 @@ body {
   background-color: #ffffff !important;
 }
 
-.col-12{
+.col-12 {
   color: #ffffff !important;
 }
 
 .name-id-container p {
-    color: #fff !important;
-    font-size: 0.9rem;
+  color: #fff !important;
+  font-size: 0.9rem;
 }
 
 .card-container {

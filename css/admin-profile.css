@@ -1,8 +1,7 @@
-  .time-grid {
-    grid-template-columns: 100fr;
-  }
+.time-grid {
+  grid-template-columns: 100fr;
+}
 
-.schedule-section{
- background-color: rgba(110, 20, 35, 0.438) !important;
-
+.schedule-section {
+  background-color: rgba(110, 20, 35, 0.438) !important;
 }

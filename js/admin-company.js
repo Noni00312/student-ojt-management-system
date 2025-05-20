@@ -551,6 +551,11 @@ function displayCompanies(companies) {
                       document.getElementById("camera-input").value = "";
                       uploadedImageBase64 = "";
                       loadCompanies();
+                      // Close the modal
+                        const addModal = bootstrap.Modal.getInstance(document.getElementById('addCompanyModal'));
+                        if (addModal) {
+                            addModal.hide();
+                        }
                   })
                   .catch((error) => {
                       if (error !== "Duplicate company name") {

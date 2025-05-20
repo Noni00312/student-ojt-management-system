@@ -23,7 +23,7 @@
   <body class="main-container">
 
     
-    <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
+    <!-- <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
       <div class="container ">
           <div class="d-flex align-items-center justify-content-between w-100">
             <div class="wrapper">
@@ -61,7 +61,75 @@
               <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-img" style="border-radius: 50%;">
             </a>
       </div>
-  </nav>
+  </nav> -->
+
+  <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="wrapper">
+        <div class="d-flex align-items-center">
+          <a href="" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS</a>
+        </div>
+        <button class="btn d-lg-none d-sm-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar" aria-controls="sideBar">
+          <i class="bi bi-list text-light fs-3 outline-none"></i>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link text-light" href="./dashboard.html">Home</a></li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Content
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="./announcements.html"><i class="bi bi-megaphone"></i> Announcements</a></li>
+              <li><a class="dropdown-item" href="./student-ojt-kits.html"><i class="bi bi-journal-text"></i> OJT Kit</a></li>
+            </ul>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Attendance
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="./time-in-out.html"><i class="bi bi-clock"></i> Time in/out</a></li>
+              <li><a class="dropdown-item" href="./history.html"><i class="bi bi-arrow-clockwise"></i> History</a></li>
+            </ul>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Reports
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="./report.html"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
+              <li><a class="dropdown-item" href="./report-online.html"><i class="bi bi-cloud-arrow-up"></i> Online Reports</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown" id="assistant-reports-nav">
+            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Assistant Reports
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="./assistant-report.html"><i class="bi bi-file-earmark-text"></i> Assistant Reports</a></li>
+              <li><a class="dropdown-item" href="./assistant-report-online.html"><i class="bi bi-cloud-arrow-up"></i> Online Assistant Reports</a></li>
+            </ul>
+          </li>
+          
+        </ul>
+      </div>
+      <a href="/pages/profile.html"  class="text-decoration-none">
+          <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-profile" 
+              style="
+                object-fit: cover !important;
+                object-position: center !important;
+              " ">
+      </a>
+    </div>
+  </div>
+</nav>
 
     
     <section class="container mt-2 d-flex flex-column  .reports-section">
@@ -145,21 +213,15 @@
               </div>
             </div>
 
-            <!-- Add this after the company address field -->
-            <!-- <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative modal-input">
-              <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-              <input type="text" class="form-control ps-3 pe-1" id="company-province" name="companyProvince"
-                placeholder="Enter company province" required>
-              <label for="company-province">Company Province</label>
-              <span id="companyProvince-error" class="text-danger" style="font-size: 12px"></span>
-            </div> -->
-            <!-- In addCompanyModal -->
-            <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative modal-input">
-              <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-              <select class="form-select ps-3 pe-1" id="company-province" name="companyProvince" required>
-                <option value="" selected disabled>Select Province</option>
-              </select>
-              <label for="company-province">Company Province</label>
+            <div class="col-12 mt-3 position-relative modal-input">
+              <div class="form-floating">
+                <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y"></i>
+                <select class="form-select ps-4 pe-5" id="company-province" name="companyProvince" required
+                  style="padding-right: 2.5rem;">
+                  <option value="" selected disabled>Select Province</option>
+                </select>
+                <label for="company-province">Company Province</label>
+              </div>
               <span id="companyProvince-error" class="text-danger" style="font-size: 12px"></span>
             </div>
 
@@ -220,24 +282,16 @@
               </div>
 
 
-              <!-- Add this after the company address field in the update modal -->
-              <!-- <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative modal-input">
-                <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-                <select class="form-select ps-3 pe-1" id="update-company-province" name="companyProvinceU" required>
+            
+              <div class="col-12 mt-3 position-relative modal-input">
+              <div class="form-floating">
+                <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y"></i>
+                <select class="form-select ps-4 pe-5" id="update-company-province" name="companyProvinceU" required
+                  style="padding-right: 2.5rem;">
                   <option value="" selected disabled>Select Province</option>
-                  <option value="Province 1">Province 1</option>
-                  <option value="Province 2">Province 2</option>
-                
                 </select>
                 <label for="update-company-province">Company Province</label>
-                <span id="companyProvinceU-error" class="text-danger" style="font-size: 12px"></span>
-              </div> -->
-              <div class="form-floating col-md-6 mt-3 ps-1 pe-1 position-relative modal-input">
-              <i class="bi bi-geo-alt-fill position-absolute top-50 end-0 me-3 translate-middle-y ms-3"></i>
-              <select class="form-select ps-3 pe-1" id="update-company-province" name="companyProvinceU" required>
-                <option value="" selected disabled>Select Province</option>
-              </select>
-              <label for="update-company-province">Company Province</label>
+              </div>
               <span id="companyProvinceU-error" class="text-danger" style="font-size: 12px"></span>
             </div>
             </div>
@@ -330,28 +384,8 @@
     <script src="/js/admin-company.js"></script>
 
 
-
-
-
     <script>
-      // let uploadedImageBase64 = ""; 
-
-      // document.getElementById('camera-input').addEventListener('change', function (event) {
-      //   const file = event.target.files[0];
-      //   const previewImage = document.getElementById('preview-image');
-      //   const cameraIcon = document.getElementById('camera-icon');
-
-      //   if (file) {
-      //     const reader = new FileReader();
-      //     reader.onload = function (e) {
-      //       previewImage.src = e.target.result;
-      //       previewImage.style.display = 'block';
-      //       if (cameraIcon) cameraIcon.style.display = 'none';
-      //       uploadedImageBase64 = e.target.result; 
-      //     };
-      //     reader.readAsDataURL(file);
-      //   }
-      // });
+      
       let uploadedImageBase64 = "";
 
       // Function to compress images that are too large
@@ -364,7 +398,6 @@
             return;
           }
 
-          // For images over 1MB, we'll compress them
           const img = new Image();
           const reader = new FileReader();
           
@@ -372,14 +405,12 @@
             img.src = e.target.result;
             
             img.onload = function() {
-              // Calculate new dimensions (reduce by 50% initially)
               const canvas = document.createElement('canvas');
               const ctx = canvas.getContext('2d');
               
-              // Reduce dimensions while maintaining aspect ratio
               let width = img.width;
               let height = img.height;
-              const maxDimension = 1024; // Maximum width or height
+              const maxDimension = 1024; 
               
               if (width > height && width > maxDimension) {
                 height = Math.round((height * maxDimension) / width);
@@ -393,8 +424,7 @@
               canvas.height = height;
               ctx.drawImage(img, 0, 0, width, height);
               
-              // Reduce quality until under 1MB
-              let quality = 0.7; // Start with 70% quality
+              let quality = 0.7; 
               canvas.toBlob((blob) => {
                 const compressedReader = new FileReader();
                 compressedReader.onload = (e) => resolve(e.target.result);
@@ -414,25 +444,19 @@
 
         if (file) {
           try {
-            // Get the image (compressed if necessary)
             const imageData = await compressImageIfNeeded(file);
             
-            // Display the image
             previewImage.src = imageData;
             previewImage.style.display = 'block';
             if (cameraIcon) cameraIcon.style.display = 'none';
             
-            // Store the Base64 string
             uploadedImageBase64 = imageData;
             
-            // Optional: Show a message if image was compressed
             if (file.size > 1 * 1024 * 1024) {
               console.log("Image was compressed to fit size requirements");
-              // You could show a toast notification here if you want
             }
           } catch (error) {
             console.error("Error processing image:", error);
-            // Handle error (show message to user, etc.)
           }
         }
       });

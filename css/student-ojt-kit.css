@@ -725,8 +725,8 @@ body.modal-open {
 }
 
 /* Responsive Layout */
-@media (min-width: 768px) {
-    /* Horizontal layout for PC */
+/* @media (min-width: 768px) {
+   
     .ojt-kits-container {
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
@@ -749,7 +749,7 @@ body.modal-open {
     .ojt-kit-arrow {
         display: none;
     }
-}
+} */
 
 @media (max-width: 767px) {
     /* Vertical layout for mobile */
@@ -763,7 +763,7 @@ body.modal-open {
 
 /* Add these styles to your CSS file */
 .ojt-kit-card.completed {
-    border-left: 4px solid #28a745;
+    border-left: 4px solid #ffffff;
     background-color: rgba(40, 167, 69, 0.05);
 }
 
@@ -771,7 +771,7 @@ body.modal-open {
     position: absolute;
     top: -8px;
     right: -8px;
-    background: white;
+    /* background: white; */
     border-radius: 50%;
     padding: 2px;
     color: #28a745;
@@ -895,3 +895,208 @@ body.modal-open {
   padding: 5px 0;
   min-height: 100px; /* Minimum height when images exist */
 }
+
+
+
+
+
+
+
+
+
+/* OJT Kits Card Design - Simplified */
+.ojt-kit-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+}
+
+.ojt-kit-card.completed {
+    background-color: #6e1423;
+    color: white;
+    border-color: #6e1423;
+}
+
+.ojt-kit-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ojt-kit-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: white;
+    font-size: 1.2rem;
+    background-color: #6e1423;
+    flex-shrink: 0;
+}
+
+.ojt-kit-card.completed .ojt-kit-icon {
+    background-color: white;
+    color: #6e1423;
+}
+
+.ojt-kit-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3C3D42;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 60px);
+}
+
+.ojt-kit-card.completed .ojt-kit-title {
+    color: white;
+}
+
+.completed-badge {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.ojt-kits-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .ojt-kits-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .ojt-kit-card {
+        min-height: 60px;
+        padding: 12px;
+    }
+    
+    .ojt-kit-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        margin-right: 12px;
+    }
+}
+
+
+
+/* OJT Kits Card Design - Consistent Alignment */
+/* .ojt-kit-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+}
+
+.ojt-kit-card.completed {
+    background-color: #6e1423;
+    color: white;
+    border-color: #6e1423;
+}
+
+.ojt-kit-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ojt-kit-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: white;
+    font-size: 1.2rem;
+    background-color: #6e1423;
+    flex-shrink: 0;
+    margin-left: 10px; 
+}
+
+.ojt-kit-card.completed .ojt-kit-icon {
+    background-color: white;
+    color: #6e1423;
+}
+
+.ojt-kit-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3C3D42;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1; 
+    padding-right: 30px;
+}
+
+.ojt-kit-card.completed .ojt-kit-title {
+    color: white;
+}
+
+.completed-badge {
+    position: absolute;
+    right: 15px;
+    color: #28a745;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.ojt-kits-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .ojt-kits-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .ojt-kit-card {
+        min-height: 60px;
+        padding: 12px;
+    }
+    
+    .ojt-kit-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        margin-right: 12px;
+    }
+    
+    .completed-badge {
+        right: 10px;
+        font-size: 1rem;
+    }
+} */
+
+

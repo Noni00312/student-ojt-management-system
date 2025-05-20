@@ -20,7 +20,7 @@
 
   <body class="main-container">
    
-    <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
+    <!-- <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
       <div class="container ">
           <div class="d-flex align-items-center justify-content-between w-100">
             <div class="wrapper">
@@ -58,7 +58,74 @@
               <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-img" style="border-radius: 50%;">
             </a>
       </div>
-  </nav>
+  </nav> -->
+  <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="wrapper">
+        <div class="d-flex align-items-center">
+          <a href="" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS</a>
+        </div>
+        <button class="btn d-lg-none d-sm-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar" aria-controls="sideBar">
+          <i class="bi bi-list text-light fs-3 outline-none"></i>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link text-light" href="./dashboard.html">Home</a></li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Content
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="./announcements.html"><i class="bi bi-megaphone"></i> Announcements</a></li>
+              <li><a class="dropdown-item" href="./student-ojt-kits.html"><i class="bi bi-journal-text"></i> OJT Kit</a></li>
+            </ul>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Attendance
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="./time-in-out.html"><i class="bi bi-clock"></i> Time in/out</a></li>
+              <li><a class="dropdown-item" href="./history.html"><i class="bi bi-arrow-clockwise"></i> History</a></li>
+            </ul>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Reports
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="./report.html"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
+              <li><a class="dropdown-item" href="./report-online.html"><i class="bi bi-cloud-arrow-up"></i> Online Reports</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown" id="assistant-reports-nav">
+            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Assistant Reports
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="./assistant-report.html"><i class="bi bi-file-earmark-text"></i> Assistant Reports</a></li>
+              <li><a class="dropdown-item" href="./assistant-report-online.html"><i class="bi bi-cloud-arrow-up"></i> Online Assistant Reports</a></li>
+            </ul>
+          </li>
+          
+        </ul>
+      </div>
+      <a href="/pages/profile.html"  class="text-decoration-none">
+          <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-profile" 
+              style="
+                object-fit: cover !important;
+                object-position: center !important;
+              " ">
+      </a>
+    </div>
+  </div>
+</nav>
 
     
     <section class="container mt-2 d-flex flex-column  student-section">

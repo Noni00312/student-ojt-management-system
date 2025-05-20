@@ -1,0 +1,627 @@
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.card-container {
+  height: calc(100vh - 210px);
+  overflow-y: auto;
+  padding: 0.5rem;
+  overflow-x: hidden;
+}
+
+.student-card {
+  background-color: #004e4e;
+  border-radius: 10px;
+  padding: 12px;
+  height: 100%;
+}
+
+.img-container {
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.name-id-container p {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.separator {
+  width: 100%;
+  height: 1px;
+  background-color: #fff;
+  opacity: 0.5;
+}
+
+.company p {
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.search-input .spinner-border {
+  margin-right: 8px;
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+.search-input .bi-search {
+  transition: all 0.3s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* FOR OJTKITS */
+
+
+.img-thumbnail {
+  padding: 1rem;
+  background-color: transparent !important;
+  border: 2px solid transparent !important;
+  border-radius: 1rem;
+  max-width: 100%;
+  height: auto;
+}
+
+input {
+  border: none;
+  background-color: #fff !important;
+  border-radius: 30px !important;
+  padding: 16px 32px !important;
+}
+
+button {
+  padding: 0px 0px;
+}
+
+#add-report-button,
+#view-report-button {
+  padding: 16px 48px;
+}
+
+.upload-icon {
+  color: #fff;
+  height: 80px !important;
+  width: 80px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50% !important;
+  outline: none;
+  background-color: var(--accent);
+  color: var(--primary);
+  font-size: 2rem !important;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 168ms ease-out;
+  box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.39);
+  -webkit-box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.39);
+  -moz-box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.39);
+}
+
+.upload-icon:hover {
+  background-color: var(--accent-darken) !important;
+}
+
+.upload-icon:active {
+  background-color: var(--accent-darken) !important;
+}
+
+.img-thumbnail-container {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.img-thumbnail-container .delete-img-btn {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.delete-img-btn:hover {
+  background: #f8f9fa;
+}
+
+.reports-section {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.report-card {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #004e4e;
+}
+
+.report-card {
+  text-decoration: none;
+  font-size: clamp(2rem, 1.5789rem + 2.1053vw, 3rem);
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.report-card span,
+.report-content-container p {
+  color: #fff;
+}
+
+#separator {
+  height: 1px;
+  width: 100%;
+  background-color: #dee2e6;
+  margin: 8px 0;
+}
+
+#date {
+  font-size: clamp(0.625rem, 0.5197rem + 0.5263vw, 0.875rem);
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+#title {
+  font-size: clamp(1rem, 0.7895rem + 1.0526vw, 1.5rem);
+  font-weight: bold;
+}
+
+.report-content-container p {
+  font-size: clamp(0.75rem, 0.6447rem + 0.5263vw, 1rem);
+  font-weight: 400;
+}
+.card-container {
+  height: calc(100vh - 205.625px);
+  overflow-y: auto;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.card-container::-webkit-scrollbar {
+  width: clamp(0.0625rem, -0.1217rem + 0.9211vw, 0.5rem);
+}
+
+.card-container::-webkit-scrollbar-thumb {
+  background: #b1adbd;
+  border-radius: 4px;
+}
+
+.add-search-container button {
+  background-color: #6e1423;
+  border: none;
+  width: 80px;
+  justify-content: center;
+  padding: 0;
+}
+
+.add-search-container button i {
+  font-size: 1.5rem !important;
+}
+
+.add-search-container {
+  gap: 0.1rem;
+}
+
+.form-control {
+  padding: 10px 32px !important;
+}
+
+.add-report-modal,
+.view-report-modal,
+.view-image-modal {
+  border-radius: 20px !important;
+  background-color: #3c3d42 !important;
+}
+.report-title {
+  background-color: #3c3d42 !important;
+  border-bottom: 1px solid #c0c2ca;
+  border-radius: 0 !important;
+  padding: 8px 16px !important;
+  outline: none;
+  color: #fff;
+}
+
+.report-title::placeholder {
+  color: #d9dae09f;
+}
+
+.report-images {
+  height: 100px;
+}
+
+.image-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-color: #b1adbd transparent;
+  scrollbar-width: thin;
+}
+
+.image-container::-webkit-scrollbar {
+  height: clamp(0.0625rem, -0.1217rem + 0.9211vw, 0.5rem);
+}
+
+.image-container::-webkit-scrollbar-thumb {
+  background: #b1adbd;
+  border-radius: 4px;
+}
+
+.image-container::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.image-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.add-image-button,
+.view-image-button {
+  border-radius: 10px;
+  background-color: #6e1423;
+  transition: all 168ms ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.add-image-button:hover,
+.view-image-button:hover {
+  background-color: #590f1c;
+}
+
+#report-content {
+  height: 1000px;
+}
+
+#add-report-button:hover,
+#view-report-button:hover {
+  background-color: #590f1c;
+}
+
+.delete-report-button {
+  width: unset;
+  width: 20px !important;
+}
+
+.image-container img {
+  cursor: pointer;
+  height: 100%;
+  display: inline-block;
+}
+
+.view-image-modal {
+  background-color: #6e1423;
+  color: white;
+  border-radius: 10px;
+}
+
+#modal-image-view {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.view-image-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-color: #b1adbd transparent;
+  scrollbar-width: thin;
+}
+
+.view-image-container::-webkit-scrollbar,
+.image-container::-webkit-scrollbar {
+  height: 5px;
+}
+
+.view-image-container::-webkit-scrollbar-thumb,
+.image-container::-webkit-scrollbar-thumb {
+  background-color: #6e1423;
+  border-radius: 10px;
+}
+
+#report-search-input {
+  background-color: #ffffff !important;
+}
+
+
+
+
+
+.document-option-btn {
+  background-color: #4a4b50;
+  border: none;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.document-option-btn:hover {
+  background-color: #5a5b60;
+  transform: translateY(-2px);
+}
+
+.document-option-btn:active {
+  transform: translateY(0);
+}
+
+.modal-content {
+  border: none;
+}
+
+
+
+/* Add this to your CSS */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.modal-content {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+    border: none;
+}
+
+/* Remove any leftover backdrop styles */
+.modal-backdrop {
+    display: none !important;
+}
+
+body.modal-open {
+    overflow: auto;
+    padding-right: 0 !important;
+}
+
+.modal.fade:not(.show) {
+    display: none;
+}
+
+
+
+
+/* Floating Action Button Styles */
+.fab-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+}
+
+.fab-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #6e1423;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fab-button:hover {
+  background-color: #590f1c;
+  transform: scale(1.1);
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+
+
+
+
+
+/* Floating Action Button */
+.floating-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #6e1423;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.floating-btn:hover {
+  background-color: #590f1c;
+  transform: scale(1.1);
+}
+
+.floating-btn:active {
+  transform: scale(0.95);
+}
+
+
+/* 
+[title] {
+    position: relative;
+  }
+  [title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+  }
+  .document-option-btn {
+    position: relative;
+    transition: all 0.2s;
+  }
+  .document-option-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .bi-check-circle-fill {
+    font-size: 1.2rem;
+  } */
+
+
+
+
+  /* Image scroll container */
+.image-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding: 5px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #6e1423 transparent;
+}
+
+.image-scroll-wrapper {
+  display: inline-flex;
+  gap: 8px;
+}
+
+/* Custom scrollbar for WebKit browsers */
+.image-scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.image-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.image-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #6e1423;
+  border-radius: 3px;
+}
+
+/* Image thumbnail styling */
+.image-thumbnail {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.image-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image-thumbnail img:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.zoom-icon {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  color: white;
+  font-size: 0.8rem;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .image-thumbnail {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .image-scroll-wrapper {
+    gap: 6px;
+  }
+}
+
+/* Add to your CSS file */
+.student-card {
+    /* Your existing card styles */
+    /* background-color: #3c3d42;  */
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.student-card.completed-card {
+    background-color: #6e1423; /* Maroon color */
+    box-shadow: 0 4px 8px rgba(110, 20, 35, 0.3);
+}
+
+.student-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.text-white {
+    color: white !important;
+}
+
+.separator {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+}

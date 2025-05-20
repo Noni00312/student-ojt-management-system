@@ -30,7 +30,6 @@ login.addEventListener("click", (e) => {
       try {
         const userData = await fetchAndCacheUserData();
         
-        // Check user type and redirect accordingly
         if (userData.userType === "admin") {
           window.location.href = "/pages/admin-dashboard.html";
         } else if (userData.userType === "student" || userData.userType === "studentAssistant") {
@@ -121,7 +120,7 @@ async function fetchAndCacheUserData() {
     await crudOperations.upsert("studentInfoTbl", userData);
 
     console.log("User data cached to IndexedDB:", userData);
-    return userData; // Return the user data for role checking
+    return userData; 
   } catch (err) {
     console.error("Failed to fetch and cache user data:", err);
     throw err;

@@ -2,11 +2,6 @@ import { firebaseCRUD } from "./firebase-crud.js";
 
 const LIST_ID = "announcements-list";
 
-/**
- * Format ISO date string as locale string.
- * @param {string} isoStr 
- * @returns {string}
- */
 function formatLocaleDate(isoStr) {
   if (!isoStr) return "";
   try {
@@ -16,10 +11,7 @@ function formatLocaleDate(isoStr) {
   }
 }
 
-/**
- * Show modal for selected announcement
- * @param {Object} announcement 
- */
+
 function showAnnouncementModal(announcement) {
   document.getElementById('viewAnnouncementLabel').innerText = announcement.title || "(No title)";
   document.getElementById('modal-announcement-content').value = announcement.content || ""
@@ -67,9 +59,6 @@ function showError(message) {
   `;
 }
 
-/**
- * Render list of announcement cards with new/updated first
- */
 function renderAnnouncements(list) {
   const container = document.getElementById(LIST_ID);
   container.innerHTML = "";
@@ -142,9 +131,7 @@ function renderAnnouncements(list) {
   });
 }
 
-/**
- * Fetch announcements (optionally by search filter), sorted
- */
+
 async function fetchAnnouncements(search = "") {
   showLoading(true);
   let announcements = [];

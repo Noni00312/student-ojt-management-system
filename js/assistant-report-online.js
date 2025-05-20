@@ -24,13 +24,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
-      console.error("No userId found in localStorage");
       return;
     }
 
     await window.dbReady;
 
-    const img = document.getElementById("user-img");
+    const img = document.getElementById("user-profile");
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",
@@ -38,7 +37,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       userId
     );
 
-    console.log("User data from IndexedDB:", dataArray);
 
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 

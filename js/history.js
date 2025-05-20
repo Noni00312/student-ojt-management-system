@@ -221,49 +221,6 @@ function populateDates(dateList) {
   });
 }
 
-// async function populateAttendanceModal(userId, date) {
-//   const logData = await getAttendanceByDate(userId, date);
-//   console.log(logData);
-
-//   const setLogData = (log, timeId, imgId) => {
-//     const timeEl = document.getElementById(timeId);
-//     const imgEl = document.getElementById(imgId);
-
-//     if (log) {
-//       const logTime = log.timestamp
-//         ? new Date(log.timestamp).toLocaleTimeString([], {
-//             hour: "2-digit",
-//             minute: "2-digit",
-//           })
-//         : "—";
-//       timeEl.textContent = logTime;
-//       console.log(log.logTime);
-//       console.log(log.image);
-//       imgEl.src = log.image || "../assets/img/icons8_no_image_500px.png";
-//     } else {
-//       timeEl.textContent = "No log";
-//       imgEl.src = "../assets/img/icons8_no_image_500px.png";
-//     }
-//   };
-
-//   setLogData(logData.morningTimeIn, "morning-in-time", "morning-time-in-img");
-//   setLogData(
-//     logData.morningTimeOut,
-//     "morning-out-time",
-//     "morning-time-out-img"
-//   );
-//   setLogData(
-//     logData.afternoonTimeIn,
-//     "afternoon-in-time",
-//     "afternoon-time-in-img"
-//   );
-//   setLogData(
-//     logData.afternoonTimeOut,
-//     "afternoon-out-time",
-//     "afternoon-time-out-img"
-//   );
-// }
-
 async function populateAttendanceModal(userId, date) {
   const logData = await getAttendanceByDate(userId, date);
   const onlineResults = await firebaseCRUD.queryData(

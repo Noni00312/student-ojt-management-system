@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const userId = localStorage.getItem("userId");
     if (!userId) {
       console.error("No userId found in localStorage");
-      window.location.href = "/pages/login.html";
+      window.location.href = "./login.html";
       return;
     }
 
@@ -389,7 +389,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         localStorage.removeItem("userEmail");
         localStorage.removeItem("userToken");
 
-        window.location.href = "/pages/login.html";
+        window.location.href = "./login.html";
       } catch (error) {
         console.error("Logout error:", error);
         alert('An error occurred during logout');
@@ -423,7 +423,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   } catch (error) {
     console.error("Initialization error:", error);
     alert('Failed to initialize profile page');
-    window.location.href = "/pages/login.html";
+    window.location.href = "./login.html";
   }
 });
 
@@ -775,7 +775,7 @@ document.addEventListener("DOMContentLoaded", function () {
           localStorage.removeItem("userEmail");
           localStorage.removeItem("userToken");
 
-          window.location.href = "/pages/login.html";
+          window.location.href = "./login.html";
         } catch (error) {
           console.error("Logout error:", error);
           alert('An error occurred during logout');

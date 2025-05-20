@@ -6,7 +6,6 @@ class OfflineManager {
     window.addEventListener("offline", () => this.handleConnectionChange());
   }
 
-  // Save data locally (works offline)
   async saveReport(reportData) {
     const report = {
       ...reportData,
@@ -16,16 +15,13 @@ class OfflineManager {
     };
 
     if (this.isOnline) {
-      // If online, save directly but still keep local copy
       await this._saveToFirebase(report);
     } else {
-      // If offline, queue for later sync
       this.pendingWrites.push(report);
       await this._saveToIndexedDB(report);
     }
   }
 
-  // Manual sync button handler
   async syncAllData() {
     if (!this.isOnline) {
       alert("You're offline. Connect to sync.");
@@ -40,7 +36,6 @@ class OfflineManager {
     this.pendingWrites = [];
   }
 
-  // Private methods
   async _saveToFirebase(data) {
     try {
       const docRef = await addDoc(collection(db, "reports"), data);
@@ -52,16 +47,12 @@ class OfflineManager {
   }
 
   async _saveToIndexedDB(data) {
-    // Implement your IndexedDB storage here
-    // Similar to your existing IndexedDB CRUD
   }
 
   async _loadFromIndexedDB() {
-    // Retrieve all unsynced items
   }
 
   async _markAsSynced(id) {
-    // Update local record status to 'synced'
   }
 
   handleConnectionChange() {

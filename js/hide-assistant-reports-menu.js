@@ -49,18 +49,23 @@ export async function hideAssistantReportsNavIfNotAssistant() {
     const navLi = document.getElementById('assistant-reports-nav');
     if (!navLi) return;
 
+    const navDd = document.getElementById('assistant-reports-dd');
+    if (!navDd) return;
+
     const [indexedDBType, firebaseType] = await Promise.all([
         getUserTypeFromIndexedDB(userId),
         getUserTypeFromFirebase(userId)
     ]);
 
     const isStudentAssistant = 
-        indexedDBType === "studentAssistant" || firebaseType === "studentAssistant";
+         firebaseType === "studentAssistant";
 
     if (!isStudentAssistant) {
         navLi.style.display = 'none';
+        navDd.style.display = 'none';
     } else {
         navLi.style.display = '';
+        navDd.style.display = '';
     }
 }
 

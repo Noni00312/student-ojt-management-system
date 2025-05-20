@@ -484,6 +484,7 @@ async function displayReports(reports) {
             ${report.content || "No content provided"}
           </p>
         </div>
+        <button class=""><i class="bi bi-download"></i></button>
       `;
 
     reportsContainer.appendChild(reportElement);

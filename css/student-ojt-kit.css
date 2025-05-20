@@ -870,3 +870,28 @@ body.modal-open {
     min-height: 150px;
   }
 }
+
+
+.image-scroll-container {
+  width: 100%;
+  transition: height 0.3s ease;
+}
+
+/* When empty */
+.image-scroll-wrapper:empty {
+  height: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  overflow: hidden;
+}
+
+/* When has content */
+.image-scroll-wrapper:not(:empty) {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 5px 0;
+  min-height: 100px; /* Minimum height when images exist */
+}

@@ -1,4 +1,3 @@
-/* Announcements Card Styling - Matching Company Style */
 .announcement-card {
   position: relative;
   height: 200px;
@@ -173,7 +172,6 @@
   display: none;
 }
 
-/* Button Styling */
 #announcement-save-btn,
 #delete-announcement-confirm-btn {
   border-radius: 10px !important;
@@ -198,7 +196,6 @@
   background-color: #bb2d3b;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
   .announcement-card {
     height: 180px;
@@ -218,8 +215,6 @@
     font-size: 0.9rem;
   }
 }
-
-/* Add these styles to your CSS file */
 .view-report-modal {
   max-height: 90vh;
   display: flex;

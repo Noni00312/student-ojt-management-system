@@ -1,4 +1,3 @@
-// import { firebaseCRUD } from './firebase-crud.js';
 
 document.addEventListener("DOMContentLoaded", async function () {
     try {
@@ -124,64 +123,6 @@ function loadStudents() {
 
 
 
-// function displayStudents(students) {
-//     const cardContainer = document.querySelector('.card-container .row');
-//     cardContainer.innerHTML = ''; 
-
-//     if (!students || students.length === 0) {
-//         cardContainer.innerHTML = `
-//             <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
-//                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
-//                 <h6 class="mt-2">No Students Available</h6>
-//                 <p class="mt-1">No students have been registered yet.</p>
-//             </div>
-//         `;
-//         return;
-//     }
-
-//     students.forEach((student) => {
-//         const colDiv = document.createElement('div');
-//         colDiv.className = 'col-lg-4 col-md-6 px-2';
-
-//         colDiv.innerHTML = `
-//             <div class="student-card h-100" data-student-id="${student.userId}">
-//                 <div class="d-flex align-items-center text-decoration-none h-100">
-//                     <div class="img-container me-3 flex-shrink-0">
-//                         ${student.userImg ?
-//                             `<img src="${student.userImg}" alt="${student.firstName}">` :
-//                             `<img src="../assets/img/icons8_male_user_480px_1.png" alt="Default user">`
-//                         }
-//                     </div>
-//                     <div class="main-container w-100 overflow-hidden">
-//                         <div class="name-id-container d-flex justify-content-between">
-//                             <p class="m-0 text-truncate fw-bold">${student.firstName + " " + (student.middleName ? student.middleName + " " : "") + student.lastName + (student.suffix ? " " + student.suffix : "") || 'No name'}</p>
-//                             <p class="m-0 ms-2 text-nowrap">${student.studentId || 'No ID'}</p>
-//                             <p class="d-none">${student.userId || ''}</p>
-//                         </div>
-//                         <div class="separator my-2"></div>
-//                         <div class="company">
-//                             <p class="m-0 text-truncate">${student.companyName || 'No company'}</p>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         `;
-
-//         // Add click event to show documents modal
-//         const studentCard = colDiv.querySelector('.student-card');
-//         studentCard.addEventListener('click', function() {
-//             const studentId = this.getAttribute('data-student-id');
-//             showDocumentsModal(studentId);
-//         });
-
-//         cardContainer.appendChild(colDiv);
-//     });
-// }
-
-
-
-
-// New function to show only OJT Kits
 function showOjtKitsModal() {
     showLoading(true);
     
@@ -193,7 +134,6 @@ function showOjtKitsModal() {
             const modal = document.getElementById('documentsModal');
             const optionsContainer = document.querySelector('#documentsModal .d-flex.flex-column.gap-3');
             
-            // Update modal title
             document.getElementById('documentsModalLabel').textContent = 'OJT Kits';
             optionsContainer.innerHTML = '';
             
@@ -219,10 +159,9 @@ function showOjtKitsModal() {
                         </div>
                     `;
                     
-                    // Add click handlers
                     container.querySelector('.document-option-btn').addEventListener('click', function() {
                         const kitId = this.getAttribute('data-ojt-kit-id');
-                        handleOjtKitSelection(null, kitId); // Pass null for studentId
+                        handleOjtKitSelection(null, kitId); 
                     });
                     
                     container.querySelector('.edit-kit').addEventListener('click', (e) => {
@@ -246,7 +185,6 @@ function showOjtKitsModal() {
                 `;
             }
             
-            // Show modal
             new bootstrap.Modal(modal).show();
             showLoading(false);
         })
@@ -257,13 +195,13 @@ function showOjtKitsModal() {
         });
 }
 
-// Floating button click handler
 document.getElementById('floatingActionBtn').addEventListener('click', showOjtKitsModal);
 
 
 
 
-// Remove student click handler from displayStudents
+
+
 function displayStudents(students) {
     const cardContainer = document.querySelector('.card-container .row');
     cardContainer.innerHTML = '';
@@ -307,20 +245,26 @@ function displayStudents(students) {
             </div>
         `;
 
+        const card = colDiv.querySelector('.student-card');
+        card.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-student-id');
+            const studentName = this.querySelector('.name-id-container p:first-child').textContent;
+            const studentNumber = this.querySelector('.name-id-container p:nth-child(2)').textContent;
+            
+            showStudentDocumentsModal(studentId, studentName, studentNumber);
+        });
+
         cardContainer.appendChild(colDiv);
     });
 }
 
 
 
-// Function to show documents modal with student ID and load OJT Kits
 function showDocumentsModal(studentId) {
     showLoading(true);
     
-    // First try to get student info from the students collection
     import("./firebase-crud.js")
         .then(({ firebaseCRUD }) => {
-            // Try to get student data from the students collection
             return firebaseCRUD.queryData('students', 'userId', '==', studentId)
                 .then((students) => {
                     if (!students || students.length === 0) {
@@ -329,25 +273,20 @@ function showDocumentsModal(studentId) {
                     
                     const student = students[0];
                     
-                    // Update modal title with student name
                     const modalTitle = document.getElementById('documentsModalLabel');
                     modalTitle.textContent = `Documents for ${student.firstName} ${student.lastName}`;
                     
-                    // Store the student ID in the modal for later use
                     const modal = document.getElementById('documentsModal');
                     modal.setAttribute('data-student-id', studentId);
                     
-                    // Now load OJT Kits
                     return firebaseCRUD.getAllData('ojtKits');
                 });
         })
         
         .then((ojtKits) => {
-            // Clear existing buttons
             const optionsContainer = document.querySelector('#documentsModal .d-flex.flex-column.gap-3');
             optionsContainer.innerHTML = '';
             
-            // Add OJT Kits as options
             if (ojtKits && ojtKits.length > 0) {
                 ojtKits.forEach((kit) => {
                     
@@ -365,36 +304,31 @@ function showDocumentsModal(studentId) {
                         <span class="text-white">${kit.title || 'Untitled Kit'}</span>
                     `;
                     
-                    // Add click handler for selecting the kit
                     button.addEventListener('click', function() {
                         const kitId = this.getAttribute('data-ojt-kit-id');
                         const studentId = document.getElementById('documentsModal').getAttribute('data-student-id');
                         handleOjtKitSelection(studentId, kitId);
                     });
                     
-                    // Create action buttons container
                     const actionButtons = document.createElement('div');
                     actionButtons.className = 'd-flex ms-2';
                     
-                    // Edit button
                     const editBtn = document.createElement('button');
                     editBtn.className = 'btn btn-sm btn-outline-warning me-2';
                     editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
                     editBtn.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Prevent triggering the main button click
+                        e.stopPropagation(); 
                         loadOjtKitForEdit(kit.id);
                     });
                     
-                    // Delete button
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'btn btn-sm btn-outline-danger';
                     deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
                     deleteBtn.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Prevent triggering the main button click
+                        e.stopPropagation(); 
                         deleteOjtKit(kit.id);
                     });
                     
-                    // Append buttons to container
                     actionButtons.appendChild(editBtn);
                     actionButtons.appendChild(deleteBtn);
                     
@@ -403,7 +337,6 @@ function showDocumentsModal(studentId) {
                     optionsContainer.appendChild(container);
                 });
             } else {
-                // Show message if no OJT Kits available
                 optionsContainer.innerHTML = `
                     <div class="text-center text-white py-3">
                         <i class="bi bi-exclamation-circle fs-4"></i>
@@ -412,7 +345,6 @@ function showDocumentsModal(studentId) {
                 `;
             }
             
-            // Show the modal
             const bsModal = new bootstrap.Modal(document.getElementById('documentsModal'));
             bsModal.show();
             
@@ -420,7 +352,6 @@ function showDocumentsModal(studentId) {
         })
         .catch((error) => {
             console.error('Error loading documents:', error);
-            // showToast('danger', 'Failed to load student information or OJT Kits');
             showLoading(false);
         });
 }
@@ -429,7 +360,7 @@ function showDocumentsModal(studentId) {
 
 
 
-// Function to handle update form submission
+
 document.getElementById('update-report-form').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -462,18 +393,15 @@ document.getElementById('update-report-form').addEventListener('submit', functio
         .then(() => {
             showToast('success', 'OJT Kit updated successfully!');
             
-            // Close the edit modal
             const editModal = bootstrap.Modal.getInstance(document.getElementById('addOJTKITSModalEdit'));
             editModal.hide();
             
-            // Refresh the documents modal if it's open
             const docsModal = document.getElementById('documentsModal');
             if (docsModal.getAttribute('data-student-id')) {
                 const studentId = docsModal.getAttribute('data-student-id');
                 showDocumentsModal(studentId);
             }
             
-            // Reset the form
             this.reset();
             currentEditingKitId = null;
         })
@@ -487,7 +415,6 @@ document.getElementById('update-report-form').addEventListener('submit', functio
         });
 });
 
-// Function to load OJT Kit for editing
 function loadOjtKitForEdit(kitId) {
     showLoading(true);
     
@@ -496,20 +423,16 @@ function loadOjtKitForEdit(kitId) {
             return firebaseCRUD.getDataById('ojtKits', kitId);
         })
         .then((kit) => {
-            // Close the documents modal if it's open
             const docsModal = bootstrap.Modal.getInstance(document.getElementById('documentsModal'));
             if (docsModal) {
                 docsModal.hide();
             }
             
-            // Populate the edit modal
             document.getElementById('update-report-title').value = kit.title || '';
             document.getElementById('update-report-content').value = kit.content || '';
             
-            // Store the kit ID for the update operation
             currentEditingKitId = kit.id;
             
-            // Show the edit modal
             const editModal = new bootstrap.Modal(document.getElementById('addOJTKITSModalEdit'));
             editModal.show();
             
@@ -522,7 +445,6 @@ function loadOjtKitForEdit(kitId) {
         });
 }
 
-// Reset the editing state when modal is closed
 document.getElementById('addOJTKITSModalEdit').addEventListener('hidden.bs.modal', function() {
     currentEditingKitId = null;
     document.getElementById('update-report-form').reset();
@@ -533,7 +455,6 @@ document.getElementById('addOJTKITSModalEdit').addEventListener('hidden.bs.modal
 
 
 
-// Function to delete an OJT Kit
 function deleteOjtKit(kitId) {
     if (!confirm('Are you sure you want to delete this OJT Kit?')) {
         return;
@@ -548,14 +469,12 @@ function deleteOjtKit(kitId) {
         .then(() => {
             showToast('danger', 'OJT Kit deleted successfully');
             
-            // Close the documents modal
             const docsModal = bootstrap.Modal.getInstance(document.getElementById('documentsModal'));
             if (docsModal) {
                 docsModal.hide();
             }
             
-            // Refresh the data (optional - if you want to reload the page or refresh a list)
-            // loadOjtKits(); // Uncomment this if you want to refresh a list after deletion
+            
         })
         .catch((error) => {
             console.error('Error deleting kit:', error);
@@ -572,50 +491,113 @@ function deleteOjtKit(kitId) {
 
 
 
-
-
-// Function to handle when an OJT Kit is selected
-function handleOjtKitSelection(studentId, kitId) {
+async function handleOjtKitSelection(studentId, kitId) {
+  try {
     showLoading(true);
     
-    import("./firebase-crud.js")
-        .then(({ firebaseCRUD }) => {
-            // Get both student and kit data
-            return Promise.all([
-                // Query student by userId
-                firebaseCRUD.queryData('students', 'userId', '==', studentId)
-                    .then(students => {
-                        if (!students || students.length === 0) {
-                            throw new Error('Student not found');
-                        }
-                        return students[0];
-                    }),
-                // Get OJT Kit by ID
-                firebaseCRUD.getDataById('ojtKits', kitId)
-            ]);
-        })
-        .then(([student, kit]) => {
-            // Here you can implement what happens when a kit is selected
-            // For example, you might want to:
-            // 1. Assign this kit to the student
-            // 2. Show a preview of the kit
-            // 3. Log the assignment
-            
-            // Example implementation - just showing a success message
-            showToast('success', `Selected "${kit.title}" for ${student.firstName} ${student.lastName}`);
-            
-            // Close the modal
-            const bsModal = bootstrap.Modal.getInstance(document.getElementById('documentsModal'));
-            // bsModal.hide();
-            
-            showLoading(false);
-        })
-        .catch((error) => {
-            console.error('Error handling selection:', error);
-            showToast('danger', 'Failed to process selection: ' + error.message);
-            showLoading(false);
-        });
+    const viewModal = document.getElementById('viewReportModal');
+    const imageContainer = document.getElementById('report-images-container');
+    imageContainer.innerHTML = '';
+
+    const [{ firebaseCRUD }] = await Promise.all([import("./firebase-crud.js")]);
+    
+    const kit = await firebaseCRUD.getDataById('ojtKits', kitId);
+    if (!kit) throw new Error('OJT Kit not found');
+
+    const studentSubmissions = await firebaseCRUD.queryData('reports2', 'ojtKitId', '==', kitId);
+    const studentSubmission = studentSubmissions.find(report => report.userId === studentId);
+    
+    // Update modal UI
+    viewModal.querySelector('#report-title').value = kit.title || 'Untitled Kit';
+    viewModal.querySelector('#report-content').value = kit.content || 'No content available';
+
+
+    if (studentSubmission && studentSubmission.id) {
+      try {
+        const imageDocs = await firebaseCRUD.getAllData(
+          `reports2/${studentSubmission.id}/images`
+        );
+
+        if (imageDocs && imageDocs.length > 0) {
+          imageDocs.forEach((imageDoc) => {
+            if (imageDoc.imageData || imageDoc.image) {
+              const imgSrc = imageDoc.imageData || imageDoc.image;
+              
+              const thumbnailDiv = document.createElement("div");
+              thumbnailDiv.className = "image-thumbnail";
+              
+              const img = document.createElement("img");
+              img.src = imgSrc;
+              img.alt = "Report image";
+              img.loading = "lazy";
+              
+              img.addEventListener("click", () => showImageInModal(imgSrc));
+              
+              const zoomIcon = document.createElement("i");
+              zoomIcon.className = "bi bi-zoom-in zoom-icon";
+              
+              thumbnailDiv.appendChild(img);
+              thumbnailDiv.appendChild(zoomIcon);
+              imageContainer.appendChild(thumbnailDiv);
+            }
+          });
+        } else {
+          imageContainer.innerHTML = `
+            <div class="text-center text-muted py-2 w-100">
+              <i class="bi bi-image fs-4"></i>
+              <p class="mt-1 small">No images attached</p>
+            </div>`;
+        }
+      } catch (error) {
+        console.error('Error loading images:', error);
+        imageContainer.innerHTML = `
+          <div class="text-center text-muted py-2 w-100">
+            <i class="bi bi-exclamation-triangle fs-4"></i>
+            <p class="mt-1 small">Error loading images</p>
+          </div>`;
+      }
+    } else {
+      imageContainer.innerHTML = `
+        <div class="text-center text-muted py-2 w-100">
+          <i class="bi bi-file-earmark-excel fs-4"></i>
+          <p class="mt-1 small">No submission found</p>
+        </div>`;
+    }
+    
+    new bootstrap.Modal(viewModal).show();
+    
+  } catch (error) {
+    console.error('Error:', error);
+    showToast('danger', 'Failed to load document');
+  } finally {
+    showLoading(false);
+  }
 }
+
+function showImageInModal(imageSrc) {
+  const modal = document.createElement("div");
+  modal.className = "modal fade";
+  modal.innerHTML = `
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-header border-0">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-0 text-center">
+          <img src="${imageSrc}" class="img-fluid" style="max-height: 80vh; width: auto;">
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  new bootstrap.Modal(modal).show();
+  
+  modal.addEventListener("hidden.bs.modal", () => {
+    modal.remove();
+  });
+}
+
 
 
 
@@ -682,10 +664,8 @@ $(document).ready(function () {
 
 
 
-// Global variable to store the currently edited OJT Kit ID
 let currentEditingKitId = null;
 
-// Function to show toast messages
 function showToast(type, message) {
     const toast = document.createElement('div');
     toast.className = `toast align-items-center text-white bg-${type} position-fixed bottom-0 end-0 m-3`;
@@ -713,11 +693,6 @@ function showToast(type, message) {
 
 
 
-
-
-
-
-// Add OJT Kit Form Submission
 document.getElementById('add-report-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -743,11 +718,9 @@ document.getElementById('add-report-form').addEventListener('submit', async func
             lastUpdated: new Date().toISOString()
         });
         
-        // Get and hide the modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('addOJTKITSModal'));
         modal.hide();
         
-        // Reset the form
         this.reset();
         
         showToast('success', 'OJT Kit added successfully!');
@@ -768,14 +741,126 @@ document.getElementById('add-report-form').addEventListener('submit', async func
 
 
 
-// Track selected student
 let selectedStudentId = null;
 
-// Add click handler for floating button
 document.getElementById('floatingActionBtn').addEventListener('click', function() {
     if (!selectedStudentId) {
-        // showToast('warning', 'Please select a student first');
         return;
     }
     showDocumentsModal(selectedStudentId);
+});
+
+
+
+
+
+
+
+
+
+
+async function showStudentDocumentsModal(studentId, studentName, studentNumber) {
+  document.getElementById('studentName').textContent = studentName;
+  document.getElementById('studentId').textContent = studentNumber;
+  
+  const optionsContainer = document.querySelector('#studentDocumentsModal .d-flex.flex-column.gap-3');
+  optionsContainer.innerHTML = `
+    <div class="text-center py-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-white mt-2">Loading OJT Kits...</p>
+    </div>
+  `;
+  
+  const modal = new bootstrap.Modal(document.getElementById('studentDocumentsModal'));
+  modal.show();
+
+  try {
+    const [{ firebaseCRUD }] = await Promise.all([import("./firebase-crud.js")]);
+    
+    const [ojtKits, studentReports] = await Promise.all([
+      firebaseCRUD.getAllData('ojtKits'),
+      firebaseCRUD.queryData('reports2', 'userId', '==', studentId)
+    ]);
+
+    optionsContainer.innerHTML = '';
+    
+    if (ojtKits && ojtKits.length > 0) {
+      const submittedKitIds = new Set(studentReports.map(report => report.ojtKitId));
+      
+      ojtKits.forEach((kit) => {
+        const hasSubmitted = submittedKitIds.has(kit.id);
+        
+        const button = document.createElement('button');
+        button.className = 'document-option-btn d-flex align-items-center p-3 position-relative';
+        button.setAttribute('data-ojt-kit-id', kit.id);
+        
+        button.innerHTML = `
+          <div class="icon-container bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+            <i class="bi bi-file-earmark-text-fill text-white"></i>
+          </div>
+          <span class="text-white">${kit.title || 'Untitled Kit'}</span>
+          ${hasSubmitted ? `
+            <div class="position-absolute end-0 me-3" title="Submitted ${new Date(studentReports.find(r => r.ojtKitId === kit.id)?.createdAt).toLocaleDateString()}">
+              <i class="bi bi-check-circle-fill text-success"></i>
+            </div>
+          ` : ''}
+        `;
+        
+        button.addEventListener('click', function() {
+          const kitId = this.getAttribute('data-ojt-kit-id');
+          handleOjtKitSelection(studentId, kitId);
+        });
+        
+        optionsContainer.appendChild(button);
+      });
+    } else {
+      optionsContainer.innerHTML = `
+        <div class="text-center text-white py-3">
+          <i class="bi bi-exclamation-circle fs-4"></i>
+          <p class="mt-2">No OJT Kits available</p>
+        </div>
+      `;
+    }
+  } catch (error) {
+    console.error('Error loading data:', error);
+    optionsContainer.innerHTML = `
+      <div class="text-center text-white py-3">
+        <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+        <p class="mt-2">Failed to load data</p>
+        <button class="btn btn-sm btn-primary mt-2" onclick="showStudentDocumentsModal('${studentId}', '${studentName}', '${studentNumber}')">
+          Retry
+        </button>
+      </div>
+    `;
+  }
+}
+
+function handleDocumentSelection(studentId, docType) {
+  console.log(`Selected ${docType} for student ${studentId}`);
+  
+  switch(docType) {
+    case 'parents-waiver':
+      break;
+    case 'ojt-payment':
+      break;
+    case 'medical-cert':
+      break;
+  }
+  
+  const modal = bootstrap.Modal.getInstance(document.getElementById('studentDocumentsModal'));
+  modal.hide();
+}
+
+
+
+document.querySelectorAll('.student-card').forEach(card => {
+  card.addEventListener('click', function() {
+    const studentId = this.getAttribute('data-student-id');
+    const studentName = this.querySelector('.name-id-container p:first-child').textContent;
+    const studentNumber = this.querySelector('.name-id-container p:nth-child(2)').textContent;
+    
+    showStudentDocumentsModal(studentId, studentName, studentNumber);
+  });
 });

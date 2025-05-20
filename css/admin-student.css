@@ -597,3 +597,31 @@ body.modal-open {
     gap: 6px;
   }
 }
+
+/* Add to your CSS file */
+.student-card {
+    /* Your existing card styles */
+    /* background-color: #3c3d42;  */
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.student-card.completed-card {
+    background-color: #6e1423; /* Maroon color */
+    box-shadow: 0 4px 8px rgba(110, 20, 35, 0.3);
+}
+
+.student-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.text-white {
+    color: white !important;
+}
+
+.separator {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+}

@@ -202,7 +202,135 @@ document.getElementById('floatingActionBtn').addEventListener('click', showOjtKi
 
 
 
-function displayStudents(students) {
+// function displayStudents(students) {
+//     const cardContainer = document.querySelector('.card-container .row');
+//     cardContainer.innerHTML = '';
+
+//     if (!students || students.length === 0) {
+//         cardContainer.innerHTML = `
+//             <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
+//                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+//                 <h6 class="mt-2">No Students Available</h6>
+//                 <p class="mt-1">No students have been registered yet.</p>
+//             </div>
+//         `;
+//         return;
+//     }
+
+//     students.forEach((student) => {
+//         const colDiv = document.createElement('div');
+//         colDiv.className = 'col-lg-4 col-md-6 px-2';
+
+//         colDiv.innerHTML = `
+//             <div class="student-card h-100" data-student-id="${student.userId}">
+//                 <div class="d-flex align-items-center text-decoration-none h-100">
+//                     <div class="img-container me-3 flex-shrink-0">
+//                         ${student.userImg ?
+//                             `<img src="${student.userImg}" alt="${student.firstName}">` :
+//                             `<img src="../assets/img/icons8_male_user_480px_1.png" alt="Default user">`
+//                         }
+//                     </div>
+//                     <div class="main-container w-100 overflow-hidden">
+//                         <div class="name-id-container d-flex justify-content-between">
+//                             <p class="m-0 text-truncate fw-bold">${student.firstName + " " + (student.middleName ? student.middleName + " " : "") + student.lastName + (student.suffix ? " " + student.suffix : "") || 'No name'}</p>
+//                             <p class="m-0 ms-2 text-nowrap">${student.studentId || 'No ID'}</p>
+//                             <p class="d-none">${student.userId || ''}</p>
+//                         </div>
+//                         <div class="separator my-2"></div>
+//                         <div class="company">
+//                             <p class="m-0 text-truncate">${student.companyName || 'No company'}</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+
+//         const card = colDiv.querySelector('.student-card');
+//         card.addEventListener('click', function() {
+//             const studentId = this.getAttribute('data-student-id');
+//             const studentName = this.querySelector('.name-id-container p:first-child').textContent;
+//             const studentNumber = this.querySelector('.name-id-container p:nth-child(2)').textContent;
+            
+//             showStudentDocumentsModal(studentId, studentName, studentNumber);
+//         });
+
+//         cardContainer.appendChild(colDiv);
+//     });
+// }
+
+// async function displayStudents(students) {
+//     const cardContainer = document.querySelector('.card-container .row');
+//     cardContainer.innerHTML = '';
+
+//     if (!students || students.length === 0) {
+//         cardContainer.innerHTML = `
+//             <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
+//                 <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+//                 <h6 class="mt-2">No Students Available</h6>
+//                 <p class="mt-1">No students have been registered yet.</p>
+//             </div>
+//         `;
+//         return;
+//     }
+
+//     // Get all OJT Kits count first
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+//     const allKits = await firebaseCRUD.getAllData('ojtKits');
+//     const totalKitsCount = allKits?.length || 0;
+
+//     // Process each student
+//     for (const student of students) {
+//         const colDiv = document.createElement('div');
+//         colDiv.className = 'col-lg-4 col-md-6 px-2';
+
+//         // Get student's submitted reports
+//         const studentReports = await firebaseCRUD.queryData('reports2', 'userId', '==', student.userId);
+//         const submittedKitsCount = studentReports?.length || 0;
+//         const completionStatus = totalKitsCount > 0 
+//             ? `${submittedKitsCount}/${totalKitsCount} Kits Completed`
+//             : 'No Kits Available';
+
+//         colDiv.innerHTML = `
+//             <div class="student-card h-100" data-student-id="${student.userId}">
+//                 <div class="d-flex align-items-center text-decoration-none h-100">
+//                     <div class="img-container me-3 flex-shrink-0">
+//                         ${student.userImg ?
+//                             `<img src="${student.userImg}" alt="${student.firstName}">` :
+//                             `<img src="../assets/img/icons8_male_user_480px_1.png" alt="Default user">`
+//                         }
+//                     </div>
+//                     <div class="main-container w-100 overflow-hidden">
+//                         <div class="name-id-container d-flex justify-content-between">
+//                             <p class="m-0 text-truncate fw-bold">${student.firstName + " " + (student.middleName ? student.middleName + " " : "") + student.lastName + (student.suffix ? " " + student.suffix : "") || 'No name'}</p>
+//                             <p class="m-0 ms-2 text-nowrap">${student.studentId || 'No ID'}</p>
+//                             <p class="d-none">${student.userId || ''}</p>
+//                         </div>
+//                         <div class="separator my-2"></div>
+//                         <div class="completion-status">
+//                             <p class="m-0 text-truncate ${submittedKitsCount === totalKitsCount ? 'text-success' : 'text-warning'}">
+//                                 ${completionStatus}
+//                                 ${submittedKitsCount === totalKitsCount ? '✓' : ''}
+//                             </p>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+
+//         const card = colDiv.querySelector('.student-card');
+//         card.addEventListener('click', function() {
+//             const studentId = this.getAttribute('data-student-id');
+//             const studentName = this.querySelector('.name-id-container p:first-child').textContent;
+//             const studentNumber = this.querySelector('.name-id-container p:nth-child(2)').textContent;
+            
+//             showStudentDocumentsModal(studentId, studentName, studentNumber);
+//         });
+
+//         cardContainer.appendChild(colDiv);
+//     }
+// }
+
+async function displayStudents(students) {
     const cardContainer = document.querySelector('.card-container .row');
     cardContainer.innerHTML = '';
 
@@ -217,12 +345,26 @@ function displayStudents(students) {
         return;
     }
 
-    students.forEach((student) => {
+    // Get all OJT Kits count first
+    const { firebaseCRUD } = await import("./firebase-crud.js");
+    const allKits = await firebaseCRUD.getAllData('ojtKits');
+    const totalKitsCount = allKits?.length || 0;
+
+    // Process each student
+    for (const student of students) {
         const colDiv = document.createElement('div');
         colDiv.className = 'col-lg-4 col-md-6 px-2';
 
+        // Get student's submitted reports
+        const studentReports = await firebaseCRUD.queryData('reports2', 'userId', '==', student.userId);
+        const submittedKitsCount = studentReports?.length || 0;
+        const isComplete = submittedKitsCount === totalKitsCount && totalKitsCount > 0;
+        const completionStatus = totalKitsCount > 0 
+            ? `${submittedKitsCount}/${totalKitsCount} Kits Completed`
+            : 'No Kits Available';
+
         colDiv.innerHTML = `
-            <div class="student-card h-100" data-student-id="${student.userId}">
+            <div class="student-card h-100 ${isComplete ? 'completed-card' : ''}" data-student-id="${student.userId}">
                 <div class="d-flex align-items-center text-decoration-none h-100">
                     <div class="img-container me-3 flex-shrink-0">
                         ${student.userImg ?
@@ -232,13 +374,16 @@ function displayStudents(students) {
                     </div>
                     <div class="main-container w-100 overflow-hidden">
                         <div class="name-id-container d-flex justify-content-between">
-                            <p class="m-0 text-truncate fw-bold">${student.firstName + " " + (student.middleName ? student.middleName + " " : "") + student.lastName + (student.suffix ? " " + student.suffix : "") || 'No name'}</p>
-                            <p class="m-0 ms-2 text-nowrap">${student.studentId || 'No ID'}</p>
+                            <p class="m-0 text-truncate fw-bold text-white">${student.firstName + " " + (student.middleName ? student.middleName + " " : "") + student.lastName + (student.suffix ? " " + student.suffix : "") || 'No name'}</p>
+                            <p class="m-0 ms-2 text-nowrap text-white">${student.studentId || 'No ID'}</p>
                             <p class="d-none">${student.userId || ''}</p>
                         </div>
                         <div class="separator my-2"></div>
-                        <div class="company">
-                            <p class="m-0 text-truncate">${student.companyName || 'No company'}</p>
+                        <div class="completion-status">
+                            <p class="m-0 text-truncate text-white">
+                                ${completionStatus}
+                                ${isComplete ? '✓' : ''}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -255,9 +400,8 @@ function displayStudents(students) {
         });
 
         cardContainer.appendChild(colDiv);
-    });
+    }
 }
-
 
 
 function showDocumentsModal(studentId) {
@@ -542,26 +686,26 @@ async function handleOjtKitSelection(studentId, kitId) {
             }
           });
         } else {
-          imageContainer.innerHTML = `
-            <div class="text-center text-muted py-2 w-100">
-              <i class="bi bi-image fs-4"></i>
-              <p class="mt-1 small">No images attached</p>
-            </div>`;
+        //   imageContainer.innerHTML = `
+        //     <div class="text-center text-muted py-2 w-100">
+        //       <i class="bi bi-image fs-4"></i>
+        //       <p class="mt-1 small">No images attached</p>
+        //     </div>`;
         }
       } catch (error) {
         console.error('Error loading images:', error);
-        imageContainer.innerHTML = `
-          <div class="text-center text-muted py-2 w-100">
-            <i class="bi bi-exclamation-triangle fs-4"></i>
-            <p class="mt-1 small">Error loading images</p>
-          </div>`;
+        // imageContainer.innerHTML = `
+        //   <div class="text-center text-muted py-2 w-100">
+        //     <i class="bi bi-exclamation-triangle fs-4"></i>
+        //     <p class="mt-1 small">Error loading images</p>
+        //   </div>`;
       }
     } else {
-      imageContainer.innerHTML = `
-        <div class="text-center text-muted py-2 w-100">
-          <i class="bi bi-file-earmark-excel fs-4"></i>
-          <p class="mt-1 small">No submission found</p>
-        </div>`;
+    //   imageContainer.innerHTML = `
+    //     <div class="text-center text-muted py-2 w-100">
+    //       <i class="bi bi-file-earmark-excel fs-4"></i>
+    //       <p class="mt-1 small">No submission found</p>
+    //     </div>`;
     }
     
     new bootstrap.Modal(viewModal).show();
@@ -759,6 +903,86 @@ document.getElementById('floatingActionBtn').addEventListener('click', function(
 
 
 
+// async function showStudentDocumentsModal(studentId, studentName, studentNumber) {
+//   document.getElementById('studentName').textContent = studentName;
+//   document.getElementById('studentId').textContent = studentNumber;
+  
+//   const optionsContainer = document.querySelector('#studentDocumentsModal .d-flex.flex-column.gap-3');
+//   optionsContainer.innerHTML = `
+//     <div class="text-center py-3">
+//       <div class="spinner-border text-primary" role="status">
+//         <span class="visually-hidden">Loading...</span>
+//       </div>
+//       <p class="text-white mt-2">Loading OJT Kits...</p>
+//     </div>
+//   `;
+  
+//   const modal = new bootstrap.Modal(document.getElementById('studentDocumentsModal'));
+//   modal.show();
+
+//   try {
+//     const [{ firebaseCRUD }] = await Promise.all([import("./firebase-crud.js")]);
+    
+//     const [ojtKits, studentReports] = await Promise.all([
+//       firebaseCRUD.getAllData('ojtKits'),
+//       firebaseCRUD.queryData('reports2', 'userId', '==', studentId)
+//     ]);
+
+//     optionsContainer.innerHTML = '';
+    
+//     if (ojtKits && ojtKits.length > 0) {
+//       const submittedKitIds = new Set(studentReports.map(report => report.ojtKitId));
+      
+//       ojtKits.forEach((kit) => {
+//         const hasSubmitted = submittedKitIds.has(kit.id);
+        
+//         const button = document.createElement('button');
+//         button.className = 'document-option-btn d-flex align-items-center p-3 position-relative';
+//         button.setAttribute('data-ojt-kit-id', kit.id);
+        
+//         button.innerHTML = `
+//           <div class="icon-container bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+//             <i class="bi bi-file-earmark-text-fill text-white"></i>
+//           </div>
+//           <span class="text-white">${kit.title || 'Untitled Kit'}</span>
+//           ${hasSubmitted ? `
+//             <div class="position-absolute end-0 me-3" title="Submitted ${new Date(studentReports.find(r => r.ojtKitId === kit.id)?.createdAt).toLocaleDateString()}">
+//               <i class="bi bi-check-circle-fill text-success"></i>
+//             </div>
+//           ` : ''}
+//         `;
+        
+//         button.addEventListener('click', function() {
+//           const kitId = this.getAttribute('data-ojt-kit-id');
+//           handleOjtKitSelection(studentId, kitId);
+//         });
+        
+//         optionsContainer.appendChild(button);
+//       });
+//     } else {
+//       optionsContainer.innerHTML = `
+//         <div class="text-center text-white py-3">
+//           <i class="bi bi-exclamation-circle fs-4"></i>
+//           <p class="mt-2">No OJT Kits available</p>
+//         </div>
+//       `;
+//     }
+//   } catch (error) {
+//     console.error('Error loading data:', error);
+//     optionsContainer.innerHTML = `
+//       <div class="text-center text-white py-3">
+//         <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+//         <p class="mt-2">Failed to load data</p>
+//         <button class="btn btn-sm btn-primary mt-2" onclick="showStudentDocumentsModal('${studentId}', '${studentName}', '${studentNumber}')">
+//           Retry
+//         </button>
+//       </div>
+//     `;
+//   }
+// }
+
+
+
 async function showStudentDocumentsModal(studentId, studentName, studentNumber) {
   document.getElementById('studentName').textContent = studentName;
   document.getElementById('studentId').textContent = studentNumber;
@@ -769,7 +993,7 @@ async function showStudentDocumentsModal(studentId, studentName, studentNumber) 
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="text-white mt-2">Loading OJT Kits...</p>
+      <p class="text-white mt-2">Loading Submitted OJT Kits...</p>
     </div>
   `;
   
@@ -779,33 +1003,45 @@ async function showStudentDocumentsModal(studentId, studentName, studentNumber) 
   try {
     const [{ firebaseCRUD }] = await Promise.all([import("./firebase-crud.js")]);
     
-    const [ojtKits, studentReports] = await Promise.all([
-      firebaseCRUD.getAllData('ojtKits'),
-      firebaseCRUD.queryData('reports2', 'userId', '==', studentId)
-    ]);
+    // Only load the student's submitted reports
+    const studentReports = await firebaseCRUD.queryData('reports2', 'userId', '==', studentId);
 
     optionsContainer.innerHTML = '';
     
-    if (ojtKits && ojtKits.length > 0) {
-      const submittedKitIds = new Set(studentReports.map(report => report.ojtKitId));
-      
-      ojtKits.forEach((kit) => {
-        const hasSubmitted = submittedKitIds.has(kit.id);
+    if (studentReports && studentReports.length > 0) {
+      // Get details for each submitted kit
+      const submittedKits = await Promise.all(
+        studentReports.map(async report => {
+          const kit = await firebaseCRUD.getDataById('ojtKits', report.ojtKitId);
+          return {
+            ...kit,
+            submittedDate: report.createdAt
+          };
+        })
+      );
+
+      // Sort by submission date (newest first)
+      submittedKits.sort((a, b) => new Date(b.submittedDate) - new Date(a.submittedDate));
+
+      submittedKits.forEach(kit => {
+        const submissionDate = kit.submittedDate 
+          ? new Date(kit.submittedDate).toLocaleDateString() 
+          : 'Unknown date';
         
         const button = document.createElement('button');
-        button.className = 'document-option-btn d-flex align-items-center p-3 position-relative';
+        button.className = 'document-option-btn d-flex align-items-center p-3 position-relative completed-kit';
         button.setAttribute('data-ojt-kit-id', kit.id);
+        button.setAttribute('data-tooltip', `Submitted: ${submissionDate}`);
         
         button.innerHTML = `
-          <div class="icon-container bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+          <div class="icon-container bg-success rounded-circle d-flex align-items-center justify-content-center me-3" 
+               style="width: 40px; height: 40px;">
             <i class="bi bi-file-earmark-text-fill text-white"></i>
           </div>
           <span class="text-white">${kit.title || 'Untitled Kit'}</span>
-          ${hasSubmitted ? `
-            <div class="position-absolute end-0 me-3" title="Submitted ${new Date(studentReports.find(r => r.ojtKitId === kit.id)?.createdAt).toLocaleDateString()}">
-              <i class="bi bi-check-circle-fill text-success"></i>
-            </div>
-          ` : ''}
+          <div class="position-absolute end-0 me-3" title="Submitted ${submissionDate}">
+            <i class="bi bi-check-circle-fill text-success"></i>
+          </div>
         `;
         
         button.addEventListener('click', function() {
@@ -813,13 +1049,22 @@ async function showStudentDocumentsModal(studentId, studentName, studentNumber) 
           handleOjtKitSelection(studentId, kitId);
         });
         
+        // Add tooltip functionality
+        new bootstrap.Tooltip(button);
+        
         optionsContainer.appendChild(button);
       });
+
+      // Add completion summary
+      const summary = document.createElement('div');
+      summary.className = 'completion-summary text-white text-center mt-3 small';
+      summary.textContent = `Submitted ${submittedKits.length} OJT Kits`;
+      optionsContainer.appendChild(summary);
     } else {
       optionsContainer.innerHTML = `
         <div class="text-center text-white py-3">
           <i class="bi bi-exclamation-circle fs-4"></i>
-          <p class="mt-2">No OJT Kits available</p>
+          <p class="mt-2">No OJT Kits submitted yet</p>
         </div>
       `;
     }
@@ -828,7 +1073,7 @@ async function showStudentDocumentsModal(studentId, studentName, studentNumber) 
     optionsContainer.innerHTML = `
       <div class="text-center text-white py-3">
         <i class="bi bi-exclamation-triangle-fill fs-4"></i>
-        <p class="mt-2">Failed to load data</p>
+        <p class="mt-2">Failed to load submitted kits</p>
         <button class="btn btn-sm btn-primary mt-2" onclick="showStudentDocumentsModal('${studentId}', '${studentName}', '${studentNumber}')">
           Retry
         </button>
@@ -836,6 +1081,10 @@ async function showStudentDocumentsModal(studentId, studentName, studentNumber) 
     `;
   }
 }
+
+
+
+
 
 function handleDocumentSelection(studentId, docType) {
   console.log(`Selected ${docType} for student ${studentId}`);

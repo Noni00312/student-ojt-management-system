@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await window.dbReady;
 
-    const img = document.getElementById("user-img");
+    const img = document.getElementById("user-profile");
 
     const dataArray = await crudOperations.getByIndex(
       "studentInfoTbl",
@@ -73,7 +73,6 @@ function formatDateForDisplay(dateStr) {
 
 async function getStudentsWithIncidentReportsByDate(date) {
   try {
-    // Get all incident reports for the selected date
     const reports = await firebaseCRUD.queryData(
       "incidentreports",
       "date",
@@ -84,11 +83,8 @@ async function getStudentsWithIncidentReportsByDate(date) {
     if (!reports || reports.length === 0) {
       return [];
     }
-
-    // Get student info for each report from Firebase students collection
     const studentsWithReports = await Promise.all(
       reports.map(async (report) => {
-        // Query Firebase students collection using the userId from the report
         const studentData = await firebaseCRUD.queryData(
           "students",
           "userId",
@@ -96,8 +92,6 @@ async function getStudentsWithIncidentReportsByDate(date) {
           report.userId
         );
         const student = studentData?.[0] || {};
-
-        // Combine name components
         const fullName = formatStudentName(
           student?.firstName,
           student?.middleName,
@@ -172,7 +166,6 @@ function populateStudentCards(students) {
       </div>
     `;
 
-    // Show the modal and populate it with report data on click
     card.addEventListener("click", (e) => {
       e.preventDefault();
       populateReportModal(student);
@@ -187,24 +180,20 @@ function populateStudentCards(students) {
   });
 }
 function populateReportModal(report) {
-  // Set student info
   document.getElementById("modal-student-img").src = report.userImg;
   document.getElementById("modal-student-name").textContent =
     report.studentName;
   document.getElementById("modal-student-id").textContent = report.studentId;
 
-  // Set report info
   document.getElementById("report-title").value =
     report.reason || "No title provided";
   document.getElementById("report-content").value =
     report.reportDetails || "No details provided";
 
-  // Set status badge
   const statusBadge = document.getElementById("modal-report-status");
   statusBadge.textContent = report.reason || "Unknown";
   statusBadge.setAttribute("data-status", report.reason || "Unknown");
 
-  // Format dates
   const reportDate = new Date(report.createdAt);
   const lastUpdated = new Date(report.lastUpdated);
 

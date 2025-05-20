@@ -1,4 +1,3 @@
-
 import { firebaseCRUD } from "./firebase-crud.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -251,7 +250,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-
 function setupEditButton(editButton) {
   const updateButtonState = () => {
     if (!navigator.onLine) {
@@ -321,7 +319,8 @@ function populateEditForm(data) {
   const firstNameInput = document.getElementById("modal-first-name");
   const editProfileImg = document.querySelector(".modal-profile-icon");
 
-  if (firstNameInput && data.firstName) firstNameInput.value = data.firstName.trim();
+  if (firstNameInput && data.firstName)
+    firstNameInput.value = data.firstName.trim();
   if (editProfileImg && data.userImg) editProfileImg.src = data.userImg;
 }
 
@@ -338,60 +337,58 @@ function formatDateTime(dateString) {
   });
 }
 
-
-
 document.addEventListener("DOMContentLoaded", function () {
   const logoutButton = document.getElementById("logout-button");
 
- function updateLogoutButtonState() {
-  if (!navigator.onLine) {
-    logoutButton.disabled = true;
-    logoutButton.title = "Internet connection required to logout";
-    logoutButton.style.cursor = "not-allowed";
-    logoutButton.style.opacity = "0.6";
-  } else {
-    logoutButton.disabled = false;
-    logoutButton.title = "";
-    logoutButton.style.cursor = "pointer";
-    logoutButton.style.opacity = "1";
-  }
-}
-
-updateLogoutButtonState();
-
-window.addEventListener('online', updateLogoutButtonState);
-window.addEventListener('offline', updateLogoutButtonState);
-
-if (logoutButton) {
-  logoutButton.addEventListener("click", async function (e) {
-  e.preventDefault();
-
-  if (!navigator.onLine) {
-    alert('You need internet connection to logout');
-    return;
-  }
-
-  const confirmed = confirm('Are you sure you want to logout?');
-  
-  if (confirmed) {
-    try {
+  function updateLogoutButtonState() {
+    if (!navigator.onLine) {
       logoutButton.disabled = true;
-      logoutButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
-      
-      await crudOperations.clearTable("studentInfoTbl");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userToken");
-
-      window.location.href = "/pages/login.html";
-    } catch (error) {
-      console.error("Logout error:", error);
-      alert('An error occurred during logout');
+      logoutButton.title = "Internet connection required to logout";
+      logoutButton.style.cursor = "not-allowed";
+      logoutButton.style.opacity = "0.6";
+    } else {
       logoutButton.disabled = false;
-      logoutButton.innerHTML = 'Logout';
+      logoutButton.title = "";
+      logoutButton.style.cursor = "pointer";
+      logoutButton.style.opacity = "1";
     }
   }
-});
-}
 
+  updateLogoutButtonState();
+
+  window.addEventListener("online", updateLogoutButtonState);
+  window.addEventListener("offline", updateLogoutButtonState);
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", async function (e) {
+      e.preventDefault();
+
+      if (!navigator.onLine) {
+        alert("You need internet connection to logout");
+        return;
+      }
+
+      const confirmed = confirm("Are you sure you want to logout?");
+
+      if (confirmed) {
+        try {
+          logoutButton.disabled = true;
+          logoutButton.innerHTML =
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
+
+          await crudOperations.clearTable("studentInfoTbl");
+          localStorage.removeItem("userId");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userToken");
+
+          window.location.href = "/pages/login.html";
+        } catch (error) {
+          console.error("Logout error:", error);
+          alert("An error occurred during logout");
+          logoutButton.disabled = false;
+          logoutButton.innerHTML = "Logout";
+        }
+      }
+    });
+  }
 });

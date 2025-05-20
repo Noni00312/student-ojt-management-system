@@ -88,7 +88,7 @@ async function initializeUserImage() {
   );
   const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
-  const img = document.getElementById("user-img");
+  const img = document.getElementById("user-profile");
   img.src = data?.userImg || "../assets/img/icons8_male_user_480px_1";
 }
 

@@ -126,7 +126,7 @@ body {
 .modal-content {
   background-color: #004e4e !important;
   border-radius: 1rem !important;
-  
+
   overflow: hidden !important;
 }
 
@@ -293,7 +293,7 @@ body {
 .attendance-status-container i {
   font-size: 2rem;
   color: #fff;
- 
+
   margin-left: 20px;
 }
 
@@ -327,8 +327,6 @@ body {
 #appoint-assistant-btn {
   margin-bottom: 16px;
 }
-
-
 
 .calendar {
   width: 100% !important;
@@ -400,38 +398,21 @@ body {
   color: white;
 }
 
-
 #edit-info-form i {
   color: #3c3d42 !important;
 }
 
-
-
-
-
-
-
-
-
-
-
- .student-report-container {
+.student-report-container {
   max-height: 80vh;
- 
+
   overflow-y: auto;
   scroll-behavior: smooth;
   padding-right: 8px;
- 
 }
 
 .report p-3 mb-4 rounded {
   background-color: #3c3d42;
 }
-
-
-
-
-
 
 .day {
   position: relative;
@@ -453,7 +434,7 @@ body {
 }
 
 .day.red {
-  background-color: #F44336;
+  background-color: #f44336;
   color: white;
 }
 
@@ -466,55 +447,41 @@ body {
   opacity: 0.3;
 }
 
-
-
-
-
-
 .phone-email-container {
   gap: 1rem;
   padding: 0 0.5rem;
 }
 
-.phone-container, .email-container {
+.phone-container,
+.email-container {
   flex: 1;
-  min-width: 0; 
+  min-width: 0;
 }
-
 
 @media (max-width: 767.98px) {
   .phone-email-container {
     justify-content: space-between;
   }
-  
+
   .phone-container {
     text-align: left !important;
   }
-  
+
   .email-container {
     text-align: right !important;
   }
 }
 
-
 @media (min-width: 768px) {
   .phone-container {
     margin-right: 1rem;
   }
-  
+
   .email-container {
     margin-left: 1rem;
   }
 }
 
-
-
-
-
-
-
-
-/* Main container layout */
 .student-report-section {
   display: flex;
   width: 100%;
@@ -522,27 +489,24 @@ body {
   overflow: hidden;
 }
 
-/* Date container - fixed width */
 .report-date-container {
-  flex: 0 0 25%; /* Don't grow or shrink, base width 25% */
-  min-width: 250px; /* Minimum width to prevent squeezing */
-  max-width: 300px; /* Maximum width */
+  flex: 0 0 25%;
+  min-width: 250px;
+  max-width: 300px;
   height: calc(100vh - 80px);
   background-color: #3c3d42;
   border-radius: 1rem;
   overflow: hidden;
 }
 
-/* Reports container - flexible but constrained */
 .reports-container {
-  flex: 1; /* Take remaining space */
-  min-width: 0; /* Allow it to shrink below content width */
+  flex: 1;
+  min-width: 0;
   background-color: #3c3d42;
   border-radius: 1rem;
   overflow: hidden;
 }
 
-/* Report content container */
 .student-report-container {
   max-height: 80vh;
   overflow-y: auto;
@@ -550,58 +514,40 @@ body {
   padding-right: 8px;
 }
 
-/* Individual report items */
 .report {
   background-color: #abacb038;
   border-radius: 10px;
   margin-bottom: 1rem;
-  word-wrap: break-word; /* Ensure long words break */
-  overflow-wrap: break-word; /* Alternative for modern browsers */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-/* Content text styling */
 .content-container p {
-  white-space: pre-wrap; /* Preserve line breaks but wrap text */
-  word-break: break-word; /* Break long words if needed */
-  overflow: hidden; /* Hide any overflow */
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: hidden;
 }
 
-
-
-
-
-
-/* Active date styling */
 .date-container button.active-date {
-  background-color: rgba(255, 255, 255, 0.1) !important; /* Light blue background */
+  background-color: rgba(255, 255, 255, 0.1) !important;
   border-left: 3px solid #abacb038 !important;
   color: #abacb038 !important;
 }
 
-/* Hover effect for all date buttons */
 .date-container button:hover {
   background-color: #abacb038 !important;
 }
 
-/* Mobile view active date styling */
 .date-container button.active-date .report-date-sm #month-name-sm,
 .date-container button.active-date .report-date-sm #month-date-sm {
   color: #ffffff !important;
 }
 
-/* Desktop view active date styling */
 .date-container button.active-date .d-none.d-md-block {
   color: #ffffff !important;
   font-weight: 600 !important;
 }
 
-
-
-
-
-
-
-/* Style for weekday checkboxes */
 .weekdays-container {
   gap: 0.5rem;
 }
@@ -664,9 +610,6 @@ body {
   }
 }
 
-
-
-
 .weekly-schedule-display {
   width: 100%;
   max-width: 100%;
@@ -685,21 +628,14 @@ body {
   transition: all 0.2s;
 }
 
-
-
-
-
-
 .view-only-checkbox {
   cursor: not-allowed;
   opacity: 0.7;
 }
 
-
 .view-only-mode {
   position: relative;
 }
-
 
 .view-only-mode:active::after {
   content: "View mode only - not editable";
@@ -721,6 +657,12 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

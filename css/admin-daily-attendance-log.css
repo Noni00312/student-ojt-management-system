@@ -69,7 +69,7 @@ body {
   overflow-x: auto;
   white-space: nowrap;
   flex-wrap: nowrap;
-  display: flex; /* Required to make flex-based scrolling work */
+  display: flex;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -78,5 +78,5 @@ body {
 }
 
 .badge {
-  flex: 0 0 auto; /* prevents shrinking */
+  flex: 0 0 auto;
 }

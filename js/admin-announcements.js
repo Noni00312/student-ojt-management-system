@@ -1,4 +1,3 @@
-
 import { firebaseCRUD } from "./firebase-crud.js";
 
 const LIST_ID = "announcements-list";
@@ -24,7 +23,8 @@ function openModal(editItem = null) {
     document.getElementById("announcementId").value = editItem.id;
     document.getElementById("announcement-title").value = editItem.title || "";
     document.getElementById("announcement-link").value = editItem.url || "";
-    document.getElementById("announcement-content").value = editItem.content || "";
+    document.getElementById("announcement-content").value =
+      editItem.content || "";
     if (editItem.image) {
       document.getElementById("preview-image").src = editItem.image;
       document.getElementById("preview-image").style.display = "block";
@@ -69,7 +69,7 @@ function createLoader() {
       <span class="visually-hidden">Loading...</span>
     </div>
   `;
-  
+
   const container = document.getElementById(LIST_ID);
   if (container) {
     container.prepend(loader);
@@ -149,7 +149,7 @@ async function saveAnnouncement(e) {
     content,
     url,
     image,
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
 
   try {
@@ -160,7 +160,9 @@ async function saveAnnouncement(e) {
       await firebaseCRUD.createData("announcements", data);
     }
     bootstrap.Modal.getInstance(document.getElementById(MODAL_ID)).hide();
-    fetchAnnouncements(document.getElementById("announcementSearch").value.trim());
+    fetchAnnouncements(
+      document.getElementById("announcementSearch").value.trim()
+    );
   } catch (error) {
     alert("Failed to save announcement: " + error.message);
   } finally {
@@ -174,8 +176,12 @@ async function deleteAnnouncement() {
   setLoading(btn, true);
   try {
     await firebaseCRUD.deleteData("announcements", currentDeleteId);
-    bootstrap.Modal.getInstance(document.getElementById(DELETE_MODAL_ID)).hide();
-    fetchAnnouncements(document.getElementById("announcementSearch").value.trim());
+    bootstrap.Modal.getInstance(
+      document.getElementById(DELETE_MODAL_ID)
+    ).hide();
+    fetchAnnouncements(
+      document.getElementById("announcementSearch").value.trim()
+    );
     currentDeleteId = null;
   } catch (error) {
     alert("Failed to delete announcement: " + error.message);
@@ -187,7 +193,7 @@ async function deleteAnnouncement() {
 function renderAnnouncements(list) {
   const container = document.getElementById(LIST_ID);
   container.innerHTML = "";
-  
+
   if (!Array.isArray(list) || list.length === 0) {
     container.innerHTML = `
       <div class="text-center text-muted py-5">
@@ -203,26 +209,43 @@ function renderAnnouncements(list) {
     card.className = "col-12 col-md-6 col-lg-4 p-2";
     card.innerHTML = `
       <div class="card h-100 shadow announcement-card">
-        ${a.image ? `
+        ${
+          a.image
+            ? `
           <div class="announcement-image-container">
             <img src="${a.image}" class="announcement-image" alt="Announcement Image">
             <div class="announcement-overlay"></div>
           </div>
-        ` : `
+        `
+            : `
           <div class="no-announcement-image">
             <i class="bi bi-megaphone"></i>
             <div class="announcement-overlay"></div>
           </div>
-        `}
+        `
+        }
         <div class="announcement-content">
           <div class="announcement-info">
             <h5>${a.title ? a.title : "(No title)"}</h5>
-            <p>${a.content ? a.content.substring(0, 100) + (a.content.length>50 ? "..." : "") : ""}</p>
-            ${a.url ? `<a href="${a.url}" target="_blank" class="text-white announcement-link"><i class="bi bi-link"></i><small>Visit Link</small></a>` : ""}
+            <p>${
+              a.content
+                ? a.content.substring(0, 100) +
+                  (a.content.length > 50 ? "..." : "")
+                : ""
+            }</p>
+            ${
+              a.url
+                ? `<a href="${a.url}" target="_blank" class="text-white announcement-link"><i class="bi bi-link"></i><small>Visit Link</small></a>`
+                : ""
+            }
           </div>
           <div class="announcement-actions">
-            <button data-action="edit" data-id="${a.id}" title="Edit"><i class="bi bi-pencil-fill"></i></button>
-            <button data-action="delete" data-id="${a.id}" title="Delete"><i class="bi bi-trash-fill"></i></button>
+            <button data-action="edit" data-id="${
+              a.id
+            }" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+            <button data-action="delete" data-id="${
+              a.id
+            }" title="Delete"><i class="bi bi-trash-fill"></i></button>
           </div>
         </div>
       </div>
@@ -231,13 +254,15 @@ function renderAnnouncements(list) {
   });
 }
 
-
 async function convertImageTo500KB(file, maxSizeKB = 500) {
   if (!file || !file.type.startsWith("image/")) return "";
 
   function dataURLtoBlob(dataurl) {
-    const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    const arr = dataurl.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
     for (let i = 0; i < n; i++) u8arr[i] = bstr.charCodeAt(i);
     return new Blob([u8arr], { type: mime });
   }
@@ -251,12 +276,12 @@ async function convertImageTo500KB(file, maxSizeKB = 500) {
 
   let currentBase64 = base64;
   let blob = dataURLtoBlob(currentBase64);
-  
-  if ((currentBase64.length * 3 / 4) / 1024 <= maxSizeKB) {
+
+  if ((currentBase64.length * 3) / 4 / 1024 <= maxSizeKB) {
     return currentBase64;
   }
 
-  let quality = 0.92; 
+  let quality = 0.92;
   const minQuality = 0.4;
   const canvas = document.createElement("canvas");
   const img = document.createElement("img");
@@ -272,18 +297,20 @@ async function convertImageTo500KB(file, maxSizeKB = 500) {
         if (file.type === "image/png" && quality === 1) {
           dataUrl = canvas.toDataURL("image/png");
         }
-        const newSizeKB = Math.ceil((dataUrl.length * 3 / 4) / 1024);
+        const newSizeKB = Math.ceil((dataUrl.length * 3) / 4 / 1024);
 
         if (newSizeKB <= maxSizeKB || quality <= minQuality) {
           resolve(dataUrl);
         } else {
           canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-          quality -= 0.07;  
+          quality -= 0.07;
           compressLoop();
         }
       })();
     };
-    img.onerror = function (e) { reject(e); };
+    img.onerror = function (e) {
+      reject(e);
+    };
     img.src = currentBase64;
   });
 }
@@ -306,7 +333,7 @@ function getBase64(file) {
 document.addEventListener("DOMContentLoaded", async function () {
   createLoader();
 
-try {
+  try {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
@@ -330,7 +357,6 @@ try {
       img.src = data.userImg
         ? data.userImg
         : "../assets/img/icons8_male_user_480px_1";
-
     } else {
       console.warn("No user data found for this user.");
     }
@@ -338,28 +364,35 @@ try {
     console.error("Failed to get user data from IndexedDB", err);
   }
 
+  document
+    .getElementById("announcementSearch")
+    .addEventListener("input", (e) => {
+      fetchAnnouncements(e.target.value);
+    });
 
-  document.getElementById("announcementSearch").addEventListener("input", (e) => {
-    fetchAnnouncements(e.target.value);
-  });
+  document
+    .getElementById("add-announcement-btn")
+    .addEventListener("click", () => {
+      openModal();
+    });
 
-  document.getElementById("add-announcement-btn").addEventListener("click", () => {
-    openModal();
-  });
-
-  document.getElementById("announcement-image").addEventListener("change", async function () {
-    if (this.files && this.files[0]) {
-      const base64 = await convertImageTo500KB(this.files[0]);
-      if (base64) {
-        document.getElementById("preview-image").src = base64;
-        document.getElementById("preview-image").style.display = "block";
+  document
+    .getElementById("announcement-image")
+    .addEventListener("change", async function () {
+      if (this.files && this.files[0]) {
+        const base64 = await convertImageTo500KB(this.files[0]);
+        if (base64) {
+          document.getElementById("preview-image").src = base64;
+          document.getElementById("preview-image").style.display = "block";
+        }
       }
-    }
-  });
+    });
 
   document.getElementById(FORM_ID).addEventListener("submit", saveAnnouncement);
 
-  document.getElementById("delete-announcement-confirm-btn").addEventListener("click", deleteAnnouncement);
+  document
+    .getElementById("delete-announcement-confirm-btn")
+    .addEventListener("click", deleteAnnouncement);
 
   document.getElementById(LIST_ID).addEventListener("click", (e) => {
     const target = e.target.closest("button");
@@ -368,7 +401,7 @@ try {
     const id = target.getAttribute("data-id");
     if (action === "edit") {
       fetchAnnouncements().then((anns) => {
-        const found = anns.find(a => a.id === id);
+        const found = anns.find((a) => a.id === id);
         if (found) openModal(found);
       });
     } else if (action === "delete") {

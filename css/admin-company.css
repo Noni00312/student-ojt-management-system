@@ -1,613 +1,416 @@
 .modal-profile-icon {
-    width: 150px;
-    height: 150px;
+  width: 150px;
+  height: 150px;
 }
 
 .modal {
-    overflow: hidden !important;
+  overflow: hidden !important;
 }
 
 .modal-dialog {
-    margin: 0 auto !important;
-    max-height: 100vh !important;
-    display: flex;
-    align-items: center;
-    min-height: calc(100% - 1rem);
+  margin: 0 auto !important;
+  max-height: 100vh !important;
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
 }
 
 .modal-content {
-    max-height: 95vh !important;
-    overflow: hidden !important;
+  max-height: 95vh !important;
+  overflow: hidden !important;
 }
 
 .modal-body {
-    max-height: calc(100vh - 150px);
-    padding: 1rem;
-
+  max-height: calc(100vh - 150px);
+  padding: 1rem;
 }
 
 .modal-open {
-    overflow: hidden;
-    padding-right: 0 !important;
+  overflow: hidden;
+  padding-right: 0 !important;
 }
 
 .add-company-modal,
 .update-company-modal {
-    background-color: #3C3D42 !important;
+  background-color: #3c3d42 !important;
 }
 
 #camera-button {
-    width: 100%;
-    background-color: #004e4e;
-    cursor: pointer;
-    border-radius: 10px !important;
-    height: 170px;
+  width: 100%;
+  background-color: #004e4e;
+  cursor: pointer;
+  border-radius: 10px !important;
+  height: 170px;
 }
 
 #camera-button i {
-    font-size: clamp(2rem, 1.1579rem + 4.2105vw, 4rem);
+  font-size: clamp(2rem, 1.1579rem + 4.2105vw, 4rem);
 }
-
 
 .modal-input h2,
 .modal-input p {
-    color: var(--accent) !important;
+  color: var(--accent) !important;
 }
 
-
 .modal-input h2 {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .modal-input input {
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border-color: #FFF;
-    border-radius: 20px !important;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
+  background-color: #3c3d42 !important;
+  box-shadow: none !important;
+  border-color: #fff;
+  border-radius: 20px !important;
+  color: var(--primary) !important;
+  padding-left: 20px !important;
+  padding-right: 30px !important;
 }
 
 .modal-input input:focus {
-    border-color: #6e1423 !important;
-    color: var(--primary) !important;
+  border-color: #6e1423 !important;
+  color: var(--primary) !important;
 }
 
 .modal-input input:-webkit-autofill {
-    background-color: #3C3D42 !important;
-    color: var(--primary) !important;
-    -webkit-box-shadow: 0 0 0px 1000px #3C3D42 inset !important;
+  background-color: #3c3d42 !important;
+  color: var(--primary) !important;
+  -webkit-box-shadow: 0 0 0px 1000px #3c3d42 inset !important;
 }
 
 .modal-input input:-webkit-autofill:focus {
-    background-color: #3C3D42 !important;
-    color: var(--primary) !important;
-    -webkit-box-shadow: 0 0 0px 1000px #3C3D42 inset !important;
+  background-color: #3c3d42 !important;
+  color: var(--primary) !important;
+  -webkit-box-shadow: 0 0 0px 1000px #3c3d42 inset !important;
 }
 
 .modal-input input:-webkit-autofill,
 .modal-input input:-webkit-autofill:hover,
 .modal-input input:-webkit-autofill:focus {
-    -webkit-text-fill-color: var(--primary) !important;
-    transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: var(--primary) !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .modal-input label {
-    color: #FFF !important;
-    font-size: small;
+  color: #fff !important;
+  font-size: small;
 }
 
 .modal-input:focus-within label {
-    color: #6e1423 !important;
+  color: #6e1423 !important;
 }
 
-
 .modal-input h5 {
-    color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 .modal-input select {
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border-color: #FFF;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
+  background-color: #3c3d42 !important;
+  box-shadow: none !important;
+  border-color: #fff;
+  color: var(--primary) !important;
+  padding-left: 20px !important;
+  padding-right: 30px !important;
 }
 
 .modal-input select:focus {
-    border-color: #6e1423 !important;
-    color: var(--primary) !important;
+  border-color: #6e1423 !important;
+  color: var(--primary) !important;
 }
 
 .modal-input select::-ms-expand {
-    display: none;
+  display: none;
 }
 
 .modal-input select option {
-    background-color: #3C3D42 !important;
-    color: var(--primary) !important;
+  background-color: #3c3d42 !important;
+  color: var(--primary) !important;
 }
 
 #add-company-button,
 #update-company-button {
-    width: 100%;
-    cursor: pointer;
-    border-radius: 10px !important;
-    height: 50px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 10px !important;
+  height: 50px;
 }
 
 #add-company-button:hover,
 #update-company-button:hover {
-    background-color: #4caf50 !important;
+  background-color: #4caf50 !important;
 }
 
 i {
-    color: #FFF !important;
+  color: #fff !important;
 }
 
 .modal-input:focus-within i {
-    color: #6e1423 !important;
+  color: #6e1423 !important;
 }
 
 @media (max-width: 768px) {
-    .modal {
-        overflow: auto !important;
-    }
+  .modal {
+    overflow: auto !important;
+  }
 
-    .modal-dialog {
-        margin: 0.5rem auto !important;
-        max-height: none !important;
-        display: block;
-        align-items: normal;
-        min-height: auto;
-    }
+  .modal-dialog {
+    margin: 0.5rem auto !important;
+    max-height: none !important;
+    display: block;
+    align-items: normal;
+    min-height: auto;
+  }
 
-    .modal-content {
-        max-height: none !important;
-        overflow: visible !important;
-        height: auto;
-    }
+  .modal-content {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto;
+  }
 
-    .modal-body {
-        max-height: none !important;
-        overflow: visible !important;
-    }
+  .modal-body {
+    max-height: none !important;
+    overflow: visible !important;
+  }
 
-    .modal-open {
-        overflow: auto !important;
-        padding-right: 0 !important;
-    }
+  .modal-open {
+    overflow: auto !important;
+    padding-right: 0 !important;
+  }
 
-    .modal-dialog {
-        width: 95%;
-        margin: 0.5rem auto !important;
-    }
+  .modal-dialog {
+    width: 95%;
+    margin: 0.5rem auto !important;
+  }
 }
 
-
-
-
 .company-card {
-    position: relative;
-    height: 200px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+  position: relative;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .company-image-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .company-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .no-image-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #6e1423 0%, #6e1423 100%);
-    color: white;
-    font-size: 3rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6e1423 0%, #6e1423 100%);
+  color: white;
+  font-size: 3rem;
 }
 
 .company-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.1) 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
 }
 
 .company-content {
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 20px;
-    color: white;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  color: white;
 }
 
 .company-info h5 {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .company-info p {
-    font-size: 0.9rem;
-    margin-bottom: 0;
-    opacity: 0.9;
+  font-size: 0.9rem;
+  margin-bottom: 0;
+  opacity: 0.9;
 }
 
 .edit-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .edit-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
-
-
-
-
-
 #camera-button {
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 #camera-button:hover {
-    border-color: #6e1423;
+  border-color: #6e1423;
 }
 
 #preview-image {
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-
-
 .search-input .spinner-border {
-    margin-right: 8px;
-    width: 1rem;
-    height: 1rem;
-    border-width: 0.15em;
+  margin-right: 8px;
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
 }
 
 .search-input .bi-search {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-
-
-
-
-
-
-/* #company-province, 
-#update-company-province {
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border-color: #FFF;
-    border-radius: 20px !important;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
-    height: calc(3.5rem + 2px); 
-    line-height: 1.25;
-}
-
-#company-province:focus, 
-#update-company-province:focus {
-    border-color: #6e1423 !important;
-    color: var(--primary) !important;
-    outline: none;
-}
-
-
-#company-province::-ms-expand,
-#update-company-province::-ms-expand {
-    display: none;
-}
-
-
-.form-floating > label {
-    color: #FFF !important;
-    font-size: small;
-    padding-left: 20px;
-}
-
-.form-floating:has(#company-province:focus) > label,
-.form-floating:has(#update-company-province:focus) > label {
-    color: #6e1423 !important;
-}
-
-@media (max-width: 368px) {
-    #company-province:focus,
-    #update-company-province:focus {
-        position: fixed;
-        left: 50% !important;
-        transform: translateX(-50%);
-        max-height: 50vh;  
-        width: 90% !important;
-        bottom: 20px; 
-        top: auto !important;
-    }
-
-    #company-province option,
-    #update-company-province option {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
-    }
-
-    body.modal-open:has(#company-province:focus),
-    body.modal-open:has(#update-company-province:focus) {
-        overflow: hidden;
-    }
-}
-
- */
-
-
-/* Add Modal Province Field */
-/* #company-province {
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border: 1px solid #FFF !important;
-    border-radius: 20px !important;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
-    width: 100% !important;
-    min-width: 100% !important;
-} */
-
-
-
-
-
-
-
-
-
-/* 
-
-
-#company-province{
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border-color: #FFF;
-    border-radius: 20px !important;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
-    height: calc(3.5rem + 2px); 
-    line-height: 1.25;
-    margin-left: 1px !important; 
-    width: calc(100%) !important;  
-    min-width: calc(100%) !important;
-}
-
-
-
-#update-company-province {
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border: 1px solid #FFF !important;
-    border-radius: 20px !important;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
-    width: calc(100% + 10px) !important;  
-    min-width: calc(100% + 10px) !important;
-    margin-left: -8px !important; 
-}
-
-
-
-
-
-
-#company-province:focus, 
-#update-company-province:focus {
-    border-color: #6e1423 !important;
-    color: var(--primary) !important;
-    outline: none;
-}
-
-.form-floating > label {
-    color: #FFF !important;
-    font-size: small;
-    padding-left: 20px;
-}
-
-.form-floating:has(#company-province:focus) > label,
-.form-floating:has(#update-company-province:focus) > label {
-    color: #6e1423 !important;
-}
-
-@media (max-width: 368px) {
-    #company-province,
-    #update-company-province {
-        padding-left: 15px !important;
-        padding-right: 25px !important;
-    }
-    
-    #company-province:focus,
-    #update-company-province:focus {
-        position: fixed;
-        left: 50% !important;
-        transform: translateX(-50%);
-        max-height: 50vh;
-        width: 90% !important;
-        bottom: 20px;
-        top: auto !important;
-    }
-} */
-
-
-
-
-/* Add Modal Province Field */
 #company-province {
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border: 1px solid #FFF !important;
-    border-radius: 20px !important;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
-    width: 100% !important;
-    min-width: 100% !important;
-    font-size: 0.9rem; /* Slightly smaller font */
+  background-color: #3c3d42 !important;
+  box-shadow: none !important;
+  border: 1px solid #fff !important;
+  border-radius: 20px !important;
+  color: var(--primary) !important;
+  padding-left: 20px !important;
+  padding-right: 30px !important;
+  height: calc(3.5rem + 2px);
+  line-height: 1.25;
+  width: 100% !important;
+  min-width: 100% !important;
+  font-size: 0.9rem;
 }
 
-/* Update Modal Province Field */
 #update-company-province {
-    background-color: #3C3D42 !important;
-    box-shadow: none !important;
-    border: 1px solid #FFF !important;
-    border-radius: 20px !important;
-    color: var(--primary) !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
-    width: calc(100% + 10px) !important;
-    min-width: calc(100% + 10px) !important;
-    margin-left: -8px !important;
-    font-size: 0.9rem; /* Slightly smaller font */
+  background-color: #3c3d42 !important;
+  box-shadow: none !important;
+  border: 1px solid #fff !important;
+  border-radius: 20px !important;
+  color: var(--primary) !important;
+  padding-left: 20px !important;
+  padding-right: 30px !important;
+  height: calc(3.5rem + 2px);
+  line-height: 1.25;
+  width: calc(100% + 10px) !important;
+  min-width: calc(100% + 10px) !important;
+  margin-left: -8px !important;
+  font-size: 0.9rem;
 }
 
-/* Dropdown options styling */
 #company-province option,
 #update-company-province option {
-    font-size: 0.85rem; /* Even smaller for options */
-    padding: 6px 12px; /* Tighter padding */
-    white-space: normal; /* Allow text wrapping */
-    word-break: break-word; /* Break long words */
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  white-space: normal;
+  word-break: break-word;
 }
 
-/* Group headers styling */
 #company-province optgroup,
 #update-company-province optgroup {
-    font-size: 0.88rem; /* Slightly larger than options */
+  font-size: 0.88rem;
 }
 
-/* Focus states */
-#company-province:focus, 
+#company-province:focus,
 #update-company-province:focus {
-    border-color: #6e1423 !important;
-    color: var(--primary) !important;
-    outline: none;
+  border-color: #6e1423 !important;
+  color: var(--primary) !important;
+  outline: none;
 }
 
-/* Floating labels */
 .form-floating > label {
-    color: #FFF !important;
-    font-size: small;
-    padding-left: 20px;
+  color: #fff !important;
+  font-size: small;
+  padding-left: 20px;
 }
 
 .form-floating:has(#company-province:focus) > label,
 .form-floating:has(#update-company-province:focus) > label {
-    color: #6e1423 !important;
+  color: #6e1423 !important;
 }
 
-/* Mobile responsiveness */
 @media (max-width: 768px) {
-    #company-province,
-    #update-company-province {
-        padding-left: 15px !important;
-        padding-right: 25px !important;
-        font-size: 0.85rem; /* Even smaller on mobile */
-    }
-    
-    #company-province option,
-    #update-company-province option {
-        font-size: 0.8rem; /* Smaller options on mobile */
-    }
-    
-    #company-province:focus,
-    #update-company-province:focus {
-        position: fixed;
-        left: 50% !important;
-        transform: translateX(-50%);
-        max-height: 50vh;
-        width: 90% !important;
-        bottom: 20px;
-        top: auto !important;
-    }
+  #company-province,
+  #update-company-province {
+    padding-left: 15px !important;
+    padding-right: 25px !important;
+    font-size: 0.85rem;
+  }
+
+  #company-province option,
+  #update-company-province option {
+    font-size: 0.8rem;
+  }
+
+  #company-province:focus,
+  #update-company-province:focus {
+    position: fixed;
+    left: 50% !important;
+    transform: translateX(-50%);
+    max-height: 50vh;
+    width: 90% !important;
+    bottom: 20px;
+    top: auto !important;
+  }
 }
 
-
-
-
-/* Style for province filter dropdown */
 #provinceFilter {
-    background-color: white !important;
-    box-shadow: none !important;
-    border-color: #8b8e9b !important;
-    border-radius: 20px !important;
-    color: #8b8e9b !important;
-    padding-left: 20px !important;
-    padding-right: 30px !important;
+  background-color: white !important;
+  box-shadow: none !important;
+  border-color: #8b8e9b !important;
+  border-radius: 20px !important;
+  color: #8b8e9b !important;
+  padding-left: 20px !important;
+  padding-right: 30px !important;
 }
 
 #provinceFilter:focus {
-    border-color: #6e1423 !important;
-    outline: none;
+  border-color: #6e1423 !important;
+  outline: none;
 }
 
-/* Adjust search container layout */
 .add-search-container {
-    gap: 10px;
+  gap: 10px;
 }
 
 @media (max-width: 768px) {
-    .add-search-container {
-        flex-wrap: wrap;
-    }
-    
-    #provinceFilter {
-        width: 100% !important;
-        margin-bottom: 10px;
-    }
+  .add-search-container {
+    flex-wrap: wrap;
+  }
+
+  #provinceFilter {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
 }
-
-

@@ -155,9 +155,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (hasPending) {
           e.preventDefault();
           e.stopPropagation();
-          alert(
-            "Please complete all your time entries for today before editing your profile."
-          );
+          Swal.fire({
+            icon: "warning",
+            title: "Editing Is Not Allowed This Time",
+            text: "Please complete all your time entries for today before editing your profile.",
+            confirmButtonColor: "#590f1c",
+          });
           return false;
         }
       });
@@ -174,9 +177,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         .addEventListener("show.bs.modal", async (e) => {
           if (!navigator.onLine) {
             e.preventDefault();
-            alert(
-              "Editing profile requires an internet connection. Please check your network and try again."
-            );
+            Swal.fire({
+              icon: "error",
+              title: "No Connection",
+              text: "Editing profile requires an internet connection. Please check your network and try again.",
+              confirmButtonColor: "#590f1c",
+            });
             modal.hide();
             return;
           }
@@ -188,9 +194,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
           if (hasPending) {
             e.preventDefault();
-            alert(
-              "Please complete all your time entries for today before editing your profile."
-            );
+            Swal.fire({
+              icon: "warning",
+              title: "Editing Is Not Allowed This Time",
+              text: "Please complete all your time entries for today before editing your profile.",
+              confirmButtonColor: "#590f1c",
+            });
             modal.hide();
             return;
           }
@@ -219,7 +228,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             populateEditForm(modalUserData);
           } else {
             e.preventDefault();
-            alert("Failed to load your profile data.");
+            Swal.fire({
+              icon: "error",
+              title: "Something Went Wrong",
+              text: "Failed to load your profile data.",
+              confirmButtonColor: "#590f1c",
+            });
             modal.hide();
           }
         });
@@ -276,9 +290,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const hasPending = await hasPendingTimeEntries(userId);
       if (hasPending) {
-        alert(
-          "Cannot update profile while having pending time entries for today."
-        );
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "Cannot update profile while having pending time entries for today.",
+          confirmButtonColor: "#590f1c",
+        });
         submitButton.disabled = false;
         submitButton.innerHTML = "<span>Update Profile</span>";
         return;
@@ -335,10 +352,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         const modal = bootstrap.Modal.getInstance(editProfileModal);
         modal.hide();
 
-        alert("Profile updated successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated",
+          text: "Profile updated successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       } catch (error) {
         console.error("Update error:", error);
-        alert("Failed to update profile. Please try again.");
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "Failed to update profile. Please try again.",
+          confirmButtonColor: "#590f1c",
+        });
       } finally {
         submitButton.disabled = false;
         submitButton.innerHTML = "<span>Update Profile</span>";
@@ -387,10 +415,20 @@ document.addEventListener("DOMContentLoaded", async function () {
         editProfileImg.src = base64Image;
         URL.revokeObjectURL(previewUrl);
 
-        alert("Profile image updated successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated",
+          text: "Profile image updated successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       } catch (error) {
-        console.error("Image upload error:", error);
-        alert("Failed to update profile image");
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "Failed to update profile image.",
+          confirmButtonColor: "#590f1c",
+        });
         editProfileImg.src = userImg.src;
       }
     });
@@ -399,12 +437,27 @@ document.addEventListener("DOMContentLoaded", async function () {
       e.preventDefault();
 
       if (!navigator.onLine) {
-        alert("You need internet connection to logout");
+        Swal.fire({
+          icon: "error",
+          title: "No Connection",
+          text: "You need internet connection to logout.",
+          confirmButtonColor: "#590f1c",
+        });
+
         return;
       }
 
-      const result = confirm("Are you sure you want to logout?");
-      if (!result) return;
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Are you sure you want to logout?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#590f1c",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, logout",
+        cancelButtonText: "Cancel",
+      });
+      if (!result.isConfirmed) return;
 
       try {
         logoutButton.disabled = true;
@@ -419,7 +472,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         window.location.href = "./login.html";
       } catch (error) {
         console.error("Logout error:", error);
-        alert("An error occurred during logout");
+        Swal.fire({
+          icon: "error",
+          title: "An Error Occur",
+          text: "An error occurred during logout.",
+          confirmButtonColor: "#590f1c",
+        });
+
         logoutButton.disabled = false;
         logoutButton.innerHTML = "Logout";
       }
@@ -448,7 +507,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   } catch (error) {
     console.error("Initialization error:", error);
-    alert("Failed to initialize profile page");
+    Swal.fire({
+      icon: "error",
+      title: "An Error Occur",
+      text: "Failed to initialize profile page.",
+      confirmButtonColor: "#590f1c",
+    });
+
     window.location.href = "./login.html";
   }
 });
@@ -785,13 +850,28 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
 
       if (!navigator.onLine) {
-        alert("You need internet connection to logout");
+        Swal.fire({
+          icon: "error",
+          title: "No Connection",
+          text: "You need internet connection to logout.",
+          confirmButtonColor: "#590f1c",
+        });
+
         return;
       }
 
-      const confirmed = confirm("Are you sure you want to logout?");
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Are you sure you want to logout?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#590f1c",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, logout",
+        cancelButtonText: "Cancel",
+      });
 
-      if (confirmed) {
+      if (result.isConfirmed) {
         try {
           logoutButton.disabled = true;
           logoutButton.innerHTML =
@@ -805,7 +885,13 @@ document.addEventListener("DOMContentLoaded", function () {
           window.location.href = "./login.html";
         } catch (error) {
           console.error("Logout error:", error);
-          alert("An error occurred during logout");
+          Swal.fire({
+            icon: "error",
+            title: "An Error Occur",
+            text: "An error occurred during logout.",
+            confirmButtonColor: "#590f1c",
+          });
+
           logoutButton.disabled = false;
           logoutButton.innerHTML = "Logout";
         }

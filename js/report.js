@@ -70,35 +70,237 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Failed to get user data from IndexedDB", err);
   }
 
+  // function setupUploadButton() {
+  //   const uploadButton = document.getElementById("upload-report-button");
+  //   if (!uploadButton) return;
+
+  //   uploadButton.addEventListener("click", async function () {
+  //     if (!navigator.onLine) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "No Connection",
+  //         text: "No internet connection. Please check your network and try again.",
+  //         confirmButtonColor: "#590f1c",
+  //       });
+  //       return;
+  //     }
+
+  //     const userId = localStorage.getItem("userId");
+  //     if (!userId) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Unauthorize User",
+  //         text: "User not authenticated. Please login again.",
+  //         confirmButtonColor: "#590f1c",
+  //       });
+  //       return;
+  //     }
+
+  //     if (
+  //       !confirm("Are you sure you want to upload all reports to the server?")
+  //     ) {
+  //       return;
+  //     }
+
+  //     try {
+  //       const originalIcon = uploadButton.innerHTML;
+  //       uploadButton.innerHTML = `
+  //               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  //           `;
+  //       uploadButton.disabled = true;
+
+  //       const transaction = db.transaction(["reportTbl"], "readonly");
+  //       const store = transaction.objectStore("reportTbl");
+  //       const index = store.index("userId");
+  //       const request = index.getAll(userId);
+
+  //       request.onsuccess = async function (event) {
+  //         const reports = event.target.result;
+  //         if (reports.length === 0) {
+  //           Swal.fire({
+  //             icon: "error",
+  //             title: "No Report",
+  //             text: "There's no reports to upload",
+  //             confirmButtonColor: "#590f1c",
+  //           });
+  //           uploadButton.innerHTML = originalIcon;
+  //           uploadButton.disabled = false;
+  //           return;
+  //         }
+
+  //         let uploadSuccess = true;
+  //         let errorMessage = "";
+
+  //         for (const report of reports) {
+  //           try {
+  //             console.log(`Processing report ${report.id}`);
+
+  //             const reportId = `${userId}_${report.id}`;
+
+  //             const firebaseReport = {
+  //               title: report.title,
+  //               content: report.content,
+  //               createdAt: report.createdAt,
+  //               userId: userId,
+  //               localId: report.id,
+  //               hasImages: report.images && report.images.length > 0,
+  //             };
+
+  //             await firebaseCRUD.setDataWithId(
+  //               "reports",
+  //               reportId,
+  //               firebaseReport
+  //             );
+  //             console.log(`Created report document with ID: ${reportId}`);
+
+  //             if (report.images && report.images.length > 0) {
+  //               console.log(
+  //                 `Uploading ${report.images.length} images for report ${reportId}`
+  //               );
+
+  //               for (const [index, imageBlob] of report.images.entries()) {
+  //                 try {
+  //                   const base64String = await blobToBase64(imageBlob);
+  //                   console.log(
+  //                     `Uploading image ${index + 1} of ${report.images.length}`
+  //                   );
+
+  //                   await firebaseCRUD.createData(
+  //                     `reports/${reportId}/images`,
+  //                     {
+  //                       imageData: base64String,
+  //                       uploadedAt: new Date().toISOString(),
+  //                       order: index,
+  //                       originalName: `image_${index + 1}.jpg`,
+  //                       reportId: reportId,
+  //                     }
+  //                   );
+
+  //                   console.log(`Successfully uploaded image ${index + 1}`);
+  //                 } catch (imageError) {
+  //                   console.error(
+  //                     `Error uploading image ${index + 1}:`,
+  //                     imageError
+  //                   );
+  //                   uploadSuccess = false;
+  //                   errorMessage = `Failed to upload some images. ${imageError.message}`;
+  //                 }
+  //               }
+  //             }
+
+  //             const deleteTransaction = db.transaction(
+  //               ["reportTbl"],
+  //               "readwrite"
+  //             );
+  //             const deleteStore = deleteTransaction.objectStore("reportTbl");
+  //             deleteStore.delete(report.id);
+  //             console.log(`Deleted local report ${report.id}`);
+  //           } catch (reportError) {
+  //             console.error(
+  //               `Error processing report ${report.id}:`,
+  //               reportError
+  //             );
+  //             uploadSuccess = false;
+  //             errorMessage = `Failed to upload some reports. ${reportError.message}`;
+  //           }
+  //         }
+
+  //         uploadButton.innerHTML = originalIcon;
+  //         uploadButton.disabled = false;
+
+  //         if (uploadSuccess) {
+  //           Swal.fire({
+  //             icon: "success",
+  //             title: "Upload Success",
+  //             text: "All reports uploaded successfully!",
+  //             timer: 2000,
+  //             showConfirmButton: false,
+  //           });
+  //         } else {
+  //           Swal.fire({
+  //             icon: "warning",
+  //             title: "Update Complete With Error",
+  //             text: `Upload completed with some errors: ${errorMessage}`,
+  //             confirmButtonColor: "#590f1c",
+  //           });
+  //         }
+
+  //         displayReports();
+  //       };
+
+  //       request.onerror = function (event) {
+  //         console.error(
+  //           "Error fetching reports from IndexedDB:",
+  //           event.target.error
+  //         );
+  //         Swal.fire({
+  //           icon: "error",
+  //           title: "Am Error Occur",
+  //           text: "Error fetching reports from local storage.",
+  //           confirmButtonColor: "#590f1c",
+  //         });
+
+  //         uploadButton.innerHTML = originalIcon;
+  //         uploadButton.disabled = false;
+  //       };
+  //     } catch (error) {
+  //       console.error("Upload error:", error);
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "An Error Occur",
+  //         text: `Error uploading reports: ${error.message}`,
+  //         confirmButtonColor: "#590f1c",
+  //       });
+
+  //       uploadButton.innerHTML = originalIcon;
+  //       uploadButton.disabled = false;
+  //     }
+  //   });
+  // }
   function setupUploadButton() {
     const uploadButton = document.getElementById("upload-report-button");
     if (!uploadButton) return;
 
     uploadButton.addEventListener("click", async function () {
       if (!navigator.onLine) {
-        alert(
-          "No internet connection. Please check your network and try again."
-        );
+        Swal.fire({
+          icon: "error",
+          title: "No Connection",
+          text: "No internet connection. Please check your network and try again.",
+          confirmButtonColor: "#590f1c",
+        });
         return;
       }
 
       const userId = localStorage.getItem("userId");
       if (!userId) {
-        alert("User not authenticated. Please login again.");
+        Swal.fire({
+          icon: "error",
+          title: "Unauthorized User",
+          text: "User not authenticated. Please login again.",
+          confirmButtonColor: "#590f1c",
+        });
         return;
       }
 
-      if (
-        !confirm("Are you sure you want to upload all reports to the server?")
-      ) {
-        return;
-      }
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to upload all reports to the server?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#590f1c",
+        cancelButtonColor: "#222",
+        confirmButtonText: "Yes, upload",
+        cancelButtonText: "Cancel",
+      });
+
+      if (!result.isConfirmed) return;
 
       try {
         const originalIcon = uploadButton.innerHTML;
         uploadButton.innerHTML = `
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            `;
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        `;
         uploadButton.disabled = true;
 
         const transaction = db.transaction(["reportTbl"], "readonly");
@@ -109,7 +311,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         request.onsuccess = async function (event) {
           const reports = event.target.result;
           if (reports.length === 0) {
-            alert("No reports to upload");
+            Swal.fire({
+              icon: "error",
+              title: "No Report",
+              text: "There's no reports to upload",
+              confirmButtonColor: "#590f1c",
+            });
             uploadButton.innerHTML = originalIcon;
             uploadButton.disabled = false;
             return;
@@ -121,7 +328,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           for (const report of reports) {
             try {
               console.log(`Processing report ${report.id}`);
-
               const reportId = `${userId}_${report.id}`;
 
               const firebaseReport = {
@@ -196,9 +402,20 @@ document.addEventListener("DOMContentLoaded", async function () {
           uploadButton.disabled = false;
 
           if (uploadSuccess) {
-            alert("All reports uploaded successfully!");
+            Swal.fire({
+              icon: "success",
+              title: "Upload Success",
+              text: "All reports uploaded successfully!",
+              timer: 2000,
+              showConfirmButton: false,
+            });
           } else {
-            alert(`Upload completed with some errors: ${errorMessage}`);
+            Swal.fire({
+              icon: "warning",
+              title: "Upload Complete with Errors",
+              text: `Upload completed with some errors: ${errorMessage}`,
+              confirmButtonColor: "#590f1c",
+            });
           }
 
           displayReports();
@@ -209,13 +426,25 @@ document.addEventListener("DOMContentLoaded", async function () {
             "Error fetching reports from IndexedDB:",
             event.target.error
           );
-          alert("Error fetching reports from local storage");
+          Swal.fire({
+            icon: "error",
+            title: "An Error Occurred",
+            text: "Error fetching reports from local storage.",
+            confirmButtonColor: "#590f1c",
+          });
+
           uploadButton.innerHTML = originalIcon;
           uploadButton.disabled = false;
         };
       } catch (error) {
         console.error("Upload error:", error);
-        alert("Error uploading reports: " + error.message);
+        Swal.fire({
+          icon: "error",
+          title: "An Error Occurred",
+          text: `Error uploading reports: ${error.message}`,
+          confirmButtonColor: "#590f1c",
+        });
+
         uploadButton.innerHTML = originalIcon;
         uploadButton.disabled = false;
       }
@@ -244,7 +473,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
-            alert(`File ${file.name} is not an image`);
+            Swal.fire({
+              icon: "error",
+              title: "Invalid File",
+              text: `File ${file.name} is not an image`,
+              confirmButtonColor: "#590f1c",
+            });
+
             continue;
           }
 
@@ -287,7 +522,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             reader.readAsDataURL(compressedBlob);
           } catch (error) {
             console.error("Error compressing image:", error);
-            alert(`Failed to process image ${file.name}: ${error.message}`);
+            Swal.fire({
+              icon: "error",
+              title: "An Error Occur",
+              text: `Failed to process image ${file.name}: ${error.message}`,
+              confirmButtonColor: "#590f1c",
+            });
           }
         }
       });
@@ -304,12 +544,24 @@ document.addEventListener("DOMContentLoaded", async function () {
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
-          alert("User not authenticated. Please login again.");
+          Swal.fire({
+            icon: "error",
+            title: "Account Not Authenticated",
+            text: "User not authenticated. Please login again.",
+            confirmButtonColor: "#590f1c",
+          });
+
           return;
         }
 
         if (!title || !content) {
-          alert("Please fill in all required fields");
+          Swal.fire({
+            icon: "warning",
+            title: "All Fields Are Required",
+            text: "Please fill in all required fields.",
+            confirmButtonColor: "#590f1c",
+          });
+
           return;
         }
 
@@ -334,8 +586,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById("addReportModal")
           );
           if (modal) modal.hide();
-          alert("Report saved successfully!");
-
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Report saved successfully!",
+            timer: 2000,
+            showConfirmButton: false,
+          });
           addReportForm.reset();
           addImageContainer.innerHTML = "";
           addModalImages = [];
@@ -345,7 +602,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         request.onerror = function (event) {
           console.error("Error storing report:", event.target.error);
-          alert("Error saving report to local database.");
+          Swal.fire({
+            icon: "error",
+            title: "An Error Occur",
+            text: "Error saving report to local database.",
+            confirmButtonColor: "#590f1c",
+          });
         };
       });
     }
@@ -391,7 +653,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
-            alert(`File ${file.name} is not an image`);
+            Swal.fire({
+              icon: "error",
+              title: "Invalid File",
+              text: `File ${file.name} is not an image`,
+              confirmButtonColor: "#590f1c",
+            });
+
             continue;
           }
 
@@ -400,7 +668,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             pendingImageChanges.toAdd.push(compressedBlob);
           } catch (error) {
             console.error("Error compressing image:", error);
-            alert(`Failed to process image ${file.name}: ${error.message}`);
+            Swal.fire({
+              icon: "error",
+              title: "An Error Occur",
+              text: `Failed to process image ${file.name}: ${error.message}`,
+              confirmButtonColor: "#590f1c",
+            });
           }
         }
 
@@ -442,12 +715,24 @@ document.addEventListener("DOMContentLoaded", async function () {
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
-          alert("User not authenticated. Please login again.");
+          Swal.fire({
+            icon: "error",
+            title: "Account Not Authenticated",
+            text: "User not authenticated. Please login again.",
+            confirmButtonColor: "#590f1c",
+          });
+
           return;
         }
 
         if (!title || !content) {
-          alert("Please fill in all required fields");
+          Swal.fire({
+            icon: "error",
+            title: "All Fields Are Required",
+            text: "Please fill in all required fields.",
+            confirmButtonColor: "#590f1c",
+          });
+
           return;
         }
 
@@ -459,7 +744,13 @@ document.addEventListener("DOMContentLoaded", async function () {
           const report = getRequest.result;
 
           if (report.userId !== userId) {
-            alert("You are not authorized to edit this report");
+            Swal.fire({
+              icon: "error",
+              title: "Unauthorize User",
+              text: "You are not authorized to edit this report",
+              confirmButtonColor: "#590f1c",
+            });
+
             return;
           }
 
@@ -479,7 +770,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 
           const putRequest = store.put(report);
           putRequest.onsuccess = function () {
-            alert("Report updated successfully!");
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Report updated successfully!",
+              timer: 2000,
+              showConfirmButton: false,
+            });
             displayReports();
 
             pendingImageChanges = { toAdd: [], toDelete: [] };
@@ -500,7 +797,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const userId = localStorage.getItem("userId");
         if (!userId) {
-          alert("User not authenticated. Please login again.");
+          Swal.fire({
+            icon: "error",
+            title: "Account Not Authenticated",
+            text: "User not authenticated. Please login again.",
+            confirmButtonColor: "#590f1c",
+          });
           return;
         }
 
@@ -519,7 +821,12 @@ document.addEventListener("DOMContentLoaded", async function () {
           getRequest.onsuccess = function () {
             const report = getRequest.result;
             if (report.userId !== userId) {
-              alert("You are not authorized to delete this report");
+              Swal.fire({
+                icon: "error",
+                title: "Unauthorize User",
+                text: "You are not authorized to delete this report.",
+                confirmButtonColor: "#590f1c",
+              });
               deleteModal.hide();
               return;
             }

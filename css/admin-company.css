@@ -414,3 +414,8 @@ i {
     margin-bottom: 10px;
   }
 }
+
+nav i,
+.offcanvas i {
+  color: rgb(60, 61, 66) !important;
+}

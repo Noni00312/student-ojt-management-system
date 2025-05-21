@@ -139,7 +139,12 @@ async function saveAnnouncement(e) {
   }
 
   if (!title || !content) {
-    alert("Title and content are required.");
+    Swal.fire({
+      icon: "warning",
+      title: "All Field Is Required",
+      text: "Title and content are required.",
+      confirmButtonColor: "#590f1c",
+    });
     setLoading(btn, false);
     return;
   }
@@ -164,7 +169,12 @@ async function saveAnnouncement(e) {
       document.getElementById("announcementSearch").value.trim()
     );
   } catch (error) {
-    alert("Failed to save announcement: " + error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Update Failed",
+      text: `Failed to save announcement: ${error.message}`,
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     setLoading(btn, false);
   }
@@ -184,7 +194,12 @@ async function deleteAnnouncement() {
     );
     currentDeleteId = null;
   } catch (error) {
-    alert("Failed to delete announcement: " + error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Delete Failed",
+      text: `Failed to delete announcement: ${error.message}`,
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     setLoading(btn, false);
   }

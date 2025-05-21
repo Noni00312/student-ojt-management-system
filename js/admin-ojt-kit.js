@@ -198,7 +198,12 @@ function showOjtKitsModal() {
     })
     .catch((error) => {
       console.error("Error loading OJT Kits:", error);
-      showToast("danger", "Failed to load OJT Kits");
+      Swal.fire({
+        icon: "error",
+        title: "Something When Wrong",
+        text: "Failed to load OJT Kits.",
+        confirmButtonColor: "#590f1c",
+      });
       showLoading(false);
     });
 }
@@ -419,12 +424,23 @@ document
       .value.trim();
 
     if (!title || !content) {
-      showToast("warning", "Please fill in all fields");
+      Swal.fire({
+        icon: "warning",
+        title: "All Fields Are Required",
+        text: "Please fill in all required fields.",
+        confirmButtonColor: "#590f1c",
+      });
+
       return;
     }
 
     if (!currentEditingKitId) {
-      showToast("danger", "No OJT Kit selected for editing");
+      Swal.fire({
+        icon: "error",
+        title: "Select OJT Kit First",
+        text: "No OJT Kit selected for editing.",
+        confirmButtonColor: "#590f1c",
+      });
       return;
     }
 
@@ -443,7 +459,13 @@ document
         });
       })
       .then(() => {
-        showToast("success", "OJT Kit updated successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "OJT Kit updated successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
 
         const editModal = bootstrap.Modal.getInstance(
           document.getElementById("addOJTKITSModalEdit")
@@ -461,7 +483,12 @@ document
       })
       .catch((error) => {
         console.error("Error updating OJT Kit:", error);
-        showToast("danger", `Error: ${error.message}`);
+        Swal.fire({
+          icon: "error",
+          title: "An Error Occur",
+          text: `Error: ${error.message}`,
+          confirmButtonColor: "#590f1c",
+        });
       })
       .finally(() => {
         submitButton.innerHTML = originalButtonText;
@@ -499,7 +526,13 @@ function loadOjtKitForEdit(kitId) {
     })
     .catch((error) => {
       console.error("Error loading kit for edit:", error);
-      showToast("danger", "Failed to load OJT Kit for editing");
+      Swal.fire({
+        icon: "error",
+        title: "Something Went Wrong",
+        text: "Failed to load OJT Kit for editing.",
+        confirmButtonColor: "#590f1c",
+      });
+
       showLoading(false);
     });
 }
@@ -523,7 +556,13 @@ function deleteOjtKit(kitId) {
       return firebaseCRUD.deleteData("ojtKits", kitId);
     })
     .then(() => {
-      showToast("danger", "OJT Kit deleted successfully");
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "OJT Kit deleted successfully.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
 
       const docsModal = bootstrap.Modal.getInstance(
         document.getElementById("documentsModal")
@@ -534,7 +573,12 @@ function deleteOjtKit(kitId) {
     })
     .catch((error) => {
       console.error("Error deleting kit:", error);
-      showToast("danger", "Failed to delete OJT Kit");
+      Swal.fire({
+        icon: "error",
+        title: "Delete Failed",
+        text: "Failed to delete OJT Kit.",
+        confirmButtonColor: "#590f1c",
+      });
     })
     .finally(() => {
       showLoading(false);
@@ -611,7 +655,12 @@ async function handleOjtKitSelection(studentId, kitId) {
     new bootstrap.Modal(viewModal).show();
   } catch (error) {
     console.error("Error:", error);
-    showToast("danger", "Failed to load document");
+    Swal.fire({
+      icon: "error",
+      title: "Something When Wrong",
+      text: "Failed to load document.",
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     showLoading(false);
   }
@@ -709,28 +758,6 @@ $(document).ready(function () {
 
 let currentEditingKitId = null;
 
-function showToast(type, message) {
-  const toast = document.createElement("div");
-  toast.className = `toast align-items-center text-white bg-${type} position-fixed bottom-0 end-0 m-3`;
-  toast.setAttribute("role", "alert");
-  toast.setAttribute("aria-live", "assertive");
-  toast.setAttribute("aria-atomic", "true");
-  toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${message}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-
-  document.body.appendChild(toast);
-  const bsToast = new bootstrap.Toast(toast);
-  bsToast.show();
-
-  setTimeout(() => {
-    toast.remove();
-  }, 5000);
-}
-
 document
   .getElementById("add-report-form")
   .addEventListener("submit", async function (e) {
@@ -740,7 +767,13 @@ document
     const content = document.getElementById("add-report-content").value;
 
     if (!title || !content) {
-      showToast("warning", "Please fill in all fields");
+      Swal.fire({
+        icon: "warning",
+        title: "All Fields Are Required",
+        text: "Please fill in all required fields.",
+        confirmButtonColor: "#590f1c",
+      });
+
       return;
     }
 
@@ -766,10 +799,21 @@ document
 
       this.reset();
 
-      showToast("success", "OJT Kit added successfully!");
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "OJT Kit added successfully!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } catch (error) {
       console.error("Error adding OJT Kit:", error);
-      showToast("danger", `Error: ${error.message}`);
+      Swal.fire({
+        icon: "error",
+        title: "An Error Occur",
+        text: `Error: ${error.message}`,
+        confirmButtonColor: "#590f1c",
+      });
     } finally {
       submitButton.innerHTML = originalButtonText;
       submitButton.disabled = false;

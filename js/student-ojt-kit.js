@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         await window.dbReady;
 
-        // const img = document.getElementById("user-img");
         const img = document.getElementById("user-profile");
         const dataArray = await crudOperations.getByIndex("studentInfoTbl", "userId", userId);
         const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
@@ -86,12 +85,9 @@ async function loadOJTKits(kits = null) {
                 ${isCompleted ? '<div class="completed-badge"><i class="bi bi-check-circle-fill"></i></div>' : ''}
             `;
             
-            // card.addEventListener('click', () => showKitDetails(kit));
-            // Only add click event if NOT completed
             if (!isCompleted) {
                 card.addEventListener('click', () => showKitDetails(kit));
             } else {
-                // Optional: Add visual feedback that completed cards can't be clicked
                 card.style.cursor = 'default';
             }
             container.appendChild(card);
@@ -112,7 +108,6 @@ async function loadOJTKits(kits = null) {
     }
 }
 
-// Helper function for icons remains the same
 function getIconForKit(title) {
     if (!title) return 'bi bi-file-earmark-text';
     
@@ -126,15 +121,7 @@ function getIconForKit(title) {
 
 
 
-// function getIconClassForKit(title) {
-//     if (!title) return '';
-    
-//     const lowerTitle = title.toLowerCase();
-//     if (lowerTitle.includes('medical')) return 'medical-cert-icon';
-//     if (lowerTitle.includes('waiver')) return 'parents-waiver-icon';
-//     if (lowerTitle.includes('payment')) return 'ojt-payment-icon';
-//     return '';
-// }
+
 
 
 
@@ -307,7 +294,6 @@ function setupEventListeners() {
 
 
 
-// Search OJT Kits
 async function searchOJTKits(searchTerm) {
     showLoading(true);
     try {
@@ -323,8 +309,6 @@ async function searchOJTKits(searchTerm) {
         
         const filtered = allKits.filter(kit => {
             const kitTitle = kit.title?.toLowerCase() || '';
-            // const kitContent = kit.content?.toLowerCase() || '';
-            // const kitDepartment = kit.department?.toLowerCase() || '';
             
             return searchTerms.every(term => 
                 kitTitle.includes(term)
@@ -642,7 +626,7 @@ async function handleOJTKitSubmit(e) {
             }
         }
         
-        showErrorToast("Report added successfully!", "success");
+        showErrorToast("Document added successfully!", "success");
         
         document.getElementById('ojtKitForm').reset();
         document.getElementById('add-image-container').innerHTML = '';

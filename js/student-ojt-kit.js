@@ -274,7 +274,12 @@ async function showKitDetails(kit, isCompleted = false) {
     modalInstance.show();
   } catch (error) {
     console.error("Error showing kit details:", error);
-    showErrorToast("Failed to load OJT Kit details");
+    Swal.fire({
+      icon: "error",
+      title: "Something Went Wrong",
+      text: "Failed to load OJT Kit details",
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     showLoading(false);
   }
@@ -331,7 +336,12 @@ async function loadOJTKitDataForView(kitId) {
     viewModal.setAttribute("data-kit-id", kitId);
   } catch (error) {
     console.error("Error loading OJT Kit data:", error);
-    showErrorToast("Failed to load OJT Kit data");
+    Swal.fire({
+      icon: "error",
+      title: "Something Went Wrong",
+      text: "Failed to load OJT Kit data.",
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     showLoading(false);
   }
@@ -399,7 +409,12 @@ async function handleAddOJTKit() {
   const content = document.getElementById("ojtKitContent").value.trim();
 
   if (!title || !content) {
-    showErrorToast("Please fill in all required fields");
+    Swal.fire({
+      icon: "warning",
+      title: "All Fields Are Required",
+      text: "Please fill in all required fields",
+      confirmButtonColor: "#590f1c",
+    });
     return;
   }
 
@@ -421,8 +436,13 @@ async function handleAddOJTKit() {
     };
 
     await firebaseCRUD.createData("ojtKits", kitData);
-
-    showErrorToast("OJT Kit added successfully!", "success");
+    Swal.fire({
+      icon: "success",
+      title: "Add Success",
+      text: "OJT Kit added successfully!",
+      timer: 2000,
+      showConfirmButton: false,
+    });
     document.getElementById("addOJTKitForm").reset();
     document.getElementById("preview-image").style.display = "none";
     document.getElementById("camera-icon").style.display = "block";
@@ -436,7 +456,12 @@ async function handleAddOJTKit() {
     await loadOJTKits();
   } catch (error) {
     console.error("Error adding OJT Kit:", error);
-    showErrorToast("Failed to add OJT Kit");
+    Swal.fire({
+      icon: "error",
+      title: "Add Failed",
+      text: "Failed to add OJT Kit.",
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     submitButton.disabled = false;
     submitButton.textContent = "Add OJT Kit";
@@ -494,20 +519,6 @@ function debounce(func, wait) {
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
-}
-
-function showErrorToast(message, type = "danger") {
-  const toast = document.createElement("div");
-  toast.className = `toast align-items-center text-white bg-${type} position-fixed bottom-0 end-0 m-3`;
-  toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${message}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-  document.body.appendChild(toast);
-  new bootstrap.Toast(toast).show();
-  setTimeout(() => toast.remove(), 5000);
 }
 
 let uploadedImageBase64 = "";
@@ -568,7 +579,12 @@ function handleImageUpload(event) {
         previewImageContainer.appendChild(imgContainer);
       } catch (error) {
         console.error("Error processing image:", error);
-        showErrorToast("Error processing one or more images");
+        Swal.fire({
+          icon: "error",
+          title: "An Error Occur",
+          text: "Error processing one or more images.",
+          confirmButtonColor: "#590f1c",
+        });
       }
     };
 
@@ -634,13 +650,23 @@ async function handleOJTKitSubmit(e) {
     ? JSON.parse(modal.dataset.viewingKit)
     : null;
   if (!kit) {
-    showErrorToast("No OJT Kit selected");
+    Swal.fire({
+      icon: "Warning",
+      title: "No OJT Kit Selected",
+      text: "Please select OJT Kit first.",
+      confirmButtonColor: "#590f1c",
+    });
     return;
   }
 
   const content = contentInput.value.trim();
   if (!content) {
-    showErrorToast("Please fill in all required fields");
+    Swal.fire({
+      icon: "warning",
+      title: "All Fields Are Required",
+      text: "Please fill in all required fields.",
+      confirmButtonColor: "#590f1c",
+    });
     return;
   }
 
@@ -704,10 +730,13 @@ async function handleOJTKitSubmit(e) {
       }
     }
 
-    showErrorToast(
-      `Document ${isUpdate ? "updated" : "added"} successfully!`,
-      "success"
-    );
+    Swal.fire({
+      icon: "success",
+      title: `${isUpdate ? "Update" : "Add"} Success`,
+      text: `Document ${isUpdate ? "updated" : "added"} successfully!`,
+      timer: 2000,
+      showConfirmButton: false,
+    });
 
     e.target.reset();
     document.getElementById("add-image-container").innerHTML = "";
@@ -721,7 +750,12 @@ async function handleOJTKitSubmit(e) {
     await loadOJTKits();
   } catch (error) {
     console.error("Error processing report:", error);
-    showErrorToast(`Failed to ${isUpdate ? "update" : "add"} report`);
+    Swal.fire({
+      icon: "error",
+      title: `${isUpdate ? "Update" : "Add"} Failed`,
+      text: `Failed to ${isUpdate ? "update" : "add"} report`,
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     submitButton.disabled = false;
     submitButton.textContent = isUpdate ? "Update OJT Kit" : "Submit OJT Kit";
@@ -743,7 +777,12 @@ document.addEventListener("DOMContentLoaded", function () {
           addImageToContainer(imageData, true);
         } catch (error) {
           console.error("Error processing image:", error);
-          showErrorToast("Error processing image");
+          Swal.fire({
+            icon: "error",
+            title: "An Error Occur",
+            text: "Error processing image.",
+            confirmButtonColor: "#590f1c",
+          });
         }
       }
 
@@ -816,13 +855,23 @@ document.addEventListener("DOMContentLoaded", function () {
             imageDocData
           );
         }
-
-        showErrorToast("Document updated successfully!", "success");
+        Swal.fire({
+          icon: "success",
+          title: "Update Success",
+          text: "Document updated successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
         bootstrap.Modal.getInstance(modal).hide();
         await loadOJTKits();
       } catch (error) {
         console.error("Error updating report:", error);
-        showErrorToast("Failed to update report");
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "Failed to update report.",
+          confirmButtonColor: "#590f1c",
+        });
       } finally {
         showLoading(false);
       }

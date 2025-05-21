@@ -75,25 +75,38 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     uploadButton.addEventListener("click", async function () {
       if (!navigator.onLine) {
-        alert(
-          "No internet connection. Please check your network and try again."
-        );
+        Swal.fire({
+          icon: "error",
+          title: "No Connection",
+          text: "No internet connection. Please check your network and try again.",
+          confirmButtonColor: "#590f1c",
+        });
         return;
       }
 
       const userId = localStorage.getItem("userId");
       if (!userId) {
-        alert("User not authenticated. Please login again.");
+        Swal.fire({
+          icon: "error",
+          title: "Unauthorize User",
+          text: "User not authenticated. Please login again.",
+          confirmButtonColor: "#590f1c",
+        });
         return;
       }
 
-      if (
-        !confirm(
-          "Are you sure you want to upload all assistant reports to the server?"
-        )
-      ) {
-        return;
-      }
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Are you sure you want to logout?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#590f1c",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, logout",
+        cancelButtonText: "Cancel",
+      });
+
+      if (!result.isConfirmed) return;
 
       try {
         const originalIcon = uploadButton.innerHTML;
@@ -110,7 +123,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         request.onsuccess = async function (event) {
           const reports = event.target.result;
           if (reports.length === 0) {
-            alert("No assistant reports to upload");
+            Swal.fire({
+              icon: "warning",
+              title: "No Report",
+              text: "No assistant reports to upload",
+              confirmButtonColor: "#590f1c",
+            });
             uploadButton.innerHTML = originalIcon;
             uploadButton.disabled = false;
             return;
@@ -200,9 +218,20 @@ document.addEventListener("DOMContentLoaded", async function () {
           uploadButton.disabled = false;
 
           if (uploadSuccess) {
-            alert("All assistant reports uploaded successfully!");
+            Swal.fire({
+              icon: "success",
+              title: "Upload Success",
+              text: "All assistant reports uploaded successfully!",
+              timer: 2000,
+              showConfirmButton: false,
+            });
           } else {
-            alert(`Upload completed with some errors: ${errorMessage}`);
+            Swal.fire({
+              icon: "error",
+              title: "Upload Complete With Error",
+              text: `Upload completed with some errors: ${errorMessage}`,
+              confirmButtonColor: "#590f1c",
+            });
           }
 
           displayReports();
@@ -213,13 +242,23 @@ document.addEventListener("DOMContentLoaded", async function () {
             "Error fetching assistant reports from IndexedDB:",
             event.target.error
           );
-          alert("Error fetching assistant reports from local storage");
+          Swal.fire({
+            icon: "error",
+            title: "An Error Occur",
+            text: "Error fetching assistant reports from local storage.",
+            confirmButtonColor: "#590f1c",
+          });
           uploadButton.innerHTML = originalIcon;
           uploadButton.disabled = false;
         };
       } catch (error) {
         console.error("Upload error:", error);
-        alert("Error uploading assistant reports: " + error.message);
+        Swal.fire({
+          icon: "error",
+          title: "An Error Occur",
+          text: `Error uploading assistant reports: " + ${error.message}`,
+          confirmButtonColor: "#590f1c",
+        });
         uploadButton.innerHTML = originalIcon;
         uploadButton.disabled = false;
       }
@@ -250,7 +289,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
-            alert(`File ${file.name} is not an image`);
+            Swal.fire({
+              icon: "warning",
+              title: "Invalid File",
+              text: `File ${file.name} is not an image`,
+              confirmButtonColor: "#590f1c",
+            });
             continue;
           }
 
@@ -293,7 +337,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             reader.readAsDataURL(compressedBlob);
           } catch (error) {
             console.error("Error compressing image:", error);
-            alert(`Failed to process image ${file.name}: ${error.message}`);
+            Swal.fire({
+              icon: "error",
+              title: "Something Went Wrong",
+              text: `Failed to process image ${file.name}: ${error.message}`,
+              confirmButtonColor: "#590f1c",
+            });
           }
         }
       });
@@ -312,12 +361,22 @@ document.addEventListener("DOMContentLoaded", async function () {
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
-          alert("User not authenticated. Please login again.");
+          Swal.fire({
+            icon: "error",
+            title: "Account Not Authenticated",
+            text: "User not authenticated. Please login again.",
+            confirmButtonColor: "#590f1c",
+          });
           return;
         }
 
         if (!title || !content) {
-          alert("Please fill in all required fields");
+          Swal.fire({
+            icon: "warning",
+            title: "All Fields Are Required",
+            text: "Please fill in all required fields.",
+            confirmButtonColor: "#590f1c",
+          });
           return;
         }
 
@@ -342,7 +401,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById("addAssistantReportModal")
           );
           if (modal) modal.hide();
-          alert("Assistant report saved successfully!");
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Assistant report saved successfully!",
+            timer: 2000,
+            showConfirmButton: false,
+          });
 
           addReportForm.reset();
           addImageContainer.innerHTML = "";
@@ -353,7 +418,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         request.onerror = function (event) {
           console.error("Error storing assistant report:", event.target.error);
-          alert("Error saving assistant report to local database.");
+          Swal.fire({
+            icon: "error",
+            title: "An Error Occur",
+            text: "Error saving assistant report to local database.",
+            confirmButtonColor: "#590f1c",
+          });
         };
       });
     }
@@ -405,7 +475,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
-            alert(`File ${file.name} is not an image`);
+            Swal.fire({
+              icon: "warning",
+              title: "Invalid File",
+              text: `File ${file.name} is not an image`,
+              confirmButtonColor: "#590f1c",
+            });
             continue;
           }
 
@@ -414,7 +489,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             pendingImageChanges.toAdd.push(compressedBlob);
           } catch (error) {
             console.error("Error compressing image:", error);
-            alert(`Failed to process image ${file.name}: ${error.message}`);
+            Swal.fire({
+              icon: "error",
+              title: "Something Went Wrong",
+              text: `Failed to process image ${file.name}: ${error.message}`,
+              confirmButtonColor: "#590f1c",
+            });
           }
         }
 
@@ -460,12 +540,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
-          alert("User not authenticated. Please login again.");
+          Swal.fire({
+            icon: "error",
+            title: "Unauthorized User",
+            text: "User not authenticated. Please login again.",
+            confirmButtonColor: "#590f1c",
+          });
           return;
         }
 
         if (!title || !content) {
-          alert("Please fill in all required fields");
+          Swal.fire({
+            icon: "warning",
+            title: "All Fields Are Required",
+            text: "Please fill in all required fields.",
+            confirmButtonColor: "#590f1c",
+          });
+
           return;
         }
 
@@ -477,7 +568,13 @@ document.addEventListener("DOMContentLoaded", async function () {
           const report = getRequest.result;
 
           if (report.userId !== userId) {
-            alert("You are not authorized to edit this assistant report");
+            Swal.fire({
+              icon: "error",
+              title: "Unauthorized User",
+              text: "You are not authorized to edit this assistant report",
+              confirmButtonColor: "#590f1c",
+            });
+
             return;
           }
 
@@ -497,7 +594,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 
           const putRequest = store.put(report);
           putRequest.onsuccess = function () {
-            alert("Assistant report updated successfully!");
+            Swal.fire({
+              icon: "success",
+              title: "Updated Success",
+              text: "Assistant report updated successfully!",
+              timer: 2000,
+              showConfirmButton: false,
+            });
             displayReports();
 
             pendingImageChanges = { toAdd: [], toDelete: [] };
@@ -518,7 +621,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const userId = localStorage.getItem("userId");
         if (!userId) {
-          alert("User not authenticated. Please login again.");
+          Swal.fire({
+            icon: "error",
+            title: "Account Not Authenticated",
+            text: "User not authenticated. Please login again.",
+            confirmButtonColor: "#590f1c",
+          });
+
           return;
         }
 
@@ -540,7 +649,12 @@ document.addEventListener("DOMContentLoaded", async function () {
           getRequest.onsuccess = function () {
             const report = getRequest.result;
             if (report.userId !== userId) {
-              alert("You are not authorized to delete this assistant report");
+              Swal.fire({
+                icon: "error",
+                title: "Unauthorized User",
+                text: "You are not authorized to delete this assistant report",
+                confirmButtonColor: "#590f1c",
+              });
               deleteModal.hide();
               return;
             }

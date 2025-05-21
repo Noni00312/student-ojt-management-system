@@ -310,30 +310,25 @@ function loadCompanyDataForUpdate(companyId) {
         })
         .catch((error) => {
           console.error("Error loading company data:", error);
-          showErrorToast("Failed to load company data: " + error.message);
+          Swal.fire({
+            icon: "error",
+            title: "Something When Wrong",
+            text: `Failed to load company data: ${error.message}`,
+            confirmButtonColor: "#590f1c",
+          });
           showLoading(false);
         });
     })
     .catch((err) => {
       console.error("Failed to load firebase-crud:", err);
-      showErrorToast("Failed to load required modules");
+      Swal.fire({
+        icon: "error",
+        title: "Something When Wrong",
+        text: "Failed to load required modules",
+        confirmButtonColor: "#590f1c",
+      });
       showLoading(false);
     });
-}
-
-function showErrorToast(message) {
-  const toast = document.createElement("div");
-  toast.className =
-    "toast align-items-center text-white bg-success position-fixed bottom-0 end-0 m-3";
-  toast.innerHTML = `
-          <div class="d-flex">
-              <div class="toast-body">${message}</div>
-              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-          </div>
-      `;
-  document.body.appendChild(toast);
-  new bootstrap.Toast(toast).show();
-  setTimeout(() => toast.remove(), 5000);
 }
 
 $(document).ready(function () {
@@ -395,7 +390,12 @@ $(document).ready(function () {
       checkCompanyNameExists(companyName)
         .then((nameExists) => {
           if (nameExists) {
-            showErrorToast("A company with this name already exists!");
+            Swal.fire({
+              icon: "warning",
+              title: "Company Exist",
+              text: "A company with this name already exists!",
+              confirmButtonColor: "#590f1c",
+            });
             return Promise.reject("Duplicate company name");
           }
 
@@ -417,7 +417,14 @@ $(document).ready(function () {
           });
         })
         .then(() => {
-          showErrorToast("Company added successfully!");
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Company added successfully!",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+
           form.reset();
           document.getElementById("preview-image").src = "";
           document.getElementById("preview-image").style.display = "none";
@@ -434,7 +441,13 @@ $(document).ready(function () {
         .catch((error) => {
           if (error !== "Duplicate company name") {
             console.error("Error:", error);
-            showErrorToast(`Operation failed: ${error.message}`);
+
+            Swal.fire({
+              icon: "error",
+              title: "Somthing Went Wrong",
+              text: `Operation failed: ${error.message}`,
+              confirmButtonColor: "#590f1c",
+            });
           }
         })
         .finally(() => {
@@ -518,7 +531,12 @@ $("#ojtFormU").validate({
     const newCompanyProvince = form.companyProvinceU.value;
 
     if (!companyId) {
-      showErrorToast("Company ID not found");
+      Swal.fire({
+        icon: "error",
+        title: "Failed To Find ID",
+        text: "Company ID not found.",
+        confirmButtonColor: "#590f1c",
+      });
       submitButton.prop("disabled", false).text("Update Company");
       return;
     }
@@ -531,9 +549,12 @@ $("#ojtFormU").validate({
     checkCompanyDuplicate(newCompanyName, newCompanyAddress, companyId)
       .then((duplicateExists) => {
         if (duplicateExists) {
-          showErrorToast(
-            "A company with this name and address already exists!"
-          );
+          Swal.fire({
+            icon: "error",
+            title: "Company With This Address Exist",
+            text: "A company with this name and address already exists!",
+            confirmButtonColor: "#590f1c",
+          });
           return Promise.reject("Duplicate company");
         }
 
@@ -561,7 +582,13 @@ $("#ojtFormU").validate({
         });
       })
       .then(() => {
-        showErrorToast("Company updated successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Company updated successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
         form.reset();
         const modal = bootstrap.Modal.getInstance(
           document.getElementById("updateCompanyModal")
@@ -584,7 +611,12 @@ $("#ojtFormU").validate({
       .catch((error) => {
         if (error !== "Duplicate company") {
           console.error("Update error:", error);
-          showErrorToast(`Update failed: ${error.message}`);
+          Swal.fire({
+            icon: "error",
+            title: "Update Failed",
+            text: `Update failed: ${error.message}`,
+            confirmButtonColor: "#590f1c",
+          });
         }
       })
       .finally(() => {

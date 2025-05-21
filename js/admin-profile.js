@@ -206,8 +206,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         text: "Are you sure you want to logout?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
+        confirmButtonColor: "#590f1c",
+        cancelButtonColor: "#6c757d",
         confirmButtonText: "Yes, logout!",
       });
 
@@ -367,9 +367,17 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      const confirmed = confirm("Are you sure you want to logout?");
+      const result = await Swal.fire({
+        title: "Logout?",
+        text: "Are you sure you want to logout?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#590f1c",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, logout!",
+      });
 
-      if (confirmed) {
+      if (result.isConfirmed) {
         try {
           logoutButton.disabled = true;
           logoutButton.innerHTML =

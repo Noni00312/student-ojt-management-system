@@ -6,7 +6,12 @@ if (window.location.pathname.includes("report.html")) {
       await displayReports();
     } catch (error) {
       console.error("Failed to load reports:", error);
-      alert("Failed to load reports. Please check your connection.");
+      Swal.fire({
+        icon: "error",
+        title: "Something Went Wrong",
+        text: "Failed to load reports. Please check your connection.",
+        confirmButtonColor: "#590f1c",
+      });
     }
   });
 }

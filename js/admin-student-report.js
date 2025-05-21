@@ -570,10 +570,21 @@ async function displayReports(reports) {
           const pdfGen = new PDFReportGenerator();
           await pdfGen.generate(reportData);
 
-          alert("PDF exported successfully!");
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "PDF exported successfully!",
+            timer: 2000,
+            showConfirmButton: false,
+          });
         } catch (err) {
           console.error("Failed to generate PDF:", err);
-          alert("Failed to generate PDF.");
+          Swal.fire({
+            icon: "error",
+            title: "PDF Generation Failed",
+            text: "Failed to generate PDF.",
+            confirmButtonColor: "#590f1c",
+          });
         } finally {
           button.innerHTML = originalIcon;
           button.disabled = false;

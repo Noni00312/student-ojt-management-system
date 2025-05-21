@@ -29,10 +29,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       } catch (error) {
         console.error("Error checking assistant status:", error);
-        showErrorToast(
-          "Failed to check assistant status: ",
-          true + error.message
-        );
+
+        Swal.fire({
+          icon: "error",
+          title: "Something Went Wrong",
+          text: `Failed to check assistant status: ${error.message}`,
+          confirmButtonColor: "#590f1c",
+        });
       }
     } else {
       console.error("No user ID found");
@@ -161,7 +164,12 @@ async function loadStudentData(userId) {
     }
   } catch (error) {
     console.error("Error loading student data:", error);
-    showErrorToast("Failed to load student data: " + error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Something Went Wrong",
+      text: `Failed to load student data: ${error.message}`,
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     showLoading(false);
   }
@@ -282,7 +290,12 @@ async function loadAttendanceData(userId) {
     );
   } catch (error) {
     console.error("Error loading attendance data:", error);
-    showErrorToast("Failed to load attendance data: ", true + error.message);
+    Swal.fire({
+      icon: "error",
+      title: "Something Went Wrong",
+      text: `Failed to load attendance data: ${error.message}`,
+      confirmButtonColor: "#590f1c",
+    });
   } finally {
     showLoading(false);
   }
@@ -331,7 +344,14 @@ document
         userType: "student",
       });
 
-      showErrorToast("Assistant disappointed successfully!");
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Assistant disappointed successfully!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
       this.disabled = true;
 
       setTimeout(() => {
@@ -339,7 +359,12 @@ document
       }, 2000);
     } catch (error) {
       console.error("Error appointing assistant:", error);
-      showErrorToast("Failed to appoint assistant: ", true + error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Something Went Wrong",
+        text: `Failed to appoint assistant: ${error.message}`,
+        confirmButtonColor: "#590f1c",
+      });
     } finally {
       showLoading(false);
     }
@@ -678,22 +703,6 @@ function displayNoReportsMessage(
     `;
 }
 
-function showErrorToast(message, isError = false) {
-  const toast = document.createElement("div");
-
-  const bgClass = isError ? "bg-danger" : "bg-success";
-  toast.className = `toast align-items-center text-white ${bgClass} position-fixed bottom-0 end-0 m-3`;
-  toast.innerHTML = `
-      <div class="d-flex">
-        <div class="toast-body">${message}</div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-      </div>
-    `;
-  document.body.appendChild(toast);
-  new bootstrap.Toast(toast).show();
-  setTimeout(() => toast.remove(), 5000);
-}
-
 document
   .querySelector('[data-bs-target="#editDataModal"]')
   ?.addEventListener("click", async function () {
@@ -709,7 +718,12 @@ document
       await loadAndSetStudentData(userId, firebaseCRUD);
     } catch (error) {
       console.error("Error loading student data:", error);
-      showErrorToast("Failed to load student data: ", true + error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Something Went Wrong",
+        text: `Failed to load student data: ${error.message}`,
+        confirmButtonColor: "#590f1c",
+      });
     } finally {
       showLoading(false);
     }
@@ -877,7 +891,13 @@ document
 
       await firebaseCRUD.updateData("students", studentDocId, formData);
 
-      showErrorToast("Student information updated successfully!");
+      Swal.fire({
+        icon: "success",
+        title: "Update Success",
+        text: "Student information updated successfully!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
 
       const editModal = bootstrap.Modal.getInstance(
         document.getElementById("editDataModal")
@@ -887,7 +907,12 @@ document
       displayStudentInfo({ ...students[0], ...formData });
     } catch (error) {
       console.error("Error updating student:", error);
-      showErrorToast("Failed to update student: ", true + error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Something Went Wrong",
+        text: `Failed to update student: ${error.message}`,
+        confirmButtonColor: "#590f1c",
+      });
     } finally {
       showLoading(false);
     }
@@ -922,7 +947,12 @@ function initializeAttendanceCalendar() {
       });
     } catch (error) {
       console.error("Error fetching attendance data:", error);
-      showErrorToast("Failed to load attendance data: ", true + error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Something Went Wrong",
+        text: `Failed to load attendance data: ${error.message}`,
+        confirmButtonColor: "#590f1c",
+      });
     } finally {
       showLoading(false);
     }

@@ -52,7 +52,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       userId
     );
 
-
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
     if (data != null) {
@@ -69,150 +68,161 @@ document.addEventListener("DOMContentLoaded", async function () {
   };
 
   function setupUploadButton() {
-    const uploadButton = document.getElementById("upload-assistant-report-button");
+    const uploadButton = document.getElementById(
+      "upload-assistant-report-button"
+    );
     if (!uploadButton) return;
 
     uploadButton.addEventListener("click", async function () {
-        if (!navigator.onLine) {
-            alert("No internet connection. Please check your network and try again.");
-            return;
-        }
+      if (!navigator.onLine) {
+        alert(
+          "No internet connection. Please check your network and try again."
+        );
+        return;
+      }
 
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-            alert("User not authenticated. Please login again.");
-            return;
-        }
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("User not authenticated. Please login again.");
+        return;
+      }
 
-        if (!confirm("Are you sure you want to upload all assistant reports to the server?")) {
-            return;
-        }
+      if (
+        !confirm(
+          "Are you sure you want to upload all assistant reports to the server?"
+        )
+      ) {
+        return;
+      }
 
-        try {
-            const originalIcon = uploadButton.innerHTML;
-            uploadButton.innerHTML = `
+      try {
+        const originalIcon = uploadButton.innerHTML;
+        uploadButton.innerHTML = `
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             `;
-            uploadButton.disabled = true;
+        uploadButton.disabled = true;
 
-            const transaction = db.transaction(["assistantReportTbl"], "readonly");
-            const store = transaction.objectStore("assistantReportTbl");
-            const index = store.index("userId");
-            const request = index.getAll(userId);
+        const transaction = db.transaction(["assistantReportTbl"], "readonly");
+        const store = transaction.objectStore("assistantReportTbl");
+        const index = store.index("userId");
+        const request = index.getAll(userId);
 
-            request.onsuccess = async function (event) {
-                const reports = event.target.result;
-                if (reports.length === 0) {
-                    alert("No assistant reports to upload");
-                    uploadButton.innerHTML = originalIcon;
-                    uploadButton.disabled = false;
-                    return;
-                }
-
-                let uploadSuccess = true;
-                let errorMessage = "";
-
-                for (const report of reports) {
-                    try {
-                        console.log(`Processing assistant report ${report.id}`);
-
-                        const reportId = `${userId}_${report.id}`;
-
-                        const firebaseReport = {
-                            title: report.title,
-                            content: report.content,
-                            createdAt: report.createdAt,
-                            userId: userId,
-                            localId: report.id,
-                            hasImages: report.images && report.images.length > 0,
-                        };
-
-                        await firebaseCRUD.setDataWithId(
-                            "assistantreports",
-                            reportId,
-                            firebaseReport
-                        );
-                        console.log(`Created assistant report document with ID: ${reportId}`);
-
-                        if (report.images && report.images.length > 0) {
-                            console.log(
-                                `Uploading ${report.images.length} images for assistant report ${reportId}`
-                            );
-
-                            for (const [index, imageBlob] of report.images.entries()) {
-                                try {
-                                    const base64String = await blobToBase64(imageBlob);
-                                    console.log(
-                                        `Uploading image ${index + 1} of ${report.images.length}`
-                                    );
-
-                                    await firebaseCRUD.createData(
-                                        `assistantreports/${reportId}/images`,
-                                        {
-                                            imageData: base64String,
-                                            uploadedAt: new Date().toISOString(),
-                                            order: index,
-                                            originalName: `image_${index + 1}.jpg`,
-                                            reportId: reportId,
-                                        }
-                                    );
-
-                                    console.log(`Successfully uploaded image ${index + 1}`);
-                                } catch (imageError) {
-                                    console.error(
-                                        `Error uploading image ${index + 1}:`,
-                                        imageError
-                                    );
-                                    uploadSuccess = false;
-                                    errorMessage = `Failed to upload some images. ${imageError.message}`;
-                                }
-                            }
-                        }
-
-                        const deleteTransaction = db.transaction(
-                            ["assistantReportTbl"],
-                            "readwrite"
-                        );
-                        const deleteStore = deleteTransaction.objectStore("assistantReportTbl");
-                        deleteStore.delete(report.id);
-                        console.log(`Deleted local assistant report ${report.id}`);
-                    } catch (reportError) {
-                        console.error(
-                            `Error processing assistant report ${report.id}:`,
-                            reportError
-                        );
-                        uploadSuccess = false;
-                        errorMessage = `Failed to upload some reports. ${reportError.message}`;
-                    }
-                }
-
-                uploadButton.innerHTML = originalIcon;
-                uploadButton.disabled = false;
-
-                if (uploadSuccess) {
-                    alert("All assistant reports uploaded successfully!");
-                } else {
-                    alert(`Upload completed with some errors: ${errorMessage}`);
-                }
-
-                displayReports();
-            };
-
-            request.onerror = function (event) {
-                console.error(
-                    "Error fetching assistant reports from IndexedDB:",
-                    event.target.error
-                );
-                alert("Error fetching assistant reports from local storage");
-                uploadButton.innerHTML = originalIcon;
-                uploadButton.disabled = false;
-            };
-        } catch (error) {
-            console.error("Upload error:", error);
-            alert("Error uploading assistant reports: " + error.message);
+        request.onsuccess = async function (event) {
+          const reports = event.target.result;
+          if (reports.length === 0) {
+            alert("No assistant reports to upload");
             uploadButton.innerHTML = originalIcon;
             uploadButton.disabled = false;
-        }
+            return;
+          }
+
+          let uploadSuccess = true;
+          let errorMessage = "";
+
+          for (const report of reports) {
+            try {
+              console.log(`Processing assistant report ${report.id}`);
+
+              const reportId = `${userId}_${report.id}`;
+
+              const firebaseReport = {
+                title: report.title,
+                content: report.content,
+                createdAt: report.createdAt,
+                userId: userId,
+                localId: report.id,
+                hasImages: report.images && report.images.length > 0,
+              };
+
+              await firebaseCRUD.setDataWithId(
+                "assistantreports",
+                reportId,
+                firebaseReport
+              );
+              console.log(
+                `Created assistant report document with ID: ${reportId}`
+              );
+
+              if (report.images && report.images.length > 0) {
+                console.log(
+                  `Uploading ${report.images.length} images for assistant report ${reportId}`
+                );
+
+                for (const [index, imageBlob] of report.images.entries()) {
+                  try {
+                    const base64String = await blobToBase64(imageBlob);
+                    console.log(
+                      `Uploading image ${index + 1} of ${report.images.length}`
+                    );
+
+                    await firebaseCRUD.createData(
+                      `assistantreports/${reportId}/images`,
+                      {
+                        imageData: base64String,
+                        uploadedAt: new Date().toISOString(),
+                        order: index,
+                        originalName: `image_${index + 1}.jpg`,
+                        reportId: reportId,
+                      }
+                    );
+
+                    console.log(`Successfully uploaded image ${index + 1}`);
+                  } catch (imageError) {
+                    console.error(
+                      `Error uploading image ${index + 1}:`,
+                      imageError
+                    );
+                    uploadSuccess = false;
+                    errorMessage = `Failed to upload some images. ${imageError.message}`;
+                  }
+                }
+              }
+
+              const deleteTransaction = db.transaction(
+                ["assistantReportTbl"],
+                "readwrite"
+              );
+              const deleteStore =
+                deleteTransaction.objectStore("assistantReportTbl");
+              deleteStore.delete(report.id);
+              console.log(`Deleted local assistant report ${report.id}`);
+            } catch (reportError) {
+              console.error(
+                `Error processing assistant report ${report.id}:`,
+                reportError
+              );
+              uploadSuccess = false;
+              errorMessage = `Failed to upload some reports. ${reportError.message}`;
+            }
+          }
+
+          uploadButton.innerHTML = originalIcon;
+          uploadButton.disabled = false;
+
+          if (uploadSuccess) {
+            alert("All assistant reports uploaded successfully!");
+          } else {
+            alert(`Upload completed with some errors: ${errorMessage}`);
+          }
+
+          displayReports();
+        };
+
+        request.onerror = function (event) {
+          console.error(
+            "Error fetching assistant reports from IndexedDB:",
+            event.target.error
+          );
+          alert("Error fetching assistant reports from local storage");
+          uploadButton.innerHTML = originalIcon;
+          uploadButton.disabled = false;
+        };
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("Error uploading assistant reports: " + error.message);
+        uploadButton.innerHTML = originalIcon;
+        uploadButton.disabled = false;
+      }
     });
   }
 
@@ -227,36 +237,38 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function setupAddModal() {
     const addImageInput = document.getElementById("add-assistant-image-input");
-    const addImageContainer = document.getElementById("add-assistant-image-container");
+    const addImageContainer = document.getElementById(
+      "add-assistant-image-container"
+    );
     const addReportForm = document.getElementById("add-assistant-report-form");
     let addModalImages = [];
 
     if (addImageInput && addImageContainer) {
       addImageInput.addEventListener("change", async function (event) {
         const files = event.target.files;
-  
+
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-  
+
           try {
             const compressedBlob = await compressImage(file, 500);
-            
+
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
               const container = document.createElement("div");
               container.className = "img-thumbnail-container";
-  
+
               const img = document.createElement("img");
               img.src = e.target.result;
               img.className = "img-thumbnail";
               img.style.maxWidth = "80px";
               img.style.maxHeight = "80px";
               img.dataset.imageIndex = addModalImages.length;
-  
+
               const deleteBtn = document.createElement("span");
               deleteBtn.className = "delete-img-btn";
               deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
@@ -265,16 +277,17 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const index = parseInt(img.dataset.imageIndex);
                 addModalImages.splice(index, 1);
                 container.remove();
-                const remainingImages = addImageContainer.querySelectorAll("img");
+                const remainingImages =
+                  addImageContainer.querySelectorAll("img");
                 remainingImages.forEach((img, newIndex) => {
                   img.dataset.imageIndex = newIndex;
                 });
               });
-  
+
               container.appendChild(img);
               container.appendChild(deleteBtn);
               addImageContainer.appendChild(container);
-  
+
               addModalImages.push(compressedBlob);
             };
             reader.readAsDataURL(compressedBlob);
@@ -290,9 +303,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       addReportForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const title = document.getElementById("assistant-report-title").value.trim();
+        const title = document
+          .getElementById("assistant-report-title")
+          .value.trim();
         const content = document
-          .getElementById("view-assistant-report-content")
+          .getElementById("assistant-report-content")
           .value.trim();
         const userId = localStorage.getItem("userId");
 
@@ -362,9 +377,15 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function setupViewModal() {
-    const viewImageContainer = document.getElementById("view-assistant-image-container");
-    const updateReportForm = document.getElementById("update-assistant-report-form");
-    const viewImageInput = document.getElementById("view-assistant-image-input");
+    const viewImageContainer = document.getElementById(
+      "view-assistant-image-container"
+    );
+    const updateReportForm = document.getElementById(
+      "update-assistant-report-form"
+    );
+    const viewImageInput = document.getElementById(
+      "view-assistant-image-input"
+    );
     const viewReportModal = document.getElementById("viewAssistantReportModal");
 
     viewReportModal.addEventListener("show.bs.modal", function () {
@@ -378,16 +399,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (viewImageInput) {
       viewImageInput.addEventListener("change", async function (event) {
         if (!currentReportId) return;
-    
+
         const files = event.target.files;
-    
+
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-    
+
           try {
             const compressedBlob = await compressImage(file, 500);
             pendingImageChanges.toAdd.push(compressedBlob);
@@ -396,7 +417,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             alert(`Failed to process image ${file.name}: ${error.message}`);
           }
         }
-    
+
         refreshViewModalImages(currentReportId, true);
       });
     }
@@ -430,8 +451,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (!currentReportId) return;
 
-        const title = document.getElementById("view-assistant-report-title").value.trim();
-        const content = document.getElementById("view-assistant-report-content").value.trim();
+        const title = document
+          .getElementById("view-assistant-report-title")
+          .value.trim();
+        const content = document
+          .getElementById("view-assistant-report-content")
+          .value.trim();
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
@@ -505,7 +530,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.querySelector(
           '#deleteConfirmationModal [name="delete-yes"]'
         ).onclick = function () {
-          const transaction = db.transaction(["assistantReportTbl"], "readwrite");
+          const transaction = db.transaction(
+            ["assistantReportTbl"],
+            "readwrite"
+          );
           const store = transaction.objectStore("assistantReportTbl");
           const getRequest = store.get(parseInt(currentReportId));
 
@@ -534,7 +562,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function refreshViewModalImages(reportId, showPending = false) {
-    const viewImageContainer = document.getElementById("view-assistant-image-container");
+    const viewImageContainer = document.getElementById(
+      "view-assistant-image-container"
+    );
     viewImageContainer.innerHTML = "";
 
     const transaction = db.transaction(["assistantReportTbl"], "readonly");
@@ -628,11 +658,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         currentReportId = report.id;
 
         const viewModal = document.getElementById("viewAssistantReportModal");
-        viewModal.querySelector("#view-assistant-report-title").value = report.title;
-        viewModal.querySelector("#view-assistant-report-content").value = report.content;
+        viewModal.querySelector("#view-assistant-report-title").value =
+          report.title;
+        viewModal.querySelector("#view-assistant-report-content").value =
+          report.content;
 
-        viewModal.querySelector("#update-assistant-report-form").dataset.reportId =
-          reportId;
+        viewModal.querySelector(
+          "#update-assistant-report-form"
+        ).dataset.reportId = reportId;
 
         refreshViewModalImages(reportId);
       }
@@ -793,25 +826,28 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 
     userRequest.onerror = function (event) {
-      console.error("Error fetching user assistant reports:", event.target.error);
+      console.error(
+        "Error fetching user assistant reports:",
+        event.target.error
+      );
     };
   }
 });
 
 function compressImage(file, maxSizeKB = 200, quality = 0.7) {
   return new Promise((resolve, reject) => {
-    if (!file.type.match('image.*')) {
-      reject(new Error('File is not an image'));
+    if (!file.type.match("image.*")) {
+      reject(new Error("File is not an image"));
       return;
     }
 
     const reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function (event) {
       const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
         const MAX_WIDTH = 512;
         const MAX_HEIGHT = 512;
         let width = img.width;
@@ -835,24 +871,35 @@ function compressImage(file, maxSizeKB = 200, quality = 0.7) {
 
         let qualityAdjusted = quality;
         let blob;
-        
-        const attemptCompression = () => {
-          canvas.toBlob((resultBlob) => {
-            if (!resultBlob) {
-              reject(new Error('Failed to compress image'));
-              return;
-            }
 
-            if (resultBlob.size / 512 <= maxSizeKB || qualityAdjusted <= 0.1) {
-              resolve(resultBlob);
-            } else {
-              qualityAdjusted = Math.max(0.1, qualityAdjusted - 0.1);
-              canvas.toBlob((newBlob) => {
-                blob = newBlob;
-                attemptCompression();
-              }, file.type, qualityAdjusted);
-            }
-          }, file.type, qualityAdjusted);
+        const attemptCompression = () => {
+          canvas.toBlob(
+            (resultBlob) => {
+              if (!resultBlob) {
+                reject(new Error("Failed to compress image"));
+                return;
+              }
+
+              if (
+                resultBlob.size / 512 <= maxSizeKB ||
+                qualityAdjusted <= 0.1
+              ) {
+                resolve(resultBlob);
+              } else {
+                qualityAdjusted = Math.max(0.1, qualityAdjusted - 0.1);
+                canvas.toBlob(
+                  (newBlob) => {
+                    blob = newBlob;
+                    attemptCompression();
+                  },
+                  file.type,
+                  qualityAdjusted
+                );
+              }
+            },
+            file.type,
+            qualityAdjusted
+          );
         };
 
         attemptCompression();

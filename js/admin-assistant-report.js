@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   showLoading(true);
   try {
     const userId = getUserIdFromUrl() || localStorage.getItem("userId");
-    console.log(userId);
 
     if (userId) {
       await Promise.all([
@@ -401,7 +400,7 @@ async function loadAssistantReports(userId) {
     showLoading(false);
   }
 }
-
+let globalStudentName = "";
 function displayStudentInfo(student) {
   const studentNameElement = document.querySelector(".student-name");
   if (studentNameElement) {
@@ -412,6 +411,7 @@ function displayStudentInfo(student) {
       fullName.length > 25 ? fullName.substring(0, 25) + "..." : fullName;
     studentNameElement.textContent = truncatedName;
     studentNameElement.title = fullName;
+    globalStudentName = fullName;
   }
 }
 
@@ -448,51 +448,53 @@ async function displayReports(reports) {
 
   for (const report of reports) {
     const formattedDateTime = formatDateTime(report.createdAt);
-
     const images = await loadReportImages(report.id);
 
     const reportElement = document.createElement("div");
+    const reportElementId = `report-${report.id}`;
+    reportElement.id = reportElementId;
     reportElement.className = "report p-3 mb-4 rounded";
 
     reportElement.innerHTML = `
-        <p class="text-end text-light">
-          <small class="font-darker-light-color">${
-            formattedDateTime.time
-          }</small>
+      <p class="text-end text-light">
+        <small class="font-darker-light-color">${formattedDateTime.time}</small>
+      </p>
+      <h2 class="border-bottom border-light text-truncate pb-2 fw-bold font-darker-light-color">
+        ${report.title || "Daily Report"}
+      </h2>
+      ${
+        images.length > 0
+          ? `
+        <div class="image-container mb-2 d-flex flex-row flex-nowrap gap-2 overflow-auto">
+          ${images
+            .map(
+              (base64Img) => `
+            <img src="${base64Img}" alt="Report image"
+              class="clickable-report-image"
+              style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer;">
+          `
+            )
+            .join("")}
+        </div>`
+          : ""
+      }
+      <div class="content-container mt-2">
+        <p class="text-light fs-6 fw-normal mb-0">
+          ${report.content || "No content provided"}
         </p>
-        <h2 class="border-bottom border-light text-truncate pb-2 fw-bold font-darker-light-color">
-          ${report.title || "Daily Report"}
-        </h2>
-        ${
-          images.length > 0
-            ? `
-          <div class="image-container mb-2 d-flex flex-row flex-nowrap gap-2 overflow-auto">
-            ${images
-              .map(
-                (base64Img) => `
-              <img src="${base64Img}" alt="Report image"
-                class="clickable-report-image"
-                style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer;">
-            `
-              )
-              .join("")}
-          </div>`
-            : ""
-        }
-        <div class="content-container mt-2">
-          <p class="text-light fs-6 fw-normal mb-0">
-            ${report.content || "No content provided"}
-          </p>
-        </div>
-        <button class=""><i class="bi bi-download"></i></button>
-      `;
+      </div>
+      <div class="w-100 d-flex justify-content-end" style="max-height: 54px">
+        <button class="col-12 col-lg-auto d-flex justify-content-center" id="download-report-button-${
+          report.id
+        }">
+          <i class="bi bi-download fs-4"></i>
+        </button>
+      </div>
+    `;
 
     reportsContainer.appendChild(reportElement);
 
-    const imageElements = reportElement.querySelectorAll(
-      ".clickable-report-image"
-    );
-    imageElements.forEach((img) => {
+    reportElement.querySelectorAll(".clickable-report-image").forEach((img) => {
       img.addEventListener("click", () => {
         document.getElementById("modal-image-view").src = img.src;
         const viewImageModal = new bootstrap.Modal(
@@ -501,7 +503,59 @@ async function displayReports(reports) {
         viewImageModal.show();
       });
     });
+
+    const downloadButton = document.getElementById(
+      `download-report-button-${report.id}`
+    );
+
+    downloadButton.addEventListener("click", async () => {
+      try {
+        console.log(globalStudentName);
+        const reportData = {
+          title: report.title || "Daily Report",
+          date: new Date(report.createdAt).toLocaleDateString(),
+          content: report.content || "No content",
+          images: images,
+          studentName: globalStudentName || "Student",
+          logoBase64: await fetchBase64("../assets/img/oc.png"),
+        };
+
+        const pdfGen = new PDFReportGenerator();
+        await pdfGen.generate(reportData);
+      } catch (err) {
+        console.error("Failed to generate PDF:", err);
+      }
+    });
   }
+}
+
+async function fetchBase64(url) {
+  const res = await fetch(url);
+  const blob = await res.blob();
+  return await new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
+function downloadPDF(elementId, title = "Report") {
+  const element = document.getElementById(elementId);
+
+  const cloned = element.cloneNode(true);
+
+  const btn = cloned.querySelector("button");
+  if (btn) btn.remove();
+
+  const opt = {
+    margin: 0.5,
+    filename: `${title.replace(/\s+/g, "_")}.pdf`,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  };
+
+  html2pdf().set(opt).from(cloned).save();
 }
 
 async function loadReportImages(reportId) {

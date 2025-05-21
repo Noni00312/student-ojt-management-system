@@ -11,12 +11,13 @@ function formatLocaleDate(isoStr) {
   }
 }
 
-
 function showAnnouncementModal(announcement) {
-  document.getElementById('viewAnnouncementLabel').innerText = announcement.title || "(No title)";
-  document.getElementById('modal-announcement-content').value = announcement.content || ""
-  document.getElementById('modal-announcement-author').style.display = ""; 
-  const link = document.getElementById('modal-announcement-link');
+  document.getElementById("viewAnnouncementLabel").innerText =
+    announcement.title || "(No title)";
+  document.getElementById("modal-announcement-content").value =
+    announcement.content || "";
+  document.getElementById("modal-announcement-author").style.display = "";
+  const link = document.getElementById("modal-announcement-link");
   if (announcement.url) {
     link.style.display = "";
     link.href = announcement.url;
@@ -24,9 +25,11 @@ function showAnnouncementModal(announcement) {
     link.style.display = "none";
     link.href = "#";
   }
-  document.getElementById('modal-announcement-updated').innerText =
-    announcement.updatedAt ? `Last updated: ${formatLocaleDate(announcement.updatedAt)}` : "";
-  new bootstrap.Modal(document.getElementById('viewAnnouncementModal')).show();
+  document.getElementById("modal-announcement-updated").innerText =
+    announcement.updatedAt
+      ? `Last updated: ${formatLocaleDate(announcement.updatedAt)}`
+      : "";
+  new bootstrap.Modal(document.getElementById("viewAnnouncementModal")).show();
 }
 
 function showLoading(show) {
@@ -84,24 +87,39 @@ function renderAnnouncements(list) {
     card.className = "col-12 col-md-6 col-lg-4 p-2";
     card.innerHTML = `
       <div class="card h-100 shadow announcement-card" style="cursor:pointer;">
-        ${a.image ? `
+        ${
+          a.image
+            ? `
           <div class="announcement-image-container">
             <img src="${a.image}" class="announcement-image" alt="Announcement Image">
             <div class="announcement-overlay"></div>
           </div>
-        ` : `
+        `
+            : `
           <div class="no-announcement-image">
             <i class="bi bi-megaphone"></i>
             <div class="announcement-overlay"></div>
           </div>
-        `}
+        `
+        }
         <div class="announcement-content">
           <div class="announcement-info">
             <h5>${a.title ? a.title : "(No title)"}</h5>
-            <p class="mb-1">${a.content ? a.content.substring(0, 100) + (a.content.length > 100 ? "..." : "") : ""}</p>
-            ${a.url ? `<a href="${a.url}" target="_blank" class="text-white announcement-link"><i class="bi bi-link"></i><small>Visit Link</small></a>` : ""}
+            <p class="mb-1">${
+              a.content
+                ? a.content.substring(0, 100) +
+                  (a.content.length > 100 ? "..." : "")
+                : ""
+            }</p>
+            ${
+              a.url
+                ? `<a href="${a.url}" target="_blank" class="text-white announcement-link"><i class="bi bi-link"></i><small>Visit Link</small></a>`
+                : ""
+            }
 
-            <button class="btn btn-outline-light btn-sm mt-2 w-100 view-announcement-btn" data-id="${a.id}"><i class="bi bi-eye"></i> View</button>
+            <button class="btn btn-outline-light btn-sm mt-2 w-100 view-announcement-btn" data-id="${
+              a.id
+            }"><i class="bi bi-eye"></i> View</button>
           </div>
         </div>
       </div>
@@ -109,28 +127,29 @@ function renderAnnouncements(list) {
     container.appendChild(card);
   });
 
-  container.querySelectorAll(".view-announcement-btn").forEach(btn => {
-    btn.addEventListener("click", function(e) {
-      e.stopPropagation(); 
+  container.querySelectorAll(".view-announcement-btn").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
       const id = this.getAttribute("data-id");
-      const announcement = list.find(an => an.id === id);
+      const announcement = list.find((an) => an.id === id);
       if (announcement) {
         showAnnouncementModal(announcement);
       }
     });
   });
-  
-  container.querySelectorAll(".announcement-card").forEach(card => {
-    card.addEventListener("click", function() {
-      const id = this.querySelector(".view-announcement-btn").getAttribute("data-id");
-      const announcement = list.find(an => an.id === id);
+
+  container.querySelectorAll(".announcement-card").forEach((card) => {
+    card.addEventListener("click", function () {
+      const id = this.querySelector(".view-announcement-btn").getAttribute(
+        "data-id"
+      );
+      const announcement = list.find((an) => an.id === id);
       if (announcement) {
         showAnnouncementModal(announcement);
       }
     });
   });
 }
-
 
 async function fetchAnnouncements(search = "") {
   showLoading(true);
@@ -194,5 +213,4 @@ document.addEventListener("DOMContentLoaded", async function () {
   } catch (err) {
     console.error("Failed to get user data from IndexedDB", err);
   }
-
 });

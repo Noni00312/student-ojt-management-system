@@ -17,36 +17,51 @@ function studentAnnouncementCard(announcement) {
   return `
     <div class="announcement-item mb-3">
       <div class="announcement-content">
-        <p>${announcement.content ? announcement.content.substring(0,120) : ""}${announcement.content && announcement.content.length > 120 ? "..." : ""}</p>
+        <p>${
+          announcement.content ? announcement.content.substring(0, 120) : ""
+        }${
+    announcement.content && announcement.content.length > 120 ? "..." : ""
+  }</p>
         <div class="announcement-meta d-flex gap-2 flex-wrap">
           <span class="badge bg-light text-dark"><i class="bi bi-calendar me-1"></i>
-            ${announcement.updatedAt ? announcement.updatedAt.substring(0,10) : ""}
+            ${
+              announcement.updatedAt
+                ? announcement.updatedAt.substring(0, 10)
+                : ""
+            }
           </span>
-          ${announcement.url ? `<a href="${announcement.url}" target="_blank" class="badge bg-primary text-white text-decoration-none"><i class="bi bi-link me-1"></i>Link</a>` : ""}
+          ${
+            announcement.url
+              ? `<a href="${announcement.url}" target="_blank" class="badge bg-primary text-white text-decoration-none"><i class="bi bi-link me-1"></i>Link</a>`
+              : ""
+          }
         </div>
       </div>
     </div>
   `;
 }
 
-
 async function fetchAndRenderStudentLatestAnnouncements() {
-  const listContainer = document.getElementById("student-dashboard-announcements-list");
-  const loadingDiv = document.getElementById("student-dashboard-announcements-loading");
-  
+  const listContainer = document.getElementById(
+    "student-dashboard-announcements-list"
+  );
+  const loadingDiv = document.getElementById(
+    "student-dashboard-announcements-loading"
+  );
+
   if (loadingDiv) loadingDiv.style.display = "block";
-  
+
   try {
     let announcements = await firebaseCRUD.getAllData("announcements");
-    
+
     if (Array.isArray(announcements)) {
       announcements = announcements
-        .filter(a => a && a.content && a.updatedAt)
+        .filter((a) => a && a.content && a.updatedAt)
         .sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""))
         .slice(0, 3);
-      
+
       if (loadingDiv) loadingDiv.style.display = "none";
-      
+
       if (announcements.length === 0) {
         listContainer.innerHTML = `
           <div class="text-center text-muted py-5">
@@ -55,7 +70,9 @@ async function fetchAndRenderStudentLatestAnnouncements() {
           </div>
         `;
       } else {
-        listContainer.innerHTML = announcements.map(studentAnnouncementCard).join("");
+        listContainer.innerHTML = announcements
+          .map(studentAnnouncementCard)
+          .join("");
       }
     } else {
       if (loadingDiv) loadingDiv.style.display = "none";
@@ -98,7 +115,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       userId
     );
 
-
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
     if (data != null) {
@@ -139,6 +155,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   } catch (err) {
     console.error("Failed to get user data from IndexedDB", err);
   }
-  
+
   fetchAndRenderStudentLatestAnnouncements();
 });

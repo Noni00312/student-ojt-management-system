@@ -64,15 +64,6 @@ body {
   transition: all 0.3s ease;
 }
 
-
-
-
-
-
-
-
-
-
 .img-thumbnail {
   padding: 1rem;
   background-color: transparent !important;
@@ -357,10 +348,6 @@ button {
   background-color: #ffffff !important;
 }
 
-
-
-
-
 .document-option-btn {
   background-color: #4a4b50;
   border: none;
@@ -383,32 +370,27 @@ button {
   border: none;
 }
 
-
-
 .modal {
-    background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
-    border: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  border: none;
 }
 
 .modal-backdrop {
-    display: none !important;
+  display: none !important;
 }
 
 body.modal-open {
-    overflow: auto;
-    padding-right: 0 !important;
+  overflow: auto;
+  padding-right: 0 !important;
 }
 
 .modal.fade:not(.show) {
-    display: none;
+  display: none;
 }
-
-
-
 
 .fab-container {
   position: fixed;
@@ -442,11 +424,6 @@ body.modal-open {
   transform: scale(0.95);
 }
 
-
-
-
-
-
 .floating-btn {
   position: fixed;
   bottom: 30px;
@@ -457,7 +434,7 @@ body.modal-open {
   background-color: #6e1423;
   color: white;
   border: none;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -476,276 +453,234 @@ body.modal-open {
   transform: scale(0.95);
 }
 
-
-
-
-
-
-
 .card-container {
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    padding: 0.5rem;
-    scrollbar-width: thin;
-    scrollbar-color: #6e1423 transparent;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: #6e1423 transparent;
 }
 
 .card-container::-webkit-scrollbar {
-    height: 8px;
+  height: 8px;
 }
 
 .card-container::-webkit-scrollbar-thumb {
-    background-color: #6e1423;
-    border-radius: 10px;
+  background-color: #6e1423;
+  border-radius: 10px;
 }
 
 .card-container::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 
 .student-card {
-    display: inline-block;
-    vertical-align: top;
-    white-space: normal;
-    margin-right: 1rem;
-    min-width: 250px;
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+  margin-right: 1rem;
+  min-width: 250px;
 }
 
 .student-card:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 @media (max-width: 768px) {
-    .student-card {
-        min-width: 200px;
-        min-height: 180px;
-    }
+  .student-card {
+    min-width: 200px;
+    min-height: 180px;
+  }
 }
 
-
-
-
-
-
-
-
-
-
 .student-card {
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
 }
 
 .student-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    border-color: #6e1423;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border-color: #6e1423;
 }
 
 .student-card.completed {
-    border: 2px solid #28a745;
-    position: relative;
-    overflow: hidden;
+  border: 2px solid #28a745;
+  position: relative;
+  overflow: hidden;
 }
 
 .student-card.completed::after {
-    content: 'Completed';
-    position: absolute;
-    top: 10px;
-    right: -30px;
-    background-color: #28a745;
-    color: white;
-    padding: 2px 30px;
-    transform: rotate(45deg);
-    font-size: 0.7rem;
-    font-weight: bold;
+  content: "Completed";
+  position: absolute;
+  top: 10px;
+  right: -30px;
+  background-color: #28a745;
+  color: white;
+  padding: 2px 30px;
+  transform: rotate(45deg);
+  font-size: 0.7rem;
+  font-weight: bold;
 }
 
 .icon-container {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .student-card:hover .icon-container {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
-    .card-container {
-        padding: 0.25rem;
-    }
-    
-    .student-card {
-        min-height: 150px;
-        padding: 1rem;
-    }
-    
-    .icon-container {
-        width: 50px !important;
-        height: 50px !important;
-    }
+  .card-container {
+    padding: 0.25rem;
+  }
+
+  .student-card {
+    min-height: 150px;
+    padding: 1rem;
+  }
+
+  .icon-container {
+    width: 50px !important;
+    height: 50px !important;
+  }
 }
 
 .modal-content {
-    border-radius: 15px !important;
+  border-radius: 15px !important;
 }
 
 .document-option-btn {
-    transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .document-option-btn:hover .icon-container {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .spinner-border {
-    width: 3rem;
-    height: 3rem;
-    border-width: 0.25em;
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.25em;
 }
 
-
-
 .read-only-title {
-    background-color: #f8f9fa !important;
-    cursor: default !important;
-    border: none !important;
-    color: #ffffff !important; 
-    font-weight: bold;
+  background-color: #f8f9fa !important;
+  cursor: default !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: bold;
 }
 
 .read-only-title:focus {
-    outline: none;
-    box-shadow: none;
+  outline: none;
+  box-shadow: none;
 }
 
-
-
-
-
-
 .student-card.completed {
-    border-left: 4px solid #28a745;
-    opacity: 0.8;
+  border-left: 4px solid #28a745;
+  opacity: 0.8;
 }
 
 .student-card.completed h5 {
-    text-decoration: line-through;
+  text-decoration: line-through;
 }
 
-
-
-
-
-
-
-
-
-
-
 .ojt-kits-container {
-    display: grid;
-    gap: 1rem;
-    width: 100%;
+  display: grid;
+  gap: 1rem;
+  width: 100%;
 }
 
 .ojt-kit-card {
-    display: flex;
-    background-color: #e3e3e4;
-    border-radius: 12px;
-    padding: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-left: 4px solid #6e1423;
-    align-items: center;
+  display: flex;
+  background-color: #e3e3e4;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 4px solid #6e1423;
+  align-items: center;
 }
 
 .ojt-kit-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ojt-kit-icon {
-    background-color: #6e1423;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 1rem;
-    flex-shrink: 0;
+  background-color: #6e1423;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  flex-shrink: 0;
 }
 
 .ojt-kit-content {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .ojt-kit-content h5 {
-    color: #3C3D42;
-    margin-bottom: 0.25rem;
-    font-weight: 600;
+  color: #3c3d42;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
 }
 
 .ojt-kit-content p {
-    color: #6c757d;
-    font-size: 0.875rem;
-    margin-bottom: 0.5rem;
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
 }
 
 .ojt-kit-meta {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.75rem;
-    color: #6c757d;
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #6c757d;
 }
 
 .ojt-kit-arrow {
-    color: #6e1423;
-    margin-left: 0.5rem;
+  color: #6e1423;
+  margin-left: 0.5rem;
 }
-
-
 
 @media (max-width: 767px) {
-    .ojt-kits-container {
-        grid-template-columns: 1fr;
-    }
+  .ojt-kits-container {
+    grid-template-columns: 1fr;
+  }
 }
 
-
-
-
 .ojt-kit-card.completed {
-    border-left: 4px solid #ffffff;
-    background-color: rgba(40, 167, 69, 0.05);
+  border-left: 4px solid #ffffff;
+  background-color: rgba(40, 167, 69, 0.05);
 }
 
 .completed-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    border-radius: 50%;
-    padding: 2px;
-    color: #28a745;
-    font-size: 1rem;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  border-radius: 50%;
+  padding: 2px;
+  color: #28a745;
+  font-size: 1rem;
 }
 
 .completed-text {
-    color: #28a745;
-    font-weight: bold;
+  color: #28a745;
+  font-weight: bold;
 }
 
 .ojt-kit-card.completed .ojt-kit-icon {
-    color: #28a745;
+  color: #28a745;
 }
-
-
-
-
-
 
 .view-report-modal {
   max-height: 90vh;
@@ -795,12 +730,13 @@ body.modal-open {
   bottom: 5px;
   right: 5px;
   color: white;
-  text-shadow: 0 0 3px rgba(0,0,0,0.5);
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
   pointer-events: none;
   font-size: 1rem;
 }
 
-.report-title, #report-content {
+.report-title,
+#report-content {
   font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
@@ -809,16 +745,15 @@ body.modal-open {
     width: 70px;
     height: 70px;
   }
-  
+
   .modal-content {
     padding: 15px;
   }
-  
+
   #report-content {
     min-height: 150px;
   }
 }
-
 
 .image-scroll-container {
   width: 100%;
@@ -839,193 +774,106 @@ body.modal-open {
   gap: 10px;
   overflow-x: auto;
   padding: 5px 0;
-  min-height: 100px; 
+  min-height: 100px;
 }
 
-
-
-
-
-
-
-
-
 .ojt-kit-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
-    display: flex;
-    align-items: center;
-    min-height: 70px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  min-height: 70px;
 }
 
 .ojt-kit-card.completed {
-    background-color: #6e1423;
-    color: white;
-    border-color: #6e1423;
+  background-color: #6e1423;
+  color: white;
+  border-color: #6e1423;
 }
 
 .ojt-kit-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .ojt-kit-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    color: white;
-    font-size: 1.2rem;
-    background-color: #6e1423;
-    flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  color: white;
+  font-size: 1.2rem;
+  background-color: #6e1423;
+  flex-shrink: 0;
 }
 
 .ojt-kit-card.completed .ojt-kit-icon {
-    background-color: white;
-    color: #6e1423;
+  background-color: white;
+  color: #6e1423;
 }
 
 .ojt-kit-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #3C3D42;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: calc(100% - 60px);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #3c3d42;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 60px);
 }
 
 .ojt-kit-card.completed .ojt-kit-title {
-    color: white;
+  color: white;
 }
 
 .completed-badge {
-    position: absolute;
-    top: 15px;
-    right: 10px;
-    color: #ffffff;
-    font-size: 1.2rem;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  color: #ffffff;
+  font-size: 1.2rem;
 }
 
 .ojt-kits-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-    width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
-    .ojt-kits-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .ojt-kit-card {
-        min-height: 60px;
-        padding: 12px;
-    }
-    
-    .ojt-kit-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-        margin-right: 12px;
-    }
+  .ojt-kits-container {
+    grid-template-columns: 1fr;
+  }
+
+  .ojt-kit-card {
+    min-height: 60px;
+    padding: 12px;
+  }
+
+  .ojt-kit-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    margin-right: 12px;
+  }
 }
-
-
-
-
 
 .custom-btn-height {
-    height: 50px; 
-    min-height: 50px; 
-    padding: 1rem 0; 
+  height: 50px;
+  min-height: 50px;
+  padding: 1rem 0;
 }
 
-
-
-/* Add this to your CSS */
-/* #update-image-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-#update-image-container::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-}
-
-#update-image-container::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-}
-
-#update-image-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
-
-.image-wrapper {
-    transition: all 0.2s ease;
-    border-radius: 5px;
-}
-
-.image-wrapper:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-} */
-
-/* Custom styles to maintain your design */
-/* #update-image-container::-webkit-scrollbar {
-    height: 6px;
-}
-
-#update-image-container::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-}
-
-#update-image-container::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
-}
-
-.image-thumbnail-wrapper {
-    transition: all 0.2s ease;
-}
-
-.image-thumbnail-wrapper:hover {
-    transform: scale(1.05);
-}
-
-.add-image-button {
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-radius: 5px;
-}
-
-.add-image-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-} */
-
-
-
-
-
-
-
-
-
-/* Add these styles to your existing CSS */
-
-/* Update Report Modal Image Container */
 #update-image-container {
   display: flex;
   flex-wrap: nowrap;
@@ -1052,7 +900,6 @@ body.modal-open {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Image Thumbnail Styles */
 .image-thumbnail-wrapper {
   position: relative;
   flex: 0 0 auto;
@@ -1074,7 +921,6 @@ body.modal-open {
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-/* Delete Button */
 .image-thumbnail-wrapper .btn-danger {
   width: 24px;
   height: 24px;
@@ -1089,33 +935,21 @@ body.modal-open {
   opacity: 1;
 }
 
-/* Add Image Button */
-/* .add-image-button {
-  min-width: 100px;
-  height: 100px;
-  border: 2px dashed rgba(255, 255, 255, 0.3);
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-} */
-
 .add-image-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.5);
 }
 
-/* Modal Content Adjustment */
 .add-report-modal .modal-content {
   max-height: 90vh;
   overflow-y: auto;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 576px) {
   #update-image-container {
     max-height: 120px;
   }
-  
+
   .image-thumbnail-wrapper,
   .add-image-button {
     width: 80px;

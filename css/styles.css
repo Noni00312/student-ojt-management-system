@@ -44,13 +44,14 @@ body {
   border-radius: 16px;
   padding: 16px;
 }
-.btn-outline-primary{
+.btn-outline-primary {
   background-color: var(--primary) !important;
   color: var(--accent) !important;
   border: 1px solid var(--accent) !important;
 }
 
-button, .btn-outline-primary {
+button,
+.btn-outline-primary {
   display: flex;
   align-items: center;
   border: none;
@@ -136,7 +137,7 @@ a {
 
 .offcanvas-body ul li a:hover {
   background-color: var(--accent);
-  color: var(--primary  ) !important;
+  color: var(--primary) !important;
 }
 
 #user-profile {
@@ -150,7 +151,7 @@ a {
 
 #user-profile img {
   height: 40px;
-  width: 40px; 
+  width: 40px;
   width: 100%;
   object-fit: cover;
   object-position: center;
@@ -329,7 +330,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   z-index: 1;
 }
 
-.dropdown-item:active{
+.dropdown-item:active {
   background-color: #6e1423 !important;
   color: #fff !important;
 }

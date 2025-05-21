@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const modal = bootstrap.Modal.getInstance(editProfileModal);
         modal.hide();
-
         Swal.fire({
           icon: "success",
           title: "Profile Updated",
@@ -171,7 +170,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         userImg.src = base64Image;
         editProfileImg.src = base64Image;
         URL.revokeObjectURL(previewUrl);
-
+        location.reload();
         Swal.fire({
           icon: "success",
           title: "Image Updated",

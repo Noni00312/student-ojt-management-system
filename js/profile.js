@@ -2,7 +2,12 @@ import { firebaseCRUD } from "./firebase-crud.js";
 
 async function fetchUserProfileFromFirebase(userId) {
   try {
-    const firebaseData = await firebaseCRUD.queryData("students", "userId", "==", userId);
+    const firebaseData = await firebaseCRUD.queryData(
+      "students",
+      "userId",
+      "==",
+      userId
+    );
     if (firebaseData && firebaseData.length > 0) {
       return firebaseData[0];
     }
@@ -46,38 +51,46 @@ document.addEventListener("DOMContentLoaded", async function () {
     async function hasPendingTimeEntries(userId) {
       try {
         const today = new Date().toLocaleDateString("en-CA");
-        
+
         const completeAttendance = await crudOperations.getByIndex(
           "completeAttendanceTbl",
           "userId",
           userId
         );
-        
-        const todayComplete = completeAttendance.find(entry => entry.date === today);
+
+        const todayComplete = completeAttendance.find(
+          (entry) => entry.date === today
+        );
         if (todayComplete && todayComplete.status === "complete") {
-          return false; 
+          return false;
         }
-    
-        const logs = await crudOperations.getByIndex("timeInOut", "userId", userId);
-        const todayLogs = logs.filter(log => log.date === today);
-        
+
+        const logs = await crudOperations.getByIndex(
+          "timeInOut",
+          "userId",
+          userId
+        );
+        const todayLogs = logs.filter((log) => log.date === today);
+
         const userDataArray = await crudOperations.getByIndex(
           "studentInfoTbl",
           "userId",
           userId
         );
-        const userData = Array.isArray(userDataArray) ? userDataArray[0] : userDataArray;
-        
+        const userData = Array.isArray(userDataArray)
+          ? userDataArray[0]
+          : userDataArray;
+
         if (!userData || !userData.weeklySchedule) return false;
-        
+
         const dayNames = ["SUN", "MON", "TUE", "WED", "THURS", "FRI", "SAT"];
         const todayDay = new Date().getDay();
         const todaySchedule = dayNames[todayDay];
-        
+
         if (!userData.weeklySchedule[todaySchedule]) {
-          return false; 
+          return false;
         }
-        
+
         const expectedLogs = [];
         if (userData.morningTimeIn && userData.morningTimeOut) {
           expectedLogs.push("morningTimeIn", "morningTimeOut");
@@ -85,9 +98,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (userData.afternoonTimeIn && userData.afternoonTimeOut) {
           expectedLogs.push("afternoonTimeIn", "afternoonTimeOut");
         }
-        
-        const loggedTypes = todayLogs.map(log => log.type);
-        return expectedLogs.some(type => !loggedTypes.includes(type));
+
+        const loggedTypes = todayLogs.map((log) => log.type);
+        return expectedLogs.some((type) => !loggedTypes.includes(type));
       } catch (error) {
         console.error("Error checking pending time entries:", error);
         return false;
@@ -98,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       const updateButtonState = async () => {
         const userId = localStorage.getItem("userId");
         const hasPending = userId ? await hasPendingTimeEntries(userId) : false;
-        
+
         if (!navigator.onLine) {
           editButton.classList.add("disabled", "btn-disabled");
           editButton.setAttribute("title", "Edit requires internet connection");
@@ -108,7 +121,10 @@ document.addEventListener("DOMContentLoaded", async function () {
           editButton.style.opacity = "0.5";
         } else if (hasPending) {
           editButton.classList.add("disabled", "btn-disabled");
-          editButton.setAttribute("title", "Complete your time entries for today before editing");
+          editButton.setAttribute(
+            "title",
+            "Complete your time entries for today before editing"
+          );
           editButton.setAttribute("data-bs-toggle", "offline");
           editButton.removeAttribute("data-bs-target");
           editButton.style.cursor = "not-allowed";
@@ -132,14 +148,16 @@ document.addEventListener("DOMContentLoaded", async function () {
           window.location.href = "no-internet.html";
           return false;
         }
-        
+
         const userId = localStorage.getItem("userId");
         const hasPending = userId ? await hasPendingTimeEntries(userId) : false;
-        
+
         if (hasPending) {
           e.preventDefault();
           e.stopPropagation();
-          alert("Please complete all your time entries for today before editing your profile.");
+          alert(
+            "Please complete all your time entries for today before editing your profile."
+          );
           return false;
         }
       });
@@ -150,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       const modal = new bootstrap.Modal(
         document.getElementById("editProfileModal")
       );
-      
+
       document
         .getElementById("editProfileModal")
         .addEventListener("show.bs.modal", async (e) => {
@@ -162,13 +180,17 @@ document.addEventListener("DOMContentLoaded", async function () {
             modal.hide();
             return;
           }
-          
+
           const userId = localStorage.getItem("userId");
-          const hasPending = userId ? await hasPendingTimeEntries(userId) : false;
-          
+          const hasPending = userId
+            ? await hasPendingTimeEntries(userId)
+            : false;
+
           if (hasPending) {
             e.preventDefault();
-            alert("Please complete all your time entries for today before editing your profile.");
+            alert(
+              "Please complete all your time entries for today before editing your profile."
+            );
             modal.hide();
             return;
           }
@@ -178,14 +200,16 @@ document.addEventListener("DOMContentLoaded", async function () {
             if (navigator.onLine) {
               modalUserData = await fetchUserProfileFromFirebase(userId);
             }
-            
+
             if (!modalUserData) {
               const dataArray = await crudOperations.getByIndex(
                 "studentInfoTbl",
                 "userId",
                 userId
               );
-              modalUserData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
+              modalUserData = Array.isArray(dataArray)
+                ? dataArray[0]
+                : dataArray;
             }
           } catch (error) {
             console.error("Error loading profile for edit modal:", error);
@@ -208,7 +232,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (navigator.onLine) {
         userData = await fetchUserProfileFromFirebase(userId);
       }
-      
+
       if (!userData) {
         const dataArray = await crudOperations.getByIndex(
           "studentInfoTbl",
@@ -217,7 +241,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         );
         userData = Array.isArray(dataArray) ? dataArray[0] : dataArray;
       }
-      
+
       if (navigator.onLine && userData) {
         try {
           await crudOperations.updateData(
@@ -252,7 +276,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const hasPending = await hasPendingTimeEntries(userId);
       if (hasPending) {
-        alert("Cannot update profile while having pending time entries for today.");
+        alert(
+          "Cannot update profile while having pending time entries for today."
+        );
         submitButton.disabled = false;
         submitButton.innerHTML = "<span>Update Profile</span>";
         return;
@@ -289,11 +315,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
 
         const docId = userData?.id || userId;
-        
+
         if (navigator.onLine) {
           await firebaseCRUD.updateData("students", docId, updatedData);
         }
-        
+
         await crudOperations.updateData("studentInfoTbl", docId, updatedData);
 
         const updatedDataArray = await crudOperations.getByIndex(
@@ -309,10 +335,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         const modal = bootstrap.Modal.getInstance(editProfileModal);
         modal.hide();
 
-        alert('Profile updated successfully!');
+        alert("Profile updated successfully!");
       } catch (error) {
         console.error("Update error:", error);
-        alert('Failed to update profile. Please try again.');
+        alert("Failed to update profile. Please try again.");
       } finally {
         submitButton.disabled = false;
         submitButton.innerHTML = "<span>Update Profile</span>";
@@ -348,12 +374,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const docId = userData?.id || userId;
         await crudOperations.updateData("studentInfoTbl", docId, {
-          userImg: base64Image
+          userImg: base64Image,
         });
 
         if (navigator.onLine) {
           await firebaseCRUD.updateData("students", docId, {
-            userImg: base64Image
+            userImg: base64Image,
           });
         }
 
@@ -361,10 +387,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         editProfileImg.src = base64Image;
         URL.revokeObjectURL(previewUrl);
 
-        alert('Profile image updated successfully!');
+        alert("Profile image updated successfully!");
       } catch (error) {
         console.error("Image upload error:", error);
-        alert('Failed to update profile image');
+        alert("Failed to update profile image");
         editProfileImg.src = userImg.src;
       }
     });
@@ -373,7 +399,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       e.preventDefault();
 
       if (!navigator.onLine) {
-        alert('You need internet connection to logout');
+        alert("You need internet connection to logout");
         return;
       }
 
@@ -382,8 +408,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       try {
         logoutButton.disabled = true;
-        logoutButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
-        
+        logoutButton.innerHTML =
+          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
+
         await crudOperations.clearTable("studentInfoTbl");
         localStorage.removeItem("userId");
         localStorage.removeItem("userEmail");
@@ -392,19 +419,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         window.location.href = "./login.html";
       } catch (error) {
         console.error("Logout error:", error);
-        alert('An error occurred during logout');
+        alert("An error occurred during logout");
         logoutButton.disabled = false;
-        logoutButton.innerHTML = 'Logout';
+        logoutButton.innerHTML = "Logout";
       }
     });
 
     async function loadCompanyData() {
       try {
         let companies = await crudOperations.getAllData("companyTbl");
-        
+
         if ((!companies || companies.length === 0) && navigator.onLine) {
           companies = await firebaseCRUD.getAllData("company");
-          
+
           if (companies && companies.length > 0) {
             await crudOperations.clearTable("companyTbl");
             for (const company of companies) {
@@ -412,17 +439,16 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
           }
         }
-        
+
         await populateCompanyDropdown();
         setupCompanySelectListener();
       } catch (error) {
         console.error("Company data load error:", error);
       }
     }
-
   } catch (error) {
     console.error("Initialization error:", error);
-    alert('Failed to initialize profile page');
+    alert("Failed to initialize profile page");
     window.location.href = "./login.html";
   }
 });
@@ -751,25 +777,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   updateLogoutButtonState();
 
-  window.addEventListener('online', updateLogoutButtonState);
-  window.addEventListener('offline', updateLogoutButtonState);
+  window.addEventListener("online", updateLogoutButtonState);
+  window.addEventListener("offline", updateLogoutButtonState);
 
   if (logoutButton) {
     logoutButton.addEventListener("click", async function (e) {
       e.preventDefault();
 
       if (!navigator.onLine) {
-        alert('You need internet connection to logout');
+        alert("You need internet connection to logout");
         return;
       }
 
-      const confirmed = confirm('Are you sure you want to logout?');
-      
+      const confirmed = confirm("Are you sure you want to logout?");
+
       if (confirmed) {
         try {
           logoutButton.disabled = true;
-          logoutButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
-          
+          logoutButton.innerHTML =
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging out...';
+
           await crudOperations.clearTable("studentInfoTbl");
           localStorage.removeItem("userId");
           localStorage.removeItem("userEmail");
@@ -778,9 +805,9 @@ document.addEventListener("DOMContentLoaded", function () {
           window.location.href = "./login.html";
         } catch (error) {
           console.error("Logout error:", error);
-          alert('An error occurred during logout');
+          alert("An error occurred during logout");
           logoutButton.disabled = false;
-          logoutButton.innerHTML = 'Logout';
+          logoutButton.innerHTML = "Logout";
         }
       }
     });

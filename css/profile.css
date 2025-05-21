@@ -6,18 +6,16 @@
   --secondary: #fff;
   --maroon: #801414;
   --cyan-dark: #004e4e;
-  --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
 }
 
-
-
-.row{
+.row {
   --bs-gutter-x: 0rem !important;
-  
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -26,18 +24,15 @@ html, body {
   min-height: 100vh;
 }
 
-
 .cards-box {
   display: flex;
   justify-content: center;
   gap: 30px;
   padding: 30px;
   flex-wrap: wrap;
-  width: 100%; 
+  width: 100%;
   overflow-y: auto;
 }
-
-
 
 .card-container {
   background: #fff;
@@ -51,7 +46,7 @@ html, body {
 
 .card-container:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
 .upper-container {
@@ -71,7 +66,7 @@ html, body {
   position: absolute;
   top: 60px;
   border: 5px solid white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .image-container img {
@@ -163,7 +158,7 @@ html, body {
 
 .department-card-container:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
 .department-overlay-container {
@@ -199,7 +194,7 @@ html, body {
   opacity: 0.9;
   font-weight: 400;
   margin: 0;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .schedule-section {
@@ -217,7 +212,7 @@ html, body {
 .schedule-label {
   font-size: 0.9rem;
   margin: 0 0 5px;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -235,21 +230,21 @@ html, body {
 }
 
 .time-slot {
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 8px;
   padding: 15px;
   transition: var(--transition);
 }
 
 .time-slot:hover {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
 }
 
 .time-label {
   font-size: 0.8rem;
   margin: 0 0 5px;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .time-value {
@@ -259,12 +254,12 @@ html, body {
 }
 
 @media (max-width: 992px) {
-  
-  .card-container, .department-card-container {
+  .card-container,
+  .department-card-container {
     max-width: 100%;
   }
-  
-  .card-container, 
+
+  .card-container,
   .department-card-container {
     width: 100%;
     max-width: 100%;
@@ -272,23 +267,23 @@ html, body {
 }
 
 @media (max-width: 576px) {
-  .profile-header{
+  .profile-header {
     padding-top: 50px;
   }
   .detail-row {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .time-grid {
     grid-template-columns: 1fr;
   }
-  
-  .lower-container, .department-container {
+
+  .lower-container,
+  .department-container {
     padding: 20px;
   }
 }
-
 
 #update-profile {
   display: inline-flex;
@@ -312,7 +307,7 @@ html, body {
 .form-floating h2,
 .form-floating p {
   font-size: small;
-  color: var(--accent-darken) ;
+  color: var(--accent-darken);
 }
 
 .form-floating h2 {
@@ -397,7 +392,6 @@ i {
   color: #6e1423 !important;
 }
 
-
 .modal-profile-icon {
   width: 150px;
   height: 150px;
@@ -448,8 +442,6 @@ section {
   margin-top: 50px;
 }
 
-
-
 input[type="time"]::-webkit-calendar-picker-indicator {
   position: absolute;
   right: 0;
@@ -475,7 +467,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   background-color: var(--accent);
 }
 
-
 .logout-button {
   color: #fff;
   height: 80px !important;
@@ -498,7 +489,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   -moz-box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.39);
   padding: 0px;
 }
-
 
 .logout-button-container {
   display: flex;
@@ -618,6 +608,4 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     display: flex;
     margin-left: 110px;
   }
-
 }
-

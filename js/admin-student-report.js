@@ -17,7 +17,7 @@ function createLoader() {
 
     const container =
       document.querySelector(".card-container") ||
-      document.querySelector(".student-report-container") ||
+      document.querySelector(".student-report-container") ||  
       document.body;
 
     if (container) {
@@ -355,6 +355,59 @@ function getUserIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("userId");
 }
+// async function loadStudentReports(userId) {
+//   showLoading(true);
+//   try {
+//     const { firebaseCRUD } = await import("./firebase-crud.js");
+
+//     const students = await firebaseCRUD.queryData(
+//       "students",
+//       "userId",
+//       "==",
+//       userId
+//     );
+//     if (!students || students.length === 0)
+//       throw new Error("Student not found");
+
+//     const student = students[0];
+//     displayStudentInfo(student);
+
+//     const reports = await firebaseCRUD.queryData(
+//       "reports",
+//       "userId",
+//       "==",
+//       userId
+//     );
+//     reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+//     if (reports && reports.length > 0) {
+//       const currentDate = new Date();
+//       currentDate.setHours(0, 0, 0, 0);
+
+//       const todaysReports = reports.filter((report) => {
+//         const reportDate = new Date(report.createdAt);
+//         reportDate.setHours(0, 0, 0, 0);
+//         return reportDate.getTime() === currentDate.getTime();
+//       });
+
+//       if (todaysReports.length > 0) {
+//         displayReports(todaysReports);
+
+//         displayNoReportsMessage("No reports found for today");
+//       }
+
+//       setupDateNavigation(reports);
+//     } else {
+//       displayNoReportsMessage("No reports found for this student");
+//     }
+//   } catch (error) {
+//     console.error("Error loading reports:", error);
+//     showError("Failed to load reports: " + error.message);
+//   } finally {
+//     showLoading(false);
+//   }
+// }
+
 async function loadStudentReports(userId) {
   showLoading(true);
   try {
@@ -392,7 +445,7 @@ async function loadStudentReports(userId) {
 
       if (todaysReports.length > 0) {
         displayReports(todaysReports);
-
+      } else {
         displayNoReportsMessage("No reports found for today");
       }
 

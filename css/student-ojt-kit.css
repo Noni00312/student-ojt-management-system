@@ -385,17 +385,15 @@ button {
 
 
 
-/* Add this to your CSS */
 .modal {
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5); 
 }
 
 .modal-content {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
     border: none;
 }
 
-/* Remove any leftover backdrop styles */
 .modal-backdrop {
     display: none !important;
 }
@@ -412,7 +410,6 @@ body.modal-open {
 
 
 
-/* Floating Action Button Styles */
 .fab-container {
   position: fixed;
   bottom: 30px;
@@ -450,7 +447,6 @@ body.modal-open {
 
 
 
-/* Floating Action Button */
 .floating-btn {
   position: fixed;
   bottom: 30px;
@@ -486,7 +482,6 @@ body.modal-open {
 
 
 
-/* Horizontal Layout Styles */
 .card-container {
     overflow-x: auto;
     overflow-y: hidden;
@@ -509,7 +504,6 @@ body.modal-open {
     background: transparent;
 }
 
-/* Card specific adjustments for horizontal layout */
 .student-card {
     display: inline-block;
     vertical-align: top;
@@ -518,12 +512,10 @@ body.modal-open {
     min-width: 250px;
 }
 
-/* Remove the last card's margin to prevent extra space */
 .student-card:last-child {
     margin-right: 0;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .student-card {
         min-width: 200px;
@@ -540,7 +532,6 @@ body.modal-open {
 
 
 
-/* OJT Kits Specific Styles */
 .student-card {
     transition: all 0.3s ease;
     border: 2px solid transparent;
@@ -580,7 +571,6 @@ body.modal-open {
     transform: scale(1.1);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .card-container {
         padding: 0.25rem;
@@ -597,7 +587,6 @@ body.modal-open {
     }
 }
 
-/* Modal styles */
 .modal-content {
     border-radius: 15px !important;
 }
@@ -610,7 +599,6 @@ body.modal-open {
     transform: scale(1.1);
 }
 
-/* Loading spinner */
 .spinner-border {
     width: 3rem;
     height: 3rem;
@@ -619,16 +607,14 @@ body.modal-open {
 
 
 
-/* Style for read-only title field */
 .read-only-title {
     background-color: #f8f9fa !important;
     cursor: default !important;
     border: none !important;
-    color: #ffffff !important; /* Match your modal text color */
+    color: #ffffff !important; 
     font-weight: bold;
 }
 
-/* Remove the focus outline for read-only field */
 .read-only-title:focus {
     outline: none;
     box-shadow: none;
@@ -658,17 +644,14 @@ body.modal-open {
 
 
 
-/* OJT Kits Container */
 .ojt-kits-container {
     display: grid;
     gap: 1rem;
     width: 100%;
 }
 
-/* Card Styles */
 .ojt-kit-card {
     display: flex;
-    /* background-color: #f8f9fa; */
     background-color: #e3e3e4;
     border-radius: 12px;
     padding: 1rem;
@@ -724,35 +707,9 @@ body.modal-open {
     margin-left: 0.5rem;
 }
 
-/* Responsive Layout */
-/* @media (min-width: 768px) {
-   
-    .ojt-kits-container {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    }
-    
-    .ojt-kit-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 1.5rem;
-    }
-    
-    .ojt-kit-icon {
-        margin-right: 0;
-        margin-bottom: 1rem;
-    }
-    
-    .ojt-kit-meta {
-        justify-content: center;
-    }
-    
-    .ojt-kit-arrow {
-        display: none;
-    }
-} */
+
 
 @media (max-width: 767px) {
-    /* Vertical layout for mobile */
     .ojt-kits-container {
         grid-template-columns: 1fr;
     }
@@ -761,7 +718,6 @@ body.modal-open {
 
 
 
-/* Add these styles to your CSS file */
 .ojt-kit-card.completed {
     border-left: 4px solid #ffffff;
     background-color: rgba(40, 167, 69, 0.05);
@@ -771,7 +727,6 @@ body.modal-open {
     position: absolute;
     top: -8px;
     right: -8px;
-    /* background: white; */
     border-radius: 50%;
     padding: 2px;
     color: #28a745;
@@ -792,13 +747,11 @@ body.modal-open {
 
 
 
-/* Add these styles to your CSS file */
 .view-report-modal {
   max-height: 90vh;
   overflow-y: auto;
 }
 
-/* Responsive modal sizing */
 @media (min-width: 576px) {
   .modal-dialog {
     max-width: 90%;
@@ -812,14 +765,12 @@ body.modal-open {
   }
 }
 
-/* Image container styling */
 .image-container {
   max-height: 300px;
   overflow-y: auto;
   padding: 5px;
 }
 
-/* Image thumbnails */
 .image-wrapper {
   position: relative;
   display: inline-block;
@@ -839,7 +790,6 @@ body.modal-open {
   transform: scale(1.05);
 }
 
-/* Zoom icon */
 .image-wrapper .bi-zoom-in {
   position: absolute;
   bottom: 5px;
@@ -850,12 +800,10 @@ body.modal-open {
   font-size: 1rem;
 }
 
-/* Responsive text areas */
 .report-title, #report-content {
   font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
-/* For smaller screens */
 @media (max-width: 576px) {
   .image-wrapper img {
     width: 70px;
@@ -877,7 +825,6 @@ body.modal-open {
   transition: height 0.3s ease;
 }
 
-/* When empty */
 .image-scroll-wrapper:empty {
   height: 0;
   min-height: 0;
@@ -887,13 +834,12 @@ body.modal-open {
   overflow: hidden;
 }
 
-/* When has content */
 .image-scroll-wrapper:not(:empty) {
   display: flex;
   gap: 10px;
   overflow-x: auto;
   padding: 5px 0;
-  min-height: 100px; /* Minimum height when images exist */
+  min-height: 100px; 
 }
 
 
@@ -904,7 +850,6 @@ body.modal-open {
 
 
 
-/* OJT Kits Card Design - Simplified */
 .ojt-kit-card {
     background-color: #ffffff;
     border-radius: 12px;
@@ -998,105 +943,10 @@ body.modal-open {
 
 
 
-/* OJT Kits Card Design - Consistent Alignment */
-/* .ojt-kit-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
-    display: flex;
-    align-items: center;
-    min-height: 70px;
+
+
+.custom-btn-height {
+    height: 50px; 
+    min-height: 50px; 
+    padding: 1rem 0; 
 }
-
-.ojt-kit-card.completed {
-    background-color: #6e1423;
-    color: white;
-    border-color: #6e1423;
-}
-
-.ojt-kit-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.ojt-kit-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    color: white;
-    font-size: 1.2rem;
-    background-color: #6e1423;
-    flex-shrink: 0;
-    margin-left: 10px; 
-}
-
-.ojt-kit-card.completed .ojt-kit-icon {
-    background-color: white;
-    color: #6e1423;
-}
-
-.ojt-kit-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #3C3D42;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-grow: 1; 
-    padding-right: 30px;
-}
-
-.ojt-kit-card.completed .ojt-kit-title {
-    color: white;
-}
-
-.completed-badge {
-    position: absolute;
-    right: 15px;
-    color: #28a745;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
-
-.ojt-kits-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-    width: 100%;
-}
-
-@media (max-width: 768px) {
-    .ojt-kits-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .ojt-kit-card {
-        min-height: 60px;
-        padding: 12px;
-    }
-    
-    .ojt-kit-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-        margin-right: 12px;
-    }
-    
-    .completed-badge {
-        right: 10px;
-        font-size: 1rem;
-    }
-} */
-
-

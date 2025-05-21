@@ -38,6 +38,77 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 
 
+// async function loadOJTKits(kits = null) {
+//     try {
+//         const userId = localStorage.getItem("userId");
+//         if (!userId) {
+//             console.error("No userId found in localStorage");
+//             return;
+//         }
+
+//         cardContainer.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>';
+        
+//         if (!kits) {
+//             const { firebaseCRUD } = await import("./firebase-crud.js");
+//             kits = await firebaseCRUD.getAllData("ojtKits");
+//         }
+        
+//         const completedKits = await getCompletedKits(userId);
+        
+//         cardContainer.innerHTML = '';
+        
+//         if (!kits || kits.length === 0) {
+//             cardContainer.innerHTML = `
+//                 <div class="position-absolute top-50 start-50 translate-middle col-12 text-center py-4">
+//                     <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+//                     <h6 class="mt-2">No OJT Kits Available</h6>
+//                     <p class="mt-1">No OJT Kits have been added yet.</p>
+//                 </div>
+//             `;
+//             return;
+//         }
+        
+//         const container = document.createElement('div');
+//         container.className = 'ojt-kits-container';
+        
+//         kits.forEach(kit => {
+//             const isCompleted = completedKits.includes(kit.id);
+            
+//             const card = document.createElement('div');
+//             card.className = `ojt-kit-card ${isCompleted ? 'completed' : ''}`;
+            
+//             card.innerHTML = `
+//                 <div class="ojt-kit-icon">
+//                     <i class="${getIconForKit(kit.title)}"></i>
+//                 </div>
+//                 <div class="ojt-kit-title">${kit.title || 'No title'}</div>
+//                 ${isCompleted ? '<div class="completed-badge"><i class="bi bi-check-circle-fill"></i></div>' : ''}
+//             `;
+            
+//             if (!isCompleted) {
+//                 card.addEventListener('click', () => showKitDetails(kit));
+//             } else {
+//                 card.style.cursor = 'default';
+//             }
+//             container.appendChild(card);
+//         });
+        
+//         cardContainer.appendChild(container);
+//     } catch (error) {
+//         console.error('Error loading OJT Kits:', error);
+//         cardContainer.innerHTML = `
+//             <div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+//                 <div class="text-center">
+//                     <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
+//                     <p class="mt-3 fs-5">Error loading OJT Kits: ${error.message}</p>
+//                     <button class="btn btn-primary mt-3" onclick="loadOJTKits()">Retry</button>
+//                 </div>
+//             </div>
+//         `;
+//     }
+// }
+
+
 async function loadOJTKits(kits = null) {
     try {
         const userId = localStorage.getItem("userId");
@@ -85,11 +156,8 @@ async function loadOJTKits(kits = null) {
                 ${isCompleted ? '<div class="completed-badge"><i class="bi bi-check-circle-fill"></i></div>' : ''}
             `;
             
-            if (!isCompleted) {
-                card.addEventListener('click', () => showKitDetails(kit));
-            } else {
-                card.style.cursor = 'default';
-            }
+            // Always make card clickable
+            card.addEventListener('click', () => showKitDetails(kit, isCompleted));
             container.appendChild(card);
         });
         
@@ -149,16 +217,264 @@ function formatDate(dateString) {
 
 
 
-async function showKitDetails(kit) {
+// async function showKitDetails(kit) {
+//     showLoading(true);
+//     try {
+//         const modal = document.getElementById('addReportModal');
+//         if (!modal) {
+//             throw new Error("Modal element not found");
+//         }
+
+//         modal.dataset.viewingKit = JSON.stringify(kit);
+
+//         let titleDisplay = modal.querySelector('#ojt-kit-title-display');
+//         if (!titleDisplay) {
+//             titleDisplay = document.createElement('h5');
+//             titleDisplay.id = 'ojt-kit-title-display';
+//             titleDisplay.className = 'text-white mb-3';
+//             modal.querySelector('form').insertBefore(titleDisplay, modal.querySelector('form').firstChild);
+//         }
+//         titleDisplay.textContent = kit.title || 'OJT Kit Details';
+
+//         const titleInput = modal.querySelector('#ojt-kit-title');
+//         if (titleInput) {
+//             titleInput.style.display = 'none';
+//             titleInput.value = kit.title || ''; 
+//         }
+
+//         const contentField = modal.querySelector('#ojt-kit-content');
+//         if (contentField) {
+//             contentField.value = kit.content || '';
+//             contentField.readOnly = true;
+//             contentField.placeholder = 'OJT Kit content';
+//         }
+
+//         const imageContainer = modal.querySelector('#add-image-container');
+//         if (imageContainer) {
+//             imageContainer.innerHTML = '';
+            
+//             if (kit.image) {
+//                 const img = document.createElement('img');
+//                 img.src = kit.image;
+//                 img.className = 'img-thumbnail';
+//                 img.style.maxWidth = '100%';
+//                 img.style.maxHeight = '200px';
+//                 imageContainer.appendChild(img);
+//             } else {
+//                 const noImage = document.createElement('div');
+//                 noImage.className = 'no-image-placeholder d-flex align-items-center justify-content-center';
+//                 noImage.style.width = '100%';
+//                 noImage.style.height = '100%';
+//                 noImage.innerHTML = '<i class="bi bi-file-earmark-text fs-1 text-muted"></i>';
+//                 imageContainer.appendChild(noImage);
+//             }
+//         }
+
+//         const modalInstance = new bootstrap.Modal(modal);
+//         modalInstance.show();
+
+//     } catch (error) {
+//         console.error("Error showing kit details:", error);
+//         showErrorToast("Failed to load OJT Kit details");
+//     } finally {
+//         showLoading(false);
+//     }
+// }
+
+// >>>>
+
+// async function showKitDetails(kit, isCompleted = false) {
+//     showLoading(true);
+//     try {
+//         const userId = localStorage.getItem("userId");
+//         if (!userId) {
+//             throw new Error("User ID not found");
+//         }
+
+//         const { firebaseCRUD } = await import("./firebase-crud.js");
+//         const reports = await firebaseCRUD.getAllData("reports2");
+        
+//         // Check if there's an existing report for this kit and user
+//         const existingReport = reports.find(report => 
+//             report.userId === userId && report.ojtKitId === kit.id
+//         );
+
+//         // Determine which modal to show
+//         let modal;
+//         if (existingReport) {
+//             // Show update modal if report exists
+//             modal = document.getElementById('updateReportModal');
+            
+//             // Set up update form fields
+//             const contentField = modal.querySelector('#ojt-kit-content');
+//             if (contentField) {
+//                 contentField.value = existingReport.content || '';
+//                 contentField.readOnly = false;
+//             }
+//         } else {
+//             // Show add modal in view mode if no report exists
+//             modal = document.getElementById('addReportModal');
+            
+//             // Set up view mode
+//             const contentField = modal.querySelector('#ojt-kit-content');
+//             if (contentField) {
+//                 contentField.value = kit.content || '';
+//                 contentField.readOnly = true;
+//             }
+//         }
+
+//         if (!modal) {
+//             throw new Error("Modal element not found");
+//         }
+
+//         modal.dataset.viewingKit = JSON.stringify(kit);
+
+//         // Set up title display (for both modals)
+//         let titleDisplay = modal.querySelector('#ojt-kit-title-display');
+//         if (!titleDisplay) {
+//             titleDisplay = document.createElement('h5');
+//             titleDisplay.id = 'ojt-kit-title-display';
+//             titleDisplay.className = 'text-white mb-3';
+//             modal.querySelector('form').insertBefore(titleDisplay, modal.querySelector('form').firstChild);
+//         }
+//         titleDisplay.textContent = kit.title || 'OJT Kit Details';
+
+//         // Hide title input (for both modals)
+//         const titleInput = modal.querySelector('#ojt-kit-title');
+//         if (titleInput) {
+//             titleInput.style.display = 'none';
+//             titleInput.value = kit.title || ''; 
+//         }
+
+//         // Handle image container (for both modals)
+//         const imageContainer = modal.querySelector('#add-image-container');
+//         if (imageContainer) {
+//             imageContainer.innerHTML = '';
+            
+//             if (kit.image) {
+//                 const img = document.createElement('img');
+//                 img.src = kit.image;
+//                 img.className = 'img-thumbnail';
+//                 img.style.maxWidth = '100%';
+//                 img.style.maxHeight = '200px';
+//                 imageContainer.appendChild(img);
+//             } else {
+//                 const noImage = document.createElement('div');
+//                 noImage.className = 'no-image-placeholder d-flex align-items-center justify-content-center';
+//                 noImage.style.width = '100%';
+//                 noImage.style.height = '100%';
+//                 noImage.innerHTML = '<i class="bi bi-file-earmark-text fs-1 text-muted"></i>';
+//                 imageContainer.appendChild(noImage);
+//             }
+//         }
+
+//         // Handle image upload controls
+//         const imageUploadControls = modal.querySelector('.report-images');
+//         if (imageUploadControls) {
+//             if (existingReport) {
+//                 // Show upload controls in update mode
+//                 imageUploadControls.style.display = 'flex';
+//             } else {
+//                 // Hide upload controls in view mode
+//                 imageUploadControls.style.display = 'none';
+//             }
+//         }
+
+//         // Handle submit button
+//         const submitButton = modal.querySelector('button[type="submit"]');
+//         if (submitButton) {
+//             if (existingReport) {
+//                 // Show update button in update mode
+//                 submitButton.style.display = 'block';
+//                 submitButton.textContent = 'Update OJT Kit';
+//             } else {
+//                 // Hide submit button in view mode
+//                 submitButton.style.display = 'none';
+//             }
+//         }
+
+//         const modalInstance = new bootstrap.Modal(modal);
+//         modalInstance.show();
+
+//     } catch (error) {
+//         console.error("Error showing kit details:", error);
+//         showErrorToast("Failed to load OJT Kit details");
+//     } finally {
+//         showLoading(false);
+//     }
+// }
+
+async function showKitDetails(kit, isCompleted = false) {
     showLoading(true);
     try {
-        const modal = document.getElementById('addReportModal');
+        const userId = localStorage.getItem("userId");
+        if (!userId) throw new Error("User ID not found");
+
+        const { firebaseCRUD } = await import("./firebase-crud.js");
+        const reports = await firebaseCRUD.getAllData("reports2");
+        const existingReport = reports.find(report => report.userId === userId && report.ojtKitId === kit.id);
+
+        let modal; // Declare modal variable at the start
+
+        if (existingReport) {
+            modal = document.getElementById('updateReportModal');
+            const existingImages = await firebaseCRUD.getAllData(`reports2/${existingReport.id}/images`);
+            
+            modal.dataset.existingImages = JSON.stringify(existingImages);
+            modal.dataset.reportId = existingReport.id;
+            modal.dataset.viewingKit = JSON.stringify(kit);
+            
+            document.getElementById('update-ojt-kit-content').value = existingReport.content || '';
+            
+            const imageContainer = document.getElementById('update-image-container');
+            imageContainer.innerHTML = '';
+            
+            existingImages.forEach((image, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'image-thumbnail-wrapper d-inline-block position-relative';
+                wrapper.style.width = '100px';
+                wrapper.style.height = '100px';
+                wrapper.style.marginRight = '10px';
+                wrapper.dataset.imageIndex = index;
+                
+                const img = document.createElement('img');
+                img.src = image.image;
+                img.className = 'h-100 w-100 object-fit-cover';
+                img.style.borderRadius = '5px';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 m-1 p-1';
+                deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+                deleteBtn.onclick = (e) => {
+                    e.preventDefault();
+                    wrapper.style.opacity = '0.5';
+                    wrapper.dataset.toDelete = 'true';
+                    deleteBtn.style.display = 'none';
+                };
+                
+                wrapper.appendChild(img);
+                wrapper.appendChild(deleteBtn);
+                imageContainer.appendChild(wrapper);
+            });
+        } else {
+            // Show add modal in view mode if no report exists
+            modal = document.getElementById('addReportModal');
+            
+            // Set up view mode
+            const contentField = modal.querySelector('#ojt-kit-content');
+            if (contentField) {
+                contentField.value = kit.content || '';
+                contentField.readOnly = true;
+            }
+        }
+
         if (!modal) {
             throw new Error("Modal element not found");
         }
 
         modal.dataset.viewingKit = JSON.stringify(kit);
 
+        // Set up title display (for both modals)
         let titleDisplay = modal.querySelector('#ojt-kit-title-display');
         if (!titleDisplay) {
             titleDisplay = document.createElement('h5');
@@ -168,19 +484,14 @@ async function showKitDetails(kit) {
         }
         titleDisplay.textContent = kit.title || 'OJT Kit Details';
 
+        // Hide title input (for both modals)
         const titleInput = modal.querySelector('#ojt-kit-title');
         if (titleInput) {
             titleInput.style.display = 'none';
             titleInput.value = kit.title || ''; 
         }
 
-        const contentField = modal.querySelector('#ojt-kit-content');
-        if (contentField) {
-            contentField.value = kit.content || '';
-            contentField.readOnly = true;
-            contentField.placeholder = 'OJT Kit content';
-        }
-
+        // Handle image container (for both modals)
         const imageContainer = modal.querySelector('#add-image-container');
         if (imageContainer) {
             imageContainer.innerHTML = '';
@@ -202,6 +513,31 @@ async function showKitDetails(kit) {
             }
         }
 
+        // Handle image upload controls
+        const imageUploadControls = modal.querySelector('.report-images');
+        if (imageUploadControls) {
+            if (existingReport) {
+                // Show upload controls in update mode
+                imageUploadControls.style.display = 'flex';
+            } else {
+                // Hide upload controls in view mode
+                imageUploadControls.style.display = 'none';
+            }
+        }
+
+        // Handle submit button
+        const submitButton = modal.querySelector('button[type="submit"]');
+        if (submitButton) {
+            if (existingReport) {
+                // Show update button in update mode
+                submitButton.style.display = 'block';
+                submitButton.textContent = 'Update OJT Kit';
+            } else {
+                // Hide submit button in view mode
+                submitButton.style.display = 'none';
+            }
+        }
+
         const modalInstance = new bootstrap.Modal(modal);
         modalInstance.show();
 
@@ -212,6 +548,10 @@ async function showKitDetails(kit) {
         showLoading(false);
     }
 }
+
+
+
+
 
 
 
@@ -452,6 +792,18 @@ function showErrorToast(message, type = 'danger') {
 
 let uploadedImageBase64 = "";
 
+// document.addEventListener('DOMContentLoaded', function() {
+//     const addImageInput = document.getElementById('add-image-input');
+//     if (addImageInput) {
+//         addImageInput.addEventListener('change', handleImageUpload);
+//     }
+    
+//     const ojtKitForm = document.getElementById('ojtKitForm');
+//     if (ojtKitForm) {
+//         ojtKitForm.addEventListener('submit', handleOJTKitSubmit);
+//     }
+// });
+
 document.addEventListener('DOMContentLoaded', function() {
     const addImageInput = document.getElementById('add-image-input');
     if (addImageInput) {
@@ -462,8 +814,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (ojtKitForm) {
         ojtKitForm.addEventListener('submit', handleOJTKitSubmit);
     }
+    
+    const ojtKitFormUpdate = document.getElementById('ojtKitFormUpdate');
+    if (ojtKitFormUpdate) {
+        ojtKitFormUpdate.addEventListener('submit', handleOJTKitSubmit);
+    }
 });
-
 
 
 let uploadedImages = [];
@@ -556,35 +912,121 @@ function compressImage(imageData, quality = 0.7) {
 
 
 
+// async function handleOJTKitSubmit(e) {
+//     e.preventDefault();
+    
+//     const modal = document.getElementById('addReportModal');
+//     const submitButton = document.getElementById('add-ojtkit-button');
+//     const titleInput = document.getElementById('ojt-kit-title');
+//     const contentInput = document.getElementById('ojt-kit-content');
+//     const userId = localStorage.getItem("userId");
+    
+//     if (!modal || !submitButton || !titleInput || !contentInput || !userId) {
+//         showErrorToast("Missing required information");
+//         return;
+//     }
+    
+//     const isViewing = modal.dataset.viewingKit ? true : false;
+    
+//     let title, content, ojtKitId = null;
+    
+//     if (isViewing) {
+//         const kit = JSON.parse(modal.dataset.viewingKit);
+//         title = kit.title || '';
+//         content = contentInput.value.trim();
+//         ojtKitId = kit.id;
+//     } else {
+//         title = titleInput.value.trim();
+//         content = contentInput.value.trim();
+//     }
+    
+//     if (!title || !content) {
+//         showErrorToast("Please fill in all required fields");
+//         return;
+//     }
+    
+//     // Set loading state
+//     submitButton.disabled = true;
+//     submitButton.innerHTML = `
+//         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+//         Adding...
+//     `;
+    
+//     try {
+//         const reportData = {
+//             title: title,
+//             content: content,
+//             createdAt: new Date().toISOString(),
+//             updatedAt: new Date().toISOString(),
+//             userId: userId,
+//             ojtKitId: ojtKitId,
+//             imageCount: uploadedImages.length 
+//         };
+        
+//         const reportId = `${userId}_${Date.now()}`;
+        
+//         const { firebaseCRUD } = await import("./firebase-crud.js");
+        
+//         await firebaseCRUD.setDataWithId("reports2", reportId, reportData);
+        
+//         if (uploadedImages.length > 0) {
+//             for (const imageData of uploadedImages) {
+//                 const imageDocData = {
+//                     image: imageData,
+//                     ojtKitId: ojtKitId,
+//                     userId: userId,
+//                     createdAt: new Date().toISOString()
+//                 };
+                
+//                 await firebaseCRUD.createData(`reports2/${reportId}/images`, imageDocData);
+//             }
+//         }
+        
+//         showErrorToast("Document added successfully!", "success");
+        
+//         document.getElementById('ojtKitForm').reset();
+//         document.getElementById('add-image-container').innerHTML = '';
+//         uploadedImages = [];
+        
+//         delete modal.dataset.viewingKit;
+        
+//         const modalInstance = bootstrap.Modal.getInstance(modal);
+//         modalInstance.hide();
+        
+//         await loadOJTKits();
+        
+//     } catch (error) {
+//         console.error("Error adding report:", error);
+//         showErrorToast("Failed to add report");
+//     } finally {
+//         submitButton.disabled = false;
+//         submitButton.textContent = "Add OJT Kit";
+//     }
+// }
+
 async function handleOJTKitSubmit(e) {
     e.preventDefault();
     
-    const modal = document.getElementById('addReportModal');
-    const submitButton = document.getElementById('add-ojtkit-button');
-    const titleInput = document.getElementById('ojt-kit-title');
-    const contentInput = document.getElementById('ojt-kit-content');
+    const formId = e.target.id;
+    const isUpdate = formId === 'ojtKitFormUpdate';
+    const modal = document.getElementById(isUpdate ? 'updateReportModal' : 'addReportModal');
+    const submitButton = e.target.querySelector('button[type="submit"]');
+    const contentInput = modal.querySelector('#ojt-kit-content');
     const userId = localStorage.getItem("userId");
     
-    if (!modal || !submitButton || !titleInput || !contentInput || !userId) {
-        showErrorToast("Missing required information");
+    if (!modal || !submitButton || !contentInput || !userId) {
+        // showErrorToast("Missing required information");
         return;
     }
     
-    const isViewing = modal.dataset.viewingKit ? true : false;
-    
-    let title, content, ojtKitId = null;
-    
-    if (isViewing) {
-        const kit = JSON.parse(modal.dataset.viewingKit);
-        title = kit.title || '';
-        content = contentInput.value.trim();
-        ojtKitId = kit.id;
-    } else {
-        title = titleInput.value.trim();
-        content = contentInput.value.trim();
+    const kit = modal.dataset.viewingKit ? JSON.parse(modal.dataset.viewingKit) : null;
+    if (!kit) {
+        showErrorToast("No OJT Kit selected");
+        return;
     }
     
-    if (!title || !content) {
+    const content = contentInput.value.trim();
+    if (!content) {
         showErrorToast("Please fill in all required fields");
         return;
     }
@@ -593,31 +1035,56 @@ async function handleOJTKitSubmit(e) {
     submitButton.disabled = true;
     submitButton.innerHTML = `
         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-        Adding...
+        ${isUpdate ? 'Updating...' : 'Submitting...'}
     `;
     
     try {
-        const reportData = {
-            title: title,
+        const { firebaseCRUD } = await import("./firebase-crud.js");
+        const reports = await firebaseCRUD.getAllData("reports2");
+        
+        // Check for existing report
+        const existingReport = reports.find(report => 
+            report.userId === userId && report.ojtKitId === kit.id
+        );
+        
+        let reportData = {
+            title: kit.title,
             content: content,
-            createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             userId: userId,
-            ojtKitId: ojtKitId,
-            imageCount: uploadedImages.length 
+            ojtKitId: kit.id,
+            imageCount: uploadedImages.length
         };
         
-        const reportId = `${userId}_${Date.now()}`;
+        let reportId;
         
-        const { firebaseCRUD } = await import("./firebase-crud.js");
+        if (existingReport) {
+            // Update existing report
+            reportId = existingReport.id;
+            reportData.createdAt = existingReport.createdAt;
+            await firebaseCRUD.updateData("reports2", reportId, reportData);
+        } else {
+            // Create new report
+            reportId = `${userId}_${Date.now()}`;
+            reportData.createdAt = new Date().toISOString();
+            await firebaseCRUD.setDataWithId("reports2", reportId, reportData);
+        }
         
-        await firebaseCRUD.setDataWithId("reports2", reportId, reportData);
-        
+        // Handle image uploads
         if (uploadedImages.length > 0) {
+            // First delete existing images if updating
+            if (existingReport) {
+                const existingImages = await firebaseCRUD.getAllData(`reports2/${reportId}/images`);
+                for (const img of existingImages) {
+                    await firebaseCRUD.deleteData(`reports2/${reportId}/images`, img.id);
+                }
+            }
+            
+            // Upload new images
             for (const imageData of uploadedImages) {
                 const imageDocData = {
                     image: imageData,
-                    ojtKitId: ojtKitId,
+                    ojtKitId: kit.id,
                     userId: userId,
                     createdAt: new Date().toISOString()
                 };
@@ -626,9 +1093,9 @@ async function handleOJTKitSubmit(e) {
             }
         }
         
-        showErrorToast("Document added successfully!", "success");
+        showErrorToast(`Document ${isUpdate ? 'updated' : 'added'} successfully!`, "success");
         
-        document.getElementById('ojtKitForm').reset();
+        e.target.reset();
         document.getElementById('add-image-container').innerHTML = '';
         uploadedImages = [];
         
@@ -640,10 +1107,170 @@ async function handleOJTKitSubmit(e) {
         await loadOJTKits();
         
     } catch (error) {
-        console.error("Error adding report:", error);
-        showErrorToast("Failed to add report");
+        console.error("Error processing report:", error);
+        showErrorToast(`Failed to ${isUpdate ? 'update' : 'add'} report`);
     } finally {
         submitButton.disabled = false;
-        submitButton.textContent = "Add OJT Kit";
+        submitButton.textContent = isUpdate ? "Update OJT Kit" : "Submit OJT Kit";
     }
+}
+
+
+
+// Image Management for Update Modal
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle image upload for update modal
+    document.getElementById('update-image-input')?.addEventListener('change', async function(e) {
+        const files = e.target.files;
+        const imageContainer = document.getElementById('update-image-container');
+        
+        if (!files || !imageContainer) return;
+        
+        for (const file of files) {
+            try {
+                const imageData = await processImageFile(file);
+                addImageToContainer(imageData, true);
+            } catch (error) {
+                console.error("Error processing image:", error);
+                showErrorToast("Error processing image");
+            }
+        }
+        
+        e.target.value = '';
+    });
+
+    // Update form submission
+    document.getElementById('ojtKitFormUpdate')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        showLoading(true);
+        
+        try {
+            const modal = document.getElementById('updateReportModal');
+            const reportId = modal.dataset.reportId;
+            const existingImages = JSON.parse(modal.dataset.existingImages || '[]');
+            const content = document.getElementById('update-ojt-kit-content').value.trim();
+            const userId = localStorage.getItem("userId");
+            const kitId = JSON.parse(modal.dataset.viewingKit).id;
+            
+            if (!reportId || !userId) {
+                // throw new Error("Missing required information");
+            }
+            
+            const { firebaseCRUD } = await import("./firebase-crud.js");
+            
+            // Process images
+            const imageWrappers = modal.querySelectorAll('#update-image-container .image-thumbnail-wrapper');
+            const imagesToDelete = [];
+            const newImages = [];
+            
+            imageWrappers.forEach((wrapper, index) => {
+                if (wrapper.dataset.toDelete === 'true') {
+                    const imgIndex = wrapper.dataset.imageIndex;
+                    if (imgIndex !== undefined) {
+                        imagesToDelete.push(existingImages[imgIndex].id);
+                    }
+                } else if (wrapper.dataset.isNew === 'true') {
+                    newImages.push(wrapper.dataset.imageData);
+                }
+            });
+            
+            // Update report data
+            const reportData = {
+                content: content,
+                updatedAt: new Date().toISOString(),
+                imageCount: existingImages.length - imagesToDelete.length + newImages.length
+            };
+            
+            await firebaseCRUD.updateData("reports2", reportId, reportData);
+            
+            // Delete marked images
+            for (const imageId of imagesToDelete) {
+                await firebaseCRUD.deleteData(`reports2/${reportId}/images`, imageId);
+            }
+            
+            // Add new images
+            for (const imageData of newImages) {
+                const imageDocData = {
+                    image: imageData,
+                    ojtKitId: kitId,
+                    userId: userId,
+                    createdAt: new Date().toISOString()
+                };
+                await firebaseCRUD.createData(`reports2/${reportId}/images`, imageDocData);
+            }
+            
+            showErrorToast("Document updated successfully!", "success");
+            bootstrap.Modal.getInstance(modal).hide();
+            await loadOJTKits();
+            
+        } catch (error) {
+            console.error("Error updating report:", error);
+            showErrorToast("Failed to update report");
+        } finally {
+            showLoading(false);
+        }
+    });
+});
+
+
+function addImageToContainer(imageData, isNew = false) {
+    const imageContainer = document.getElementById('update-image-container');
+    
+    const wrapper = document.createElement('div');
+    wrapper.className = 'image-thumbnail-wrapper d-inline-block position-relative';
+    wrapper.style.width = '100px';
+    wrapper.style.height = '100px';
+    wrapper.style.marginRight = '10px';
+    
+    const img = document.createElement('img');
+    img.src = imageData;
+    img.className = 'h-100 w-100 object-fit-cover';
+    img.style.borderRadius = '5px';
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 m-1 p-1';
+    deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+    deleteBtn.onclick = (e) => {
+        e.preventDefault();
+        wrapper.style.opacity = '0.5';
+        wrapper.dataset.toDelete = 'true';
+        deleteBtn.style.display = 'none';
+    };
+    
+    if (isNew) {
+        wrapper.dataset.isNew = 'true';
+        wrapper.dataset.imageData = imageData;
+    }
+    
+    wrapper.appendChild(img);
+    wrapper.appendChild(deleteBtn);
+    imageContainer.appendChild(wrapper);
+}
+
+
+async function processImageFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = async function(e) {
+            try {
+                let imageData = e.target.result;
+                
+                // Compress if file is larger than 1MB
+                if (file.size > 1048576) {
+                    imageData = await compressImage(imageData);
+                }
+                
+                resolve(imageData);
+            } catch (error) {
+                reject(error);
+            }
+        };
+        
+        reader.onerror = function() {
+            reject(new Error("Failed to read file"));
+        };
+        
+        reader.readAsDataURL(file);
+    });
 }

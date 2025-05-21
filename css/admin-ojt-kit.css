@@ -570,3 +570,10 @@ body.modal-open {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
 }
+
+
+.custom-btn-height {
+    height: 50px; 
+    min-height: 50px; 
+    padding: 1rem 0; 
+}

@@ -508,24 +508,45 @@ async function displayReports(reports) {
       `download-report-button-${report.id}`
     );
 
-    downloadButton.addEventListener("click", async () => {
-      try {
-        console.log(globalStudentName);
-        const reportData = {
-          title: report.title || "Daily Report",
-          date: new Date(report.createdAt).toLocaleDateString(),
-          content: report.content || "No content",
-          images: images,
-          studentName: globalStudentName || "Student",
-          logoBase64: await fetchBase64("../assets/img/oc.png"),
-        };
+    document
+      .getElementById(`download-report-button-${report.id}`)
+      .addEventListener("click", async () => {
+        const button = document.getElementById(
+          `download-report-button-${report.id}`
+        );
 
-        const pdfGen = new PDFReportGenerator();
-        await pdfGen.generate(reportData);
-      } catch (err) {
-        console.error("Failed to generate PDF:", err);
-      }
-    });
+        const originalIcon = button.innerHTML;
+
+        button.innerHTML = `
+        <div class="spinner-border spinner-border-sm text-light" role="status" style="width: 1.2rem; height: 1.2rem;">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      `;
+        button.disabled = true;
+
+        try {
+          const reportData = {
+            title: report.title || "Daily Report",
+            date: new Date(report.createdAt).toLocaleDateString(),
+            content: report.content || "No content",
+            images: images,
+            studentName: globalStudentName || "Student",
+            logoBase64: await fetchBase64("../assets/img/oc.png"),
+          };
+
+          const pdfGen = new PDFReportGenerator();
+          await pdfGen.generate(reportData);
+
+          alert("PDF exported successfully!");
+        } catch (err) {
+          console.error("Failed to generate PDF:", err);
+          alert("Failed to generate PDF.");
+        } finally {
+          button.innerHTML = originalIcon;
+          button.disabled = false;
+          button.style.backgroundColor = "rgb(110, 20, 35)";
+        }
+      });
   }
 }
 
@@ -537,25 +558,6 @@ async function fetchBase64(url) {
     reader.onloadend = () => resolve(reader.result);
     reader.readAsDataURL(blob);
   });
-}
-
-function downloadPDF(elementId, title = "Report") {
-  const element = document.getElementById(elementId);
-
-  const cloned = element.cloneNode(true);
-
-  const btn = cloned.querySelector("button");
-  if (btn) btn.remove();
-
-  const opt = {
-    margin: 0.5,
-    filename: `${title.replace(/\s+/g, "_")}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-  };
-
-  html2pdf().set(opt).from(cloned).save();
 }
 
 async function loadReportImages(reportId) {

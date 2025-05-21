@@ -186,3 +186,8 @@ tbody tr:last-child td:last-child {
 #upload-btn:active:not(:disabled) {
   background-color: #4d0a16;
 }
+
+#absent-incident-submit {
+  background-color: #4d0a16;
+  border: none;
+}

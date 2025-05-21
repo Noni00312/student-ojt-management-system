@@ -46,14 +46,11 @@ class OfflineManager {
     }
   }
 
-  async _saveToIndexedDB(data) {
-  }
+  async _saveToIndexedDB(data) {}
 
-  async _loadFromIndexedDB() {
-  }
+  async _loadFromIndexedDB() {}
 
-  async _markAsSynced(id) {
-  }
+  async _markAsSynced(id) {}
 
   handleConnectionChange() {
     this.isOnline = navigator.onLine;

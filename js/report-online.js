@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     showLoading(true);
     await displayReports();
     setupEventListeners();
-    setupDateSearch(); 
+    setupDateSearch();
   } catch (error) {
     console.error("Initialization error:", error);
     showError("Failed to load reports. Please try again later.");

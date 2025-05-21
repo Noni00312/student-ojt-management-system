@@ -3,88 +3,170 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/css/dashboard.css" />
-    <link rel="stylesheet" href="/css/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/bootstrap-icons.min.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/assets/img/icons/LOGO 96.png" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="apple-touch-icon" href="../assets/img/icons/LOGO 96.png" />
     <link rel="app-mobile-web-app-status-bar" href="#6e1423" />
     <meta name="theme-color" content="#6e1423" />
     <script src="../js/prevent-back.js"></script>
     <title>Dashboard | SOJTMS</title>
-    <link rel="icon" type="image/png" href="/assets/img/logo trans.png">
+    <link rel="icon" type="image/png" href="../assets/img/logo trans.png" />
   </head>
   <body>
-
     <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
       <div class="container">
         <div class="d-flex align-items-center justify-content-between w-100">
           <div class="wrapper">
             <div class="d-flex align-items-center">
-              <a href="" class="navbar-brand fw-bold text-white d-none d-lg-block">SOJTMS</a>
+              <a
+                href=""
+                class="navbar-brand fw-bold text-white d-none d-lg-block"
+                >SOJTMS</a
+              >
             </div>
-            <button class="btn d-lg-none d-sm-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideBar" aria-controls="sideBar">
+            <button
+              class="btn d-lg-none d-sm-block"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#sideBar"
+              aria-controls="sideBar"
+            >
               <i class="bi bi-list text-light fs-3 outline-none"></i>
             </button>
           </div>
-          <div class="collapse navbar-collapse me-2" id="navbarSupportedContent">
+          <div
+            class="collapse navbar-collapse me-2"
+            id="navbarSupportedContent"
+          >
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item"><a class="nav-link text-light" href="./dashboard.html">Home</a></li>
-              
+              <li class="nav-item">
+                <a class="nav-link text-light" href="./dashboard.html">Home</a>
+              </li>
+
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
                   Content
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="./announcements.html"><i class="bi bi-megaphone"></i> Announcements</a></li>
-                  <li><a class="dropdown-item" href="./student-ojt-kits.html"><i class="bi bi-journal-text"></i> OJT Kit</a></li>
-                </ul>
-              </li>
-              
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Attendance
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="./time-in-out.html"><i class="bi bi-clock"></i> Time in/out</a></li>
-                  <li><a class="dropdown-item" href="./history.html"><i class="bi bi-arrow-clockwise"></i> History</a></li>
-                </ul>
-              </li>
-              
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Reports
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="./report.html"><i class="bi bi-file-earmark-text"></i> Reports</a></li>
-                  <li><a class="dropdown-item" href="./report-online.html"><i class="bi bi-cloud-arrow-up"></i> Online Reports</a></li>
+                  <li>
+                    <a class="dropdown-item" href="./announcements.html"
+                      ><i class="bi bi-megaphone"></i> Announcements</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./student-ojt-kits.html"
+                      ><i class="bi bi-journal-text"></i> OJT Kit</a
+                    >
+                  </li>
                 </ul>
               </li>
 
-              <li class="nav-item dropdown" id="assistant-reports-nav" style="display: none;">
-                <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Attendance
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="./time-in-out.html"
+                      ><i class="bi bi-clock"></i> Time in/out</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./history.html"
+                      ><i class="bi bi-arrow-clockwise"></i> History</a
+                    >
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Reports
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="./report.html"
+                      ><i class="bi bi-file-earmark-text"></i> Reports</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./report-online.html"
+                      ><i class="bi bi-cloud-arrow-up"></i> Online Reports</a
+                    >
+                  </li>
+                </ul>
+              </li>
+
+              <li
+                class="nav-item dropdown"
+                id="assistant-reports-nav"
+                style="display: none"
+              >
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
                   Assistant Reports
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="./assistant-report.html"><i class="bi bi-file-earmark-text"></i> Assistant Reports</a></li>
-                  <li><a class="dropdown-item" href="./assistant-report-online.html"><i class="bi bi-cloud-arrow-up"></i> Online Assistant Reports</a></li>
+                  <li>
+                    <a class="dropdown-item" href="./assistant-report.html"
+                      ><i class="bi bi-file-earmark-text"></i> Assistant
+                      Reports</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="./assistant-report-online.html"
+                      ><i class="bi bi-cloud-arrow-up"></i> Online Assistant
+                      Reports</a
+                    >
+                  </li>
                 </ul>
               </li>
-              
             </ul>
           </div>
-          <a href="./profile.html"  class="text-decoration-none">
-              <img src="/assets/img/icons8_male_user_480px_1.png" alt="User profile icon" loading="lazy" id="user-profile" 
-                  style="
-                    object-fit: cover !important;
-                    object-position: center !important;
-                  " ">
+          <a href="./profile.html" class="text-decoration-none">
+            <img
+              src="../assets/img/icons8_male_user_480px_1.png"
+              alt="User profile icon"
+              loading="lazy"
+              id="user-profile"
+              style="
+                object-fit: cover !important;
+                object-position: center !important;
+              "
+            />
           </a>
         </div>
       </div>
@@ -92,14 +174,19 @@
 
     <section class="container mt-4">
       <div class="row g-4">
-        <div class="col-lg-6 position-relative"> 
-          <div class="dashboard-card h-100 position-relative">  
-            <i class="bi bi-calendar2-week text-light fs-1 position-absolute opacity-25" id="overlay-icon"></i>
-            
-            <div class="card-header position-relative" style="z-index: 1;">  
-              <h2><i class="bi bi-calendar2-week me-2 py-3"></i>Work Schedule</h2>
+        <div class="col-lg-6 position-relative">
+          <div class="dashboard-card h-100 position-relative">
+            <i
+              class="bi bi-calendar2-week text-light fs-1 position-absolute opacity-25"
+              id="overlay-icon"
+            ></i>
+
+            <div class="card-header position-relative" style="z-index: 1">
+              <h2>
+                <i class="bi bi-calendar2-week me-2 py-3"></i>Work Schedule
+              </h2>
             </div>
-            <div class="card-body position-relative" style="z-index: 1;">  
+            <div class="card-body position-relative" style="z-index: 1">
               <div class="time-slot">
                 <div class="time-label">
                   <i class="bi bi-clock"></i>
@@ -113,11 +200,13 @@
                   <span class="separator">to</span>
                   <span class="time-badge">
                     <span id="morning-time-out">...</span>
-                    <span class="time-period" id="morning-time-out-tt">...</span>
+                    <span class="time-period" id="morning-time-out-tt"
+                      >...</span
+                    >
                   </span>
                 </div>
               </div>
-              
+
               <div class="time-slot">
                 <div class="time-label">
                   <i class="bi bi-clock"></i>
@@ -126,25 +215,31 @@
                 <div class="time-range">
                   <span class="time-badge">
                     <span id="afternoon-time-in">...</span>
-                    <span class="time-period" id="afternoon-time-in-tt">...</span>
+                    <span class="time-period" id="afternoon-time-in-tt"
+                      >...</span
+                    >
                   </span>
                   <span class="separator">to</span>
                   <span class="time-badge">
                     <span id="afternoon-time-out">...</span>
-                    <span class="time-period" id="afternoon-time-out-tt">...</span>
+                    <span class="time-period" id="afternoon-time-out-tt"
+                      >...</span
+                    >
                   </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
 
-        <div class="col-lg-6 position-relative"> 
-          <div class="dashboard-card h-100 position-relative">  
-            <i class="bi bi-buildings text-light fs-1 position-absolute opacity-25" id="overlay-icon"></i>
-            
-            <div class="card-header position-relative" style="z-index: 1;">  
+        <div class="col-lg-6 position-relative">
+          <div class="dashboard-card h-100 position-relative">
+            <i
+              class="bi bi-buildings text-light fs-1 position-absolute opacity-25"
+              id="overlay-icon"
+            ></i>
+
+            <div class="card-header position-relative" style="z-index: 1">
               <h2><i class="bi bi-building me-2 py-3"></i>Company</h2>
             </div>
             <div class="card-body">
@@ -155,22 +250,36 @@
                 </div>
                 <div class="info-item">
                   <span class="info-label">Location</span>
-                  <p class="info-value" id="company-address">Loading address...</p>
+                  <p class="info-value" id="company-address">
+                    Loading address...
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="col-12">
           <div class="dashboard-card">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
               <h2><i class="bi bi-megaphone me-2 py-3"></i>Announcements</h2>
-              <a href="./announcements.html" class="btn btn-outline-primary btn-sm">View All</a>
+              <a
+                href="./announcements.html"
+                class="btn btn-outline-primary btn-sm"
+                >View All</a
+              >
             </div>
             <div class="card-body">
-              <div class="announcements-grid" id="student-dashboard-announcements-list">
-                <div class="text-center text-muted py-5" id="student-dashboard-announcements-loading">
+              <div
+                class="announcements-grid"
+                id="student-dashboard-announcements-list"
+              >
+                <div
+                  class="text-center text-muted py-5"
+                  id="student-dashboard-announcements-loading"
+                >
                   <span class="spinner-border"></span>
                 </div>
               </div>
@@ -180,36 +289,61 @@
       </div>
     </section>
 
-    <div class="offcanvas offcanvas-start primary-background-color" tabindex="-1" id="sideBar" aria-labelledby="sideBarLabel">
+    <div
+      class="offcanvas offcanvas-start primary-background-color"
+      tabindex="-1"
+      id="sideBar"
+      aria-labelledby="sideBarLabel"
+    >
       <div class="offcanvas-header accent-darken-bg-color">
-        <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">MENU</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">
+          MENU
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="offcanvas-body p-0">
         <ul class="nav d-flex flex-column">
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" href="./dashboard.html">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              href="./dashboard.html"
+            >
               <span class="fs-5">Dashboard</span>
               <i class="bi bi-microsoft fs-5"></i>
             </a>
           </li>
-          
+
           <!-- Content Dropdown -->
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#contentCollapse">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#contentCollapse"
+            >
               <span class="fs-5">Content</span>
               <i class="bi bi-chevron-down fs-5"></i>
             </a>
             <div class="collapse" id="contentCollapse">
               <ul class="nav flex-column ps-4">
                 <li class="nav-item">
-                  <a class="nav-link py-2 d-flex align-items-center" href="./announcements.html">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center"
+                    href="./announcements.html"
+                  >
                     <i class="bi bi-megaphone me-2"></i>
                     <span>Announcements</span>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link py-2 d-flex align-items-center" href="./student-ojt-kits.html">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center"
+                    href="./student-ojt-kits.html"
+                  >
                     <i class="bi bi-journal-text me-2"></i>
                     <span>OJT Kit</span>
                   </a>
@@ -217,23 +351,33 @@
               </ul>
             </div>
           </li>
-          
+
           <!-- Attendance Dropdown -->
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#attendanceCollapse">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#attendanceCollapse"
+            >
               <span class="fs-5">Attendance</span>
               <i class="bi bi-chevron-down fs-5"></i>
             </a>
             <div class="collapse" id="attendanceCollapse">
               <ul class="nav flex-column ps-4">
                 <li class="nav-item">
-                  <a class="nav-link py-2 d-flex align-items-center" href="./time-in-out.html">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center"
+                    href="./time-in-out.html"
+                  >
                     <i class="bi bi-clock me-2"></i>
                     <span>Time in/out</span>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link py-2 d-flex align-items-center" href="./history.html">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center"
+                    href="./history.html"
+                  >
                     <i class="bi bi-arrow-clockwise me-2"></i>
                     <span>History</span>
                   </a>
@@ -241,23 +385,33 @@
               </ul>
             </div>
           </li>
-          
+
           <!-- Reports Dropdown -->
           <li class="nav-item">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#reportsCollapse">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#reportsCollapse"
+            >
               <span class="fs-5">Reports</span>
               <i class="bi bi-chevron-down fs-5"></i>
             </a>
             <div class="collapse" id="reportsCollapse">
               <ul class="nav flex-column ps-4">
                 <li class="nav-item">
-                  <a class="nav-link py-2 d-flex align-items-center" href="./report.html">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center"
+                    href="./report.html"
+                  >
                     <i class="bi bi-file-earmark-text me-2"></i>
                     <span>Reports</span>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link py-2 d-flex align-items-center" href="./report-online.html">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center"
+                    href="./report-online.html"
+                  >
                     <i class="bi bi-cloud-arrow-up me-2"></i>
                     <span>Online Reports</span>
                   </a>
@@ -265,23 +419,33 @@
               </ul>
             </div>
           </li>
-          
+
           <!-- Assistant Reports Dropdown -->
-          <li class="nav-item" id="assistant-reports-dd" style="display: none;"">
-            <a class="nav-link py-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#assistantReportsCollapse">
+          <li class="nav-item" id="assistant-reports-dd" style="display: none">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#assistantReportsCollapse"
+            >
               <span class="fs-5">Assistant Reports</span>
               <i class="bi bi-chevron-down fs-5"></i>
             </a>
             <div class="collapse" id="assistantReportsCollapse">
               <ul class="nav flex-column ps-4">
                 <li class="nav-item">
-                  <a class="nav-link py-2 d-flex align-items-center" href="./assistant-report.html">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center"
+                    href="./assistant-report.html"
+                  >
                     <i class="bi bi-file-earmark-text me-2"></i>
                     <span>Assistant Reports</span>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link py-2 d-flex align-items-center" href="./assistant-report-online.html">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center"
+                    href="./assistant-report-online.html"
+                  >
                     <i class="bi bi-cloud-arrow-up me-2"></i>
                     <span>Online Assistant Reports</span>
                   </a>
@@ -293,16 +457,15 @@
       </div>
     </div>
 
-
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-    <script type="module" src="/js/firebase-config.js"></script>
-    <script src="/js/index-db-crud.js"></script>
-    <script src="/js/app.js"></script>
-    <script type="module"  src="/js/dashboard.js"></script>
-    <script type="module" src="/js/hide-assistant-reports-menu.js"></script>
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script src="../js/index-db-crud.js"></script>
+    <script src="../js/app.js"></script>
+    <script type="module" src="../js/dashboard.js"></script>
+    <script type="module" src="../js/hide-assistant-reports-menu.js"></script>
   </body>
 </html>

@@ -64,9 +64,6 @@ body {
   transition: all 0.3s ease;
 }
 
-
-
-
 .img-thumbnail {
   padding: 1rem;
   background-color: transparent !important;
@@ -351,10 +348,6 @@ button {
   background-color: #ffffff !important;
 }
 
-
-
-
-
 .document-option-btn {
   background-color: #4a4b50;
   border: none;
@@ -377,32 +370,27 @@ button {
   border: none;
 }
 
-
-
 .modal {
-    background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
-    border: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  border: none;
 }
 
 .modal-backdrop {
-    display: none !important;
+  display: none !important;
 }
 
 body.modal-open {
-    overflow: auto;
-    padding-right: 0 !important;
+  overflow: auto;
+  padding-right: 0 !important;
 }
 
 .modal.fade:not(.show) {
-    display: none;
+  display: none;
 }
-
-
-
 
 .fab-container {
   position: fixed;
@@ -436,11 +424,6 @@ body.modal-open {
   transform: scale(0.95);
 }
 
-
-
-
-
-
 .floating-btn {
   position: fixed;
   bottom: 30px;
@@ -451,7 +434,7 @@ body.modal-open {
   background-color: #6e1423;
   color: white;
   border: none;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -469,10 +452,6 @@ body.modal-open {
 .floating-btn:active {
   transform: scale(0.95);
 }
-
-
-
-
 
 .image-scroll-container {
   width: 100%;
@@ -540,40 +519,39 @@ body.modal-open {
     width: 70px;
     height: 70px;
   }
-  
+
   .image-scroll-wrapper {
     gap: 6px;
   }
 }
 
 .student-card {
-    border-radius: 10px;
-    padding: 15px;
-    transition: all 0.3s ease;
+  border-radius: 10px;
+  padding: 15px;
+  transition: all 0.3s ease;
 }
 
 .student-card.completed-card {
-    background-color: #6e1423;
-    box-shadow: 0 4px 8px rgba(110, 20, 35, 0.3);
+  background-color: #6e1423;
+  box-shadow: 0 4px 8px rgba(110, 20, 35, 0.3);
 }
 
 .student-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .text-white {
-    color: white !important;
+  color: white !important;
 }
 
 .separator {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
 }
 
-
 .custom-btn-height {
-    height: 50px; 
-    min-height: 50px; 
-    padding: 1rem 0; 
+  height: 50px;
+  min-height: 50px;
+  padding: 1rem 0;
 }

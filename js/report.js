@@ -75,148 +75,152 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (!uploadButton) return;
 
     uploadButton.addEventListener("click", async function () {
-        if (!navigator.onLine) {
-            alert("No internet connection. Please check your network and try again.");
-            return;
-        }
+      if (!navigator.onLine) {
+        alert(
+          "No internet connection. Please check your network and try again."
+        );
+        return;
+      }
 
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-            alert("User not authenticated. Please login again.");
-            return;
-        }
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("User not authenticated. Please login again.");
+        return;
+      }
 
-        if (!confirm("Are you sure you want to upload all reports to the server?")) {
-            return;
-        }
+      if (
+        !confirm("Are you sure you want to upload all reports to the server?")
+      ) {
+        return;
+      }
 
-        try {
-            const originalIcon = uploadButton.innerHTML;
-            uploadButton.innerHTML = `
+      try {
+        const originalIcon = uploadButton.innerHTML;
+        uploadButton.innerHTML = `
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             `;
-            uploadButton.disabled = true;
+        uploadButton.disabled = true;
 
-            const transaction = db.transaction(["reportTbl"], "readonly");
-            const store = transaction.objectStore("reportTbl");
-            const index = store.index("userId");
-            const request = index.getAll(userId);
+        const transaction = db.transaction(["reportTbl"], "readonly");
+        const store = transaction.objectStore("reportTbl");
+        const index = store.index("userId");
+        const request = index.getAll(userId);
 
-            request.onsuccess = async function (event) {
-                const reports = event.target.result;
-                if (reports.length === 0) {
-                    alert("No reports to upload");
-                    uploadButton.innerHTML = originalIcon;
-                    uploadButton.disabled = false;
-                    return;
-                }
-
-                let uploadSuccess = true;
-                let errorMessage = "";
-
-                for (const report of reports) {
-                    try {
-                        console.log(`Processing report ${report.id}`);
-
-                        const reportId = `${userId}_${report.id}`;
-
-                        const firebaseReport = {
-                            title: report.title,
-                            content: report.content,
-                            createdAt: report.createdAt,
-                            userId: userId,
-                            localId: report.id,
-                            hasImages: report.images && report.images.length > 0,
-                        };
-
-                        await firebaseCRUD.setDataWithId(
-                            "reports",
-                            reportId,
-                            firebaseReport
-                        );
-                        console.log(`Created report document with ID: ${reportId}`);
-
-                        if (report.images && report.images.length > 0) {
-                            console.log(
-                                `Uploading ${report.images.length} images for report ${reportId}`
-                            );
-
-                            for (const [index, imageBlob] of report.images.entries()) {
-                                try {
-                                    const base64String = await blobToBase64(imageBlob);
-                                    console.log(
-                                        `Uploading image ${index + 1} of ${report.images.length}`
-                                    );
-
-                                    await firebaseCRUD.createData(
-                                        `reports/${reportId}/images`,
-                                        {
-                                            imageData: base64String,
-                                            uploadedAt: new Date().toISOString(),
-                                            order: index,
-                                            originalName: `image_${index + 1}.jpg`,
-                                            reportId: reportId,
-                                        }
-                                    );
-
-                                    console.log(`Successfully uploaded image ${index + 1}`);
-                                } catch (imageError) {
-                                    console.error(
-                                        `Error uploading image ${index + 1}:`,
-                                        imageError
-                                    );
-                                    uploadSuccess = false;
-                                    errorMessage = `Failed to upload some images. ${imageError.message}`;
-                                }
-                            }
-                        }
-
-                        const deleteTransaction = db.transaction(
-                            ["reportTbl"],
-                            "readwrite"
-                        );
-                        const deleteStore = deleteTransaction.objectStore("reportTbl");
-                        deleteStore.delete(report.id);
-                        console.log(`Deleted local report ${report.id}`);
-                    } catch (reportError) {
-                        console.error(
-                            `Error processing report ${report.id}:`,
-                            reportError
-                        );
-                        uploadSuccess = false;
-                        errorMessage = `Failed to upload some reports. ${reportError.message}`;
-                    }
-                }
-
-                uploadButton.innerHTML = originalIcon;
-                uploadButton.disabled = false;
-
-                if (uploadSuccess) {
-                    alert("All reports uploaded successfully!");
-                } else {
-                    alert(`Upload completed with some errors: ${errorMessage}`);
-                }
-
-                displayReports();
-            };
-
-            request.onerror = function (event) {
-                console.error(
-                    "Error fetching reports from IndexedDB:",
-                    event.target.error
-                );
-                alert("Error fetching reports from local storage");
-                uploadButton.innerHTML = originalIcon;
-                uploadButton.disabled = false;
-            };
-        } catch (error) {
-            console.error("Upload error:", error);
-            alert("Error uploading reports: " + error.message);
+        request.onsuccess = async function (event) {
+          const reports = event.target.result;
+          if (reports.length === 0) {
+            alert("No reports to upload");
             uploadButton.innerHTML = originalIcon;
             uploadButton.disabled = false;
-        }
+            return;
+          }
+
+          let uploadSuccess = true;
+          let errorMessage = "";
+
+          for (const report of reports) {
+            try {
+              console.log(`Processing report ${report.id}`);
+
+              const reportId = `${userId}_${report.id}`;
+
+              const firebaseReport = {
+                title: report.title,
+                content: report.content,
+                createdAt: report.createdAt,
+                userId: userId,
+                localId: report.id,
+                hasImages: report.images && report.images.length > 0,
+              };
+
+              await firebaseCRUD.setDataWithId(
+                "reports",
+                reportId,
+                firebaseReport
+              );
+              console.log(`Created report document with ID: ${reportId}`);
+
+              if (report.images && report.images.length > 0) {
+                console.log(
+                  `Uploading ${report.images.length} images for report ${reportId}`
+                );
+
+                for (const [index, imageBlob] of report.images.entries()) {
+                  try {
+                    const base64String = await blobToBase64(imageBlob);
+                    console.log(
+                      `Uploading image ${index + 1} of ${report.images.length}`
+                    );
+
+                    await firebaseCRUD.createData(
+                      `reports/${reportId}/images`,
+                      {
+                        imageData: base64String,
+                        uploadedAt: new Date().toISOString(),
+                        order: index,
+                        originalName: `image_${index + 1}.jpg`,
+                        reportId: reportId,
+                      }
+                    );
+
+                    console.log(`Successfully uploaded image ${index + 1}`);
+                  } catch (imageError) {
+                    console.error(
+                      `Error uploading image ${index + 1}:`,
+                      imageError
+                    );
+                    uploadSuccess = false;
+                    errorMessage = `Failed to upload some images. ${imageError.message}`;
+                  }
+                }
+              }
+
+              const deleteTransaction = db.transaction(
+                ["reportTbl"],
+                "readwrite"
+              );
+              const deleteStore = deleteTransaction.objectStore("reportTbl");
+              deleteStore.delete(report.id);
+              console.log(`Deleted local report ${report.id}`);
+            } catch (reportError) {
+              console.error(
+                `Error processing report ${report.id}:`,
+                reportError
+              );
+              uploadSuccess = false;
+              errorMessage = `Failed to upload some reports. ${reportError.message}`;
+            }
+          }
+
+          uploadButton.innerHTML = originalIcon;
+          uploadButton.disabled = false;
+
+          if (uploadSuccess) {
+            alert("All reports uploaded successfully!");
+          } else {
+            alert(`Upload completed with some errors: ${errorMessage}`);
+          }
+
+          displayReports();
+        };
+
+        request.onerror = function (event) {
+          console.error(
+            "Error fetching reports from IndexedDB:",
+            event.target.error
+          );
+          alert("Error fetching reports from local storage");
+          uploadButton.innerHTML = originalIcon;
+          uploadButton.disabled = false;
+        };
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("Error uploading reports: " + error.message);
+        uploadButton.innerHTML = originalIcon;
+        uploadButton.disabled = false;
+      }
     });
-}
+  }
 
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
@@ -236,29 +240,29 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (addImageInput && addImageContainer) {
       addImageInput.addEventListener("change", async function (event) {
         const files = event.target.files;
-  
+
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-  
+
           try {
             const compressedBlob = await compressImage(file, 500);
-            
+
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
               const container = document.createElement("div");
               container.className = "img-thumbnail-container";
-  
+
               const img = document.createElement("img");
               img.src = e.target.result;
               img.className = "img-thumbnail";
               img.style.maxWidth = "80px";
               img.style.maxHeight = "80px";
               img.dataset.imageIndex = addModalImages.length;
-  
+
               const deleteBtn = document.createElement("span");
               deleteBtn.className = "delete-img-btn";
               deleteBtn.innerHTML = '<i class="bi bi-x"></i>';
@@ -267,16 +271,17 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const index = parseInt(img.dataset.imageIndex);
                 addModalImages.splice(index, 1);
                 container.remove();
-                const remainingImages = addImageContainer.querySelectorAll("img");
+                const remainingImages =
+                  addImageContainer.querySelectorAll("img");
                 remainingImages.forEach((img, newIndex) => {
                   img.dataset.imageIndex = newIndex;
                 });
               });
-  
+
               container.appendChild(img);
               container.appendChild(deleteBtn);
               addImageContainer.appendChild(container);
-  
+
               addModalImages.push(compressedBlob);
             };
             reader.readAsDataURL(compressedBlob);
@@ -380,16 +385,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (viewImageInput) {
       viewImageInput.addEventListener("change", async function (event) {
         if (!currentReportId) return;
-    
+
         const files = event.target.files;
-    
+
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (!file.type.match("image.*")) {
             alert(`File ${file.name} is not an image`);
             continue;
           }
-    
+
           try {
             const compressedBlob = await compressImage(file, 500);
             pendingImageChanges.toAdd.push(compressedBlob);
@@ -398,7 +403,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             alert(`Failed to process image ${file.name}: ${error.message}`);
           }
         }
-    
+
         refreshViewModalImages(currentReportId, true);
       });
     }
@@ -801,18 +806,18 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 function compressImage(file, maxSizeKB = 200, quality = 0.7) {
   return new Promise((resolve, reject) => {
-    if (!file.type.match('image.*')) {
-      reject(new Error('File is not an image'));
+    if (!file.type.match("image.*")) {
+      reject(new Error("File is not an image"));
       return;
     }
 
     const reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function (event) {
       const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
         const MAX_WIDTH = 512;
         const MAX_HEIGHT = 512;
         let width = img.width;
@@ -836,24 +841,35 @@ function compressImage(file, maxSizeKB = 200, quality = 0.7) {
 
         let qualityAdjusted = quality;
         let blob;
-        
-        const attemptCompression = () => {
-          canvas.toBlob((resultBlob) => {
-            if (!resultBlob) {
-              reject(new Error('Failed to compress image'));
-              return;
-            }
 
-            if (resultBlob.size / 512 <= maxSizeKB || qualityAdjusted <= 0.1) {
-              resolve(resultBlob);
-            } else {
-              qualityAdjusted = Math.max(0.1, qualityAdjusted - 0.1);
-              canvas.toBlob((newBlob) => {
-                blob = newBlob;
-                attemptCompression();
-              }, file.type, qualityAdjusted);
-            }
-          }, file.type, qualityAdjusted);
+        const attemptCompression = () => {
+          canvas.toBlob(
+            (resultBlob) => {
+              if (!resultBlob) {
+                reject(new Error("Failed to compress image"));
+                return;
+              }
+
+              if (
+                resultBlob.size / 512 <= maxSizeKB ||
+                qualityAdjusted <= 0.1
+              ) {
+                resolve(resultBlob);
+              } else {
+                qualityAdjusted = Math.max(0.1, qualityAdjusted - 0.1);
+                canvas.toBlob(
+                  (newBlob) => {
+                    blob = newBlob;
+                    attemptCompression();
+                  },
+                  file.type,
+                  qualityAdjusted
+                );
+              }
+            },
+            file.type,
+            qualityAdjusted
+          );
         };
 
         attemptCompression();

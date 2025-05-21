@@ -343,16 +343,17 @@ button {
   .assistant-card-container {
     height: calc(100vh - 180px);
   }
-  
+
   .add-search-container {
     flex-direction: row;
   }
-  
+
   .add-search-container button {
     width: 60px;
   }
-  
-  input, .form-control {
+
+  input,
+  .form-control {
     padding: 12px 24px !important;
   }
 }

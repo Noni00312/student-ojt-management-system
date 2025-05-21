@@ -29,10 +29,13 @@ login.addEventListener("click", (e) => {
 
       try {
         const userData = await fetchAndCacheUserData();
-        
+
         if (userData.userType === "admin") {
           window.location.href = "/pages/admin-dashboard.html";
-        } else if (userData.userType === "student" || userData.userType === "studentAssistant") {
+        } else if (
+          userData.userType === "student" ||
+          userData.userType === "studentAssistant"
+        ) {
           window.location.href = "/pages/dashboard.html";
         } else {
           errorLabel.textContent = "Unauthorized user type.";
@@ -91,9 +94,6 @@ login.addEventListener("click", (e) => {
     });
 });
 
-
-
-
 async function fetchAndCacheUserData() {
   const uid = localStorage.getItem("userId");
   if (!uid) {
@@ -120,7 +120,7 @@ async function fetchAndCacheUserData() {
     await crudOperations.upsert("studentInfoTbl", userData);
 
     console.log("User data cached to IndexedDB:", userData);
-    return userData; 
+    return userData;
   } catch (err) {
     console.error("Failed to fetch and cache user data:", err);
     throw err;

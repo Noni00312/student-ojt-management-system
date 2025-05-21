@@ -1,18 +1,24 @@
 import { firebaseCRUD } from "./firebase-crud.js";
 
 const reportsContainer = document.getElementById("assistant-reports-container");
-const reportSearchInput = document.getElementById("assistant-report-search-input");
+const reportSearchInput = document.getElementById(
+  "assistant-report-search-input"
+);
 const viewReportModal = document.getElementById("viewAssistantReportModal");
 const reportTitleInput = document.getElementById("assistant-report-title");
-const reportContentTextarea = document.getElementById("assistant-report-content");
-const reportImagesContainer = document.getElementById("assistant-report-images-container");
+const reportContentTextarea = document.getElementById(
+  "assistant-report-content"
+);
+const reportImagesContainer = document.getElementById(
+  "assistant-report-images-container"
+);
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     showLoading(true);
     await displayReports();
     setupEventListeners();
-    setupDateSearch(); 
+    setupDateSearch();
   } catch (error) {
     console.error("Initialization error:", error);
     showError("Failed to load assistant reports. Please try again later.");
@@ -36,7 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       "userId",
       userId
     );
-
 
     const data = Array.isArray(dataArray) ? dataArray[0] : dataArray;
 
@@ -142,7 +147,9 @@ async function createReportCard(report) {
 
   let hasImages = false;
   try {
-    const images = await firebaseCRUD.getAllData(`assistantreports/${report.id}/images`);
+    const images = await firebaseCRUD.getAllData(
+      `assistantreports/${report.id}/images`
+    );
     hasImages = images.length > 0;
   } catch (error) {
     console.error("Error checking for images:", error);

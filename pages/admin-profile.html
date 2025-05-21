@@ -110,6 +110,7 @@
               class="bi bi-x-lg fs-6 text-white"
               data-bs-dismiss="modal"
               aria-label="Close"
+              onclick="reloadPage()"
             ></i>
           </div>
 
@@ -169,12 +170,16 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="../js/firebase-config.js"></script>
     <script type="module" src="../js/firebase-crud.js"></script>
     <script src="../js/index-db-crud.js"></script>
     <script src="../js/app.js"></script>
-    <script src="../js/ui.js"></script>
     <script type="module" src="../js/admin-profile.js"></script>
+    <script>
+      function reloadPage() {
+        location.reload();
+      }
+    </script>
   </body>
 </html>

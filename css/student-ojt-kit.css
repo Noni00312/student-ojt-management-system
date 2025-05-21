@@ -950,3 +950,175 @@ body.modal-open {
     min-height: 50px; 
     padding: 1rem 0; 
 }
+
+
+
+/* Add this to your CSS */
+/* #update-image-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+#update-image-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+#update-image-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+#update-image-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.image-wrapper {
+    transition: all 0.2s ease;
+    border-radius: 5px;
+}
+
+.image-wrapper:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+} */
+
+/* Custom styles to maintain your design */
+/* #update-image-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+#update-image-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+#update-image-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.image-thumbnail-wrapper {
+    transition: all 0.2s ease;
+}
+
+.image-thumbnail-wrapper:hover {
+    transform: scale(1.05);
+}
+
+.add-image-button {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 5px;
+}
+
+.add-image-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+} */
+
+
+
+
+
+
+
+
+
+/* Add these styles to your existing CSS */
+
+/* Update Report Modal Image Container */
+#update-image-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 5px 0;
+  min-height: 100px;
+  max-height: 150px;
+  align-items: center;
+  scrollbar-width: thin;
+  scrollbar-color: #686868 transparent;
+}
+
+#update-image-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+#update-image-container::-webkit-scrollbar-thumb {
+  background-color: #686868;
+  border-radius: 3px;
+}
+
+#update-image-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Image Thumbnail Styles */
+.image-thumbnail-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+
+.image-thumbnail-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.image-thumbnail-wrapper:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Delete Button */
+.image-thumbnail-wrapper .btn-danger {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+}
+
+.image-thumbnail-wrapper .btn-danger:hover {
+  opacity: 1;
+}
+
+/* Add Image Button */
+/* .add-image-button {
+  min-width: 100px;
+  height: 100px;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+} */
+
+.add-image-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Modal Content Adjustment */
+.add-report-modal .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+  #update-image-container {
+    max-height: 120px;
+  }
+  
+  .image-thumbnail-wrapper,
+  .add-image-button {
+    width: 80px;
+    height: 80px;
+  }
+}

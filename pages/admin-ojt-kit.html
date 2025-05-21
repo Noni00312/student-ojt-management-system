@@ -21,7 +21,7 @@
   <body class="main-container">
    
     
-    <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
+    <!-- <nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
   <div class="container">
     <div class="d-flex align-items-center justify-content-between w-100">
       <div class="wrapper">
@@ -87,7 +87,133 @@
       </a>
     </div>
   </div>
-</nav>
+</nav> -->
+<nav class="navbar navbar-expand-lg fixes-top accent-bg-color sticky-top">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <div class="wrapper">
+            <div class="d-flex align-items-center">
+              <a
+                href=""
+                class="navbar-brand fw-bold text-white d-none d-lg-block"
+                >SOJTMS - Admin</a
+              >
+            </div>
+            <button
+              class="btn d-lg-none d-sm-block"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#sideBar"
+              aria-controls="sideBar"
+            >
+              <i class="bi bi-list text-light fs-3 outline-none"></i>
+            </button>
+          </div>
+          <div
+            class="collapse navbar-collapse me-2"
+            id="navbarSupportedContent"
+          >
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link text-light" href="./admin-dashboard.html"
+                  >Home</a
+                >
+              </li>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Content
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="./admin-announcements.html"
+                      ><i class="bi bi-megaphone"></i> Announcements</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-ojt-kit.html"
+                      ><i class="bi bi-journal-text"></i> OJT Kit</a
+                    >
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Attendance
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="./admin-daily-attendance-log.html"
+                      ><i class="bi bi-list-check"></i> Attendance</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-t-i-o.html"
+                      ><i class="bi bi-clock"></i> Time in/out</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-incident-report.html"
+                      ><i class="bi bi-exclamation-triangle"></i> Incident
+                      Report</a
+                    >
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle text-light"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Management
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="./admin-company.html"
+                      ><i class="bi bi-buildings"></i> Companies</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-student.html"
+                      ><i class="bi bi-mortarboard"></i> Students</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="./admin-assistant.html"
+                      ><i class="bi bi-person-badge"></i> Assistants</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <a href="/pages/admin-profile.html" class="text-decoration-none">
+            <img src="/assets/img/icons8_male_user_480px_1.png" alt="User
+            profile icon" loading="lazy" id="user-profile" style=" object-fit:
+            cover !important; object-position: center !important; " ">
+          </a>
+        </div>
+      </div>
+    </nav>
 
     
     <section class="container mt-2 d-flex flex-column  student-section">
@@ -227,7 +353,7 @@
             ></textarea>
             <button
               id="update-report-button"
-              class="w-100 d-flex justify-content-center"
+              class="w-100 d-flex justify-content-center custom-btn-height"
               name="report-submit"
               value="submit"
             >
@@ -348,7 +474,7 @@
 
     
 
-    <div class="offcanvas offcanvas-start primary-background-color" tabindex="-1" id="sideBar" aria-labelledby="sideBarLabel">
+    <!-- <div class="offcanvas offcanvas-start primary-background-color" tabindex="-1" id="sideBar" aria-labelledby="sideBarLabel">
   <div class="offcanvas-header accent-darken-bg-color">
     <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">MENU</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -362,7 +488,6 @@
         </a>
       </li>
       
-      <!-- Content Dropdown -->
       <li class="nav-item">
         <a class="nav-link py-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#contentCollapse">
           <span class="fs-5">Content</span>
@@ -456,7 +581,141 @@
       </li>
     </ul>
   </div>
-</div>
+</div> -->
+
+<div
+      class="offcanvas offcanvas-start primary-background-color"
+      tabindex="-1"
+      id="sideBar"
+      aria-labelledby="sideBarLabel"
+    >
+      <div class="offcanvas-header accent-darken-bg-color">
+        <h5 class="offcanvas-title fw-bold text-white" id="sideBarLabel">
+          MENU
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0">
+        <ul class="nav d-flex flex-column">
+          <li class="nav-item">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              href="./admin-dashboard.html"
+              ><span class="fs-5">Dashboard</span>
+              <i class="bi bi-microsoft fs-5"></i
+            ></a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#contentCollapse"
+            >
+              <span class="fs-5">Content</span>
+              <i class="bi bi-chevron-down fs-5"></i>
+            </a>
+            <div class="collapse" id="contentCollapse">
+              <ul class="nav flex-column ps-4">
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-announcements.html"
+                    ><span>Announcements</span> <i class="bi bi-megaphone"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-ojt-kit.html"
+                    ><span>OJT Kit</span> <i class="bi bi-journal-text"></i
+                  ></a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#attendanceCollapse"
+            >
+              <span class="fs-5">Attendance</span>
+              <i class="bi bi-chevron-down fs-5"></i>
+            </a>
+            <div class="collapse" id="attendanceCollapse">
+              <ul class="nav flex-column ps-4">
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-daily-attendance-log.html"
+                    ><span>Attendance</span> <i class="bi bi-list-check"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-t-i-o.html"
+                    ><span>Time in/out</span> <i class="bi bi-clock"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-incident-report.html"
+                    ><span>Incident Report</span>
+                    <i class="bi bi-exclamation-triangle"></i
+                  ></a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link py-3 d-flex align-items-center justify-content-between"
+              data-bs-toggle="collapse"
+              href="#managementCollapse"
+            >
+              <span class="fs-5">Management</span>
+              <i class="bi bi-chevron-down fs-5"></i>
+            </a>
+            <div class="collapse" id="managementCollapse">
+              <ul class="nav flex-column ps-4">
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-company.html"
+                    ><span>Companies</span> <i class="bi bi-buildings"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-student.html"
+                    ><span>Students</span> <i class="bi bi-mortarboard"></i
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link py-2 d-flex align-items-center justify-content-between"
+                    href="./admin-assistant.html"
+                    ><span>Assistants</span> <i class="bi bi-person-badge"></i
+                  ></a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"

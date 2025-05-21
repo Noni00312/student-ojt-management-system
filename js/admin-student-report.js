@@ -17,7 +17,7 @@ function createLoader() {
 
     const container =
       document.querySelector(".card-container") ||
-      document.querySelector(".student-report-container") ||  
+      document.querySelector(".student-report-container") ||
       document.body;
 
     if (container) {
@@ -355,58 +355,6 @@ function getUserIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("userId");
 }
-// async function loadStudentReports(userId) {
-//   showLoading(true);
-//   try {
-//     const { firebaseCRUD } = await import("./firebase-crud.js");
-
-//     const students = await firebaseCRUD.queryData(
-//       "students",
-//       "userId",
-//       "==",
-//       userId
-//     );
-//     if (!students || students.length === 0)
-//       throw new Error("Student not found");
-
-//     const student = students[0];
-//     displayStudentInfo(student);
-
-//     const reports = await firebaseCRUD.queryData(
-//       "reports",
-//       "userId",
-//       "==",
-//       userId
-//     );
-//     reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-//     if (reports && reports.length > 0) {
-//       const currentDate = new Date();
-//       currentDate.setHours(0, 0, 0, 0);
-
-//       const todaysReports = reports.filter((report) => {
-//         const reportDate = new Date(report.createdAt);
-//         reportDate.setHours(0, 0, 0, 0);
-//         return reportDate.getTime() === currentDate.getTime();
-//       });
-
-//       if (todaysReports.length > 0) {
-//         displayReports(todaysReports);
-
-//         displayNoReportsMessage("No reports found for today");
-//       }
-
-//       setupDateNavigation(reports);
-//     } else {
-//       displayNoReportsMessage("No reports found for this student");
-//     }
-//   } catch (error) {
-//     console.error("Error loading reports:", error);
-//     showError("Failed to load reports: " + error.message);
-//   } finally {
-//     showLoading(false);
-//   }
-// }
 
 async function loadStudentReports(userId) {
   showLoading(true);
@@ -471,6 +419,7 @@ function displayStudentInfo(student) {
       fullName.length > 25 ? fullName.substring(0, 25) + "..." : fullName;
     studentNameElement.textContent = truncatedName;
     studentNameElement.title = fullName;
+    globalStudentName = fullName;
   }
 }
 
@@ -500,7 +449,7 @@ function formatDateTime(dateString) {
     fullDate: dateString,
   };
 }
-
+let globalStudentName = "";
 async function displayReports(reports) {
   const reportsContainer = document.querySelector(".student-report-container");
   reportsContainer.innerHTML = "";
@@ -542,6 +491,13 @@ async function displayReports(reports) {
           ${report.content || "No content provided"}
         </p>
       </div>
+      <div class="w-100 d-flex justify-content-end" style="max-height: 54px">
+        <button class="col-12 col-lg-auto d-flex justify-content-center" id="download-report-button-${
+          report.id
+        }">
+          <i class="bi bi-download fs-4"></i>
+        </button>
+      </div>
     `;
 
     reportsContainer.appendChild(reportElement);
@@ -558,7 +514,61 @@ async function displayReports(reports) {
         viewImageModal.show();
       });
     });
+
+    const downloadButton = document.getElementById(
+      `download-report-button-${report.id}`
+    );
+
+    document
+      .getElementById(`download-report-button-${report.id}`)
+      .addEventListener("click", async () => {
+        const button = document.getElementById(
+          `download-report-button-${report.id}`
+        );
+
+        const originalIcon = button.innerHTML;
+
+        button.innerHTML = `
+          <div class="spinner-border spinner-border-sm text-light" role="status" style="width: 1.2rem; height: 1.2rem;">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        `;
+        button.disabled = true;
+
+        try {
+          const reportData = {
+            title: report.title || "Daily Report",
+            date: new Date(report.createdAt).toLocaleDateString(),
+            content: report.content || "No content",
+            images: images,
+            studentName: globalStudentName || "Student",
+            logoBase64: await fetchBase64("../assets/img/oc.png"),
+          };
+
+          const pdfGen = new PDFReportGenerator();
+          await pdfGen.generate(reportData);
+
+          alert("PDF exported successfully!");
+        } catch (err) {
+          console.error("Failed to generate PDF:", err);
+          alert("Failed to generate PDF.");
+        } finally {
+          button.innerHTML = originalIcon;
+          button.disabled = false;
+          button.style.backgroundColor = "rgb(110, 20, 35)";
+        }
+      });
   }
+}
+
+async function fetchBase64(url) {
+  const res = await fetch(url);
+  const blob = await res.blob();
+  return await new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
 }
 
 async function loadReportImages(reportId) {

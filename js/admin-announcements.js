@@ -16,7 +16,26 @@ function resetForm() {
   currentEditId = null;
 }
 
+/**
+ * Utility function to remove all Bootstrap modal backdrops from the DOM.
+ */
+function cleanupModalBackdrops() {
+  document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+}
+
+/**
+ * Utility to completely restore body state and scrolling after modal / SweetAlert usage
+ */
+function restoreBodyScroll() {
+  document.body.classList.remove('modal-open');
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
+  // Remove any lingering Bootstrap modal backdrops
+  cleanupModalBackdrops();
+}
+
 function openModal(editItem = null) {
+  cleanupModalBackdrops();   // Ensure no old backdrops
   resetForm();
   if (editItem) {
     currentEditId = editItem.id;
@@ -34,6 +53,7 @@ function openModal(editItem = null) {
 }
 
 function openDeleteModal(id) {
+  cleanupModalBackdrops();   // Ensure no old backdrops
   currentDeleteId = id;
   new bootstrap.Modal(document.getElementById(DELETE_MODAL_ID)).show();
 }
@@ -120,6 +140,34 @@ async function fetchAnnouncements(search = "") {
   return announcements;
 }
 
+/**
+ * Helper to hide a modal and, when hidden, trigger a callback (like SweetAlert)
+ * Cleans up any lingering backdrops after hiding and restores body scrolling.
+ */
+function hideModalThen(modalElem, callback) {
+  const instance = bootstrap.Modal.getInstance(modalElem);
+  if (!instance) {
+    cleanupModalBackdrops();
+    callback();
+    setTimeout(restoreBodyScroll, 210); // let SweetAlert finish
+    return;
+  }
+  // Listen only once for the hidden event
+  const handler = function() {
+    modalElem.removeEventListener('hidden.bs.modal', handler);
+    setTimeout(() => {
+      cleanupModalBackdrops(); // Cleanup after modal has hidden
+      callback();
+      // After SweetAlert closes, restore scroll (works even if SweetAlert shows up)
+      setTimeout(() => {
+        restoreBodyScroll();
+      }, 210); // allow SweetAlert to finish, 210ms covers fade timers
+    }, 10); // slight delay for focus issues
+  };
+  modalElem.addEventListener('hidden.bs.modal', handler);
+  instance.hide();
+}
+
 async function saveAnnouncement(e) {
   e.preventDefault();
   const btn = document.getElementById("announcement-save-btn");
@@ -138,12 +186,16 @@ async function saveAnnouncement(e) {
     image = "";
   }
 
+  const modalElem = document.getElementById(MODAL_ID);
+
   if (!title || !content) {
-    Swal.fire({
-      icon: "warning",
-      title: "All Field Is Required",
-      text: "Title and content are required.",
-      confirmButtonColor: "#590f1c",
+    hideModalThen(modalElem, function() {
+      Swal.fire({
+        icon: "warning",
+        title: "All Field Is Required",
+        text: "Title and content are required.",
+        confirmButtonColor: "#590f1c",
+      });
     });
     setLoading(btn, false);
     return;
@@ -160,27 +212,39 @@ async function saveAnnouncement(e) {
   try {
     if (id) {
       await firebaseCRUD.updateData("announcements", id, data);
+      hideModalThen(modalElem, function() {
+        Swal.fire({
+          icon: "success",
+          title: "Update Success",
+          text: "Announcement successfully updated.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      });
     } else {
       data.createdAt = new Date().toISOString();
       await firebaseCRUD.createData("announcements", data);
-      Swal.fire({
-        icon: "success",
-        title: "Update Success",
-        text: "Announcement successfully added.",
-        timer: 2000,
-        showConfirmButton: false,
+      hideModalThen(modalElem, function() {
+        Swal.fire({
+          icon: "success",
+          title: "Add Success",
+          text: "Announcement successfully added.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       });
     }
-    bootstrap.Modal.getInstance(document.getElementById(MODAL_ID)).hide();
     fetchAnnouncements(
       document.getElementById("announcementSearch").value.trim()
     );
   } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Update Failed",
-      text: `Failed to save announcement: ${error.message}`,
-      confirmButtonColor: "#590f1c",
+    hideModalThen(modalElem, function() {
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: `Failed to save announcement: ${error.message}`,
+        confirmButtonColor: "#590f1c",
+      });
     });
   } finally {
     setLoading(btn, false);
@@ -193,9 +257,16 @@ async function deleteAnnouncement() {
   setLoading(btn, true);
   try {
     await firebaseCRUD.deleteData("announcements", currentDeleteId);
-    bootstrap.Modal.getInstance(
-      document.getElementById(DELETE_MODAL_ID)
-    ).hide();
+    const modalElem = document.getElementById(DELETE_MODAL_ID);
+    hideModalThen(modalElem, function() {
+      Swal.fire({
+        icon: "success",
+        title: "Delete Success",
+        text: "Announcement successfully deleted.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    });
     fetchAnnouncements(
       document.getElementById("announcementSearch").value.trim()
     );
@@ -248,11 +319,11 @@ function renderAnnouncements(list) {
         }
         <div class="announcement-content">
           <div class="announcement-info">
-            <h5>${a.title ? a.title : "(No title)"}</h5>
+            <h5 class="pt-5">${a.title ? a.title : "(No title)"}</h5>
             <p>${
               a.content
-                ? a.content.substring(0, 100) +
-                  (a.content.length > 50 ? "..." : "")
+                ? a.content.substring(0, 40) +
+                  (a.content.length > 1 ? "..." : "")
                 : ""
             }</p>
             ${
@@ -354,6 +425,16 @@ function getBase64(file) {
 
 document.addEventListener("DOMContentLoaded", async function () {
   createLoader();
+  
+  // Add global SweetAlert after-close scroll fix
+  if (typeof Swal !== "undefined") {
+    const originalSwal = window.Swal;
+    if (originalSwal) {
+      window.Swal = originalSwal.mixin({
+        didClose: restoreBodyScroll
+      });
+    }
+  }
 
   try {
     const userId = localStorage.getItem("userId");

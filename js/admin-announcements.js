@@ -163,6 +163,13 @@ async function saveAnnouncement(e) {
     } else {
       data.createdAt = new Date().toISOString();
       await firebaseCRUD.createData("announcements", data);
+      Swal.fire({
+        icon: "success",
+        title: "Update Success",
+        text: "Announcement successfully added.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
     bootstrap.Modal.getInstance(document.getElementById(MODAL_ID)).hide();
     fetchAnnouncements(

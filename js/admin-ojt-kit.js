@@ -113,7 +113,7 @@ function loadStudents() {
       showError("Failed to load required modules. Please try again.");
     });
 }
-
+let globalStudentName = "";
 function showOjtKitsModal() {
   showLoading(true);
 
@@ -296,6 +296,7 @@ async function displayStudents(students) {
       const studentName = this.querySelector(
         ".name-id-container p:first-child"
       ).textContent;
+      globalStudentName = studentName;
       const studentNumber = this.querySelector(
         ".name-id-container p:nth-child(2)"
       ).textContent;
@@ -480,6 +481,7 @@ document
 
         this.reset();
         currentEditingKitId = null;
+        loadStudents();
       })
       .catch((error) => {
         console.error("Error updating OJT Kit:", error);
@@ -544,39 +546,63 @@ document
     document.getElementById("update-report-form").reset();
   });
 
-function deleteOjtKit(kitId) {
-  if (!confirm("Are you sure you want to delete this OJT Kit?")) {
-    return;
-  }
+async function deleteOjtKit(kitId) {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Are you sure you want to delete this OJT Kit?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#590f1c",
+    cancelButtonColor: "#6c757d",
+    confirmButtonText: "Delete",
+    cancelButtonText: "Cancel",
+  });
+
+  if (!result.isConfirmed) return;
 
   showLoading(true);
 
   import("./firebase-crud.js")
-    .then(({ firebaseCRUD }) => {
-      return firebaseCRUD.deleteData("ojtKits", kitId);
-    })
-    .then(() => {
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "OJT Kit deleted successfully.",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-
-      const docsModal = bootstrap.Modal.getInstance(
-        document.getElementById("documentsModal")
+    .then(async ({ firebaseCRUD }) => {
+      const canDelete = await firebaseCRUD.queryData(
+        "ojtkits_2",
+        "ojtKitId",
+        "==",
+        kitId
       );
-      if (docsModal) {
-        docsModal.hide();
+
+      if (canDelete.length === 0) {
+        await firebaseCRUD.deleteData("ojtKits", kitId);
+        return true;
+      } else {
+        throw new Error("There are related entries in the database.");
+      }
+    })
+    .then((deleted) => {
+      if (deleted) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "OJT Kit deleted successfully.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+
+        const docsModal = bootstrap.Modal.getInstance(
+          document.getElementById("documentsModal")
+        );
+        if (docsModal) {
+          docsModal.hide();
+          loadStudents();
+        }
       }
     })
     .catch((error) => {
-      console.error("Error deleting kit:", error);
+      console.error("Error deleting kit:", error.message);
       Swal.fire({
         icon: "error",
         title: "Delete Failed",
-        text: "Failed to delete OJT Kit.",
+        text: error.message || "Failed to delete OJT Kit.",
         confirmButtonColor: "#590f1c",
       });
     })
@@ -591,7 +617,9 @@ async function handleOjtKitSelection(studentId, kitId) {
 
     const viewModal = document.getElementById("viewReportModal");
     const imageContainer = document.getElementById("report-images-container");
+    const DLContainer = document.getElementById("download-button-container");
     imageContainer.innerHTML = "";
+    DLContainer.innerHTML = "";
 
     const [{ firebaseCRUD }] = await Promise.all([
       import("./firebase-crud.js"),
@@ -615,6 +643,8 @@ async function handleOjtKitSelection(studentId, kitId) {
     viewModal.querySelector("#report-content").value =
       kit.content || "No content available";
 
+    let images = [];
+
     if (studentSubmission && studentSubmission.id) {
       try {
         const imageDocs = await firebaseCRUD.getAllData(
@@ -623,8 +653,9 @@ async function handleOjtKitSelection(studentId, kitId) {
 
         if (imageDocs && imageDocs.length > 0) {
           imageDocs.forEach((imageDoc) => {
-            if (imageDoc.imageData || imageDoc.image) {
-              const imgSrc = imageDoc.imageData || imageDoc.image;
+            const imgSrc = imageDoc.imageData || imageDoc.image;
+            if (imgSrc) {
+              images.push(imgSrc);
 
               const thumbnailDiv = document.createElement("div");
               thumbnailDiv.className = "image-thumbnail";
@@ -644,12 +675,69 @@ async function handleOjtKitSelection(studentId, kitId) {
               imageContainer.appendChild(thumbnailDiv);
             }
           });
-        } else {
+
+          DLContainer.innerHTML = `
+            <button
+              class="w-100 d-flex justify-content-center"
+              id="download-report-button"
+              style="background-color: rgb(110, 20, 35); color: white;"
+            >
+              <i class="bi bi-download fs-4 me-2"></i> Download PDF
+            </button>
+          `;
+
+          document
+            .getElementById("download-report-button")
+            .addEventListener("click", async () => {
+              const button = document.getElementById("download-report-button");
+              const originalIcon = button.innerHTML;
+
+              button.innerHTML = `
+              <div class="spinner-border spinner-border-sm text-light" role="status" style="width: 1.2rem; height: 1.2rem;">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            `;
+              button.disabled = true;
+
+              try {
+                const reportData = {
+                  title: kit.title || "",
+                  date: new Date(
+                    studentSubmission.createdAt || Date.now()
+                  ).toLocaleDateString(),
+                  content: "",
+                  images,
+                  studentName: globalStudentName || "Student",
+                  logoBase64: await fetchBase64("../assets/img/oc.png"),
+                };
+
+                const pdfGen = new PDFReportGenerator();
+                await pdfGen.generate(reportData);
+
+                Swal.fire({
+                  icon: "success",
+                  title: "Success",
+                  text: "PDF exported successfully!",
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+              } catch (err) {
+                console.error("Failed to generate PDF:", err);
+                Swal.fire({
+                  icon: "error",
+                  title: "PDF Generation Failed",
+                  text: "Failed to generate PDF.",
+                  confirmButtonColor: "#590f1c",
+                });
+              } finally {
+                button.innerHTML = originalIcon;
+                button.disabled = false;
+              }
+            });
         }
       } catch (error) {
         console.error("Error loading images:", error);
       }
-    } else {
     }
 
     new bootstrap.Modal(viewModal).show();
@@ -657,7 +745,7 @@ async function handleOjtKitSelection(studentId, kitId) {
     console.error("Error:", error);
     Swal.fire({
       icon: "error",
-      title: "Something When Wrong",
+      title: "Something Went Wrong",
       text: "Failed to load document.",
       confirmButtonColor: "#590f1c",
     });
@@ -665,7 +753,15 @@ async function handleOjtKitSelection(studentId, kitId) {
     showLoading(false);
   }
 }
-
+async function fetchBase64(url) {
+  const res = await fetch(url);
+  const blob = await res.blob();
+  return await new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
 function showImageInModal(imageSrc) {
   const modal = document.createElement("div");
   modal.className = "modal fade";
@@ -806,6 +902,8 @@ document
         timer: 2000,
         showConfirmButton: false,
       });
+
+      loadStudents();
     } catch (error) {
       console.error("Error adding OJT Kit:", error);
       Swal.fire({

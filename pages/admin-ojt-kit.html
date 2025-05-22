@@ -441,11 +441,8 @@
       data-bs-keyboard="false"
       tabindex="-1"
     >
-      <div class="modal-dialog modal-dialog-centered" style="max-height: 70vh">
-        <div
-          class="modal-content p-3 view-report-modal"
-          style="max-height: 70vh; overflow-y: auto"
-        >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3 view-report-modal">
           <div class="d-flex justify-content-end w-100">
             <i
               class="bi bi-x-lg fs-6 text-white"
@@ -476,6 +473,11 @@
               style="height: 120px"
               readonly
             ></textarea>
+            <div
+              id="download-button-container"
+              class="w-100 d-flex justify-content-end"
+              style="height: 54px"
+            ></div>
           </form>
         </div>
       </div>
@@ -613,6 +615,17 @@
         </ul>
       </div>
     </div>
+
+    <!-- PDF template -->
+    <div id="pdf-template" style="display: none">
+      <div class="report-container">
+        <p id="report-date"></p>
+        <h1 id="report-title"></h1>
+        <p id="report-content"></p>
+        <div id="report-images"></div>
+      </div>
+    </div>
+    <!-- PDF template -->
     <div id="floatingActionBtn" class="fab-container">
       <button id="studentActionsFab" class="fab-button">
         <i class="bi bi-list"></i>
@@ -628,6 +641,11 @@
     <script src="../js/jquery.validate.min.js"></script>
     <script type="module" src="../js/firebase-config.js"></script>
     <script src="../js/index-db-crud.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+      window.jsPDF = window.jspdf.jsPDF;
+    </script>
+    <script src="../js/PDFReportGenerator.js"></script>
     <script src="../js/app.js"></script>
     <script type="module" src="../js/admin-ojt-kit.js"></script>
   </body>

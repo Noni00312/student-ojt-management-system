@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         icon: "question",
         showCancelButton: true,
         confirmButtonColor: "#590f1c",
-        cancelButtonColor: "#222",
+        cancelButtonColor: "#6c757d",
         confirmButtonText: "Yes, upload",
         cancelButtonText: "Cancel",
       });

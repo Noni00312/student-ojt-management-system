@@ -97,12 +97,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const result = await Swal.fire({
         title: "Are you sure?",
-        text: "Are you sure you want to logout?",
+        text: "Do you want to upload all reports to the server?",
         icon: "question",
         showCancelButton: true,
         confirmButtonColor: "#590f1c",
         cancelButtonColor: "#6c757d",
-        confirmButtonText: "Yes, logout",
+        confirmButtonText: "Yes, Upload",
         cancelButtonText: "Cancel",
       });
 

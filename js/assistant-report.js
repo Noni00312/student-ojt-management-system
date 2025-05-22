@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             try {
               console.log(`Processing assistant report ${report.id}`);
 
-              const reportId = `${userId}_${report.id}`;
+              const reportId = `${userId}_${crypto.randomUUID()}`;
 
               const firebaseReport = {
                 title: report.title,

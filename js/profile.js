@@ -61,7 +61,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         const todayComplete = completeAttendance.find(
           (entry) => entry.date === today
         );
-        if (todayComplete && todayComplete.status === "complete") {
+        if (
+          (todayComplete && todayComplete.status === "complete") ||
+          (todayComplete && todayComplete.status === "absent")
+        ) {
           return false;
         }
 
@@ -142,8 +145,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       updateButtonState();
 
       editButton.addEventListener("click", async (e) => {
+        e.preventDefault();
         if (!navigator.onLine) {
-          e.preventDefault();
           e.stopPropagation();
           window.location.href = "no-internet.html";
           return false;
@@ -532,25 +535,21 @@ function convertTo12HourFormat(time24) {
   return [time, suffix];
 }
 
-function formatWeeklySchedule(weeklySchedule) {
+async function formatWeeklySchedule(weeklySchedule) {
   if (!weeklySchedule) return "";
+  const orderedDays = [
+    { key: "SUN", label: "Sun" },
+    { key: "MON", label: "Mon" },
+    { key: "TUES", label: "Tue" },
+    { key: "WED", label: "Wed" },
+    { key: "THURS", label: "Thu" },
+    { key: "FRI", label: "Fri" },
+    { key: "SAT", label: "Sat" },
+  ];
 
-  const daysMap = {
-    SUN: "Sun",
-    MON: "Mon",
-    TUE: "Tue",
-    WED: "Wed",
-    THURS: "Thu",
-    FRI: "Fri",
-    SAT: "Sat",
-  };
-
-  const activeDays = [];
-  for (const [day, isActive] of Object.entries(weeklySchedule)) {
-    if (isActive && daysMap[day]) {
-      activeDays.push(daysMap[day]);
-    }
-  }
+  const activeDays = orderedDays
+    .filter((day) => weeklySchedule[day.key])
+    .map((day) => day.label);
 
   return activeDays.join(", ");
 }
@@ -600,7 +599,7 @@ async function handleImageUpload(userId, file) {
   }
 }
 
-function updateProfileUI(data) {
+async function updateProfileUI(data) {
   const userImg = document.querySelector(".profile-icon");
   const userName = document.querySelector("#profile-name");
   const studentId = document.getElementById("student-id");
@@ -634,7 +633,7 @@ function updateProfileUI(data) {
   if (data.companyName) companyName.textContent = data.companyName;
   if (data.companyAddress) companyAddress.textContent = data.companyAddress;
   if (data.weeklySchedule)
-    workSchedule.textContent = formatWeeklySchedule(data.weeklySchedule);
+    workSchedule.textContent = await formatWeeklySchedule(data.weeklySchedule);
 
   if (data.morningTimeIn) {
     const [morningInTime, morningInPeriod] = convertTo12HourFormat(

@@ -16,26 +16,19 @@ function resetForm() {
   currentEditId = null;
 }
 
-/**
- * Utility function to remove all Bootstrap modal backdrops from the DOM.
- */
 function cleanupModalBackdrops() {
   document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
 }
 
-/**
- * Utility to completely restore body state and scrolling after modal / SweetAlert usage
- */
 function restoreBodyScroll() {
   document.body.classList.remove('modal-open');
   document.body.style.overflow = '';
   document.body.style.paddingRight = '';
-  // Remove any lingering Bootstrap modal backdrops
   cleanupModalBackdrops();
 }
 
 function openModal(editItem = null) {
-  cleanupModalBackdrops();   // Ensure no old backdrops
+  cleanupModalBackdrops();  
   resetForm();
   if (editItem) {
     currentEditId = editItem.id;
@@ -53,7 +46,7 @@ function openModal(editItem = null) {
 }
 
 function openDeleteModal(id) {
-  cleanupModalBackdrops();   // Ensure no old backdrops
+  cleanupModalBackdrops();  
   currentDeleteId = id;
   new bootstrap.Modal(document.getElementById(DELETE_MODAL_ID)).show();
 }
@@ -140,29 +133,24 @@ async function fetchAnnouncements(search = "") {
   return announcements;
 }
 
-/**
- * Helper to hide a modal and, when hidden, trigger a callback (like SweetAlert)
- * Cleans up any lingering backdrops after hiding and restores body scrolling.
- */
+
 function hideModalThen(modalElem, callback) {
   const instance = bootstrap.Modal.getInstance(modalElem);
   if (!instance) {
     cleanupModalBackdrops();
     callback();
-    setTimeout(restoreBodyScroll, 210); // let SweetAlert finish
+    setTimeout(restoreBodyScroll, 210);
     return;
   }
-  // Listen only once for the hidden event
   const handler = function() {
     modalElem.removeEventListener('hidden.bs.modal', handler);
     setTimeout(() => {
-      cleanupModalBackdrops(); // Cleanup after modal has hidden
+      cleanupModalBackdrops();
       callback();
-      // After SweetAlert closes, restore scroll (works even if SweetAlert shows up)
       setTimeout(() => {
         restoreBodyScroll();
-      }, 210); // allow SweetAlert to finish, 210ms covers fade timers
-    }, 10); // slight delay for focus issues
+      }, 210); 
+    }, 10); 
   };
   modalElem.addEventListener('hidden.bs.modal', handler);
   instance.hide();
@@ -408,11 +396,6 @@ async function convertImageTo500KB(file, maxSizeKB = 500) {
   });
 }
 
-/**
- * Simple function to get base64 from a file
- * @param {File} file - The file to convert
- * @returns {Promise<string>} - Base64 string
- */
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     if (!file) return resolve("");
@@ -426,7 +409,6 @@ function getBase64(file) {
 document.addEventListener("DOMContentLoaded", async function () {
   createLoader();
   
-  // Add global SweetAlert after-close scroll fix
   if (typeof Swal !== "undefined") {
     const originalSwal = window.Swal;
     if (originalSwal) {

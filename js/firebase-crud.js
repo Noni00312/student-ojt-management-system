@@ -210,7 +210,6 @@ export const firebaseCRUD = {
       throw error;
     }
   },
-
   /**
    * Fetches all documents from a Firestore collection or subcollection at the specified path.
    *

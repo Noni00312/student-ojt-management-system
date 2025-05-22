@@ -529,10 +529,6 @@ async function displayReports(reports) {
       });
     });
 
-    const downloadButton = document.getElementById(
-      `download-report-button-${report.id}`
-    );
-
     document
       .getElementById(`download-report-button-${report.id}`)
       .addEventListener("click", async () => {

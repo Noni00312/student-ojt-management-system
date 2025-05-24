@@ -207,23 +207,48 @@ $(document).ready(function () {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
+        const attendanceMonitoringData = {
+          userId: form.userId.value,
+          lastAttendanceUpdate: "",
+          hasIncident: false,
+        };
 
         try {
           const { firebaseCRUD } = await import("./firebase-crud.js");
-          const result = await firebaseCRUD.createData("students", studentData);
-
-          alert("Registration successful!");
+          await firebaseCRUD.createData("students", studentData);
+          await firebaseCRUD.setDataWithId(
+            "studentattendanceupdate",
+            attendanceMonitoringData.userId,
+            attendanceMonitoringData
+          );
+          await Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Registration success!",
+            timer: 2000,
+            showConfirmButton: false,
+          });
           window.location.href = "../pages/login.html";
         } catch (error) {
           console.error("Full error object:", error);
           console.error("HTTP status:", error.response?.status);
-          alert(`Registration failed: ${error.message}`);
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong",
+            text: `Registration failed: ${error.message}`,
+            confirmButtonColor: "#590f1c",
+          });
           submitButton.prop("disabled", false);
           submitButton.text("Create account");
         }
       } catch (error) {
         console.error("Registration error:", error);
-        alert(`Registration failed: ${error.message}`);
+        Swal.fire({
+          icon: "error",
+          title: "Something went wrong",
+          text: `Registration failed: ${error.message}`,
+          confirmButtonColor: "#590f1c",
+        });
         submitButton.prop("disabled", false);
         submitButton.text("Create account");
       }

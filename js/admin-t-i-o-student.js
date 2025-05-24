@@ -152,7 +152,7 @@ function renderStudentCards(studentsData) {
     studentCard.setAttribute("data-name", formatName(student));
 
     studentCard.innerHTML = `
-      <div class="mb-3 curved-border-container">
+      <div class="mb-3 curved-border-container" role="button">
         <div class="overlay" style="background: url('${
           student.companyImage || "../assets/img/OC.jpg"
         }') no-repeat center center/cover;">
@@ -168,7 +168,7 @@ function renderStudentCards(studentsData) {
             class="img-fluid rounded-circle me-3"
           />
           <div class="text-container">
-            <h6 class="mb-2">${formatName(student)}</h6>
+            <h6 class="mb-2 ">${formatName(student)}</h6>
             <p id="attendance-status" class="${
               student.isPresent
                 ? student.isLate
@@ -256,7 +256,10 @@ async function getAttendanceByDate(userId, dateStr) {
     const getLog = async (logType) => {
       const logRef = doc(db, ...basePath, logType);
       const snap = await getDoc(logRef);
-      return snap.exists() ? snap.data() : null;
+      if (!snap.exists()) return null;
+
+      const data = snap.data();
+      return data[logType] || data;
     };
 
     const [morningIn, morningOut, afternoonIn, afternoonOut] =

@@ -282,7 +282,7 @@ function loadCompanyDataForUpdate(companyId) {
           const cameraIcon = updateModal.querySelector("#update-camera-icon");
           const provinceSelect = updateModal.querySelector(
             '[name="companyProvinceU"]'
-          ); // Add this line
+          );
 
           if (!nameInput || !addressInput || !previewImage || !cameraIcon) {
             throw new Error("Required form elements not found");
@@ -486,6 +486,195 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// $("#ojtFormU").validate({
+//   rules: {
+//     companyNameU: {
+//       required: true,
+//       minlength: 2,
+//     },
+//     companyAddressU: {
+//       required: true,
+//       minlength: 2,
+//     },
+//     companyProvinceU: {
+//       required: true,
+//     },
+//   },
+//   messages: {
+//     companyNameU: {
+//       required: "Please enter company name",
+//       minlength: "Company name must be at least 2 characters long",
+//     },
+//     companyAddressU: {
+//       required: "Please enter company address",
+//       minlength: "Company address must be at least 2 characters long",
+//     },
+//     companyProvinceU: {
+//       required: "Please select a province",
+//     },
+//   },
+//   errorPlacement: function (error, element) {
+//     error.appendTo($("#" + element.attr("name") + "-error"));
+//   },
+//   submitHandler: async function (form, event) {
+//     event.preventDefault();
+
+//     const submitButton = $(form).find('button[type="submit"]');
+//     const companyId = document
+//       .getElementById("updateCompanyModal")
+//       ?.getAttribute("data-company-id");
+//     const previewImage = document.querySelector(
+//       "#updateCompanyModal #update-preview-image"
+//     );
+//     const newCompanyName = form.companyNameU.value.trim();
+//     const newCompanyAddress = form.companyAddressU.value.trim();
+//     const newCompanyProvince = form.companyProvinceU.value;
+
+//     if (!companyId) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Failed To Find ID",
+//         text: "Company ID not found.",
+//         confirmButtonColor: "#590f1c",
+//       });
+//       submitButton.prop("disabled", false).text("Update Company");
+//       return;
+//     }
+
+//     let oldCompanyData = null;
+
+//     await import("./firebase-crud.js")
+//       .then(({ firebaseCRUD }) => {
+//         return firebaseCRUD.getDataById("company", companyId);
+//       })
+//       .then((company) => {
+//         oldCompanyData = company;
+//       });
+
+//     submitButton.prop("disabled", true).html(`
+//               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+//               Checking...
+//           `);
+
+//     checkCompanyDuplicate(newCompanyName, newCompanyAddress, companyId)
+//       .then(async (duplicateExists) => {
+//         if (duplicateExists) {
+//           Swal.fire({
+//             icon: "error",
+//             title: "Company With This Address Exist",
+//             text: "A company with this name and address already exists!",
+//             confirmButtonColor: "#590f1c",
+//           });
+//           return Promise.reject("Duplicate company");
+//         }
+
+//         submitButton.html(`
+//                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+//                       Updating...
+//                   `);
+
+//         const companyData = {
+//           companyName: newCompanyName,
+//           companyAddress: newCompanyAddress,
+//           companyProvince: newCompanyProvince,
+//           updatedAt: new Date().toISOString(),
+//         };
+
+//         if (uploadedImageBase64) {
+//           companyData.image = uploadedImageBase64;
+//         } else if (previewImage?.src && previewImage.style.display !== "none") {
+//         } else {
+//           companyData.image = "";
+//         }
+
+//         const { firebaseCRUD } = await import("./firebase-crud.js");
+//         return await firebaseCRUD.updateData("company", companyId, companyData);
+//       })
+//       .then(() => {
+//         return import("./firebase-crud.js").then(({ firebaseCRUD }) => {
+//           return updateStudentsByCompany(
+//             firebaseCRUD,
+//             oldCompanyData,
+//             companyData
+//           );
+//         });
+//       })
+//       .then(() => {
+//         Swal.fire({
+//           icon: "success",
+//           title: "Success",
+//           text: "Company updated successfully!",
+//           timer: 2000,
+//           showConfirmButton: false,
+//         });
+//         form.reset();
+//         const modal = bootstrap.Modal.getInstance(
+//           document.getElementById("updateCompanyModal")
+//         );
+//         modal?.hide();
+
+//         if (previewImage) {
+//           previewImage.src = "";
+//           previewImage.style.display = "none";
+//         }
+//         const cameraIcon = document.querySelector(
+//           "#updateCompanyModal #camera-icon"
+//         );
+//         if (cameraIcon) {
+//           cameraIcon.style.display = "block";
+//         }
+//         uploadedImageBase64 = "";
+//         loadCompanies();
+//       })
+//       .catch((error) => {
+//         if (error !== "Duplicate company") {
+//           console.error("Update error:", error);
+//           Swal.fire({
+//             icon: "error",
+//             title: "Update Failed",
+//             text: `Update failed: ${error.message}`,
+//             confirmButtonColor: "#590f1c",
+//           });
+//         }
+//       })
+//       .finally(() => {
+//         submitButton.prop("disabled", false).text("Update Company");
+//       });
+//   },
+// });
+
+// async function updateStudentsByCompany(firebaseCRUD, oldData, newData) {
+//   try {
+//     const matchingStudents = await firebaseCRUD.queryData(
+//       "students",
+//       "companyName",
+//       "==",
+//       oldData.companyName
+//     );
+
+//     const filtered = matchingStudents.filter(
+//       (student) =>
+//         student.companyAddress === oldData.companyAddress &&
+//         student.companyProvince === oldData.companyProvince
+//     );
+
+//     const updatePromises = filtered.map((student) => {
+//       const updatedFields = {
+//         companyName: newData.companyName,
+//         companyAddress: newData.companyAddress,
+//         companyProvince: newData.companyProvince,
+//         updatedAt: new Date().toISOString(),
+//       };
+//       return firebaseCRUD.updateData("students", student.id, updatedFields);
+//     });
+
+//     await Promise.all(updatePromises);
+//     console.log(`Updated ${updatePromises.length} student(s)`);
+//   } catch (error) {
+//     console.error("Failed to update students by company:", error);
+//   }
+// }
+
 $("#ojtFormU").validate({
   rules: {
     companyNameU: {
@@ -516,7 +705,7 @@ $("#ojtFormU").validate({
   errorPlacement: function (error, element) {
     error.appendTo($("#" + element.attr("name") + "-error"));
   },
-  submitHandler: function (form, event) {
+  submitHandler: async function (form, event) {
     event.preventDefault();
 
     const submitButton = $(form).find('button[type="submit"]');
@@ -526,6 +715,7 @@ $("#ojtFormU").validate({
     const previewImage = document.querySelector(
       "#updateCompanyModal #update-preview-image"
     );
+
     const newCompanyName = form.companyNameU.value.trim();
     const newCompanyAddress = form.companyAddressU.value.trim();
     const newCompanyProvince = form.companyProvinceU.value;
@@ -542,88 +732,127 @@ $("#ojtFormU").validate({
     }
 
     submitButton.prop("disabled", true).html(`
-              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              Checking...
-          `);
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Checking...
+    `);
 
-    checkCompanyDuplicate(newCompanyName, newCompanyAddress, companyId)
-      .then((duplicateExists) => {
-        if (duplicateExists) {
-          Swal.fire({
-            icon: "error",
-            title: "Company With This Address Exist",
-            text: "A company with this name and address already exists!",
-            confirmButtonColor: "#590f1c",
-          });
-          return Promise.reject("Duplicate company");
-        }
+    try {
+      const { firebaseCRUD } = await import("./firebase-crud.js");
 
-        submitButton.html(`
-                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                      Updating...
-                  `);
+      const oldCompanyData = await firebaseCRUD.getDataById(
+        "company",
+        companyId
+      );
 
-        const companyData = {
-          companyName: newCompanyName,
-          companyAddress: newCompanyAddress,
-          companyProvince: newCompanyProvince,
-          updatedAt: new Date().toISOString(),
-        };
-
-        if (uploadedImageBase64) {
-          companyData.image = uploadedImageBase64;
-        } else if (previewImage?.src && previewImage.style.display !== "none") {
-        } else {
-          companyData.image = "";
-        }
-
-        return import("./firebase-crud.js").then(({ firebaseCRUD }) => {
-          return firebaseCRUD.updateData("company", companyId, companyData);
-        });
-      })
-      .then(() => {
+      const duplicateExists = await checkCompanyDuplicate(
+        newCompanyName,
+        newCompanyAddress,
+        companyId
+      );
+      if (duplicateExists) {
         Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Company updated successfully!",
-          timer: 2000,
-          showConfirmButton: false,
+          icon: "error",
+          title: "Company With This Address Exists",
+          text: "A company with this name and address already exists!",
+          confirmButtonColor: "#590f1c",
         });
-        form.reset();
-        const modal = bootstrap.Modal.getInstance(
-          document.getElementById("updateCompanyModal")
-        );
-        modal?.hide();
+        return;
+      }
 
-        if (previewImage) {
-          previewImage.src = "";
-          previewImage.style.display = "none";
-        }
-        const cameraIcon = document.querySelector(
-          "#updateCompanyModal #camera-icon"
-        );
-        if (cameraIcon) {
-          cameraIcon.style.display = "block";
-        }
-        uploadedImageBase64 = "";
-        loadCompanies();
-      })
-      .catch((error) => {
-        if (error !== "Duplicate company") {
-          console.error("Update error:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Update Failed",
-            text: `Update failed: ${error.message}`,
-            confirmButtonColor: "#590f1c",
-          });
-        }
-      })
-      .finally(() => {
-        submitButton.prop("disabled", false).text("Update Company");
+      submitButton.html(`
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Updating...
+      `);
+
+      const companyData = {
+        companyName: newCompanyName,
+        companyAddress: newCompanyAddress,
+        companyProvince: newCompanyProvince,
+        updatedAt: new Date().toISOString(),
+        image:
+          uploadedImageBase64 ||
+          (previewImage?.src && previewImage.style.display !== "none"
+            ? previewImage.src
+            : ""),
+      };
+
+      await firebaseCRUD.updateData("company", companyId, companyData);
+      await updateStudentsByCompany(firebaseCRUD, oldCompanyData, companyData);
+
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Company updated successfully!",
+        timer: 2000,
+        showConfirmButton: false,
       });
+
+      form.reset();
+
+      const modal = bootstrap.Modal.getInstance(
+        document.getElementById("updateCompanyModal")
+      );
+      modal?.hide();
+
+      if (previewImage) {
+        previewImage.src = "";
+        previewImage.style.display = "none";
+      }
+
+      const cameraIcon = document.querySelector(
+        "#updateCompanyModal #camera-icon"
+      );
+      if (cameraIcon) cameraIcon.style.display = "block";
+
+      uploadedImageBase64 = "";
+      loadCompanies();
+    } catch (error) {
+      if (error !== "Duplicate company") {
+        console.error("Update error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: `Update failed: ${error.message || error}`,
+          confirmButtonColor: "#590f1c",
+        });
+      }
+    } finally {
+      submitButton.prop("disabled", false).text("Update Company");
+    }
   },
 });
+
+async function updateStudentsByCompany(firebaseCRUD, oldData, newData) {
+  try {
+    const matchingStudents = await firebaseCRUD.queryData(
+      "students",
+      "companyName",
+      "==",
+      oldData.companyName
+    );
+
+    const filtered = matchingStudents.filter(
+      (student) =>
+        student.companyAddress === oldData.companyAddress &&
+        student.companyProvince === oldData.companyProvince
+    );
+
+    const updatePromises = filtered.map((student) => {
+      const updatedFields = {
+        companyName: newData.companyName,
+        companyAddress: newData.companyAddress,
+        companyProvince: newData.companyProvince,
+        updatedAt: new Date().toISOString(),
+      };
+      return firebaseCRUD.updateData("students", student.id, updatedFields);
+    });
+
+    await Promise.all(updatePromises);
+    console.log(`Updated ${updatePromises.length} student(s)`);
+  } catch (error) {
+    console.error("Failed to update students by company:", error);
+  }
+}
 
 async function checkCompanyDuplicate(
   companyName,

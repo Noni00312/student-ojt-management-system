@@ -180,7 +180,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                         reportId: reportId,
                       }
                     );
-
                     console.log(`Successfully uploaded image ${index + 1}`);
                   } catch (imageError) {
                     console.error(

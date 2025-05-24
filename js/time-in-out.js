@@ -125,7 +125,6 @@ document
         showConfirmButton: false,
       });
       descriptionField.value = "";
-      location.reload();
       updateAttendanceButtonState();
       absentModal.hide();
     } catch (err) {
@@ -627,6 +626,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (overlay) overlay.style.display = "none";
     return;
   }
+  await checkSkipIncidentReport(userId);
 
   const dataArray = await crudOperations.getByIndex(
     "studentInfoTbl",
@@ -657,9 +657,19 @@ window.addEventListener("DOMContentLoaded", async () => {
       noSheduleContainer.classList.remove("d-none");
     }
   })();
-
+  const date = new Date();
+  const today =
+    date.getFullYear() +
+    "-" +
+    String(date.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(date.getDate()).padStart(2, "0");
   await updateAttendanceButtonState();
-  await populateAttendanceImages();
+  const status = await checkCompletionStatus(userId, today);
+  if (status !== "complete" && status !== "absent") {
+    await populateAttendanceImages();
+  }
+
   setInterval(updateAttendanceButtonState, 8000);
 
   const overlay = document.getElementById("page-loading-overlay");
@@ -782,6 +792,11 @@ document
         if (!hasStatus) {
           await firebaseCRUD.setDataWithId(dateDocPath, "status", statusData);
         }
+
+        await firebaseCRUD.updateData("studentattendanceupdate", userId, {
+          lastAttendanceUpdate: new Date().toISOString(),
+        });
+
         await populateAttendanceImages(attendanceData);
         const { data: updatedAttendanceData } =
           await firebaseCRUD.getSubcollectionData(userId, today);
@@ -792,11 +807,22 @@ document
           return entry?.type === "afternoonTimeOut";
         });
 
+        if (!hasAfternoonTimeOut) {
+          await Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Log recorded successfully.",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
+
         if (hasAfternoonTimeOut) {
           await attendanceCompletion();
         } else {
           await updateAttendanceButtonState();
         }
+        // incident function
       } else {
         console.log("Offline mode: Data not uploaded to Firebase.");
         Swal.fire({
@@ -828,11 +854,53 @@ document
         confirmButtonColor: "#590f1c",
       });
       button.disabled = false;
-      button.innerHTML = isTimeIn;
+      button.innerHTML = isTimeIn();
       console.error(error);
       return;
     }
   });
+
+async function checkSkipIncidentReport(userId) {
+  const { firebaseCRUD } = await import("./firebase-crud.js");
+
+  const results = await firebaseCRUD.queryData(
+    "studentattendanceupdate",
+    "userId",
+    "==",
+    userId
+  );
+
+  if (results.length === 0) return;
+
+  const lastDate = results[0].lastAttendanceUpdate.split("T")[0];
+  const date = new Date();
+  const today = date.toISOString().split("T")[0];
+
+  const { data: updatedAttendanceData } =
+    await firebaseCRUD.getSubcollectionData(userId, lastDate);
+
+  const isComplete = checkLogCompleteness(updatedAttendanceData);
+
+  if (isComplete) return;
+
+  const incidentResult = await firebaseCRUD.queryData(
+    "incidentreports",
+    "userId",
+    "==",
+    userId
+  );
+
+  const hasExistingIncident = incidentResult.some((report) => {
+    const reportDate = new Date(report.date).toISOString().split("T")[0];
+    return reportDate === lastDate;
+  });
+
+  if (hasExistingIncident) return;
+
+  if (results[0].hasIncident === true) {
+    showIncidentModal(userId, lastDate, updatedAttendanceData);
+  }
+}
 
 async function populateAttendanceImages() {
   await window.dbReady;
@@ -917,7 +985,7 @@ async function populateAttendanceImages() {
  * const result = calculateWorkHours(logs, schedule);
  * // result = { hours: 7, minutes: 55, totalMinutes: 475, isLate: true, isPresent: true }
  */
-function calculateWorkHours(logs, schedule) {
+async function calculateWorkHours(logs, schedule) {
   function toMinutes(timeStr) {
     const [h, m] = timeStr.split(":").map(Number);
     return h * 60 + m;
@@ -989,6 +1057,9 @@ async function attendanceCompletion() {
   const isLate = await detectLateness(userId, attendanceData);
 
   if (!isComplete || isLate) {
+    await firebaseCRUD.updateData("studentattendanceupdate", userId, {
+      hasIncident: true,
+    });
     showIncidentModal(userId, today, attendanceData);
   } else {
     await uploadLogs(userId, today, attendanceData);
@@ -1143,6 +1214,9 @@ function showIncidentModal(userId, date, logsForDate) {
         return entry[key];
       });
 
+      await firebaseCRUD.updateData("studentattendanceupdate", userId, {
+        hasIncident: false,
+      });
       await uploadLogs(userId, date, flattenedLogs);
     } catch (err) {
       console.error("Failed to upload incident report:", err);
@@ -1190,13 +1264,9 @@ async function uploadLogs(userId, date, logsForDate) {
   try {
     const { firebaseCRUD } = await import("./firebase-crud.js");
 
-    const flatLogs = logsForDate.map((entry) => {
-      const key = Object.keys(entry).find((k) => k !== "id");
-      return {
-        ...entry[key],
-        id: entry.id,
-      };
-    });
+    const cleanLogs = logsForDate.filter(
+      (log) => log && typeof log === "object" && log.type && log.time
+    );
 
     const userInfoArr = await crudOperations.getByIndex(
       "studentInfoTbl",
@@ -1213,7 +1283,7 @@ async function uploadLogs(userId, date, logsForDate) {
     };
 
     const logsByType = {};
-    flatLogs.forEach((log) => {
+    cleanLogs.forEach((log) => {
       logsByType[log.type] = {
         timestamp: log.time
           ? new Date(`${log.date}T${log.time}`).toISOString()
@@ -1227,7 +1297,7 @@ async function uploadLogs(userId, date, logsForDate) {
       };
     });
 
-    const workHours = calculateWorkHours(flatLogs, schedule);
+    const workHours = await calculateWorkHours(cleanLogs, schedule);
 
     const isLate =
       !logsByType["morningTimeIn"] ||

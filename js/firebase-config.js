@@ -23,12 +23,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBgmAZwLqyNldx-vEQlUXztFyvINWeD1yY",
-  authDomain: "student-ojt-management-s-4580f.firebaseapp.com",
-  projectId: "student-ojt-management-s-4580f",
-  storageBucket: "student-ojt-management-s-4580f.appspot.com",
-  messagingSenderId: "636983402790",
-  appId: "1:636983402790:web:001c224269afe3f03e61e7",
+  apiKey: "AIzaSyBFO9RbuzSsCGWi6YZElOFziCa3DfjuVJ8",
+  authDomain: "sojtms.firebaseapp.com",
+  projectId: "sojtms",
+  storageBucket: "sojtms.firebasestorage.app",
+  messagingSenderId: "599818378176",
+  appId: "1:599818378176:web:65475abd4497cbde328625",
+  measurementId: "G-VBJP0Q4V6W",
 };
 
 const app = initializeApp(firebaseConfig);
